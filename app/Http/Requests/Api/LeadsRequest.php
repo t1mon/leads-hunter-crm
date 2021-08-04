@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class LeadsRequest extends FormRequest
 {
@@ -14,14 +15,13 @@ class LeadsRequest extends FormRequest
      */
     public function authorize(\Illuminate\Http\Request $request)
     {
-        if (!$request->id || !$request->token) {
+        if (!$request->id || !$request->api_token) {
             return false;
         }
         if (!$project = Project::find($request->id)) {
             return false;
         }
-        return $project->secret_token === $request->token;
-
+        return $project->api_token === $request->api_token;
     }
 
     /**
@@ -29,13 +29,15 @@ class LeadsRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
-            //'id' => 'required|integer',
-            //'token' => 'required',
+            'id' => 'required|integer|exists:projects,id',
             'name' => 'required',
-            'phone' => 'required|integer'
+            'phone' => 'required|integer|regex:/^\d+$/s',
+            'ip' => 'nullable|ip',
+            'email' => 'nullable|email',
+            'utm' => 'nullable|json'
         ];
     }
 }

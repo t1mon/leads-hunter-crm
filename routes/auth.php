@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectTokenController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -25,10 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::match(['put', 'patch'], 'token', 'UserTokenController@update')->name('users.token.update');
     });
 
-//    Route::prefix('project')->group(function () {
-//        Route::get('create', [ProjectController::class, 'create'])->name('create');
-//        Route::get('{id}', [ProjectController::class, 'show']);
-//    });
+    Route::prefix('project')->group(function () {
+        Route::get('{id}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
+        Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
+    });
 
     Route::resource('project', 'ProjectController');
 

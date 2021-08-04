@@ -8,7 +8,7 @@ return [
     'back' => 'Back',
     'generate' => 'Generate',
     'delete' => 'Delete',
-    'add' => 'Add',
+    'add' => 'Добавить',
   ],
 
   'comments' => [

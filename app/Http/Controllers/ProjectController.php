@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectRequest;
-use App\Models\Leads;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +17,10 @@ class ProjectController extends Controller
     public function index()
     {
         return view('project.index', [
-            'projects' => Project::where('user_id', Auth::guard()->id())->paginate(50)
+            'projects' => Project::where('user_id', Auth::guard()->id())
+                                ->with('leads', 'leadsToday')
+                                ->withCount('leads', 'leadsToday')
+                                ->paginate(50)
         ]);
     }
 
@@ -44,9 +46,10 @@ class ProjectController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        $project = Project::create($request->only('name', 'user_id'));
+        Project::create($request->only('name', 'user_id'));
 
-        return redirect()->route('project.index');
+        return redirect()->route('project.index')->withSuccess('Проект успешно создан');
+        ;
     }
 
     /**
@@ -58,8 +61,18 @@ class ProjectController extends Controller
      */
     public function show(Request $request, Project $project)
     {
-        return 'id';
+        return view('project.show', compact('project'));
     }
+
+//    public function token(Request $request, Project $project)
+//    {
+//        return view('project.token', compact('project'));
+//    }
+//
+//    public function tokenUpdate(Request $request, Project $project)
+//    {
+//        return view('project.token', compact('project'));
+//    }
 
     /**
      * Show the form for editing the specified resource.
@@ -94,6 +107,6 @@ class ProjectController extends Controller
     {
         $project->delete();
 
-        return redirect()->route('project.index')->withSuccess(__('project.deleted'));
+        return redirect()->route('project.index')->withSuccess('Проект удален');
     }
 }

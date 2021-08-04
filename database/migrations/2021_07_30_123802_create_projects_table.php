@@ -18,7 +18,7 @@ class CreateProjectsTable extends Migration
             $table->integer('user_id')->unsigned()->default(0);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
-            $table->string('secret_token', 60)->unique()->nullable();
+            $table->string('api_token', 60)->unique()->nullable();
             $table->timestamps();
         });
     }
