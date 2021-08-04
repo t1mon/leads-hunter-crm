@@ -42,8 +42,10 @@ class LeadsController extends Controller
 
         return new LeadsResource(
             Leads::create([
-                'project_id' => $request->id,
+                'project_id' => $request->project_id,
                 'name' => $request->name,
+                'surname' => $request->surname,
+                'patronymic' => $request->patronymic,
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'cost' => $request->cost,
@@ -51,7 +53,9 @@ class LeadsController extends Controller
                 'city' => $request->city,
                 'ip' => $request->ip,
                 'referrer' => $request->referrer,
-                'utm' => $request->utm
+                'utm' => $request->utm,
+                'host' => $request->host,
+                'url_query_string' => $request->url_query_string
             ])
         );
 

@@ -15,7 +15,7 @@ class Leads extends Model
      * @var array
      */
     protected $fillable = [
-        'project_id', 'name', 'phone', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'utm'
+        'project_id', 'name','surname','patronymic', 'phone', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'utm','host','url_query_string'
     ];
 
     public function project()
