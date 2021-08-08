@@ -36,7 +36,7 @@ class LeadsRequest extends FormRequest
             'name' => 'required|string',
             'surname' => 'nullable|string',
             'patronymic' => 'nullable|string',
-            'cost' => 'nullable|integer',
+            'cost' => 'nullable|string',
             'comment' => 'nullable|string',
             'city' => 'nullable|string',
             'phone' => 'required|integer|regex:/^\d+$/s',
