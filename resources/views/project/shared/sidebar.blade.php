@@ -1,6 +1,11 @@
 <ul class="navbar-nav navbar-sidenav">
-
-    <li class="nav-item" role="presentation" data-toggle="tooltip" data-placement="right" title="@lang('dashboard.users')">
+    <li class="nav-item" role="presentation" data-toggle="tooltip" data-placement="right">
+        <a class="nav-link {{ request()->route()->named('project.journal') ? 'active' : '' }}" href="{{ route('project.journal', $project) }}">
+            <i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;
+            <span class="nav-link-text">@lang('projects.sidebar.journal')</span>
+        </a>
+    </li>
+    <li class="nav-item" role="presentation" data-toggle="tooltip" data-placement="right">
         <a class="nav-link {{ request()->route()->named('project.token') ? 'active' : '' }}" href="{{ route('project.token', $project) }}">
             <i class="fa fa-key" aria-hidden="true"></i>&nbsp;
             <span class="nav-link-text">@lang('projects.sidebar.integrations')</span>

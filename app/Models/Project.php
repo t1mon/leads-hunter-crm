@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class Project extends Model
 {
@@ -16,13 +17,18 @@ class Project extends Model
         'api_token'
     ];
 
+    public function isOwner(): bool
+    {
+        return Project::findOrFail($this->id)->user_id === Auth::id();
+    }
+
     public function leads()
     {
-        return $this->hasMany(Leads::class);
+        return $this->hasMany(Leads::class, 'project_id');
     }
 
     public function leadsToday()
     {
-        return $this->hasMany(Leads::class)->whereDate('created_at', Carbon::today());
+        return $this->hasMany(Leads::class, 'project_id')->whereDate('created_at', Carbon::today());
     }
 }

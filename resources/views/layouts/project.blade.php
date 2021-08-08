@@ -19,25 +19,26 @@
 </head>
 <body class="admin-body bg-dark">
 @include('project/shared/navbar')
+<div id="app">
+    <div class="content-wrapper bg-dark">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    @include('shared/alerts')
 
-<div class="content-wrapper bg-light">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                @include('shared/alerts')
-
-                <div class="card">
-                    <div class="card-body">
-                        @yield('content')
+                    <div class="card  bg-dark">
+                        <div class="card-body  bg-dark">
+                            @yield('content')
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Scripts -->
 <script src="{{ mix('/js/app.js') }}"></script>
 <script src="{{ mix('/js/admin.js') }}"></script>
+@stack('inline-scripts')
 </body>
 </html>

@@ -18,6 +18,15 @@ class Leads extends Model
         'project_id', 'name','surname','patronymic', 'phone', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'utm','host','url_query_string'
     ];
 
+    protected $casts = [
+        'utm' => 'array'
+    ];
+
+    public function getClientName(): string
+    {
+        return $this->surname . ' ' .$this->name. ' ' . $this->patronymic;
+    }
+
     public function project()
     {
         return $this->belongsTo(Project::class);

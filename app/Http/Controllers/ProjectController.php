@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -46,7 +49,11 @@ class ProjectController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        Project::create($request->only('name', 'user_id'));
+        $project = Project::create($request->only('name', 'user_id'));
+
+        $project->update([
+            'api_token' => Str::random(60)
+        ]);
 
         return redirect()->route('project.index')->withSuccess('Проект успешно создан');
         ;
@@ -64,15 +71,35 @@ class ProjectController extends Controller
         return view('project.show', compact('project'));
     }
 
-//    public function token(Request $request, Project $project)
-//    {
-//        return view('project.token', compact('project'));
-//    }
-//
-//    public function tokenUpdate(Request $request, Project $project)
-//    {
-//        return view('project.token', compact('project'));
-//    }
+    /**
+     * Display the specified resource.
+     *
+     * @param Request $request
+     * @param \App\Models\Project $project
+     * @return \Illuminate\Http\Response
+     */
+    public function journal(Request $request, Project $project)
+    {
+        if (Gate::denies('view', $project)) {
+            return redirect()->route('project.index');
+        }
+
+        $leads = $project->leads();
+
+        if ($request->has('date_from') && !empty($request->date_from)) {
+            $leads->whereDate('created_at', '>=', Carbon::parse($request->date_from)->format('Y-m-d'));
+        }
+
+        if ($request->has('date_to') && !empty($request->date_to)) {
+            $leads->whereDate('created_at', '<=', Carbon::parse($request->date_to)->format('Y-m-d'));
+        }
+
+
+        $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+
+
+        return view('project.journal', compact('project', 'leads'));
+    }
 
     /**
      * Show the form for editing the specified resource.
