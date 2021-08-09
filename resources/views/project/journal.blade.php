@@ -40,6 +40,7 @@
                 <th>@lang('projects.journal.client')</th>
                 <th>@lang('projects.journal.phone')</th>
                 <th>@lang('projects.journal.host')</th>
+                <th>@lang('projects.journal.source')</th>
                 <th>@lang('projects.journal.utm.utm_source')</th>
                 <th>@lang('projects.journal.utm.utm_campaign')</th>
                 <th>@lang('projects.journal.utm.utm_medium')</th>
@@ -63,6 +64,7 @@
                     <td class="text-nowrap">{{  $lead->getClientName() }}</td>
                     <td class="text-nowrap">{{ phone_format($lead->phone) }}</td>
                     <td class="text-nowrap">{{ $lead->host }}</td>
+                    <td class="text-nowrap">{{ $lead->referrer }}</td>
                     <td class="text-nowrap">{{ $lead->utm['utm_source'] ?? '' }}</td>
                     <td class="text-nowrap">{{ $lead->utm['utm_campaign'] ?? '' }}</td>
                     <td class="text-nowrap">{{ $lead->utm['utm_medium'] ?? ''}}</td>
