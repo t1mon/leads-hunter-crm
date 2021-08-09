@@ -65,7 +65,7 @@
                     <td class="text-nowrap">{{  $lead->getClientName() }}</td>
                     <td class="text-nowrap">{{ phone_format($lead->phone) }}</td>
                     <td class="text-nowrap">{{ $lead->host }}</td>
-                    <td class="text-nowrap">{{ $lead->referrer }}</td>
+                    <td class="text-nowrap">{{ \Illuminate\Support\Str::limit($lead->referrer, 20) }}</td>
                     <td class="text-nowrap">{{ $lead->utm['utm_source'] ?? '' }}</td>
                     <td class="text-nowrap">{{ $lead->utm['utm_campaign'] ?? '' }}</td>
                     <td class="text-nowrap">{{ $lead->utm['utm_medium'] ?? ''}}</td>
