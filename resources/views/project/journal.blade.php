@@ -3,6 +3,7 @@
 @section('content')
     @php
         $phones = [];
+        $tableId = 1;
     @endphp
 {{--    <form action="{{ route('project.journal', $project) }}">--}}
 {{--        <input type="text" name="client">--}}
@@ -59,7 +60,7 @@
                     @endphp
                 @endif
                 <tr>
-                    <td class="text-nowrap">{{ ++$count }}</td>
+                    <td class="text-nowrap">{{ $tableId++ }}</td>
                     <td class="text-nowrap">{{ humanize_date($lead->created_at, 'd-m-Y H:i:s') }}</td>
                     <td class="text-nowrap">{{  $lead->getClientName() }}</td>
                     <td class="text-nowrap">{{ phone_format($lead->phone) }}</td>

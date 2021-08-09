@@ -15,6 +15,7 @@ class AlterTypeQueryStringLeadsTable extends Migration
     {
         Schema::table('leads', function (Blueprint $table) {
             $table->longText('url_query_string')->nullable()->change();
+            $table->longText('referrer')->nullable()->change();
         });
     }
 
@@ -27,6 +28,7 @@ class AlterTypeQueryStringLeadsTable extends Migration
     {
         Schema::table('leads', function (Blueprint $table) {
             $table->string('url_query_string')->nullable()->change();
+            $table->string('referrer')->nullable()->change();
         });
     }
 }

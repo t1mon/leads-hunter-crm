@@ -18,19 +18,6 @@ class LeadsController extends Controller
 //            return response()->json(['error' => 'phone already exists for this project'], Response::HTTP_UNPROCESSABLE_ENTITY);
 //        }
 
-//        $lead = new Leads();
-//        $lead->project_id = $request->id;
-//        $lead->name = $request->name;
-//        $lead->phone = $request->phone;
-//        $lead->email = $request->email;
-//        $lead->cost = $request->cost;
-//        $lead->comment = $request->comment;
-//        $lead->city = $request->city;
-//        $lead->ip = $request->ip;
-//        $lead->referrer = $request->referrer;
-//        $lead->utm = $request->utm;
-//
-//        $lead->save();
 //
 //
 //        return response()->json(
@@ -53,7 +40,6 @@ class LeadsController extends Controller
                 'city' => $request->city,
                 'ip' => $request->ip,
                 'referrer' => $request->referrer,
-                'utm' => $request->utm,
                 'host' => $request->host,
                 'url_query_string' => $request->url_query_string
             ])
