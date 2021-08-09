@@ -6,10 +6,10 @@
 /public/js
 /public/mix-manifest.json
 public/media/
-/public
 /vendor
 /.idea
 /.vagrant
+/mysqldb
 .env
 .php_cs.cache
 /storage/debugbar

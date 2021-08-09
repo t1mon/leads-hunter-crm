@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
     });
 
+    Route::get('/', 'ProjectController@index')->name('home');
     Route::resource('project', 'ProjectController')->only(['index','create','store','destroy']);
 
     Route::resource('newsletter-subscriptions', 'NewsletterSubscriptionController')->only('store');
