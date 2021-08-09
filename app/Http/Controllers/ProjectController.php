@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectRequest;
+use App\Models\Notification;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -45,16 +48,19 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        $request->merge([
-            'user_id' => Auth::id()
-        ]);
+        try {
 
-        $project = Project::create($request->only('name', 'user_id'));
+            DB::transaction(function () use ($request) {
+                $request->merge([ 'user_id' => Auth::id() ]);
+                $project = Project::create($request->only('name', 'user_id'));
+                $project->update([ 'api_token' => Str::random(60) ]);
+                Notification::create([ 'project_id' => $project->id ]);
+            }, 3);  // Повторить три раза, прежде чем признать неудачу
 
-        $project->update([
-            'api_token' => Str::random(60)
-        ]);
-
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
+        }
         return redirect()->route('project.index')->withSuccess('Проект успешно создан');
         ;
     }
