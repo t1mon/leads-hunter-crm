@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTypeQueryStringLeadsTable extends Migration
+class AlterTypeReferrerLeadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AlterTypeQueryStringLeadsTable extends Migration
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->longText('url_query_string')->nullable()->change();
+            $table->longText('referrer')->nullable()->change();
         });
     }
 
@@ -26,7 +26,7 @@ class AlterTypeQueryStringLeadsTable extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->longText('url_query_string')->nullable()->change();
+            $table->longText('referrer')->nullable()->change();
         });
     }
 }
