@@ -8,6 +8,7 @@ use App\Models\Leads;
 use App\Http\Resources\Leads as LeadsResource;
 use App\Models\Project;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class LeadsController extends Controller
 {
@@ -26,6 +27,7 @@ class LeadsController extends Controller
 //            ['Content-Type' => 'application/json;charset=utf8'],
 //            JSON_UNESCAPED_UNICODE
 //        );
+        Log::info('ip: '.$request->ip().' getHost:'.$request->getHost().' url:'.$request->url().' referer'.$request->headers->get('referer'));
 
         return new LeadsResource(
             Leads::create([
