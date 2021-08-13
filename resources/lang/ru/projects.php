@@ -34,6 +34,7 @@ return [
     ],
     'sidebar' => [
         'journal' => 'Журнал',
+        'notification' => 'Уведомления',
         'integrations' => 'Интеграция'
     ],
     'count' => ':count проект|:count проекта|:count проектов',

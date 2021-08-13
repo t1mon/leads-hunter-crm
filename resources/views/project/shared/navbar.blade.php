@@ -2,7 +2,16 @@
     <div class="container">
         <!-- Branding Image -->
         {{ link_to_route('home', config('app.name', 'Laravel'), [], ['class' => 'navbar-brand']) }}
-
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{$project->name}}
+            </button>
+            <div class="dropdown-menu">
+                @foreach(auth()->user()->projects as $_project)
+                    <a class="dropdown-item" href="{{ route('project.journal', $_project) }}">{{ $_project->name }}</a>
+                @endforeach
+            </div>
+        </div>
         <!-- Collapsed Hamburger -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

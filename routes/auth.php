@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('project')->group(function () {
         Route::get('{project}/journal', [ProjectController::class, 'journal'])->name('project.journal');
+        Route::get('{project}/notification', [ProjectController::class, 'journal'])->name('project.notification');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
     });
