@@ -12,10 +12,20 @@
     {!! Form::open(['route' => ['project.journal', $project], 'class' => 'd-flex', 'method' => 'GET']) !!}
 <div class="form-row">
     <div class="form-group col-md-4">
-        {!! Form::text('date_from',request()->date_from ?? null , ['class' => 'form-control', 'placeholder' => 'Дата от']) !!}
+        {!! Form::text('date_from',request()->date_from ?? null , ['class' => 'form-control' . ($errors->has('date_from') ? ' is-invalid' : ''), 'placeholder' => 'Дата от']) !!}
+
+        @error('date_from')
+        <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+
     </div>
     <div class="form-group col-md-4">
-        {!! Form::text('date_to',request()->date_to ?? \Illuminate\Support\Carbon::now()->format('d-m-Y'), ['class' => 'form-control', 'placeholder' => ' до']) !!}
+        {!! Form::text('date_to',request()->date_to ?? \Illuminate\Support\Carbon::now()->format('d-m-Y'), ['class' => 'form-control' . ($errors->has('date_to') ? ' is-invalid' : ''), 'placeholder' => ' до']) !!}
+
+        @error('date_to')
+        <span class="invalid-feedback">{{ $message }}</span>
+        @enderror
+
     </div>
     <div class="form-group col-md-4">
         <div class="checkbox">

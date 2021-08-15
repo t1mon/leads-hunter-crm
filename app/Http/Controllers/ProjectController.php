@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -89,6 +90,11 @@ class ProjectController extends Controller
         if (Gate::denies('view', $project)) {
             return redirect()->route('project.index');
         }
+
+        $this->validate($request, [
+            'date_from' => 'nullable|date_format:d-m-Y',
+            'date_to'   => 'nullable|date_format:d-m-Y',
+        ]);
 
         $leads = $project->leads();
 
