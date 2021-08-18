@@ -14,6 +14,8 @@ class LeadsController extends Controller
 {
     public function store(LeadsRequest $request)
     {
+        Log::info($_SERVER);
+        Log::info(request()->server());
 
         return new LeadsResource(
             Leads::create([
