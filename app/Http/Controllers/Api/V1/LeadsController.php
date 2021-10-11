@@ -18,7 +18,7 @@ class LeadsController extends Controller
         Log::info(request()->server());
 
         return new LeadsResource(
-            Leads::addToDB($request->all());
+            Leads::addToDB($request->all())
             /*
             Leads::create([
                 'project_id' => $request->project_id,

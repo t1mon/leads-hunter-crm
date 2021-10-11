@@ -50,5 +50,7 @@ class Leads extends Model
         $lead->fill($params);
         $lead->entries = $entries;
         $lead->save();
+
+        return $lead;
     }
 }
