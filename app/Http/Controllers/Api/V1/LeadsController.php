@@ -18,6 +18,8 @@ class LeadsController extends Controller
         Log::info(request()->server());
 
         return new LeadsResource(
+            Leads::addToDB($request->all());
+            /*
             Leads::create([
                 'project_id' => $request->project_id,
                 'name' => $request->name,
@@ -33,6 +35,7 @@ class LeadsController extends Controller
                 'host' => $request->host,
                 'url_query_string' => $request->url_query_string
             ])
+            */
         );
 
     }
