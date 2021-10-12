@@ -34,18 +34,25 @@ class Leads extends Model
 
     public static function getEntries($phone) //Получение номера вхождений у лида
     {
-        $oldLead = self::where('phone', $phone)->first();
+        $oldLead = self::where('phone', $phone)->count();
 
-        if(!is_null($oldLead))
-            return $oldLead->entries == 1 ? 2 : 3; //2, если во второй раз, и 3, если больше двух раз
+        if ($oldLead === 0) {
+            return 1;
+        }
 
-        return 1;    //Если лид не найден в базе данных, вернуть 1
+        if ($oldLead === 1) {
+            return 2 ;
+        }
+
+        if ($oldLead > 1) {
+            return ++ self::where('phone', $phone)->where('entries', '>', 1)->first()->entries ;
+        }
     }
 
     public static function addToDB(array $params) //Добавить лид или обновить его количество вхождений
     {
         $entries = self::getEntries($params['phone']);
-        $lead = $entries == 1 ? new self : self::where('phone', $params['phone'])->first();
+        $lead = ($entries == 1 || $entries == 2) ? new self : self::where('phone', $params['phone'])->where('entries', '>', 1)->first();
         $lead->fill($params);
         $lead->entries = $entries;
         $lead->save();
