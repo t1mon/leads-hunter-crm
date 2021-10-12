@@ -79,11 +79,7 @@
                 </tr>
             @endforeach
             </tbody>
-            @if(request()->has('double_phone') && !empty(request()->double_phone))
-                <caption>{{ trans_choice('projects.journal.count_unique', count($leads)) }}</caption>
-            @else
-                <caption>{{ trans_choice('projects.journal.count', $leads->total()) }}</caption>
-            @endif
+            <caption>{{ trans_choice('projects.journal.count', $leads->total()) }}</caption>
         </table>
     </div>
 
