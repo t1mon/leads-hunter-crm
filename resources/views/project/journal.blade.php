@@ -50,6 +50,7 @@
                 <th>@lang('projects.journal.date')</th>
                 <th>@lang('projects.journal.client')</th>
                 <th>@lang('projects.journal.phone')</th>
+                <th>@lang('projects.journal.entries')</th>
                 <th>@lang('projects.journal.host')</th>
                 <th>@lang('projects.journal.source')</th>
                 <th>@lang('projects.journal.utm.utm_source')</th>
@@ -61,19 +62,12 @@
             </thead>
             <tbody>
             @foreach($leads as $count => $lead)
-                @if(request()->has('double_phone') && !empty(request()->double_phone))
-                    @php
-                        if (in_array($lead->phone, $phones)) {
-                            continue;
-                        }
-                        $phones[] = $lead->phone;
-                    @endphp
-                @endif
                 <tr>
                     <td class="text-nowrap">{{ $tableId++ }}</td>
                     <td class="text-nowrap">{{ humanize_date($lead->created_at, 'd-m-Y H:i:s') }}</td>
                     <td class="text-nowrap">{{  $lead->getClientName() }}</td>
                     <td class="text-nowrap">{{ phone_format($lead->phone) }}</td>
+                    <td class="text-nowrap">{{ $lead->entries }}</td>
                     <td class="text-nowrap">{{ $lead->host }}</td>
 {{--                    <td class="text-nowrap">{{ \Illuminate\Support\Str::limit($lead->referrer, 20) }}</td>--}}
                     <td class="text-nowrap">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</td>
@@ -85,9 +79,8 @@
                 </tr>
             @endforeach
             </tbody>
-
             @if(request()->has('double_phone') && !empty(request()->double_phone))
-                <caption>{{ trans_choice('projects.journal.count_unique', count($phones)) }}</caption>
+                <caption>{{ trans_choice('projects.journal.count_unique', count($leads)) }}</caption>
             @else
                 <caption>{{ trans_choice('projects.journal.count', $leads->total()) }}</caption>
             @endif

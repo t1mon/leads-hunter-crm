@@ -6,6 +6,8 @@ use App\Models\Post;
 use App\Models\Role;
 use App\Models\Token;
 use App\Models\User;
+use App\Models\Project;
+use App\Models\Leads;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,6 +36,46 @@ class DatabaseSeeder extends Seeder
         );
 
         $user->roles()->sync([$role_admin->id]);
+
+        //Projects
+        $project = Project::firstOrCreate(
+            ['user_id' => $user->id],
+            ['name' => 'Test Project']
+        );
+
+        //Leads
+        Leads::firstOrCreate(
+            [
+                'phone' => 71112223344,
+                'project_id' => $project->id,
+            ],
+            [
+                'status' => 'pending',
+                'name' => 'Алексей',
+            ]
+        );
+
+        Leads::firstOrCreate(
+            [
+                'phone' => 72223334455,
+                'project_id' => $project->id,
+            ],
+            [
+                'status' => 'pending',
+                'name' => 'Светлана',
+            ]
+        );
+
+        Leads::firstOrCreate(
+            [
+                'project_id' => $project->id,
+                'phone' => 73334445566,
+            ],
+            [
+                'status' => 'pending',
+                'name' => 'Евгений',
+            ]
+        );
 
         // Posts
         $post = Post::firstOrCreate(
