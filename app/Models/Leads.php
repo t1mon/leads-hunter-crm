@@ -36,11 +36,10 @@ class Leads extends Model
     {
         $oldLead = self::where('phone', $phone)->first();
 
-        //Если лид не найден в базе данных, вернуть 1
-        if(is_null($oldLead))
-            return 1;
-        else //Если лид уже есть в базе данных
+        if(!is_null($oldLead))
             return $oldLead->entries == 1 ? 2 : 3; //2, если во второй раз, и 3, если больше двух раз
+
+        return 1;    //Если лид не найден в базе данных, вернуть 1
     }
 
     public static function addToDB(array $params) //Добавить лид или обновить его количество вхождений
