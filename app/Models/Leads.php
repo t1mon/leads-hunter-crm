@@ -32,9 +32,9 @@ class Leads extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public static function getEntries($phone) //Получение номера вхождений у лида
+    public static function getEntries($projectId,$phone) //Получение номера вхождений у лида
     {
-        $oldLead = self::where('phone', $phone)->count();
+        $oldLead = self::where('project_id',$projectId )->where('phone', $phone)->count();
 
         if ($oldLead === 0) {
             return 1;
@@ -45,14 +45,14 @@ class Leads extends Model
         }
 
         if ($oldLead > 1) {
-            return ++ self::where('phone', $phone)->where('entries', '>', 1)->first()->entries ;
+            return ++ self::where('project_id',$projectId )->where('phone', $phone)->where('entries', '>', 1)->first()->entries ;
         }
     }
 
     public static function addToDB(array $params) //Добавить лид или обновить его количество вхождений
     {
-        $entries = self::getEntries($params['phone']);
-        $lead = ($entries == 1 || $entries == 2) ? new self : self::where('phone', $params['phone'])->where('entries', '>', 1)->first();
+        $entries = self::getEntries($params['project_id'],$params['phone']);
+        $lead = ($entries == 1 || $entries == 2) ? new self : self::where('project_id',$params['project_id'])->where('phone', $params['phone'])->where('entries', '>', 1)->first();
         $lead->fill($params);
         $lead->entries = $entries;
         $lead->save();
