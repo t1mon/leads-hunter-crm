@@ -109,20 +109,6 @@ class ProjectController extends Controller
 
 
         $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-        //Удаление дубликатов по команде пользователя
-//        if ($request->has('double_phone') && !empty(request()->double_phone)) {
-//            $phones = [];
-//            $items = $leads->items();
-//
-//
-//            for ($i = 0; $i < $leads->total(); $i++) {
-//                if (in_array($items[$i]->phone, $phones)) {
-//                    $leads->offsetUnset($i);
-//                } else {
-//                    $phones[] = $items[$i]->phone;
-//                }
-//            }
-//        }
 
         return view('project.journal', compact('project', 'leads'));
     }
