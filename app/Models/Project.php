@@ -14,6 +14,7 @@ class Project extends Model
 
     protected $fillable = [
         'name',
+        'host',
         'user_id',
         'api_token'
     ];
@@ -21,6 +22,22 @@ class Project extends Model
     public function isOwner(): bool
     {
         return Project::findOrFail($this->id)->user_id === Auth::id();
+    }
+
+    public function hosts()
+    {
+        return $this->hasMany(Host::class);
+    }
+
+    public function hasInHosts(string $host): bool
+    {
+
+        $hosts = $this->hosts;
+        foreach($hosts as $item){
+            if(strcasecmp($item->host, $host) == 0)
+                return true;
+        }
+        return false;
     }
 
     public function leads()

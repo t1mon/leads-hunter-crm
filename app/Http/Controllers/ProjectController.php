@@ -113,6 +113,16 @@ class ProjectController extends Controller
         return view('project.journal', compact('project', 'leads'));
     }
 
+    public function hosts(Request $request, Project $project){
+        if (Gate::denies('view', $project)) {
+            return redirect()->route('project.index');
+        }
+
+        $hosts = $project->hosts;
+
+        return view('project.hosts', compact('hosts', 'project'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

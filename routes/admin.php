@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
+/*
+Route::get('dashboard', function(){
+
+})->name('dashboard');
+*/
+
 Route::get('dashboard', 'ShowDashboard')->name('dashboard');
 Route::resource('posts', 'PostController');
 Route::delete('/posts/{post}/thumbnail', 'PostThumbnailController@destroy')->name('posts_thumbnail.destroy');

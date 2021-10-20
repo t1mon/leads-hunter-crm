@@ -17,7 +17,7 @@ class Leads extends JsonResource
     {
         return [
             'id' => $this->id,
-            'message' => 'Lead Created',
+            'message' => trans('leads.created'),
             'status' => Response::HTTP_CREATED
         ];
     }

@@ -33,8 +33,20 @@ return [
             'utm_term' => '[utm_term]'
         ]
     ],
+    'hosts' => [
+        'host' => 'Хост',
+        'action' => 'Действие',
+        'project' => 'Проект',
+        'add-form' => 'Добавить хост',
+        'add-button' => 'Добавить',
+        'delete' => 'Удалить',
+        'create-error' => 'Ошибка добавления хоста',
+        'create-success' => 'Хост добавлен в проект',
+        'error-exists' => 'Хост уже есть в базе данных',
+    ],
     'sidebar' => [
         'journal' => 'Журнал',
+        'hosts' => 'Управление хостами',
         'notification' => 'Уведомления',
         'integrations' => 'Интеграция'
     ],

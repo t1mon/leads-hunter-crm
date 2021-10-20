@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Token;
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Host;
 use App\Models\Leads;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -40,8 +41,29 @@ class DatabaseSeeder extends Seeder
         //Projects
         $project = Project::firstOrCreate(
             ['user_id' => $user->id],
-            ['name' => 'Test Project']
+            [
+                'name' => 'Test Project',
+            ]
         );
+
+        //Hosts
+        $host_1 = Host::create(
+            [
+                'project_id' => $project->id,
+                'host' => 'https://host-1.com'
+            ]);
+
+        $host_2 = Host::create(
+            [
+                'project_id' => $project->id,
+                'host' => 'https://host-2.com'
+            ]);
+
+        $host_3 = Host::create(
+            [
+                'project_id' => $project->id,
+                'host' => 'https://host-3.com'
+            ]);
 
         //Leads
         Leads::firstOrCreate(
@@ -52,6 +74,7 @@ class DatabaseSeeder extends Seeder
             [
                 'status' => 'pending',
                 'name' => 'Алексей',
+                'host' => $host_1->host,
             ]
         );
 
@@ -63,6 +86,7 @@ class DatabaseSeeder extends Seeder
             [
                 'status' => 'pending',
                 'name' => 'Светлана',
+                'host' => $host_2->host,
             ]
         );
 
@@ -74,6 +98,7 @@ class DatabaseSeeder extends Seeder
             [
                 'status' => 'pending',
                 'name' => 'Евгений',
+                'host' => $host_3->host,
             ]
         );
 

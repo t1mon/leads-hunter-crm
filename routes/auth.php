@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Project\ProjectTokenController;
+use App\Http\Controllers\HostController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('project')->group(function () {
         Route::get('{project}/journal', [ProjectController::class, 'journal'])->name('project.journal');
+        Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/notification', [ProjectController::class, 'journal'])->name('project.notification');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
@@ -35,6 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/', 'ProjectController@index')->name('home');
     Route::resource('project', 'ProjectController')->only(['index','create','store','destroy']);
+
+    Route::resource('host', 'HostController')->only(['store', 'destroy']);
 
     Route::resource('newsletter-subscriptions', 'NewsletterSubscriptionController')->only('store');
 });
