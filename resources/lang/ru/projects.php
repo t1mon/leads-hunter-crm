@@ -39,7 +39,7 @@ return [
         'project' => 'Проект',
         'add-form' => 'Добавить хост',
         'add-button' => 'Добавить',
-        'delete' => 'Удалить',
+        'delete-success' => 'Хост удалён',
         'create-error' => 'Ошибка добавления хоста',
         'create-success' => 'Хост добавлен в проект',
         'error-exists' => 'Хост уже есть в базе данных',

@@ -31,9 +31,13 @@
             <tbody>
                 @foreach($hosts as $host)
                     <tr>
-                        <td class="text-nowrap">{{$host->id++}}</td>
+                        <td class="text-nowrap">{{$host->id}}</td>
                         <td class="text-nowrap">{{$host->host}}</td>
-                        <td class="text-nowrap"><a href=''>@lang('projects.hosts.delete')</a></td>
+                        <td class="text-nowrap">
+                            {!! Form::model($host, ['method' => 'DELETE', 'route' => ['host.destroy', $host]]) !!}
+                            {!! Form::button('<i class="fa fa-trash" aria-hidden="true"></i>', ['class' => 'btn btn-danger btn-sm', 'name' => 'submit', 'type' => 'submit']) !!}
+                        {!! Form::close() !!}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

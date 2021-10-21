@@ -41,6 +41,8 @@ class HostController extends Controller
      */
     public function destroy(Host $host)
     {
-
+        $project_id = $host->project_id;
+        $host->delete();
+        return redirect()->route('project.hosts', [$project_id])->withSuccess(trans('projects.hosts.delete-success'));
     } //destroy
 }
