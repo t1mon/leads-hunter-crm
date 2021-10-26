@@ -10,6 +10,8 @@ class Host extends Model
 {
     use HasFactory;
 
+    const HOST_NOT_FOUND = 'host_not_found';
+
     //Свойства
     protected $fillable = ['host', 'project_id'];
 
@@ -24,4 +26,5 @@ class Host extends Model
     {
         return (strcmp($this->project->name, $project) == 0) ? true : false;
     }
+
 }

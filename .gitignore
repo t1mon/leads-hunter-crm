@@ -17,3 +17,6 @@ public/media/
 /storage/medialibrary
 /log
 .phpunit.result.cache
+_ide_helper.php
+.phpstorm.meta.php
+composer.lock

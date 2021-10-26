@@ -4,26 +4,36 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LeadsRequest;
-use App\Models\Project;
-use App\Models\Leads;
 use App\Http\Resources\Leads as LeadsResource;
+use App\Models\Host;
+use App\Models\Leads;
+use App\Models\Project;
+use Illuminate\Http\Response;
 
 class LeadsController extends Controller
 {
     public function store(LeadsRequest $request)
     {
+        $host = parse_url($request->host);
+        $request->merge([
+            'host' => $host['host'],
+        ]);
+
         //Проверка хоста у лида
         $project = Project::findOrFail($request->project_id);
-        if($project->hasInHosts($request->host))
+
+        if ($project->hasInHosts($request->host)) {
             return new LeadsResource(
                 Leads::addToDB($request->all())
             );
-        else
-            return response()->json(['data' =>
+        }
+
+        return response()->json(['data' =>
                                         [
+                                            'status'  => Host::HOST_NOT_FOUND,
                                             'message' => trans('leads.host-error'),
-                                            'status' => 412,
+                                            'response' => Response::HTTP_PRECONDITION_FAILED,
                                         ]
-                                    ]);
+                                    ],Response::HTTP_PRECONDITION_FAILED);
     }
 }

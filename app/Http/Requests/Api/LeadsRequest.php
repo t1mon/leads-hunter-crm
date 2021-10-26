@@ -43,7 +43,7 @@ class LeadsRequest extends FormRequest
             'ip' => 'nullable|ip',
             'email' => 'nullable|email',
             'utm' => 'nullable|json',
-            'host' =>  'nullable|string',
+            'host' =>  'required|string|url',
             'referrer' => 'nullable|string',
             'url_query_string' => 'nullable|string',
         ];

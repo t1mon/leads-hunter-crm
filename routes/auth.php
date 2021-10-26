@@ -38,7 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', 'ProjectController@index')->name('home');
     Route::resource('project', 'ProjectController')->only(['index','create','store','destroy']);
 
-    Route::resource('host', 'HostController')->only(['store', 'destroy']);
+    Route::resource('project/{project}/host', 'HostController')->only(['store', 'destroy']);
 
     Route::resource('newsletter-subscriptions', 'NewsletterSubscriptionController')->only('store');
 });

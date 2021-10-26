@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Form::open(['route' => ['host.store'], 'class' => 'd-flex']) !!}
+{!! Form::open(['route' => ['host.store',$project], 'class' => 'd-flex']) !!}
 
     <div class="form-row">
         <div class="form-group col-md-12">
@@ -23,7 +23,6 @@
         <table class="table table-striped table-bordered table-dark ">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>@lang('projects.hosts.host')</th>
                     <th>@lang('projects.hosts.action')</th>
                 </tr>
@@ -31,10 +30,9 @@
             <tbody>
                 @foreach($hosts as $host)
                     <tr>
-                        <td class="text-nowrap">{{$host->id}}</td>
                         <td class="text-nowrap">{{$host->host}}</td>
                         <td class="text-nowrap">
-                            {!! Form::model($host, ['method' => 'DELETE', 'route' => ['host.destroy', $host]]) !!}
+                            {!! Form::model($host, ['method' => 'DELETE', 'route' => ['host.destroy', [$project,$host]]]) !!}
                             {!! Form::button('<i class="fa fa-trash" aria-hidden="true"></i>', ['class' => 'btn btn-danger btn-sm', 'name' => 'submit', 'type' => 'submit']) !!}
                         {!! Form::close() !!}
                         </td>
