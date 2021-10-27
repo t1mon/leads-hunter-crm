@@ -4,9 +4,7 @@ namespace App\Listeners\Leads;
 
 use App\Events\Leads\LeadCreated;
 use App\Mail\Leads\SendLeadData;
-use App\Mail\Newsletter;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -32,7 +30,11 @@ class SendEmailData
     public function handle(LeadCreated $event)
     {
         Log::channel('leads')->info(json_encode($event));
-        //Mail::to('gorin163@gmail.com')->send(new SendLeadData($event->lead));
-
+//        try {
+//            Mail::to('gorin163@gmail.com')->send(new SendLeadData($event->lead));
+//            Log::channel('leads')->info(json_encode($event));
+//        } catch (\Exception $exception) {
+//            Log::error($exception->getMessage());
+//        }
     }
 }
