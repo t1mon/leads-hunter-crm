@@ -8,6 +8,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class HostController extends Controller
 {
@@ -19,10 +20,14 @@ class HostController extends Controller
      */
     public function store(HostRequest $request)
     {
-        $host = parse_url($request->host);
-        $request->merge([
-            'host' => $host['host'],
-        ]);
+        if(filter_var($request->host, FILTER_VALIDATE_URL)){
+            $host = parse_url($request->host);
+            $request->merge([
+                'host' => $host['host'],
+            ]);
+        }
+        $request->merge(['host' =>  Str::lower($request->host)]); //Перевод в нижний регистр
+
 
         try {
             if (Host::where('host', $request->host)->exists()) {

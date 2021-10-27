@@ -10,14 +10,20 @@ use App\Models\Leads;
 use App\Models\Project;
 use Illuminate\Http\Response;
 
+use Illuminate\Support\Str;
+
+
 class LeadsController extends Controller
 {
     public function store(LeadsRequest $request)
     {
-        $host = parse_url($request->host);
-        $request->merge([
-            'host' => $host['host'],
-        ]);
+        if(filter_var($request->host, FILTER_VALIDATE_URL)){
+            $host = parse_url($request->host);
+            $request->merge([
+                'host' => $host['host'],
+            ]);
+        }
+        $request->merge(['host' =>  Str::lower($request->host)]);
 
         //Проверка хоста у лида
         $project = Project::findOrFail($request->project_id);
