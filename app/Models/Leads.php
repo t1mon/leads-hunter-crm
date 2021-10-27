@@ -60,8 +60,9 @@ class Leads extends Model
         $lead = ($entries == 1 || $entries == 2) ? new self : self::where('project_id', $params['project_id'])->where('phone', $params['phone'])->where('entries', '>', 1)->first();
         $lead->fill($params);
         $lead->entries = $entries;
+        $lead->status = ($entries == 1) ? self::LEAD_NEW : self::LEAD_EXISTS;
         $lead->save();
-        event(new LeadCreated(new \App\Http\Resources\Leads($lead)));
+        event(new LeadCreated($lead));
         return $lead;
     }
 }

@@ -30,8 +30,8 @@ class LeadCreated
      *
      * @return array|\Illuminate\Broadcasting\Channel
      */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
+//    public function broadcastOn()
+//    {
+//        return new PrivateChannel('channel-name');
+//    }
 }
