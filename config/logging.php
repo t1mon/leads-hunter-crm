@@ -33,6 +33,7 @@ return [
     */
 
     'channels' => [
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
@@ -74,6 +75,13 @@ return [
 
         'errorlog' => [
             'driver' => 'errorlog',
+            'level' => 'debug',
+        ],
+
+        //Лог для лидов через api
+        'leads' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/leads.log'),
             'level' => 'debug',
         ],
     ],
