@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\Leads\LeadCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -60,7 +61,7 @@ class Leads extends Model
         $lead->fill($params);
         $lead->entries = $entries;
         $lead->save();
-
+        event(new LeadCreated(new \App\Http\Resources\Leads($lead)));
         return $lead;
     }
 }
