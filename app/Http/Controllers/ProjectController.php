@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Notification;
 use App\Models\Project;
+use App\Models\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -111,7 +112,33 @@ class ProjectController extends Controller
         $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
 
         return view('project.journal', compact('project', 'leads'));
-    }
+    } //journal
+
+    public function notification(Request $request, Project $project)
+    {
+        if (Gate::denies('view', $project)) {
+            return redirect()->route('project.index');
+        }
+
+        //TODO: Валидация запроса даты
+        //TODO: Загрузка уведомлений из базы и сортировка их по запросу
+
+        //Получение списка email-адресов
+        $emails = Email::where('project_id', $project->id)->get();
+
+        //Получение списка уведомлений
+        $notifications =  Notification::where('project_id', $project->id)->get();
+        
+        return view('project.notification', compact('emails', 'notifications', 'project'));
+    }   //notification
+
+    public function notification_toggle(Project $project) //Включить/выключить уведомления в проекте
+    {
+        $project->notifications_enabled = !$project->notifications_enabled;
+        $project->save();
+
+        return redirect()->route('project.notification', ['project' => $project]);
+    } //notification_toggle
 
     public function hosts(Request $request, Project $project){
         if (Gate::denies('view', $project)) {
@@ -121,7 +148,7 @@ class ProjectController extends Controller
         $hosts = $project->hosts;
 
         return view('project.hosts', compact('hosts', 'project'));
-    }
+    } //hosts
 
     /**
      * Show the form for editing the specified resource.
@@ -132,7 +159,7 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         //
-    }
+    } //edit
 
     /**
      * Update the specified resource in storage.
@@ -144,7 +171,7 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         //
-    }
+    } //update
 
     /**
      * Remove the specified resource from storage.
@@ -157,5 +184,5 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('project.index')->withSuccess('Проект удален');
-    }
+    } //destroy
 }

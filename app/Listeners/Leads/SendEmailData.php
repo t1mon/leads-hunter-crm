@@ -30,6 +30,16 @@ class SendEmailData
     public function handle(LeadCreated $event)
     {
         Log::channel('leads')->info(json_encode($event));
+        if($event->lead->project->notifications_enabled){
+            $emails = $event->lead->project->emails;
+            foreach($emails as $email){
+                Log::channel('leads')->info('Отправлено уведомление по ' . $email->email);
+            }
+        }
+        else
+        Log::channel('leads')->info('У проекта ' . $event->lead->project->name . ' отключены уведомления.');
+
+
 //        try {
 //            Mail::to('gorin163@gmail.com')->send(new SendLeadData($event->lead));
 //            Log::channel('leads')->info(json_encode($event));

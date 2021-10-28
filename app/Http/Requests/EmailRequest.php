@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 
-class HostRequest extends FormRequest
+class EmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +25,15 @@ class HostRequest extends FormRequest
     public function rules()
     {
         return [
-            'host' => 'required|regex:~^([a-z]+?://)?(www\.)?[\w-]{2,}\.[\w]{2,}$~i',
+            'email' => 'required|email',
         ];
     }
 
     public function messages()
     {
         return [
-            'host.regex' => 'url должен иметь вид https://example.ru',
+            'email.required' => 'Поле email обзяательно для заполнения',
+            'email.email' => 'Email должен иметь вид example@example.com',
         ];
     }
 }

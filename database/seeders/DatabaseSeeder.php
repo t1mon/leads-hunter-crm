@@ -8,6 +8,7 @@ use App\Models\Token;
 use App\Models\User;
 use App\Models\Project;
 use App\Models\Host;
+use App\Models\Email;
 use App\Models\Leads;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -99,6 +100,28 @@ class DatabaseSeeder extends Seeder
                 'status' => 'pending',
                 'name' => 'Евгений',
                 'host' => $host_3->host,
+            ]
+        );
+
+        // Emails
+        Email::create(
+            [
+                'email' => 'dummymail@example.ru',
+                'project_id' => $project->id,
+            ]
+        );
+
+        Email::create(
+            [
+                'email' => 'example@mail.ru',
+                'project_id' => $project->id,
+            ]
+        );
+
+        Email::create(
+            [
+                'email' => 'emptybox@box.com',
+                'project_id' => $project->id,
             ]
         );
 

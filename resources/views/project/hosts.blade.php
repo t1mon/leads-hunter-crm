@@ -34,7 +34,7 @@
                         <td class="text-nowrap">
                             {!! Form::model($host, ['method' => 'DELETE', 'route' => ['host.destroy', [$project,$host]]]) !!}
                             {!! Form::button('<i class="fa fa-trash" aria-hidden="true"></i>', ['class' => 'btn btn-danger btn-sm', 'name' => 'submit', 'type' => 'submit']) !!}
-                        {!! Form::close() !!}
+                            {!! Form::close() !!}
                         </td>
                     </tr>
                 @endforeach

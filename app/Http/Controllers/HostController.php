@@ -12,12 +12,6 @@ use Illuminate\Support\Str;
 
 class HostController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(HostRequest $request)
     {
         if(filter_var($request->host, FILTER_VALIDATE_URL)){
@@ -42,13 +36,6 @@ class HostController extends Controller
         return redirect()->route('project.hosts', ['project' => $request->project_id])->withSuccess(trans('projects.hosts.create-success'));
     } //store
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Host  $host
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Project $project, Host $host)
     {
         $host->delete();

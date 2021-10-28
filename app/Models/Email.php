@@ -6,18 +6,15 @@ use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Host extends Model
+class Email extends Model
 {
     use HasFactory;
 
-    const HOST_NOT_FOUND = 'host_not_found';
-
     //Свойства
-    protected $fillable = ['host', 'project_id'];
-
+    protected $fillable = ['email', 'project_id'];
 
     //Методы
-    public function project() //Возвращает проект, к которому относится хост
+    public function project() //Возвращает проект, к которому относится адрес почты
     {
         return $this->belongsTo(Project::class);
     }

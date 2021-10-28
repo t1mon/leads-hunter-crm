@@ -29,15 +29,9 @@ class Project extends Model
         return $this->hasMany(Host::class);
     }
 
-    public function hasInHosts(string $host): bool
+    public function emails()
     {
-
-        $hosts = $this->hosts;
-        foreach($hosts as $item){
-            if(strcasecmp($item->host, $host) == 0)
-                return true;
-        }
-        return false;
+        return $this->hasMany(Email::class);
     }
 
     public function leads()

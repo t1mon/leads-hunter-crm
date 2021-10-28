@@ -33,6 +33,30 @@ return [
             'utm_term' => '[utm_term]'
         ]
     ],
+    'notifications' => [
+        //Меню редактирования адресов
+        'notifications_enabled' => 'Уведомления включены',
+        'notifications_disabled' => 'Уведомления отключены',
+        'email_collapse' => 'Адреса e-mail',
+        'telegram_collapse' => 'Адреса Telegram',
+        
+        //Таблица email-адресов
+        'emails_header' => 'СПИСОК АДРЕСОВ EMAIL',
+        'emails_form_placeholder' => 'Введите e-mail',
+        'emails_button_add' => 'Добавить',
+        'emails_email' => 'Адрес',
+        'emails_action' => 'Действие',
+        'emails_none' => 'В данный момент в базе нет адресов',
+
+        //Заголовки таблицы
+        'date' => 'Дата',
+        'email_notification' => 'E-mail',
+        'telegram_notification' => 'Telegram',
+
+        //Прочее
+        'none_available' => 'В данный момент уведомления отсутствуют',
+    ],
+
     'hosts' => [
         'host' => 'Хост',
         'action' => 'Действие',

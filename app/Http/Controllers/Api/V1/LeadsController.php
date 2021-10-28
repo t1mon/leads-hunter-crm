@@ -26,9 +26,7 @@ class LeadsController extends Controller
         $request->merge(['host' =>  Str::lower($request->host)]);
 
         //Проверка хоста у лида
-        $project = Project::findOrFail($request->project_id);
-
-        if ($project->hasInHosts($request->host)) {
+        if(Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
             return new LeadsResource(
                 Leads::addToDB($request->all())
             );
