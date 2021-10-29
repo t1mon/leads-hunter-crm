@@ -29,22 +29,19 @@ class SendEmailData
      */
     public function handle(LeadCreated $event)
     {
+        //Рассылка по e-mail
         Log::channel('leads')->info(json_encode($event));
-        if($event->lead->project->notifications_enabled){
+        if($event->lead->project->settings['email']['enabled']){
             $emails = $event->lead->project->emails;
             foreach($emails as $email){
-                Log::channel('leads')->info('Отправлено уведомление по ' . $email->email);
+                try {
+                    Log::channel('leads')->info($email->email);
+                    Mail::to($email->email)->send(new SendLeadData($event->lead));
+                    //Log::channel('leads')->info(json_encode($event));
+                } catch (\Exception $exception) {
+                    Log::error($exception->getMessage());
+                }
             }
-        }
-        else
-        Log::channel('leads')->info('У проекта ' . $event->lead->project->name . ' отключены уведомления.');
-
-
-//        try {
-//            Mail::to('gorin163@gmail.com')->send(new SendLeadData($event->lead));
-//            Log::channel('leads')->info(json_encode($event));
-//        } catch (\Exception $exception) {
-//            Log::error($exception->getMessage());
-//        }
+        }        
     }
 }

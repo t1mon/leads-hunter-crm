@@ -19,7 +19,8 @@ return [
         'patronymic' => 'Отчество',
         'phone' => 'Телефон',
         'entries' => 'Кол-во вхождений',
-        'email' => 'Email',
+        'email' => 'E-mail',
+        'city' => 'Город',
         'cost' => 'Сумма сделки',
         'host' => 'Посадочная',
         'source' => 'Источник',
@@ -40,6 +41,8 @@ return [
         
         //Таблица настроек рассылки по email
         'emails_toggle' => 'Включить рассылку',
+        'emails_settings' => 'Настройки',
+        'emails_fields' => 'Дополнительные поля в рассылке',
         'emails_save' => 'Сохранить',
         'emails_form_placeholder' => 'Введите e-mail',
         'emails_button_add' => 'Добавить',

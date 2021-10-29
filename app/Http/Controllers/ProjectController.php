@@ -127,8 +127,6 @@ class ProjectController extends Controller
         $emails = Email::where('project_id', $project->id)->get();
 
         //Получение списка уведомлений
-        return $project->settings;
-
         $notifications =  Notification::where('project_id', $project->id)->get();
         return view('project.notification', compact('emails', 'notifications', 'project'));
     }   //notification
@@ -163,7 +161,16 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        //Обновление настроек
+        $new_settings = $request->all()['settings'];
+        $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
+        if(!array_key_exists('fields', $new_settings['email']))
+            $new_settings['email']['fields'] = [];
+
+        $project->settings = $new_settings;
+        
+        $project->save();
+        return redirect()->route('project.notification', $project)->withSuccess('Настройки проекта обновлены'); 
     } //update
 
     /**

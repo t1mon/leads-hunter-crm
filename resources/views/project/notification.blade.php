@@ -49,20 +49,18 @@
         <!--Форма настроек e-mail-->
         <div>
             <div>
-                <h1>Настройки</h1>
+                <h1>@lang('projects.notifications.emails_settings')</h1>
                 {!! Form::model($project, ['method' => 'PUT', 'route' => ['project.update', [$project]] ]) !!}
                     <p>
-                        {!! Form::checkbox('settings[\'email\'][\'enabled\']', 'true', $project->settings['email']['enabled'] ? true : false) !!}
-                        Включить рассылку
+                        {!! Form::hidden('settings[email][enabled]', 0) !!}
+                        {!! Form::checkbox('settings[email][enabled]', 1, $project->settings['email']['enabled'] ? true : false) !!}
+                        @lang('projects.notifications.emails_toggle')
                     </p>
-                    <h2>Поля для отправки</h2>
+                    <h2>@lang('projects.notifications.emails_fields')</h2>
                     <ul>
-                        <li>{!! Form::checkbox('settings[\'email\'][\'fields\'][]', 'name', in_array('name', $project->settings['email']['fields']) ? true : false) !!} Имя</li>
-                        <li>{!! Form::checkbox('settings[\'email\'][\'fields\'][]', 'phone', in_array('phone', $project->settings['email']['fields']) ? true : false) !!} Телефон</li>
-                        <li>{!! Form::checkbox('settings[\'email\'][\'fields\'][]', 'email', in_array('email', $project->settings['email']['fields']) ? true : false) !!} E-mail</li>
-                        <li>{!! Form::checkbox('settings[\'email\'][\'fields\'][]', 'city', in_array('city', $project->settings['email']['fields']) ? true : false) !!} Город</li>
-                        <li>{!! Form::checkbox('settings[\'email\'][\'fields\'][]', 'host', in_array('host', $project->settings['email']['fields']) ? true : false) !!} Хост</li>
-                        <li>{!! Form::checkbox('settings[\'email\'][\'fields\'][]', 'utm', in_array('utm', $project->settings['email']['fields']) ? true : false) !!} Посадочная</li>
+                        <li>{!! Form::checkbox('settings[email][fields][]', 'email', in_array('email', $project->settings['email']['fields']) ? true : false) !!} @lang('projects.journal.email')</li>
+                        <li>{!! Form::checkbox('settings[email][fields][]', 'city', in_array('city', $project->settings['email']['fields']) ? true : false) !!} @lang('projects.journal.city')</li>
+                        <li>{!! Form::checkbox('settings[email][fields][]', 'host', in_array('host', $project->settings['email']['fields']) ? true : false) !!} @lang('projects.journal.host')</li>
                     </ul>
                     {!! Form::button(trans('projects.notifications.emails_save'), ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
                 {!! Form::close()!!}
