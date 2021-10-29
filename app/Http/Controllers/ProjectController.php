@@ -127,18 +127,11 @@ class ProjectController extends Controller
         $emails = Email::where('project_id', $project->id)->get();
 
         //Получение списка уведомлений
+        return $project->settings;
+
         $notifications =  Notification::where('project_id', $project->id)->get();
-        
         return view('project.notification', compact('emails', 'notifications', 'project'));
     }   //notification
-
-    public function notification_toggle(Project $project) //Включить/выключить уведомления в проекте
-    {
-        $project->notifications_enabled = !$project->notifications_enabled;
-        $project->save();
-
-        return redirect()->route('project.notification', ['project' => $project]);
-    } //notification_toggle
 
     public function hosts(Request $request, Project $project){
         if (Gate::denies('view', $project)) {

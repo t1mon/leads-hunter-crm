@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNotificationsEnabledColumnToProjects extends Migration
+class AddSettingsColumnToProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddNotificationsEnabledColumnToProjects extends Migration
     public function up()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->boolean('notifications_enabled')->after('name')->default(true);
+            $table->json('settings')->after('name');
         });
     }
 
@@ -26,7 +26,7 @@ class AddNotificationsEnabledColumnToProjects extends Migration
     public function down()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->dropColumn('notifications_enabled');
+            $table->dropColumn('settings');
         });
     }
 }

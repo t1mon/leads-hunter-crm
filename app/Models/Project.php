@@ -16,8 +16,23 @@ class Project extends Model
         'name',
         'host',
         'user_id',
+        'settings',
         'api_token'
     ];
+
+    //Настройки по умолчанию
+    protected $attributes = [
+        'settings' =>
+        '{
+            "email":
+            {
+                "enabled": true,
+                "fields": ["name", "phone"]
+            }
+        }',
+    ];
+
+    protected $casts = ['settings' => 'array'];
 
     public function isOwner(): bool
     {

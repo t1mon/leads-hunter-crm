@@ -16,7 +16,7 @@ class CreateHostsTable extends Migration
         Schema::create('hosts', function (Blueprint $table) {
             $table->id();
             $table->string('host');
-            $table->unsignedBigInteger('project_id')->references('id')->on('projects');
+            $table->unsignedBigInteger('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }

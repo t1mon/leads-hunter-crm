@@ -44,27 +44,40 @@ class DatabaseSeeder extends Seeder
             ['user_id' => $user->id],
             [
                 'name' => 'Test Project',
+                'settings' => '{"email":{"enabled": true,"fields": ["name", "phone"]}}',
             ]
         );
 
         //Hosts
-        $host_1 = Host::create(
+        $host_1 = Host::firstOrCreate(
             [
                 'project_id' => $project->id,
                 'host' => 'https://host-1.com'
-            ]);
+            ],
+            [
+                'host' => 'https://host-1.com'
+            ]
+        );
 
-        $host_2 = Host::create(
+        $host_2 = Host::firstOrCreate(
             [
                 'project_id' => $project->id,
                 'host' => 'https://host-2.com'
-            ]);
+            ],
+            [
+                'host' => 'https://host-2.com'
+            ]
+        );
 
-        $host_3 = Host::create(
+        $host_3 = Host::firstOrCreate(
             [
                 'project_id' => $project->id,
                 'host' => 'https://host-3.com'
-            ]);
+            ],
+            [
+                'host' => 'https://host-3.com'
+            ]
+        );
 
         //Leads
         Leads::firstOrCreate(
@@ -104,24 +117,33 @@ class DatabaseSeeder extends Seeder
         );
 
         // Emails
-        Email::create(
+        Email::firstOrCreate(
             [
                 'email' => 'dummymail@example.ru',
                 'project_id' => $project->id,
+            ],
+            [
+                'email' => 'dummymail@example.ru',
             ]
         );
 
-        Email::create(
+        Email::firstOrCreate(
             [
                 'email' => 'example@mail.ru',
                 'project_id' => $project->id,
+            ],
+            [
+                'email' => 'example@mail.ru',
             ]
         );
 
-        Email::create(
+        Email::firstOrCreate(
             [
                 'email' => 'emptybox@box.com',
                 'project_id' => $project->id,
+            ],
+            [
+                'email' => 'emptybox@box.com',
             ]
         );
 

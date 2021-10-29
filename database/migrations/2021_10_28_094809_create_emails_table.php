@@ -16,7 +16,7 @@ class CreateEmailsTable extends Migration
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->string('email');
-            $table->unsignedBigInteger('project_id')->references('id')->on('projects');
+            $table->unsignedBigInteger('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }

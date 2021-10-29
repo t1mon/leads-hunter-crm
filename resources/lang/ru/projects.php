@@ -34,14 +34,13 @@ return [
         ]
     ],
     'notifications' => [
-        //Меню редактирования адресов
-        'notifications_enabled' => 'Уведомления включены',
-        'notifications_disabled' => 'Уведомления отключены',
-        'email_collapse' => 'Адреса e-mail',
-        'telegram_collapse' => 'Адреса Telegram',
+        //Меню вкладок
+        'tab_forward_log' => 'Журнал рассылок',
+        'tab_email_settings' => 'Настройки e-mail',
         
-        //Таблица email-адресов
-        'emails_header' => 'СПИСОК АДРЕСОВ EMAIL',
+        //Таблица настроек рассылки по email
+        'emails_toggle' => 'Включить рассылку',
+        'emails_save' => 'Сохранить',
         'emails_form_placeholder' => 'Введите e-mail',
         'emails_button_add' => 'Добавить',
         'emails_email' => 'Адрес',
@@ -71,7 +70,7 @@ return [
     'sidebar' => [
         'journal' => 'Журнал',
         'hosts' => 'Управление хостами',
-        'notification' => 'Уведомления',
+        'forwarding' => 'Рассылки',
         'integrations' => 'Интеграция'
     ],
     'count' => ':count проект|:count проекта|:count проектов',

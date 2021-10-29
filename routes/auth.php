@@ -31,13 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{project}/journal', [ProjectController::class, 'journal'])->name('project.journal');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');
-        Route::post('{project}/notification/toggle', [ProjectController::class, 'notification_toggle'])->name('project.notification-toggle');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
     });
 
     Route::get('/', 'ProjectController@index')->name('home');
-    Route::resource('project', 'ProjectController')->only(['index','create','store','destroy']);
+    Route::resource('project', 'ProjectController')->only(['index','create','store', 'update', 'destroy']);
 
     //Хосты
     Route::resource('project/{project}/host', 'HostController')->only(['store', 'destroy']);
