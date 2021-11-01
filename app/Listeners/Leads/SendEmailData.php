@@ -34,8 +34,8 @@ class SendEmailData
             $emails = $event->lead->project->emails;
             foreach($emails as $email){
                 try {
-                    Log::channel('leads')->info($email->email);
                     Mail::to($email->email)->queue(new SendLeadData($event->lead));
+                    Log::channel('leads')->info($email->email);
                 } catch (\Exception $exception) {
                     Log::channel('leads')->error($exception->getMessage());
                 }
