@@ -1,8 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\NewsletterSubscriptionController;
+use App\Http\Controllers\Project\EmailController;
+use App\Http\Controllers\Project\HostController;
+use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Project\ProjectTokenController;
-use App\Http\Controllers\HostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPasswordController;
+use App\Http\Controllers\UserTokenController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,32 +22,29 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('settings')->group(function () {
-        Route::get('account', 'UserController@edit')->name('users.edit');
-        Route::match(['put', 'patch'], 'account', 'UserController@update')->name('users.update');
+        Route::get('account', [ UserController::class,'edit' ])->name('users.edit');
+        Route::match(['put', 'patch'], 'account', [ UserController::class,'update' ])->name('users.update');
 
-        Route::get('password', 'UserPasswordController@edit')->name('users.password');
-        Route::match(['put', 'patch'], 'password', 'UserPasswordController@update')->name('users.password.update');
+        Route::get('password', [ UserPasswordController::class,'edit' ])->name('users.password');
+        Route::match(['put', 'patch'], 'password', [ UserPasswordController::class,'update' ])->name('users.password.update');
 
-        Route::get('token', 'UserTokenController@edit')->name('users.token');
-        Route::match(['put', 'patch'], 'token', 'UserTokenController@update')->name('users.token.update');
+        Route::get('token', [ UserTokenController::class,'edit' ])->name('users.token');
+        Route::match(['put', 'patch'], 'token', [ UserTokenController::class,'update' ])->name('users.token.update');
     });
 
+
+    Route::get('/', [ ProjectController::class, 'index' ])->name('home');
+    Route::resource('project', ProjectController::class)->only(['index','create', 'store', 'update', 'destroy']);
     Route::prefix('project')->group(function () {
         Route::get('{project}/journal', [ProjectController::class, 'journal'])->name('project.journal');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
+        Route::resource('{project}/host', HostController::class)->only(['store', 'destroy']);
+        Route::resource('project/{project}/email', EmailController::class)->only(['store', 'destroy']);
     });
 
-    Route::get('/', 'ProjectController@index')->name('home');
-    Route::resource('project', 'ProjectController')->only(['index','create','store', 'update', 'destroy']);
 
-    //Хосты
-    Route::resource('project/{project}/host', 'HostController')->only(['store', 'destroy']);
-    
-    //Email
-    Route::resource('project/{project}/email', 'EmailController')->only(['store', 'destroy']);
-
-    Route::resource('newsletter-subscriptions', 'NewsletterSubscriptionController')->only('store');
+    Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
 });

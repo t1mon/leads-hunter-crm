@@ -66,7 +66,7 @@
                 {!! Form::close()!!}
             </div>
         </div>
-        
+
         <!--Форма добавления новых e-mail-->
         <div>
             {!! Form::open(['route' => ['email.store', $project], 'class' => 'd-flex']) !!}
@@ -77,7 +77,7 @@
             <div class="form-group col-md-12">
                 {!! Form::button(trans('projects.notifications.emails_button_add'), ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
             </div>
-    
+
             {!! Form::close() !!}
         </div>
 
@@ -112,7 +112,7 @@
         </div>
     </div>
 
-    
+
 </div>
 
 @endsection

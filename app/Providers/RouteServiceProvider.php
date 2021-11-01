@@ -61,7 +61,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(): void
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
+             //->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
     }
 
@@ -100,7 +100,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapAuthRoutes(): void
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
+             //->namespace($this->namespace)
              ->group(base_path('routes/auth.php'));
     }
 

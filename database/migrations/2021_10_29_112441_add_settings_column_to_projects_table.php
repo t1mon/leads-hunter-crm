@@ -16,6 +16,15 @@ class AddSettingsColumnToProjectsTable extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->json('settings')->after('name');
         });
+
+        DB::table('projects')->update([
+            'settings' => [
+                'email' => [
+                    'fields' => [],
+                    'enabled' => false
+                ]
+            ],
+        ]);
     }
 
     /**

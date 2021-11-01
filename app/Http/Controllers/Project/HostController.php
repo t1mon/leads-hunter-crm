@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Project;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\HostRequest;
 use App\Models\Host;
 use App\Models\Project;

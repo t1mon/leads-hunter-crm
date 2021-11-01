@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Project;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Notification;
 use App\Models\Project;
@@ -168,9 +169,9 @@ class ProjectController extends Controller
             $new_settings['email']['fields'] = [];
 
         $project->settings = $new_settings;
-        
+
         $project->save();
-        return redirect()->route('project.notification', $project)->withSuccess('Настройки проекта обновлены'); 
+        return redirect()->route('project.notification', $project)->withSuccess('Настройки проекта обновлены');
     } //update
 
     /**
