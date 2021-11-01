@@ -30,18 +30,16 @@ class SendEmailData
     public function handle(LeadCreated $event)
     {
         //Рассылка по e-mail
-        Log::channel('leads')->info(json_encode($event));
         if($event->lead->project->settings['email']['enabled']){
             $emails = $event->lead->project->emails;
             foreach($emails as $email){
                 try {
                     Log::channel('leads')->info($email->email);
-                    Mail::to($email->email)->send(new SendLeadData($event->lead));
-                    //Log::channel('leads')->info(json_encode($event));
+                    Mail::to($email->email)->queue(new SendLeadData($event->lead));
                 } catch (\Exception $exception) {
-                    Log::error($exception->getMessage());
+                    Log::channel('leads')->error($exception->getMessage());
                 }
             }
-        }        
+        }
     }
 }
