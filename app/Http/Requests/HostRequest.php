@@ -25,7 +25,7 @@ class HostRequest extends FormRequest
     public function rules()
     {
         return [
-            'host' => 'required|regex:~^([a-z]+?://)?(www\.)?[\w-]{2,}\.[\w]{2,}$~i',
+            'host' => ['required', 'regex:~^((http|https)+?://)?(www\.)?[\w\-\.]{2,}\.[\w]{2,}$~i']
         ];
     }
 
