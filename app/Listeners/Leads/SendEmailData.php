@@ -8,8 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailData
-    //implements ShouldQueue
+class SendEmailData implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -34,8 +33,9 @@ class SendEmailData
             $emails = $event->lead->project->emails;
             foreach($emails as $email){
                 try {
-                    Mail::to($email->email)->queue(new SendLeadData($event->lead));
-                    Log::channel('leads')->info($email->email);
+                    Mail::to($email->email)->send(new SendLeadData($event->lead));
+                    Log::channel('leads')->info(json_encode($event->lead)." --> ".$email->email);
+                    Log::channel('leads')->info("Lead id:".$event->lead->id." sent to ".$email->email);
                 } catch (\Exception $exception) {
                     Log::channel('leads')->error($exception->getMessage());
                 }

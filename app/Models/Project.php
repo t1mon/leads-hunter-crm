@@ -27,7 +27,7 @@ class Project extends Model
             "email":
             {
                 "enabled": true,
-                "fields": ["name", "phone"]
+                "fields": []
             }
         }',
     ];
