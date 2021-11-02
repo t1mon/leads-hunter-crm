@@ -4,6 +4,7 @@ use App\Http\Controllers\NewsletterSubscriptionController;
 use App\Http\Controllers\Project\EmailController;
 use App\Http\Controllers\Project\HostController;
 use App\Http\Controllers\Project\ProjectController;
+use App\Http\Controllers\Project\UserPermissionsController;
 use App\Http\Controllers\Project\ProjectTokenController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPasswordController;
@@ -38,10 +39,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('project')->group(function () {
         Route::get('{project}/journal', [ProjectController::class, 'journal'])->name('project.journal');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
+        Route::get('{project}/users', [UserPermissionsController::class, 'list'])->name('project.users');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
         Route::resource('{project}/host', HostController::class)->only(['store', 'destroy']);
+        Route::resource('{project}/user', UserPermissionsController::class)->only(['store', 'update', 'destroy']);
         Route::resource('project/{project}/email', EmailController::class)->only(['store', 'destroy']);
     });
 

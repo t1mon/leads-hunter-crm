@@ -74,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->whereHas('roles', function ($query) {
             $query->where('roles.name', Role::ROLE_ADMIN)
-                  ->orWhere('roles.name', Role::ROLE_EDITOR);
+                  ->orWhere('roles.name', Role::ROLE_WATCHER);
         });
     }
 
@@ -83,7 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canBeAuthor(): bool
     {
-        return $this->isAdmin() || $this->isEditor();
+        return $this->isAdmin() || $this->isWatcher();
     }
 
     /**
@@ -105,9 +105,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if the user has role editor
      */
-    public function isEditor(): bool
+    public function isWatcher(): bool
     {
-        return $this->hasRole(Role::ROLE_EDITOR);
+        return $this->hasRole(Role::ROLE_WATCHER);
     }
 
     /**
@@ -148,5 +148,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class, 'user_id');
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(UserPermissions::class);
     }
 }

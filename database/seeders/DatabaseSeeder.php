@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Project;
 use App\Models\Host;
 use App\Models\Email;
+use App\Models\Project\UserPermissions;
 use App\Models\Leads;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -21,8 +22,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Roles
-        Role::firstOrCreate(['name' => Role::ROLE_EDITOR]);
-        $role_admin = Role::firstOrCreate(['name' => Role::ROLE_ADMIN]);
+        Role::firstOrCreate(['id' => Role::ROLE_WATCHER_ID], ['name' => Role::ROLE_WATCHER]);
+        $role_admin = Role::firstOrCreate(['id' => Role::ROLE_ADMIN_ID], ['name' => Role::ROLE_ADMIN]);
 
         // MediaLibrary
         MediaLibrary::firstOrCreate([]);
@@ -144,6 +145,22 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'email' => 'emptybox@box.com',
+            ]
+        );
+
+        //User Permissions
+        UserPermissions::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'project_id' => $project->id
+            ],
+            [
+                'role_id' => $role_admin->id,
+                'manage_users' => false,
+                'manage_settings' => false,
+                'manage_payments' => false,
+                'view_journal' => true,
+                'view_fields' => ['email', 'city', 'host'],
             ]
         );
 
