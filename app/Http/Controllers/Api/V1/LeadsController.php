@@ -19,11 +19,15 @@ class LeadsController extends Controller
     {
         if(filter_var($request->host, FILTER_VALIDATE_URL)){
             $host = parse_url($request->host);
-            $request->merge([
-                'host' => $host['host'],
-            ]);
+            $request->merge(['host' => $host['host']]);
         }
         $request->merge(['host' =>  Str::lower($request->host)]);
+        $phone = $request->phone;
+
+        if ($phone[0] == 8) {
+            $phone = preg_replace('/^./','7', $phone);;
+            $request->merge(['phone' => $phone]);
+        }
 
         //Проверка хоста у лида
         if(Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
