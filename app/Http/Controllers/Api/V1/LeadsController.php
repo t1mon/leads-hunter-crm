@@ -25,7 +25,7 @@ class LeadsController extends Controller
         $phone = $request->phone;
 
         if ($phone[0] == 8) {
-            $phone = preg_replace('/^./','7', $phone);;
+            $phone = preg_replace('/^./','7', $phone);
             $request->merge(['phone' => $phone]);
         }
 

@@ -18,6 +18,26 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Artisan::command('leads:first_simbol', function(){
+    $start = now();
+    $this->comment('Processing');
+
+    $leads = \App\Models\Leads::all();
+
+    $leads->each(function ($lead) {
+        $_phone =$lead->phone.'';
+        if ($_phone[0] == 8){
+            $_phone[0] =  preg_replace('/^./','7', $_phone);
+            $lead->update(['phone' => $_phone]);
+            $this->comment("id #{$lead->id} замена первого символа на (цыфру 7) {$_phone}" );
+        }
+
+    });
+
+    $time = $start->diffInMilliseconds(now());
+    $this->comment("Processed in $time milliseconds");
+});
+
 Artisan::command('leads:duble_phone_entries', function(){
     $start = now();
     $this->comment('Processing');
