@@ -30,15 +30,19 @@ class SendEmailData implements ShouldQueue
     {
         //Рассылка по e-mail
         if($event->lead->project->settings['email']['enabled']){
-            $emails = $event->lead->project->emails;
-            foreach($emails as $email){
-                try {
-                    Mail::to($email->email)->send(new SendLeadData($event->lead));
-                    Log::channel('leads')->info(json_encode($event->lead)." --> ".$email->email);
-                    Log::channel('leads')->info("Lead id:".$event->lead->id." sent to ".$email->email);
-                } catch (\Exception $exception) {
-                    Log::channel('leads')->error($exception->getMessage());
+            if ($event->lead->entries === 1) {
+                $emails = $event->lead->project->emails;
+                foreach ($emails as $email) {
+                    try {
+                        Mail::to($email->email)->send(new SendLeadData($event->lead));
+                        Log::channel('leads')->info(json_encode($event->lead) . " --> " . $email->email);
+                        Log::channel('leads')->info("Lead id:" . $event->lead->id . " sent to " . $email->email);
+                    } catch (\Exception $exception) {
+                        Log::channel('leads')->error($exception->getMessage());
+                    }
                 }
+            }else{
+                Log::channel('leads')->warning("Лид id:" . $event->lead->id . " не отправлен по Email ограничение числа вхождений лида entries > 1 ");
             }
         }
     }

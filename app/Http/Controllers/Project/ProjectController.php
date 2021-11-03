@@ -110,7 +110,7 @@ class ProjectController extends Controller
         }
 
 
-        $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
 
         return view('project.journal', compact('project', 'leads'));
     } //journal
