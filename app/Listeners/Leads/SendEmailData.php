@@ -5,10 +5,13 @@ namespace App\Listeners\Leads;
 use App\Events\Leads\LeadCreated;
 use App\Mail\Leads\SendLeadData;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailData implements ShouldQueue
+class SendEmailData
+    //implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -34,7 +37,8 @@ class SendEmailData implements ShouldQueue
                 $emails = $event->lead->project->emails;
                 foreach ($emails as $email) {
                     try {
-                        Mail::to($email->email)->send(new SendLeadData($event->lead));
+                        $message = (new SendLeadData($event->lead))->onQueue('emails');
+                        Mail::to($email->email)->queue($message);
                         Log::channel('leads')->info(json_encode($event->lead) . " --> " . $email->email);
                         Log::channel('leads')->info("Lead id:" . $event->lead->id . " sent to " . $email->email);
                     } catch (\Exception $exception) {
