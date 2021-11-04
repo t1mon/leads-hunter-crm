@@ -17,6 +17,10 @@ use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
+
+    public function test(){
+        return view('material-dashboard.layouts.app');
+    }
     /**
      * Display a listing of the resource.
      *
