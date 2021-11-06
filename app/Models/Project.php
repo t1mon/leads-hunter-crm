@@ -71,18 +71,4 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    public function isAdmin() //Проверяет, является ли текущий пользователь администратором проекта
-    {
-        $user = Project\UserPermissions::where(['project_id' => $this->id, 'user_id' => Auth::user()->id])->first();
-
-        //Проверка, добавлен ли пользователь в проект
-        if($user->exists()){
-            //Проверка, имеет ли пользователь роль админа
-            return
-                $user->role_id == Role::ROLE_ADMIN_ID ? true : false;
-        }
-        else
-            return false;
-    }
 }

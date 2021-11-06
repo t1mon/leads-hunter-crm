@@ -11,6 +11,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
+use App\Models\Project\UserPermissions;
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
@@ -79,36 +81,47 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Check if the user can be an author
+     * Проверяет, добавлен ли пользователь в проект
      */
-    public function canBeAuthor(): bool
+    public function isInProject(Project $project): bool
     {
-        return $this->isAdmin() || $this->isWatcher();
-    }
+        return $project->where(['project_id' => $project->id, 'user_id' => $this->id])->exists();
+    } //isInProject
 
     /**
-     * Check if the user has a role
+     * Проверяет, является ли пользователь администратором определённого проекта
      */
+    public function isAdmin(Project $project): bool
+    {
+        $permissions = $this->getPermissionsForProject($project);
+        if( is_null($permissions) )
+        return false;
+        else
+            return $permissions->role_id == Role::ROLE_ADMIN_ID;
+    } //isAdmin
+
     public function hasRole(string $role): bool
     {
         return $this->roles->where('name', $role)->isNotEmpty();
     }
 
-    /**
-     * Check if the user has role admin
-     */
-    public function isAdmin(): bool
+    public function isAdminOld(): bool //Старая версия метода, всё ещё используется для авторизации
     {
+        //TODO Переделать авторизацию, чтобы больше не держать этот метод
         return $this->hasRole(Role::ROLE_ADMIN);
     }
 
     /**
-     * Check if the user has role editor
+     * Проверяет, является ли пользователь наблюдателем определённого проекта
      */
     public function isWatcher(): bool
     {
-        return $this->hasRole(Role::ROLE_WATCHER);
-    }
+        $permissions = $this->getPermissionsForProject($project);
+        if( is_null($permissions) )
+        return false;
+        else
+            return $permissions->role_id == Role::ROLE_WATCHER_ID;
+    } //isWatcher
 
     /**
      * Return the user's posts
@@ -150,8 +163,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Project::class, 'user_id');
     }
 
-    public function permissions()
+    public function permissions() //Получить ВСЕ разрешения пользователя по ВСЕМ проектам
     {
         return $this->hasMany(UserPermissions::class);
-    }
+    } //permissions
+
+    public function getPermissionsForProject(Project $project) //Получить разрешения пользователя по конкретному проекту
+    {
+        return UserPermissions::where(['project_id' => $project->id, 'user_id' => $this->id])->first();
+    } //getPermissionsForProject
+
+    
 }

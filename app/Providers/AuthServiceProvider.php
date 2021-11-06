@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\Leads;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Project\UserPermissions;
 use App\Policies\LeadsPolicy;
 use App\Policies\ProjectPolicy;
+use App\Policies\UserPermissionsPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 
@@ -23,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\User' => 'App\Policies\UserPolicy',
         'App\Models\Media' => 'App\Policies\MediaPolicy',
         Project::class => ProjectPolicy::class,
+        UserPermissions::class => UserPermissionsPolicy::class,
     ];
 
     /**

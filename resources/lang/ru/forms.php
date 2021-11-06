@@ -3,12 +3,20 @@
 return [
 
   'actions' => [
-    'save' => 'Save',
-    'update' => 'Update',
-    'back' => 'Back',
-    'generate' => 'Generate',
-    'delete' => 'Delete',
+    'save' => 'Сохранить',
+    'update' => 'Обновить',
+    'back' => 'Назад',
+    'generate' => 'Сгенерировать',
+    'delete' => 'Удалить',
     'add' => 'Добавить',
+  ],
+
+  'projects' => [
+    'delete' => 'Вы уверены, что хотите удалить этот проект?'
+  ],
+
+  'user-permissions' => [
+    'delete' => 'Вы уверены, что хотите удалить пользователя из проекта?'
   ],
 
   'comments' => [

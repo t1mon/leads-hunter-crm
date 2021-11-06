@@ -3,10 +3,11 @@
 namespace App\Policies;
 
 use App\Models\Project;
+use App\Models\Project\UserPermissions;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ProjectPolicy
+class UserPermissionsPolicy
 {
     use HandlesAuthorization;
 
@@ -25,57 +26,58 @@ class ProjectPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project\UserPermissions  $UserPermissions
      * @return mixed
      */
-    public function view(User $user, Project $project)
+    public function view(User $user, UserPermissions $UserPermissions)
     {
-        return ( $project->isOwner() or ($user->isAdmin($project) or $user->isWatcher($project)) );
+        //
     }
 
     /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Project $project
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, Project $project)
     {
-        //
+        return $project->isOwner() or $user->isAdmin($project);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project $project
      * @return mixed
      */
     public function update(User $user, Project $project)
     {
-        //
+        return $project->isOwner() or $user->isAdmin($project);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project\UserPermissions  $tUserPermissions
      * @return mixed
      */
     public function delete(User $user, Project $project)
     {
-        //
+        return $project->isOwner() or $user->isAdmin($project);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project\UserPermissions  $UserPermissions
      * @return mixed
      */
-    public function restore(User $user, Project $project)
+    public function restore(User $user, UserPermissions $UserPermissions)
     {
         //
     }
@@ -84,10 +86,10 @@ class ProjectPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project\UserPermissions  $UserPermissions
      * @return mixed
      */
-    public function forceDelete(User $user, Project $project)
+    public function forceDelete(User $user, UserPermissions $UserPermissions)
     {
         //
     }
