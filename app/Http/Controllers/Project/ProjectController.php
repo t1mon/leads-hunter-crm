@@ -19,7 +19,7 @@ class ProjectController extends Controller
 {
 
     public function test(){
-        return view('material-dashboard.layouts.app');
+        return view('material-dashboard.test');
     }
     /**
      * Display a listing of the resource.
@@ -32,7 +32,7 @@ class ProjectController extends Controller
             'projects' => Project::where('user_id', Auth::guard()->id())
                                 ->with('leads', 'leadsToday')
                                 ->withCount('leads', 'leadsToday')
-                                ->paginate(50)
+                                ->get()
         ]);
     }
 

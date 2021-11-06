@@ -46,6 +46,7 @@
 	background: transparent;
 }
 /* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+//noinspection ALL
 .leaflet-safari .leaflet-tile {
 	image-rendering: -webkit-optimize-contrast;
 	}
@@ -224,6 +225,8 @@
 .leaflet-interactive {
 	cursor: pointer;
 	}
+
+//noinspection ALL
 .leaflet-grab {
 	cursor: -webkit-grab;
 	cursor:    -moz-grab;
@@ -237,6 +240,8 @@
 .leaflet-control {
 	cursor: auto;
 	}
+
+//noinspection ALL
 .leaflet-dragging .leaflet-grab,
 .leaflet-dragging .leaflet-grab .leaflet-interactive,
 .leaflet-dragging .leaflet-marker-draggable {
@@ -364,12 +369,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	border-radius: 5px;
 	}
 .leaflet-control-layers-toggle {
-	background-image: url(images/layers.png);
+    //background-image: url(images/layers.png);
 	width: 36px;
 	height: 36px;
 	}
 .leaflet-retina .leaflet-control-layers-toggle {
-	background-image: url(images/layers-2x.png);
+	//background-image: url(images/layers-2x.png);
 	background-size: 26px 26px;
 	}
 .leaflet-touch .leaflet-control-layers-toggle {
@@ -410,7 +415,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* Default icon URLs */
 .leaflet-default-icon-path {
-	background-image: url(images/marker-icon.png);
+	//background-image: url(images/marker-icon.png);
 	}
 
 

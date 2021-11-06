@@ -8,11 +8,10 @@ import 'bootstrap5'
 import Clipboard from 'clipboard'
 import jquery from 'jquery'
 import Echo from 'laravel-echo'
-import PopperJs from 'popper.js'
+import '@popperjs/core'
 import 'pusher-js'
 
 window.$ = window.jQuery = jquery
-window.PopperJs = PopperJs.default
 
 new Clipboard('[data-clipboard-target]')
 

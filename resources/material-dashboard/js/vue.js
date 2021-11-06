@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 Vue.config.productionTip = false
 
-window.Event = new Vue()
+window.VueEvent = new Vue()
 
 new Vue({
   el: '#app',
@@ -12,6 +12,8 @@ new Vue({
   },
 
   mounted () {
-
+    $('[data-confirm]').on('click', () => {
+      return confirm($(this).data('confirm'))
+    })
   }
 })

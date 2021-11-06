@@ -14,7 +14,8 @@ mix.js('resources/material-dashboard/js/app.js', 'public/js/material-dashboard-a
   .sass('resources/material-dashboard/sass/material-dashboard.scss', 'public/css/material-dashboard-app.css')
   .postCss('resources/material-dashboard/css/nucleo-icons.css', 'public/css')
   .postCss('resources/material-dashboard/css/nucleo-svg.css', 'public/css')
-  .js('resources/material-dashboard/js/material-dashboard.js', 'public/js')
+
+mix.copy('resources/material-dashboard/media/', 'public/media')
 
 mix.js('resources/js/app.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css')

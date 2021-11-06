@@ -31,25 +31,9 @@ if (document.getElementById('navbarBlur')) {
   navbarBlurOnScroll('navbarBlur');
 }
 
-// initialization of Tooltips
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
 
-// when input is focused add focused class for style
-function focused(el) {
-  if (el.parentElement.classList.contains('input-group')) {
-    el.parentElement.classList.add('focused');
-  }
-}
 
-// when input is focused remove focused class for style
-function defocused(el) {
-  if (el.parentElement.classList.contains('input-group')) {
-    el.parentElement.classList.remove('focused');
-  }
-}
+
 
 // helper for adding on all elements multiple attributes
 function setAttributes(el, options) {
@@ -58,14 +42,6 @@ function setAttributes(el, options) {
   })
 }
 
-// adding on inputs attributes for calling the focused and defocused functions
-if (document.querySelectorAll('.input-group').length != 0) {
-  var allInputs = document.querySelectorAll('input.form-control');
-  allInputs.forEach(el => setAttributes(el, {
-    "onfocus": "focused(this)",
-    "onfocusout": "defocused(this)"
-  }));
-}
 
 
 // Fixed Plugin
