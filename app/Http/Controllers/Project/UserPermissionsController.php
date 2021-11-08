@@ -59,14 +59,15 @@ class UserPermissionsController extends Controller
         //Проверка полномочий пользователя
         if(Gate::denies('create', [UserPermissions::class, $project]))
            return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+
+        //Проверка существования пользователя. Если пользователя нет в БД, вернуть ошибку
+        $user = User::where(['email' => $request->email])->first();
+        if( is_null($user) )
+            return redirect()->route('project.users', $project)->withErrors(trans('projects.users.create-error') . ': ' . trans('projects.users.error-doesnt-exist'));
         
-        //Проверка наличия записи в БД
-        //TODO Проверка существования пользователя
-        //Если пользователя не существует, надо предусмотреть механизм его создания и подтверждения (с отправкой e-mail)
-        //Данный метод является временным, т.к. надо ещё указать имя пользователя (здесь вместо него при отсутствии пользователя ставится e-mail)
-        $user = User::firstOrCreate(['email' => $request->email], ['name' => $request->email]);
-        if(UserPermissions::where(['project_id' => $project->id, 'user_id' => $user->id])->exists())
-            return redirect()->route('project.users', $project)->withError( trans('projects.users.create-error') . ': ' . trans('projects.error-exists') );
+        //Если пользователь уже назначен на проект, вернуть ошибку
+        if( UserPermissions::where(['user_id' => $user->id, 'project_id' => $project->id])->exists() )
+            return redirect()->route('project.users', $project)->withErrors( trans('projects.users.create-error') . ': ' . trans('projects.users.error-exists') );
         
         $request->merge(['user_id' => $user->id]);
 
