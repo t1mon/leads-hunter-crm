@@ -28,7 +28,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('project.index', [
+        return view('material-dashboard.project.index', [
             'projects' => Project::where('user_id', Auth::guard()->id())
                                 ->with('leads', 'leadsToday')
                                 ->withCount('leads', 'leadsToday')
@@ -93,10 +93,11 @@ class ProjectController extends Controller
         if (Gate::denies('view', $project)) {
             return redirect()->route('project.index');
         }
+        //dd($request->date_from);
 
         $this->validate($request, [
-            'date_from' => 'nullable|date_format:d-m-Y',
-            'date_to'   => 'nullable|date_format:d-m-Y',
+            'date_from' => 'nullable|date_format:Y-m-d',
+            'date_to'   => 'nullable|date_format:Y-m-d',
         ]);
 
         $leads = $project->leads();
@@ -116,7 +117,7 @@ class ProjectController extends Controller
 
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
 
-        return view('project.journal', compact('project', 'leads'));
+        return view('material-dashboard.project.journal', compact('project', 'leads'));
     } //journal
 
     public function notification(Request $request, Project $project)

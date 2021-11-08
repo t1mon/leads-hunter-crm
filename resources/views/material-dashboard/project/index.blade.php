@@ -1,7 +1,7 @@
 @extends('material-dashboard.layouts.app')
 
 @section('content')
-
+<div class="row">
     @if($projects->isNotEmpty())
 
         <div class="row mb-4 mb-md-0">
@@ -15,12 +15,11 @@
                 </a>
             </div>
         </div>
-        @include ('project/_list')
+        @include ('material-dashboard/project/_list')
 
     @else
         <a href="{{ route('project.create') }}" class="btn btn-primary btn-lg">Создай свой первый проект</a>
     @endif
-
-
+</div>
 @endsection
 

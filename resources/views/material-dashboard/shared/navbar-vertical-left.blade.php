@@ -50,19 +50,19 @@
                 </div>
             </li>
             <hr class="horizontal light mt-0">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('home') }}">
-                    <i class="material-icons-round opacity-10">dashboard</i>
-                    <span class="nav-link-text ms-2 ps-1">Панель управления</span>
-                </a>
-            </li>
-            @if(request()->route()->named('project.*') && !request()->route()->named('project.index'))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('home') }}">
+                        <i class="material-icons-round opacity-10">dashboard</i>
+                        <span class="nav-link-text ms-2 ps-1">Панель управления</span>
+                    </a>
+                </li>
+                @if(request()->route()->named('project.*') && !request()->route()->named('project.index'))
                     <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#dashboardsExamples" class="nav-link text-white active" aria-controls="dashboardsExamples" role="button" aria-expanded="false">
+                        <a data-bs-toggle="collapse" href="#dashboardsExamples" class="nav-link text-white active mb-2 collapsed" aria-controls="dashboardsExamples" role="button" aria-expanded="false">
                             <i class="material-icons-round opacity-10">dashboard</i>
                             <span class="nav-link-text ms-2 ps-1">Проекты</span>
                         </a>
-                        <div class="collapse  show " id="dashboardsExamples">
+                        <div class="collapse " id="dashboardsExamples">
                             <ul class="nav ">
                                 @foreach(auth()->user()->projects as $_project)
                                     <li class="nav-item {{ request()->route()->parameters()['project']['id'] === $_project->id ? 'active' : '' }}">
@@ -75,6 +75,9 @@
                             </ul>
                         </div>
                     </li>
+                @endif
+            <hr class="horizontal light mt-0">
+            @if(request()->route()->named('project.*') && !request()->route()->named('project.index'))
 
                 <li class="nav-item {{ request()->route()->named('project.journal') ? 'active' : '' }}">
                         <a class="nav-link {{ request()->route()->named('project.journal') ? 'active' : '' }}" href="{{ route('project.journal', request()->route()->parameters()['project']['id'] ) }}">
