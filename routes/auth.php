@@ -38,6 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('project', ProjectController::class)->only(['index','create', 'store', 'update', 'destroy']);
     Route::prefix('project')->group(function () {
         Route::get('{project}/journal', [ProjectController::class, 'journal'])->name('project.journal');
+        Route::get('{project}/settings_basic/{tab?}', [ProjectController::class, 'settings_basic'])->name('project.settings-basic');
+        Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/users', [UserPermissionsController::class, 'list'])->name('project.users');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');

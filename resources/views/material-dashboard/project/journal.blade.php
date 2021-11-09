@@ -63,8 +63,20 @@
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.client')</th>
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.phone')</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th>
+
+                        {{--Дополнительные колонки согласно настройкам пользователя--}}
+                        @php
+                            $permissions = Auth::user()->getPermissionsForProject($project);
+                        @endphp
+
+                        @foreach($permissions->view_fields as $field)
+                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                            @lang('projects.journal.' . $field)
+                        </th>
+                        @endforeach
+                        
+                        {{-- <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
+                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th> --}}
                     </tr>
                     </thead>
                     <tbody>
@@ -96,12 +108,20 @@
                               </span>
                                 </div>
                             </td>
-                            <td class="align-middle text-center">
+
+                            {{--Дополнительные ячейки согласно настройкам пользователя--}}
+                            @foreach($permissions->view_fields as $field)
+                                <th class="align-middle text-center">
+                                    <p class="text-sm font-weight-normal mb-0">{{ $lead->$field }}</p>
+                                </th>
+                            @endforeach
+
+                            {{-- <td class="align-middle text-center">
                                 <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
                             </td>
                             <td class="align-middle text-center">
                                 <p class="text-sm font-weight-normal mb-0">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</p>
-                            </td>
+                            </td> --}}
                         </tr>
                     @endforeach
                     </tbody>

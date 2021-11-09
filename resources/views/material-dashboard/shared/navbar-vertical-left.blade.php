@@ -64,7 +64,7 @@
                         </a>
                         <div class="collapse " id="dashboardsExamples">
                             <ul class="nav ">
-                                @foreach(auth()->user()->projects as $_project)
+                                @foreach(auth()->user()->getAllprojects() as $_project)
                                     <li class="nav-item {{ request()->route()->parameters()['project']['id'] === $_project->id ? 'active' : '' }}">
                                         <a class="nav-link text-white {{ request()->route()->parameters()['project']['id'] === $_project->id ? 'active' : '' }}" href="{{ route('project.journal', $_project) }}">
                                             <span class="sidenav-mini-icon"> {{ $_project->id }} </span>
@@ -85,28 +85,31 @@
                             <span class="nav-link-text ms-2 ps-1">ЕЖЛ</span>
                         </a>
                 </li>
-                <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link text-white " aria-controls="pagesExamples" role="button" aria-expanded="false">
-                            <i class="material-icons-round">settings</i>
-                            <span class="nav-link-text ms-2 ps-1">Настройки</span>
-                        </a>
-                        <div class="collapse " id="pagesExamples">
-                            <ul class="nav ">
-                                <li class="nav-item ">
-                                    <a class="nav-link text-white " href="../../pages/pages/sweet-alerts.html">
-                                        <span class="sidenav-normal  ms-2  ps-1"> Основное </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link text-white " href="../../pages/pages/notifications.html">
-                                        <span class="sidenav-normal  ms-2  ps-1"> Синхронизации </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                </li>
+                
+                @if($project->isOwner() or Auth::user()->isAdmin($project))
+                    <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link text-white " aria-controls="pagesExamples" role="button" aria-expanded="false">
+                                <i class="material-icons-round">settings</i>
+                                <span class="nav-link-text ms-2 ps-1">Настройки</span>
+                            </a>
+                            <div class="collapse " id="pagesExamples">
+                                <ul class="nav ">
+                                    <li class="nav-item ">
+                                        <a class="nav-link text-white " href={{route('project.settings-basic', $project)}}>
+                                            <span class="sidenav-normal  ms-2  ps-1"> Основное </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link text-white " href={{route('project.settings-sync', $project)}}>
+                                            <span class="sidenav-normal  ms-2  ps-1"> Синхронизации </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                    </li>
+                @endif
 
-                    <hr class="horizontal light">
+                    {{-- <hr class="horizontal light">
                     <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder text-white">Вспомогательное меню</h6>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('project.hosts', $project) }}">
@@ -125,7 +128,7 @@
                             <i class="material-icons-round">receipt_long</i>
                             <span class="nav-link-text ms-2 ps-1">@lang('projects.sidebar.integrations')</span>
                         </a>
-                    </li>
+                    </li> --}}
             @endif
             @endauth
 
