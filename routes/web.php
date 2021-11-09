@@ -26,3 +26,5 @@ use Illuminate\Support\Facades\Route;
 //});
 
 //Route::get('newsletter-subscriptions/unsubscribe', 'NewsletterSubscriptionController@unsubscribe')->name('newsletter-subscriptions.unsubscribe');
+
+Route::get('/test', [\App\Http\Controllers\Project\ProjectController::class , 'test']);
