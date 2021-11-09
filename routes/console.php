@@ -18,6 +18,12 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Artisan::command('horizon:flush', function () {
+    Redis::command('flushdb');
+    $this->comment('failed jobs is clear');
+})->purpose('clear failed jobs in Laravel Horizon');
+
+//Замена цыфры 8 на 7 в номере, поиск номеров происходит по всей базе
 Artisan::command('leads:first_simbol', function(){
     $start = now();
     $this->comment('Processing');
@@ -38,6 +44,7 @@ Artisan::command('leads:first_simbol', function(){
     $this->comment("Processed in $time milliseconds");
 });
 
+//Удаление дублей номеров, где число вхождений 1
 Artisan::command('leads:duble_phone_entries', function(){
     $start = now();
     $this->comment('Processing');
