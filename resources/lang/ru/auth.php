@@ -18,6 +18,7 @@ return [
     'login'    => 'Login',
     'logout'    => 'Logout',
     'register' => "Register",
+    'sign_up' => "Регистрация",
     'remember_me' => 'Remember me',
     'forgotten_password' => 'Forgot password ?',
     'reset_password' => 'Reset password',

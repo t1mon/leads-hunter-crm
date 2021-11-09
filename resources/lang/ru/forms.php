@@ -10,6 +10,9 @@ return [
     'delete' => 'Удалить',
     'add' => 'Добавить',
   ],
+  'projects' => [
+      'delete' => 'Are you sure you want to delete this project?'
+  ],
 
   'projects' => [
     'delete' => 'Вы уверены, что хотите удалить этот проект?'

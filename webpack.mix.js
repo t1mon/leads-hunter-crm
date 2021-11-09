@@ -10,6 +10,12 @@ const mix = require('laravel-mix')
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix.js('resources/material-dashboard/js/app.js', 'public/js/material-dashboard-app.js')
+  .sass('resources/material-dashboard/sass/material-dashboard.scss', 'public/css/material-dashboard-app.css')
+  .postCss('resources/material-dashboard/css/nucleo-icons.css', 'public/css')
+  .postCss('resources/material-dashboard/css/nucleo-svg.css', 'public/css')
+
+mix.copy('resources/material-dashboard/media/', 'public/media')
 
 mix.js('resources/js/app.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css')
