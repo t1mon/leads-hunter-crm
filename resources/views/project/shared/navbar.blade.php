@@ -7,7 +7,7 @@
               {{$project->name}}
             </button>
             <div class="dropdown-menu">
-                @foreach(auth()->user()->projects as $_project)
+                @foreach(auth()->user()->getAllProjects() as $_project)
                     <a class="dropdown-item" href="{{ route('project.journal', $_project) }}">{{ $_project->name }}</a>
                 @endforeach
             </div>

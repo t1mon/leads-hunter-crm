@@ -114,7 +114,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Проверяет, является ли пользователь наблюдателем определённого проекта
      */
-    public function isWatcher(): bool
+    public function isWatcher(Project $project): bool
     {
         $permissions = $this->getPermissionsForProject($project);
         if( is_null($permissions) )
@@ -158,10 +158,16 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Return the user's projects
      */
-    public function projects(): HasMany
+    public function projects(): HasMany //Возвращает проекты, создателями которых является пользователь
     {
         return $this->hasMany(Project::class, 'user_id');
     }
+
+    public function getAllProjects() //Возвращает ВСЕ проекты, на которые назначен (или является создателем) пользователь
+    {
+        $ids = UserPermissions::where(['user_id' => $this->id])->pluck('project_id');
+        return Project::findMany($ids);
+    } //getAllProjects
 
     public function permissions() //Получить ВСЕ разрешения пользователя по ВСЕМ проектам
     {

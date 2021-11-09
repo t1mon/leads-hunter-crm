@@ -34,6 +34,20 @@ class ProjectPolicy
     }
 
     /**
+     * Определяет, может ли пользователь просматривать страницы с настройками
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Project  $project
+     * @return bool
+     */
+
+    public function settings(User $user, Project $project)
+    {
+        //Настройки может просматривать только администратор или создатель
+        return $project->isOwner() or $user->isAdmin($project);
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
@@ -49,11 +63,12 @@ class ProjectPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Project  $project
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Project $project)
     {
-        //
+        //Обновлять проект может только владелец
+        return $project->isOwner();
     }
 
     /**
@@ -61,11 +76,12 @@ class ProjectPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Project  $project
-     * @return mixed
+     * @return bool
      */
     public function delete(User $user, Project $project)
     {
-        //
+        //Удалить проект может только владелец
+        return $project->isOwner();
     }
 
     /**

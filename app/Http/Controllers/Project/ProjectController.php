@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Notification;
+use App\Models\Role;
 use App\Models\Project;
+use App\Models\Project\UserPermissions;
 use App\Models\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -24,12 +26,21 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('project.index', [
-            'projects' => Project::where('user_id', Auth::guard()->id())
+        $ids = UserPermissions::where(['user_id' => Auth::id()])->pluck('project_id');
+        $projects = Project::whereIn('id', $ids)
                                 ->with('leads', 'leadsToday')
                                 ->withCount('leads', 'leadsToday')
-                                ->paginate(50)
-        ]);
+                                ->paginate(50);
+        
+        return view('project.index', compact('projects'));
+
+
+        // return view('project.index', [
+        //     'projects' => Project::where('user_id', Auth::guard()->id())
+        //                         ->with('leads', 'leadsToday')
+        //                         ->withCount('leads', 'leadsToday')
+        //                         ->paginate(50)
+        // ]);
     }
 
     /**
@@ -55,6 +66,16 @@ class ProjectController extends Controller
                 $request->merge([ 'user_id' => Auth::id() ]);
                 $project = Project::create($request->only('name', 'user_id'));
                 $project->update([ 'api_token' => Str::random(60) ]);
+                UserPermissions::create([
+                    'user_id' => Auth::id(),
+                    'project_id' => $project->id,
+                    'role_id' => Role::ROLE_ADMIN_ID,
+                    'manage_users' => true,
+                    'manage_settings' => true,
+                    'manage_payments' => true,
+                    'view_journal' => true,
+                    'view_fields' => ['email', 'city', 'host'],
+                ]);
                 Notification::create([ 'project_id' => $project->id ]);
             }, 3);  // Повторить три раза, прежде чем признать неудачу
         } catch (\Exception $exception) {
@@ -62,7 +83,6 @@ class ProjectController extends Controller
             return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
         }
         return redirect()->route('project.index')->withSuccess('Проект успешно создан');
-        ;
     }
 
     /**
@@ -86,7 +106,7 @@ class ProjectController extends Controller
      */
     public function journal(Request $request, Project $project)
     {
-        if (Gate::denies('view', $project)) {
+        if (Gate::denies('view', [Project::class, $project])) {
             return redirect()->route('project.index');
         }
 
@@ -117,9 +137,9 @@ class ProjectController extends Controller
 
     public function notification(Request $request, Project $project)
     {
-        if (Gate::denies('view', $project)) {
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
-        }
 
         //TODO: Валидация запроса даты
         //TODO: Загрузка уведомлений из базы и сортировка их по запросу
@@ -133,9 +153,9 @@ class ProjectController extends Controller
     }   //notification
 
     public function hosts(Request $request, Project $project){
-        if (Gate::denies('view', $project)) {
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
-        }
 
         $hosts = $project->hosts;
 
@@ -162,6 +182,10 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+        //Проверка полномочий пользователя
+        if (Gate::denies('update', [Project::class, $project]))
+            return trans('projects.not-authorized');
+
         //Обновление настроек
         $new_settings = $request->all()['settings'];
         $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
@@ -182,6 +206,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        //Проверка полномочий пользователя
+        if (Gate::denies('delete', [Project::class, $project]))
+            return redirect()->route('project.index');
+
         $project->delete();
 
         return redirect()->route('project.index')->withSuccess('Проект удален');

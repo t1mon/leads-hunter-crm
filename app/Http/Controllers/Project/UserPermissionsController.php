@@ -28,26 +28,10 @@ class UserPermissionsController extends Controller
     public function list(Project $project) //Список пользователей и полномочий по проекту
     {
         //Проверка полномочий пользователя
-        if(Gate::denies('view', [Project::class, $project]))
-            return 'У вас нет полномочий на просмотр данной страницы'; //TODO: сделать более симпатичное представление
+        if(Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
         
         $permissions = $project->user_permissions;
-
-        //Если в БД нет записи о полномочиях пользователей (со старой версии), но текущий пользователь
-        //является создателем проекта, ему по умолчанию в БД создаются полномочия админа
-        if(!UserPermissions::where(['project_id' => $project->id, 'user_id' => Auth::user()->id])->exists()){
-            $new_permissions = new UserPermissions();
-            $new_permissions->user_id = Auth::user()->id;
-            $new_permissions->project_id = $project->id;
-            $new_permissions->role_id = Role::ROLE_ADMIN_ID;
-            $new_permissions->manage_users = true;
-            $new_permissions->manage_settings = true;
-            $new_permissions->manage_payments = true;
-            $new_permissions->view_journal = true;
-            $new_permissions->view_fields = ['email', 'city', 'host', 'utm'];
-            $new_permissions->save();
-            $permissions = $project->user_permissions;
-        }
 
         return view('project.users', compact('project', 'permissions'));
     } //list
@@ -58,7 +42,7 @@ class UserPermissionsController extends Controller
 
         //Проверка полномочий пользователя
         if(Gate::denies('create', [UserPermissions::class, $project]))
-           return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+           return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
 
         //Проверка существования пользователя. Если пользователя нет в БД, вернуть ошибку
         $user = User::where(['email' => $request->email])->first();
@@ -78,7 +62,7 @@ class UserPermissionsController extends Controller
     public function update(Project $project, $permissions, Request $request){
         //Проверка полномочий пользователя
         if(Gate::denies('delete', [UserPermissions::class, $project]))
-            return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+            return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
 
         //TODO Эта строка поставлена как костыль, пока не будет понятно, почему в этом контроллере $project передаётся как просто идентификатор, а не объект
         $permissions = UserPermissions::find($permissions);
@@ -98,7 +82,7 @@ class UserPermissionsController extends Controller
     {
         //Проверка полномочий пользователя
         if(Gate::denies('delete', [UserPermissions::class, $project]))
-            return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+            return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
         
         //TODO Эта строка поставлена как костыль, пока не будет понятно, почему в этом контроллере $project передаётся как просто идентификатор, а не объект
         $permissions = UserPermissions::find($permissions);
