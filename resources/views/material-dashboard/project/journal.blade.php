@@ -4,6 +4,8 @@
     @php
         $phones = [];
         $tableId = 1;
+
+        $permissions = Auth::user()->getPermissionsForProject($project);
     @endphp
     {{--    <form action="{{ route('project.journal', $project) }}">--}}
     {{--        <input type="text" name="client">--}}
@@ -64,19 +66,17 @@
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.phone')</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
 
-                        {{--Дополнительные колонки согласно настройкам пользователя--}}
-                        @php
-                            $permissions = Auth::user()->getPermissionsForProject($project);
-                        @endphp
-
-                        @foreach($permissions->view_fields as $field)
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
-                            @lang('projects.journal.' . $field)
-                        </th>
-                        @endforeach
-                        
-                        {{-- <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th> --}}
+                        {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
+                        @if($project->isOwner() or Auth::user()->isAdmin($project))
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th>
+                        @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
+                            @foreach($permissions->view_fields as $field)
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                                @lang('projects.journal.' . $field)
+                            </th>
+                            @endforeach
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -108,20 +108,21 @@
                               </span>
                                 </div>
                             </td>
-
-                            {{--Дополнительные ячейки согласно настройкам пользователя--}}
-                            @foreach($permissions->view_fields as $field)
-                                <th class="align-middle text-center">
-                                    <p class="text-sm font-weight-normal mb-0">{{ $lead->$field }}</p>
-                                </th>
-                            @endforeach
-
-                            {{-- <td class="align-middle text-center">
-                                <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <p class="text-sm font-weight-normal mb-0">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</p>
-                            </td> --}}
+                            {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
+                            @if($project->isOwner() or Auth::user()->isAdmin($project))
+                                <td class="align-middle text-center">
+                                    <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <p class="text-sm font-weight-normal mb-0">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</p>
+                                </td>
+                            @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
+                                @foreach($permissions->view_fields as $field)
+                                    <th class="align-middle text-center">
+                                        <p class="text-sm font-weight-normal mb-0">{{ $lead->$field }}</p>
+                                    </th>
+                                @endforeach
+                            @endif
                         </tr>
                     @endforeach
                     </tbody>

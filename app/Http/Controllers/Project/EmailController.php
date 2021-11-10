@@ -26,11 +26,11 @@ class EmailController extends Controller
             return redirect()->route('project.notification', ['project' => $request->project_id])
                 ->withErrors('Ошибка: адрес с таким проектом уже существует.');
         }
-        return redirect()->route('project.notification', ['project' => $request->project_id])->withSuccess('Email добавлен в базу');
+        return redirect()->route('project.settings-sync', ['project' => $request->project_id])->withSuccess('Email добавлен в базу');
     } //store
 
     public function destroy(Project $project, Email $email){
         $email->delete();
-        return redirect()->route('project.notification', $project)->withSuccess('Email удалён из базы.');
+        return redirect()->route('project.settings-sync', $project)->withSuccess('Email удалён из базы.');
     }
 }

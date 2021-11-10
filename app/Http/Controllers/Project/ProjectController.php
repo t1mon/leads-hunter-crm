@@ -77,9 +77,9 @@ class ProjectController extends Controller
             }, 3);  // Повторить три раза, прежде чем признать неудачу
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
-            return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
+            return redirect()->route('project.settings-basic')->withErrors('Ошибка создания проекта');
         }
-        return redirect()->route('project.index')->withSuccess('Проект успешно создан');
+        return redirect()->route('project.settings-basic')->withSuccess('Проект успешно создан');
     }
 
     /**
@@ -219,7 +219,7 @@ class ProjectController extends Controller
         $project->settings = $new_settings;
 
         $project->save();
-        return redirect()->route('project.notification', $project)->withSuccess('Настройки проекта обновлены');
+        return redirect()->route('project.settings-sync', $project)->withSuccess('Настройки проекта обновлены');
     } //update
 
     /**
@@ -236,6 +236,6 @@ class ProjectController extends Controller
 
         $project->delete();
 
-        return redirect()->route('project.index')->withSuccess('Проект удален');
+        return redirect()->route('project.settings-basic')->withSuccess('Проект удален');
     } //destroy
 }
