@@ -19,7 +19,7 @@
                     <td>
                         <div class="d-flex px-2">
                             <div>
-                                <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2">
+                                <img src="{{ asset('media/img/project.png') }}" class="avatar avatar-sm rounded-circle me-2">
                             </div>
                             <div class="my-auto">
                                 <h6 class="mb-0 text-xs">{{ link_to_route('project.journal', $project->name, $project) }}</h6>

@@ -16,7 +16,7 @@
             @auth()
             <li class="nav-item mb-2 mt-0">
                 <a data-bs-toggle="collapse" href="#ProfileNav" class="nav-link text-white" aria-controls="ProfileNav" role="button" aria-expanded="false">
-                    <img src="../../assets/img/team-3.jpg" class="avatar">
+                    <img src="{{ asset('media/img/avatar.jpg') }}" class="avatar">
                     <span class="nav-link-text ms-2 ps-1"> {{ Auth::user()->name }} </span>
                 </a>
                 <div class="collapse" id="ProfileNav" style="">
@@ -29,7 +29,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white " href=" {{ route('users.edit') }} ">
-                                <span class="sidenav-mini-icon"> S </span>
+                                <i class="material-icons-round opacity-10">manage_accounts</i>
                                 <span class="sidenav-normal  ms-3  ps-1">{{ __('users.settings') }} </span>
                             </a>
                         </li>
@@ -38,7 +38,7 @@
                                class="nav-link text-white"
                                onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
-                                <span class="sidenav-mini-icon"> L </span>
+                                <i class="material-icons-round opacity-10">logout</i>
                                 <span class="sidenav-normal  ms-3  ps-1"> @lang('auth.logout') </span>
                             </a>
 
