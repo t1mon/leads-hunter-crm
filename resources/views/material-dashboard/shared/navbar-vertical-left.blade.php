@@ -1,5 +1,5 @@
 {{--{{--}}
-{{--    //dd(\Illuminate\Support\Facades\Route::current()->project->id)--}}
+{{--{{    dd(\Illuminate\Support\Facades\Route::current()->project) }}--}}
 {{--    dd(request()->route()->named('project.*'))--}}
 {{--}}--}}
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
@@ -65,8 +65,8 @@
                         <div class="collapse " id="dashboardsExamples">
                             <ul class="nav ">
                                 @foreach(auth()->user()->getAllprojects() as $_project)
-                                    <li class="nav-item {{ request()->route()->parameters()['project']['id'] === $_project->id ? 'active' : '' }}">
-                                        <a class="nav-link text-white {{ request()->route()->parameters()['project']['id'] === $_project->id ? 'active' : '' }}" href="{{ route('project.journal', $_project) }}">
+                                    <li class="nav-item {{ $project->id === $_project->id ? 'active' : '' }}">
+                                        <a class="nav-link text-white {{ $project->id === $_project->id ? 'active' : '' }}" href="{{ route('project.journal', $_project) }}">
                                             <span class="sidenav-mini-icon"> {{ $_project->id }} </span>
                                             <span class="sidenav-normal  ms-2  ps-1"> {{ $_project->name }} </span>
                                         </a>
@@ -80,12 +80,12 @@
             @if(request()->route()->named('project.*') && !request()->route()->named('project.index'))
 
                 <li class="nav-item {{ request()->route()->named('project.journal') ? 'active' : '' }}">
-                        <a class="nav-link {{ request()->route()->named('project.journal') ? 'active' : '' }}" href="{{ route('project.journal', request()->route()->parameters()['project']['id'] ) }}">
+                        <a class="nav-link {{ request()->route()->named('project.journal') ? 'active' : '' }}" href="{{ route('project.journal', $project ) }}">
                             <i class="material-icons-round opacity-10">text_snippet</i>
                             <span class="nav-link-text ms-2 ps-1">ЕЖЛ</span>
                         </a>
                 </li>
-                
+
                 @if($project->isOwner() or Auth::user()->isManagerFor($project))
                     <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link text-white " aria-controls="pagesExamples" role="button" aria-expanded="false">
