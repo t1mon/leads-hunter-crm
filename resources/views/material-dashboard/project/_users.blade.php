@@ -16,8 +16,8 @@
                 {!! Form::hidden('project_id', $project->id) !!}
                 {!! Form::text('email', null, ['class' => 'form-control', 'placeholder' => 'Введите email']) !!}
                 <label>
-                    {!! Form::hidden('admin', 0) !!}
-                    {!! Form::checkbox('admin', 1) !!}
+                    {!! Form::hidden('role', \App\Models\Role::ROLE_WATCHER) !!}
+                    {!! Form::checkbox('role', \App\Models\Role::ROLE_MANAGER) !!}
                     @lang('projects.users.add-form.make_admin')
                 </label>     
 
@@ -75,10 +75,10 @@
                         <td>
                         {!! Form::model($permission, ['route' => ['user.update', $project, $permission], 'method' => 'PUT']) !!}
                             
-                            {!! Form::hidden('role_id', $permission->role::ROLE_WATCHER_ID) !!}
+                            {!! Form::hidden('role', \App\Models\Role::ROLE_WATCHER) !!}
                             {!! Form::checkbox(
-                                'role_id', $permission->role::ROLE_MANAGER_ID,
-                                $permission->role_id == $permission->role::ROLE_MANAGER_ID ? true : false,
+                                'role', "manager",
+                                $permission->role === \App\Models\Role::ROLE_MANAGER ? true : false,
                                 [( (Auth::user()->isWatcher($project) or $project->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
                                 ) 
                             !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;                                        

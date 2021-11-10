@@ -19,7 +19,8 @@ class ProjectTokenController extends Controller
 
         $project = Project::findOrFail($id);
 
-        return view('project.token', compact('project'));
+        // return view('project.token', compact('project'));
+        return view('material-dashboard.project.token', compact('project'));
     }
 
 

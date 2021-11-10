@@ -13,10 +13,6 @@ class Role extends Model
     const ROLE_ADMIN = 'admin';
     const ROLE_MANAGER = 'manager';
     
-    const ROLE_WATCHER_ID = 1;
-    const ROLE_ADMIN_ID = 2;
-    const ROLE_MANAGER_ID = 3;
-    
     /**
      * The attributes that are mass assignable.
      *

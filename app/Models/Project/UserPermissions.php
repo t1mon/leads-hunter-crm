@@ -18,7 +18,7 @@ class UserPermissions extends Model
     protected $fillable = [
         'user_id',
         'project_id',
-        'role_id',
+        'role',
         'view_fields' //Поля журнала, которые пользователь может видеть
     ];
 
@@ -28,7 +28,7 @@ class UserPermissions extends Model
 
 
     protected $attributes = [
-        'role_id' => Role::ROLE_WATCHER_ID, //Роль "Наблюдатель"
+        'role' => Role::ROLE_WATCHER, //Роль "Наблюдатель"
         'view_fields' => '["email", "city", "host"]',
     ];
 
@@ -40,10 +40,10 @@ class UserPermissions extends Model
         return $this->belongsTo(\App\Models\User::class);
     } //user
 
-    public function role()
-    {
-        return $this->belongsTo(\App\Models\Role::class);
-    } //role
+    // public function role()
+    // {
+    //     return $this->belongsTo(\App\Models\Role::class);
+    // } //role
 
     public function project()
     {

@@ -107,7 +107,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if( is_null($permissions) )
             return false;
         else
-            return $permissions->role_id == Role::ROLE_MANAGER_ID;
+            return $permissions->role === Role::ROLE_MANAGER;
     } //isManagerFor
 
     //Проверяет, является ли пользователь наблюдателем определённого проекта
@@ -115,9 +115,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $permissions = $this->getPermissionsForProject($project);
         if( is_null($permissions) )
-        return false;
+            return false;
         else
-            return $permissions->role_id == Role::ROLE_WATCHER_ID;
+            return $permissions->role === Role::ROLE_WATCHER;
     } //isWatcher
 
     /**

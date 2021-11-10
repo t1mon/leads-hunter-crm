@@ -24,8 +24,7 @@ class CreateUserPermissionsTable extends Migration
             $table->unsignedInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             
-            $table->unsignedInteger('role_id');
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->string('role');
 
             //Поля в журнале, которые может просматривать пользователь
             $table->json('view_fields');
@@ -33,6 +32,10 @@ class CreateUserPermissionsTable extends Migration
 
         DB::table('user_permissions')->update([
             'view_fields' => ['email', 'city', 'host'],
+        ]);
+
+        DB::table('roles')->insert([
+            'name' => 'manager'
         ]);
     }
 

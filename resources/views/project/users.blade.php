@@ -119,10 +119,10 @@
                         <td>
                         {!! Form::model($permission, ['route' => ['user.update', $project, $permission], 'method' => 'PUT']) !!}
                             
-                                {!! Form::hidden('role_id', $permission->role::ROLE_WATCHER_ID) !!}
+                                {!! Form::hidden('role', $permission->role::ROLE_WATCHER) !!}
                                 {!! Form::checkbox(
-                                    'role_id', $permission->role::ROLE_MANAGER_ID,
-                                    $permission->role_id == $permission->role::ROLE_MANAGER_ID ? true : false,
+                                    'role', $permission->role::ROLE_MANAGER,
+                                    $permission->role == $permission->role::ROLE_MANAGER ? true : false,
                                     [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                     ) 
                                 !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;

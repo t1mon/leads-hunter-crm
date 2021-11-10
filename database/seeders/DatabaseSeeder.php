@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Roles
-        Role::firstOrCreate(['id' => Role::ROLE_WATCHER_ID], ['name' => Role::ROLE_WATCHER]);
-        $role_admin = Role::firstOrCreate(['id' => Role::ROLE_ADMIN_ID], ['name' => Role::ROLE_ADMIN]);
-        $role_manager = Role::firstOrCreate(['id' => Role::ROLE_MANAGER_ID], ['name' => Role::ROLE_MANAGER]);
+        Role::firstOrCreate(['name' => Role::ROLE_WATCHER]);
+        $role_admin = Role::firstOrCreate(['name' => Role::ROLE_ADMIN]);
+        $role_manager = Role::firstOrCreate(['name' => Role::ROLE_MANAGER]);
 
 
         // MediaLibrary
@@ -36,6 +36,15 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'anakin',
                 'password' => Hash::make('123456'),
+                'email_verified_at' => now()
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => '2@2.ru'],
+            [
+                'name' => 'user_2',
+                'password' => Hash::make('1'),
                 'email_verified_at' => now()
             ]
         );
@@ -157,7 +166,7 @@ class DatabaseSeeder extends Seeder
                 'project_id' => $project->id
             ],
             [
-                'role_id' => $role_manager->id,
+                'role' => $role_admin->name,
                 'view_fields' => ['email', 'city', 'host'],
             ]
         );

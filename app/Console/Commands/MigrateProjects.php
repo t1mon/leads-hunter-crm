@@ -49,7 +49,7 @@ class MigrateProjects extends Command
                 UserPermissions::create([
                     'user_id' => $project->user_id,
                     'project_id' => $project->id,
-                    'role_id' => Role::ROLE_MANAGER_ID,
+                    'role' => Role::ROLE_MANAGER,
                     'view_fields' => ['email', 'city', 'host'],
                 ]);
 
