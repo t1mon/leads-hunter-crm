@@ -9,7 +9,7 @@
     </li>
 
     <!--К этим вкладкам имеет доступ только администратор или создатель проекта-->
-    @if(Auth::user()->isAdmin($project) or $project->isOwner())
+    @if(Auth::user()->isManagerFor($project) or $project->isOwner())
         <li class="nav-item" role="presentation" data-toggle="tooltip" data-placement="right">
             <a class="nav-link {{ request()->route()->named('project.hosts') ? 'active' : '' }}" href="{{ route('project.hosts', $project) }}">
                 <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;

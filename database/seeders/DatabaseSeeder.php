@@ -6,9 +6,9 @@ use App\Models\Post;
 use App\Models\Role;
 use App\Models\Token;
 use App\Models\User;
-use App\Models\Project;
-use App\Models\Host;
-use App\Models\Email;
+use App\Models\Project\Project;
+use App\Models\Project\Host;
+use App\Models\Project\Email;
 use App\Models\Project\UserPermissions;
 use App\Models\Leads;
 use Illuminate\Database\Seeder;
@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         // Roles
         Role::firstOrCreate(['id' => Role::ROLE_WATCHER_ID], ['name' => Role::ROLE_WATCHER]);
         $role_admin = Role::firstOrCreate(['id' => Role::ROLE_ADMIN_ID], ['name' => Role::ROLE_ADMIN]);
+        $role_manager = Role::firstOrCreate(['id' => Role::ROLE_MANAGER_ID], ['name' => Role::ROLE_MANAGER]);
+
 
         // MediaLibrary
         MediaLibrary::firstOrCreate([]);
@@ -155,11 +157,7 @@ class DatabaseSeeder extends Seeder
                 'project_id' => $project->id
             ],
             [
-                'role_id' => $role_admin->id,
-                'manage_users' => false,
-                'manage_settings' => false,
-                'manage_payments' => false,
-                'view_journal' => true,
+                'role_id' => $role_manager->id,
                 'view_fields' => ['email', 'city', 'host'],
             ]
         );

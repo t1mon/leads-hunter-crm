@@ -121,9 +121,9 @@
                             
                                 {!! Form::hidden('role_id', $permission->role::ROLE_WATCHER_ID) !!}
                                 {!! Form::checkbox(
-                                    'role_id', $permission->role::ROLE_ADMIN_ID,
-                                    $permission->role_id == $permission->role::ROLE_ADMIN_ID ? true : false,
-                                    [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                    'role_id', $permission->role::ROLE_MANAGER_ID,
+                                    $permission->role_id == $permission->role::ROLE_MANAGER_ID ? true : false,
+                                    [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                     ) 
                                 !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             {{--
@@ -131,7 +131,7 @@
                             {!! Form::checkbox(
                                 'manage_users', true,
                                 $permission->manage_users ? true : false,
-                                [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                 ) 
                             !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                     
@@ -139,7 +139,7 @@
                             {!! Form::checkbox(
                                 'manage_settings', true,
                                 $permission->manage_settings ? true : false,
-                                [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                 ) 
                             !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                         
@@ -147,7 +147,7 @@
                             {!! Form::checkbox(
                                 'manage_payments', true,
                                 $permission->manage_payments ? true : false,
-                                [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                 ) 
                             !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             --}}
@@ -156,7 +156,7 @@
                             {!! Form::checkbox(
                                 'view_journal', true,
                                 $permission->view_journal ? true : false,
-                                [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                 ) 
                             !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
                         
@@ -165,7 +165,7 @@
                                 {!! Form::checkbox(
                                     'view_fields[]', 'email',
                                     in_array('email', $permission->view_fields) ? true : false,
-                                    [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                    [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                     ) 
                                 !!}
                             </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -175,7 +175,7 @@
                                 {!! Form::checkbox(
                                     'view_fields[]', 'city',
                                     in_array('city', $permission->view_fields) ? true : false,
-                                    [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                    [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                     ) 
                                 !!}
                             </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -185,7 +185,7 @@
                                 {!! Form::checkbox(
                                     'view_fields[]', 'host',
                                     in_array('host', $permission->view_fields) ? true : false,
-                                    [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                    [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                     ) 
                                 !!}
                             </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -195,7 +195,7 @@
                                 {!! Form::checkbox(
                                     'view_fields[]', 'utm',
                                     in_array('utm', $permission->view_fields) ? true : false,
-                                    [(Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
+                                    [(Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled']
                                     ) 
                                 !!}
                             </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -204,7 +204,7 @@
                                 [
                                     'type' => 'submit',
                                     'class' => 'btn btn-danger btn-sm',
-                                    (Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled'
+                                    (Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled'
                                 ])
                             !!}
                         </td>
@@ -218,7 +218,7 @@
                                     'class' => 'btn btn-danger btn-sm',
                                     'type' => 'submit',
                                     'data-confirm' => __('forms.user-permissions.delete'),
-                                    (Auth::user()->isAdmin($project) and $permission->user_id != $project->id ) ? '' : 'disabled'
+                                    (Auth::user()->isManagerFor($project) and $permission->user_id != $project->id ) ? '' : 'disabled'
                                 ]) !!}
                             {!! Form::close() !!}
 

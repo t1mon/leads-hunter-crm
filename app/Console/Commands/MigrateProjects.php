@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Models\User;
 use App\Models\Role;
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 
 class MigrateProjects extends Command
@@ -49,11 +49,7 @@ class MigrateProjects extends Command
                 UserPermissions::create([
                     'user_id' => $project->user_id,
                     'project_id' => $project->id,
-                    'role_id' => Role::ROLE_ADMIN_ID,
-                    'manage_users' => true,
-                    'manage_settings' => true,
-                    'manage_payments' => true,
-                    'view_journal' => true,
+                    'role_id' => Role::ROLE_MANAGER_ID,
                     'view_fields' => ['email', 'city', 'host'],
                 ]);
 

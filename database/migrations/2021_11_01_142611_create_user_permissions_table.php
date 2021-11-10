@@ -27,11 +27,7 @@ class CreateUserPermissionsTable extends Migration
             $table->unsignedInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
 
-            //Разрешения
-            $table->boolean('manage_users')->default(false);
-            $table->boolean('manage_settings')->default(false);
-            $table->boolean('manage_payments')->default(false);
-            $table->boolean('view_journal')->default(true);
+            //Поля в журнале, которые может просматривать пользователь
             $table->json('view_fields');
         });
 

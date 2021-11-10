@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
-use App\Models\Project;
-use App\Models\Email;
+use App\Models\Project\Project;
+use App\Models\Project\Email;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EmailRequest;

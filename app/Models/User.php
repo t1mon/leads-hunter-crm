@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
+use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -75,7 +76,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeAuthors(Builder $query): Builder
     {
         return $query->whereHas('roles', function ($query) {
-            $query->where('roles.name', Role::ROLE_ADMIN)
+            $query->where('roles.name', Role::ROLE_MANAGER)
                   ->orWhere('roles.name', Role::ROLE_WATCHER);
         });
     }
@@ -88,32 +89,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return $project->where(['project_id' => $project->id, 'user_id' => $this->id])->exists();
     } //isInProject
 
-    /**
-     * Проверяет, является ли пользователь администратором определённого проекта
-     */
-    public function isAdmin(Project $project): bool
-    {
-        $permissions = $this->getPermissionsForProject($project);
-        if( is_null($permissions) )
-        return false;
-        else
-            return $permissions->role_id == Role::ROLE_ADMIN_ID;
-    } //isAdmin
-
     public function hasRole(string $role): bool
     {
         return $this->roles->where('name', $role)->isNotEmpty();
     }
 
-    public function isAdminOld(): bool //Старая версия метода, всё ещё используется для авторизации
+    public function isAdmin(): bool
     {
         //TODO Переделать авторизацию, чтобы больше не держать этот метод
         return $this->hasRole(Role::ROLE_ADMIN);
     }
 
-    /**
-     * Проверяет, является ли пользователь наблюдателем определённого проекта
-     */
+    //Проверяет, является ли пользователь менеджером определённого проекта
+    public function isManagerFor(Project $project): bool
+    {
+        $permissions = $this->getPermissionsForProject($project);
+        if( is_null($permissions) )
+            return false;
+        else
+            return $permissions->role_id == Role::ROLE_MANAGER_ID;
+    } //isManagerFor
+
+    //Проверяет, является ли пользователь наблюдателем определённого проекта
     public function isWatcher(Project $project): bool
     {
         $permissions = $this->getPermissionsForProject($project);

@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -30,7 +30,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project)
     {
-        return ( $project->isOwner() or ($user->isAdmin($project) or $user->isWatcher($project)) );
+        return ( $project->isOwner() or ($user->isManagerFor($project) or $user->isWatcher($project)) );
     }
 
     /**
@@ -43,8 +43,8 @@ class ProjectPolicy
 
     public function settings(User $user, Project $project)
     {
-        //Настройки может просматривать только администратор или создатель
-        return $project->isOwner() or $user->isAdmin($project);
+        //Настройки может просматривать только менеджер или создатель
+        return $project->isOwner() or $user->isManagerFor($project);
     }
 
     /**

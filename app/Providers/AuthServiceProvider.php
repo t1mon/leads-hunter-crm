@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Leads;
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\User;
 use App\Models\Project\UserPermissions;
 use App\Policies\LeadsPolicy;

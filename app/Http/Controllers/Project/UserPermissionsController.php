@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Project\UserPermissions;
-use App\Models\Project;
+use App\Models\Project\Project;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EmailRequest;
@@ -47,16 +47,16 @@ class UserPermissionsController extends Controller
         //Проверка существования пользователя. Если пользователя нет в БД, вернуть ошибку
         $user = User::where(['email' => $request->email])->first();
         if( is_null($user) )
-            return redirect()->route('project.settings-basic', $project)->withErrors(trans('projects.users.create-error') . ': ' . trans('projects.users.error-doesnt-exist'));
+            return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withErrors(trans('projects.users.create-error') . ': ' . trans('projects.users.error-doesnt-exist'));
         
         //Если пользователь уже назначен на проект, вернуть ошибку
         if( UserPermissions::where(['user_id' => $user->id, 'project_id' => $project->id])->exists() )
-            return redirect()->route('project.settings-basic', $project)->withErrors( trans('projects.users.create-error') . ': ' . trans('projects.users.error-exists') );
+            return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withErrors( trans('projects.users.create-error') . ': ' . trans('projects.users.error-exists') );
         
         $request->merge(['user_id' => $user->id]);
 
         UserPermissions::create($request->all());
-        return redirect()->route('project.settings-basic', $project)->withSuccess( trans('projects.users.create-success') );
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess( trans('projects.users.create-success') );
     } //store
 
     public function update(Project $project, $permissions, Request $request){
@@ -75,7 +75,7 @@ class UserPermissionsController extends Controller
 
         $permissions->save();
 
-        return redirect()->route('project.settings-basic', $project)->withSuccess( trans('projects.users.update-success') );;
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess( trans('projects.users.update-success') );;
     } //update
 
     public function destroy(Project $project, $permissions)
@@ -93,6 +93,6 @@ class UserPermissionsController extends Controller
 
         $permissions->delete();
 
-        return redirect()->route('project.settings-basic', $project)->withSuccess(trans('projects.users.delete-success'));
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess(trans('projects.users.delete-success'));
     } //destroy
 }

@@ -7,9 +7,9 @@ use App\Http\Requests\ProjectRequest;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\Role;
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
-use App\Models\Email;
+use App\Models\Project\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -66,20 +66,16 @@ class ProjectController extends Controller
                 UserPermissions::create([
                     'user_id' => Auth::id(),
                     'project_id' => $project->id,
-                    'role_id' => Role::ROLE_ADMIN_ID,
-                    'manage_users' => true,
-                    'manage_settings' => true,
-                    'manage_payments' => true,
-                    'view_journal' => true,
+                    'role_id' => Role::ROLE_MANAGER_ID,
                     'view_fields' => ['email', 'city', 'host'],
                 ]);
                 Notification::create([ 'project_id' => $project->id ]);
             }, 3);  // Повторить три раза, прежде чем признать неудачу
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
-            return redirect()->route('project.settings-basic')->withErrors('Ошибка создания проекта');
+            return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
         }
-        return redirect()->route('project.settings-basic')->withSuccess('Проект успешно создан');
+        return redirect()->route('project.index')->withSuccess('Проект успешно создан');
     }
 
     /**
@@ -236,6 +232,6 @@ class ProjectController extends Controller
 
         $project->delete();
 
-        return redirect()->route('project.settings-basic')->withSuccess('Проект удален');
+        return redirect()->route('project.index')->withSuccess('Проект удален');
     } //destroy
 }

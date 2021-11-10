@@ -86,7 +86,7 @@
                         </a>
                 </li>
                 
-                @if($project->isOwner() or Auth::user()->isAdmin($project))
+                @if($project->isOwner() or Auth::user()->isManagerFor($project))
                     <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link text-white " aria-controls="pagesExamples" role="button" aria-expanded="false">
                                 <i class="material-icons-round">settings</i>

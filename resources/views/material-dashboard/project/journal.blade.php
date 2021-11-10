@@ -66,8 +66,8 @@
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.phone')</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
 
-                        {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
-                        @if($project->isOwner() or Auth::user()->isAdmin($project))
+                        {{--Если пользователь создатель или менеджер проекта, ему видны все колонки --}}
+                        @if($project->isOwner() or Auth::user()->isManagerFor($project))
                             <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
                             <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th>
                         @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
@@ -109,7 +109,7 @@
                                 </div>
                             </td>
                             {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
-                            @if($project->isOwner() or Auth::user()->isAdmin($project))
+                            @if($project->isOwner() or Auth::user()->isManagerFor($project))
                                 <td class="align-middle text-center">
                                     <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
                                 </td>

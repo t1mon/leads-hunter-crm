@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -43,7 +43,7 @@ class UserPermissionsPolicy
      */
     public function create(User $user, Project $project)
     {
-        return $project->isOwner() or $user->isAdmin($project);
+        return $project->isOwner() or $user->isManagerFor($project);
     }
 
     /**
@@ -55,7 +55,7 @@ class UserPermissionsPolicy
      */
     public function update(User $user, Project $project)
     {
-        return $project->isOwner() or $user->isAdmin($project);
+        return $project->isOwner() or $user->isManagerFor($project);
     }
 
     /**
@@ -67,7 +67,7 @@ class UserPermissionsPolicy
      */
     public function delete(User $user, Project $project)
     {
-        return $project->isOwner() or $user->isAdmin($project);
+        return $project->isOwner() or $user->isManagerFor($project);
     }
 
     /**

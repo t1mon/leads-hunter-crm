@@ -19,24 +19,17 @@ class UserPermissions extends Model
         'user_id',
         'project_id',
         'role_id',
-        'manage_users', //Право добавлять и удалять пользователей в проект
-        'manage_settings', //Право изменять настройки проекта
-        'manage_payments', //Право осуществлять платежи по проекту
-        'view_journal', //Право на просмотр журнала
         'view_fields' //Поля журнала, которые пользователь может видеть
-    ];
-
-    protected $attributes = [
-        'role_id' => Role::ROLE_WATCHER_ID, //Роль "Наблюдатель"
-        'manage_users' => false,
-        'manage_settings' => false,
-        'manage_payments' => false,
-        'view_journal' => true,
-        'view_fields' => '["email", "city", "host"]',
     ];
 
     protected $casts = [
         'view_fields' => 'array'
+    ];
+
+
+    protected $attributes = [
+        'role_id' => Role::ROLE_WATCHER_ID, //Роль "Наблюдатель"
+        'view_fields' => '["email", "city", "host"]',
     ];
 
     //#############
