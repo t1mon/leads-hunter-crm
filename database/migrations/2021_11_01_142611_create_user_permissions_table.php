@@ -18,9 +18,14 @@ class CreateUserPermissionsTable extends Migration
             $table->id();
             
             //Идентификаторы
-            $table->unsignedBigInteger('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->unsignedBigInteger('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedInteger('project_id');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            
+            $table->unsignedInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
 
             //Разрешения
             $table->boolean('manage_users')->default(false);
