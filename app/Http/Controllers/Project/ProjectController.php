@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\Project\Email;
+use App\Models\Project\TelegramID;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -111,9 +112,14 @@ class ProjectController extends Controller
         $emails = Email::where('project_id', $project->id)->get();
 
         //TODO Загрузка контактов Telegram
-        //...
+        //Групповой чат
+        $telegram_groupID = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_GROUP])->first();
 
-        return view('material-dashboard.project.settings_sync', compact('tab', 'project', 'emails'));
+        //Личные чаты
+        $telegram_privateIDs = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE])->paginate(50);
+
+        return view( 'material-dashboard.project.settings_sync',
+            compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs') );
     } //sync_settings
 
     /**

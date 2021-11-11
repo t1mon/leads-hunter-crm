@@ -49,14 +49,4 @@ class UserPermissions extends Model
     {
         return $this->belongsTo(\App\Models\Project::class);
     } //project
-
-    public function resetFieldsToDefault() //Сбросить настройки доступных полей журнала
-    {
-        $this->view_fields = $this->getOriginal('view_fields');
-    } //resetFieldsToDefault
-
-    public function resetAllToDefault() //Сбросить ВСЕ настройки
-    {
-        $this->fill($this->getOriginal());
-    } //resetAllToDefault
 }

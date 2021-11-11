@@ -31,6 +31,12 @@ class Project extends Model
             {
                 "enabled": true,
                 "fields": []
+            },
+
+            "telegram":
+            {
+                "enabled": true,
+                "fields": []
             }
         }',
     ];

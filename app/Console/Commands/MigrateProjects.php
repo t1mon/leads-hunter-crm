@@ -23,7 +23,7 @@ class MigrateProjects extends Command
      *
      * @var string
      */
-    protected $description = 'Создать разрешения пользователя для старых проектов';
+    protected $description = 'Обновить старые проекты под новые функции';
 
     /**
      * Create a new command instance.
@@ -43,8 +43,11 @@ class MigrateProjects extends Command
     public function handle()
     {
         $projects = Project::all();
+
         foreach($projects as $project){
-            if(!UserPermissions::where(['user_id' => $project->user_id, 'project_id' => $project->id])->exists() ){
+            /* 1.
+                Создать полномочия для создателя в каждом проекте */
+            if(!UserPermissions::where(['user_id' => $project->user_id, 'project_id' => $project->id])->exists() ){              
                 
                 UserPermissions::create([
                     'user_id' => $project->user_id,
@@ -53,6 +56,22 @@ class MigrateProjects extends Command
                     'view_fields' => ['email', 'city', 'host'],
                 ]);
 
+            }
+
+            /* 2.
+                Добавить настройки рассылки Telegram по умолчанию */
+            if(!array_key_exists('telegram', $project->settings)){
+                $new_settings = [
+                    'telegram' =>
+                    [
+                        'enabled' => true,
+                        'fields' => [],
+                    ]
+                ];
+
+                $project->settings = array_merge($project->settings, $new_settings);
+
+                $project->save();
             }
         }
     }
