@@ -17,7 +17,7 @@
         <div class="input-group input-group-static my-3 p-2">
 {{--            {!! Form::text('date_from',request()->date_from ?? null , ['class' => 'form-control' . ($errors->has('date_from') ? ' is-invalid' : ''), 'placeholder' => 'Дата от']) !!}--}}
             <label>Дата от</label>
-            <input type="date" class="form-control {{ ($errors->has('date_from') ? ' is-invalid' : '') }}" name="date_from" value="{{ ( request()->date_from ? request()->date_from : '') }}">
+            <input type="date" class="form-control {{ ($errors->has('date_from') ? ' is-invalid' : '') }}" name="date_from" value="{{ ( request()->date_from ? request()->date_from : null) }}">
             @error('date_from')
             <span class="invalid-feedback">{{ $message }}</span>
             @enderror
@@ -28,7 +28,7 @@
         <div class="input-group input-group-static my-3 p-2">
 {{--            {!! Form::text('date_to',request()->date_to ?? \Illuminate\Support\Carbon::now()->format('d-m-Y'), ['class' => 'form-control' . ($errors->has('date_to') ? ' is-invalid' : ''), 'placeholder' => ' до']) !!}--}}
             <label> до</label>
-            <input type="date" class="form-control {{ ($errors->has('date_to') ? ' is-invalid' : '') }}" name="date_to" value="{{ (request()->date_to ? request()->date_to : '') }}">
+            <input type="date" class="form-control {{ ($errors->has('date_to') ? ' is-invalid' : '') }}" name="date_to" value="{{ (request()->date_to ? request()->date_to : null) }}">
             @error('date_to')
             <span class="invalid-feedback">{{ $message }}</span>
             @enderror

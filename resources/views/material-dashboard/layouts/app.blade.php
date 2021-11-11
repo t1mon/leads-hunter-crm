@@ -24,7 +24,7 @@
     <link href="{{ mix('/css/nucleo-svg.css') }}" rel="stylesheet">
     <link href="{{ mix('/css/material-dashboard-app.css') }}" rel="stylesheet">
 </head>
-<body  class="g-sidenav-show  bg-gray-200 g-sidenav-pinned">
+<body  class="g-sidenav-show  bg-gray-200">
 <div id="app">
 @include('material-dashboard.shared.navbar-vertical-left')
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
