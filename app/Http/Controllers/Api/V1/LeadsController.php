@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LeadsRequest;
 use App\Http\Resources\Leads as LeadsResource;
-use App\Models\Host;
+use App\Models\Project\Host;
 use App\Models\Leads;
-use App\Models\Project;
+use App\Models\Project\Project;
 use Illuminate\Http\Response;
 
 use Illuminate\Support\Str;

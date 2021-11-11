@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Project\UserPermissions;
-use App\Models\Project;
+use App\Models\Project\Project;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EmailRequest;
@@ -28,26 +28,10 @@ class UserPermissionsController extends Controller
     public function list(Project $project) //Список пользователей и полномочий по проекту
     {
         //Проверка полномочий пользователя
-        if(Gate::denies('view', [Project::class, $project]))
-            return 'У вас нет полномочий на просмотр данной страницы'; //TODO: сделать более симпатичное представление
+        if(Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
         
         $permissions = $project->user_permissions;
-
-        //Если в БД нет записи о полномочиях пользователей (со старой версии), но текущий пользователь
-        //является создателем проекта, ему по умолчанию в БД создаются полномочия админа
-        if(!UserPermissions::where(['project_id' => $project->id, 'user_id' => Auth::user()->id])->exists()){
-            $new_permissions = new UserPermissions();
-            $new_permissions->user_id = Auth::user()->id;
-            $new_permissions->project_id = $project->id;
-            $new_permissions->role_id = Role::ROLE_ADMIN_ID;
-            $new_permissions->manage_users = true;
-            $new_permissions->manage_settings = true;
-            $new_permissions->manage_payments = true;
-            $new_permissions->view_journal = true;
-            $new_permissions->view_fields = ['email', 'city', 'host', 'utm'];
-            $new_permissions->save();
-            $permissions = $project->user_permissions;
-        }
 
         return view('project.users', compact('project', 'permissions'));
     } //list
@@ -58,26 +42,27 @@ class UserPermissionsController extends Controller
 
         //Проверка полномочий пользователя
         if(Gate::denies('create', [UserPermissions::class, $project]))
-           return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+           return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
+
+        //Проверка существования пользователя. Если пользователя нет в БД, вернуть ошибку
+        $user = User::where(['email' => $request->email])->first();
+        if( is_null($user) )
+            return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withErrors(trans('projects.users.create-error') . ': ' . trans('projects.users.error-doesnt-exist'));
         
-        //Проверка наличия записи в БД
-        //TODO Проверка существования пользователя
-        //Если пользователя не существует, надо предусмотреть механизм его создания и подтверждения (с отправкой e-mail)
-        //Данный метод является временным, т.к. надо ещё указать имя пользователя (здесь вместо него при отсутствии пользователя ставится e-mail)
-        $user = User::firstOrCreate(['email' => $request->email], ['name' => $request->email]);
-        if(UserPermissions::where(['project_id' => $project->id, 'user_id' => $user->id])->exists())
-            return redirect()->route('project.users', $project)->withError( trans('projects.users.create-error') . ': ' . trans('projects.error-exists') );
+        //Если пользователь уже назначен на проект, вернуть ошибку
+        if( UserPermissions::where(['user_id' => $user->id, 'project_id' => $project->id])->exists() )
+            return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withErrors( trans('projects.users.create-error') . ': ' . trans('projects.users.error-exists') );
         
         $request->merge(['user_id' => $user->id]);
 
         UserPermissions::create($request->all());
-        return redirect()->route('project.users', $project)->withSuccess( trans('projects.users.create-success') );
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess( trans('projects.users.create-success') );
     } //store
 
     public function update(Project $project, $permissions, Request $request){
         //Проверка полномочий пользователя
         if(Gate::denies('delete', [UserPermissions::class, $project]))
-            return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+            return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
 
         //TODO Эта строка поставлена как костыль, пока не будет понятно, почему в этом контроллере $project передаётся как просто идентификатор, а не объект
         $permissions = UserPermissions::find($permissions);
@@ -90,14 +75,14 @@ class UserPermissionsController extends Controller
 
         $permissions->save();
 
-        return redirect()->route('project.users', $project)->withSuccess( trans('projects.users.update-success') );;
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess( trans('projects.users.update-success') );;
     } //update
 
     public function destroy(Project $project, $permissions)
     {
         //Проверка полномочий пользователя
         if(Gate::denies('delete', [UserPermissions::class, $project]))
-            return 'У вас нет полномочий на данное действие'; //TODO: сделать более симпатичное представление
+            return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
         
         //TODO Эта строка поставлена как костыль, пока не будет понятно, почему в этом контроллере $project передаётся как просто идентификатор, а не объект
         $permissions = UserPermissions::find($permissions);
@@ -108,6 +93,6 @@ class UserPermissionsController extends Controller
 
         $permissions->delete();
 
-        return redirect()->route('project.users', $project)->withSuccess(trans('projects.users.delete-success'));
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess(trans('projects.users.delete-success'));
     } //destroy
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Project\Project;
 use App\Events\Leads\LeadCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

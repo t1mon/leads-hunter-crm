@@ -18,20 +18,24 @@ class CreateUserPermissionsTable extends Migration
             $table->id();
             
             //Идентификаторы
-            $table->unsignedBigInteger('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->unsignedBigInteger('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            //Разрешения
-            $table->boolean('manage_users')->default(false);
-            $table->boolean('manage_settings')->default(false);
-            $table->boolean('manage_payments')->default(false);
-            $table->boolean('view_journal')->default(true);
+            $table->unsignedInteger('project_id');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            
+            $table->string('role');
+
+            //Поля в журнале, которые может просматривать пользователь
             $table->json('view_fields');
         });
 
         DB::table('user_permissions')->update([
             'view_fields' => ['email', 'city', 'host'],
+        ]);
+
+        DB::table('roles')->insert([
+            'name' => 'manager'
         ]);
     }
 

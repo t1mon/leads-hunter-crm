@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Models\Project;
+use App\Models\Project\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 

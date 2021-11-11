@@ -6,9 +6,9 @@ use App\Models\Post;
 use App\Models\Role;
 use App\Models\Token;
 use App\Models\User;
-use App\Models\Project;
-use App\Models\Host;
-use App\Models\Email;
+use App\Models\Project\Project;
+use App\Models\Project\Host;
+use App\Models\Project\Email;
 use App\Models\Project\UserPermissions;
 use App\Models\Leads;
 use Illuminate\Database\Seeder;
@@ -22,8 +22,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Roles
-        Role::firstOrCreate(['id' => Role::ROLE_WATCHER_ID], ['name' => Role::ROLE_WATCHER]);
-        $role_admin = Role::firstOrCreate(['id' => Role::ROLE_ADMIN_ID], ['name' => Role::ROLE_ADMIN]);
+        Role::firstOrCreate(['name' => Role::ROLE_WATCHER]);
+        $role_admin = Role::firstOrCreate(['name' => Role::ROLE_ADMIN]);
+        $role_manager = Role::firstOrCreate(['name' => Role::ROLE_MANAGER]);
+
 
         // MediaLibrary
         MediaLibrary::firstOrCreate([]);
@@ -34,6 +36,15 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'anakin',
                 'password' => Hash::make('123456'),
+                'email_verified_at' => now()
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => '2@2.ru'],
+            [
+                'name' => 'user_2',
+                'password' => Hash::make('1'),
                 'email_verified_at' => now()
             ]
         );
@@ -155,11 +166,7 @@ class DatabaseSeeder extends Seeder
                 'project_id' => $project->id
             ],
             [
-                'role_id' => $role_admin->id,
-                'manage_users' => false,
-                'manage_settings' => false,
-                'manage_payments' => false,
-                'view_journal' => true,
+                'role' => $role_admin->name,
                 'view_fields' => ['email', 'city', 'host'],
             ]
         );

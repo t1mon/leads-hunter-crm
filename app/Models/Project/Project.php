@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Project;
+
+use App\Models\User;
+use App\Models\Leads;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,7 +49,7 @@ class Project extends Model
 
     public function user_permissions()
     {
-        return $this->hasMany(Project\UserPermissions::class);
+        return $this->hasMany(UserPermissions::class);
     }
 
     public function emails()

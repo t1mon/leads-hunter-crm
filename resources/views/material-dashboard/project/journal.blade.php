@@ -4,6 +4,8 @@
     @php
         $phones = [];
         $tableId = 1;
+
+        $permissions = Auth::user()->getPermissionsForProject($project);
     @endphp
     {{--    <form action="{{ route('project.journal', $project) }}">--}}
     {{--        <input type="text" name="client">--}}
@@ -15,7 +17,7 @@
         <div class="input-group input-group-static my-3 p-2">
 {{--            {!! Form::text('date_from',request()->date_from ?? null , ['class' => 'form-control' . ($errors->has('date_from') ? ' is-invalid' : ''), 'placeholder' => 'Дата от']) !!}--}}
             <label>Дата от</label>
-            <input type="date" class="form-control {{ ($errors->has('date_from') ? ' is-invalid' : '') }}" name="date_from" value="{{ ( request()->date_from ? request()->date_from : '') }}">
+            <input type="date" class="form-control {{ ($errors->has('date_from') ? ' is-invalid' : '') }}" name="date_from" value="{{ ( request()->date_from ? request()->date_from : null) }}">
             @error('date_from')
             <span class="invalid-feedback">{{ $message }}</span>
             @enderror
@@ -26,7 +28,7 @@
         <div class="input-group input-group-static my-3 p-2">
 {{--            {!! Form::text('date_to',request()->date_to ?? \Illuminate\Support\Carbon::now()->format('d-m-Y'), ['class' => 'form-control' . ($errors->has('date_to') ? ' is-invalid' : ''), 'placeholder' => ' до']) !!}--}}
             <label> до</label>
-            <input type="date" class="form-control {{ ($errors->has('date_to') ? ' is-invalid' : '') }}" name="date_to" value="{{ (request()->date_to ? request()->date_to : '') }}">
+            <input type="date" class="form-control {{ ($errors->has('date_to') ? ' is-invalid' : '') }}" name="date_to" value="{{ (request()->date_to ? request()->date_to : null) }}">
             @error('date_to')
             <span class="invalid-feedback">{{ $message }}</span>
             @enderror
@@ -63,8 +65,18 @@
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.client')</th>
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.phone')</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
-                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th>
+
+                        {{--Если пользователь создатель или менеджер проекта, ему видны все колонки --}}
+                        @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th>
+                        @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
+                            @foreach($permissions->view_fields as $field)
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                                @lang('projects.journal.' . $field)
+                            </th>
+                            @endforeach
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -96,12 +108,21 @@
                               </span>
                                 </div>
                             </td>
-                            <td class="align-middle text-center">
-                                <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <p class="text-sm font-weight-normal mb-0">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</p>
-                            </td>
+                            {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
+                            @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                                <td class="align-middle text-center">
+                                    <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <p class="text-sm font-weight-normal mb-0">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</p>
+                                </td>
+                            @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
+                                @foreach($permissions->view_fields as $field)
+                                    <th class="align-middle text-center">
+                                        <p class="text-sm font-weight-normal mb-0">{{ $lead->$field }}</p>
+                                    </th>
+                                @endforeach
+                            @endif
                         </tr>
                     @endforeach
                     </tbody>

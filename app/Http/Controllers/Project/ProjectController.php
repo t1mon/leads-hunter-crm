@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Notification;
-use App\Models\Project;
-use App\Models\Email;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Project\Project;
+use App\Models\Project\UserPermissions;
+use App\Models\Project\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -28,12 +31,13 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('material-dashboard.project.index', [
-            'projects' => Project::where('user_id', Auth::guard()->id())
+        $ids = UserPermissions::where(['user_id' => Auth::id()])->pluck('project_id');
+        $projects = Project::whereIn('id', $ids)
                                 ->with('leads', 'leadsToday')
                                 ->withCount('leads', 'leadsToday')
-                                ->get()
-        ]);
+                                ->get();
+
+        return view('material-dashboard.project.index', compact('projects'));
     }
 
     /**
@@ -59,6 +63,12 @@ class ProjectController extends Controller
                 $request->merge([ 'user_id' => Auth::id() ]);
                 $project = Project::create($request->only('name', 'user_id'));
                 $project->update([ 'api_token' => Str::random(60) ]);
+                UserPermissions::create([
+                    'user_id' => Auth::id(),
+                    'project_id' => $project->id,
+                    'role' => Role::ROLE_MANAGER,
+                    'view_fields' => ['email', 'city', 'host'],
+                ]);
                 Notification::create([ 'project_id' => $project->id ]);
             }, 3);  // Повторить три раза, прежде чем признать неудачу
         } catch (\Exception $exception) {
@@ -66,7 +76,6 @@ class ProjectController extends Controller
             return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
         }
         return redirect()->route('project.index')->withSuccess('Проект успешно создан');
-        ;
     }
 
     /**
@@ -79,7 +88,33 @@ class ProjectController extends Controller
     public function show(Request $request, Project $project)
     {
         return view('project.show', compact('project'));
-    }
+    } //show
+
+    public function settings_basic(Project $project, string $tab = null) //Страница основных настроек
+    {
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
+
+        //Загрузка хостов
+        $hosts = $project->hosts;
+
+        //Загрузка пользователей, назначенных на проект
+        $permissions = $project->user_permissions;
+
+        return view('material-dashboard.project.settings_basic', compact('tab', 'project', 'hosts', 'permissions'));
+    } //settings_basic
+
+    public function settings_sync(Project $project, string $tab = null) //Страница настроек синхронизации
+    {
+        //Загрузка списка email-адресов
+        $emails = Email::where('project_id', $project->id)->get();
+
+        //TODO Загрузка контактов Telegram
+        //...
+
+        return view('material-dashboard.project.settings_sync', compact('tab', 'project', 'emails'));
+    } //sync_settings
 
     /**
      * Display the specified resource.
@@ -122,9 +157,9 @@ class ProjectController extends Controller
 
     public function notification(Request $request, Project $project)
     {
-        if (Gate::denies('view', $project)) {
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
-        }
 
         //TODO: Валидация запроса даты
         //TODO: Загрузка уведомлений из базы и сортировка их по запросу
@@ -138,9 +173,9 @@ class ProjectController extends Controller
     }   //notification
 
     public function hosts(Request $request, Project $project){
-        if (Gate::denies('view', $project)) {
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
-        }
 
         $hosts = $project->hosts;
 
@@ -167,6 +202,10 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+        //Проверка полномочий пользователя
+        if (Gate::denies('update', [Project::class, $project]))
+            return trans('projects.not-authorized');
+
         //Обновление настроек
         $new_settings = $request->all()['settings'];
         $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
@@ -176,7 +215,7 @@ class ProjectController extends Controller
         $project->settings = $new_settings;
 
         $project->save();
-        return redirect()->route('project.notification', $project)->withSuccess('Настройки проекта обновлены');
+        return redirect()->route('project.settings-sync', $project)->withSuccess('Настройки проекта обновлены');
     } //update
 
     /**
@@ -187,6 +226,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        //Проверка полномочий пользователя
+        if (Gate::denies('delete', [Project::class, $project]))
+            return redirect()->route('project.index');
+
         $project->delete();
 
         return redirect()->route('project.index')->withSuccess('Проект удален');

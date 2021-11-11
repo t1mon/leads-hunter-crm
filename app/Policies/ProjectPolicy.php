@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -30,7 +30,21 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project)
     {
-        return ( $project->isOwner() or ($user->isAdmin($project) or $user->isWatcher($project)) );
+        return ( $project->isOwner() or ($user->isManagerFor($project) or $user->isWatcher($project)) );
+    }
+
+    /**
+     * Определяет, может ли пользователь просматривать страницы с настройками
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Project  $project
+     * @return bool
+     */
+
+    public function settings(User $user, Project $project)
+    {
+        //Настройки может просматривать только менеджер или создатель
+        return $project->isOwner() or $user->isManagerFor($project);
     }
 
     /**
@@ -49,11 +63,12 @@ class ProjectPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Project  $project
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Project $project)
     {
-        //
+        //Обновлять проект может только владелец
+        return $project->isOwner();
     }
 
     /**
@@ -61,11 +76,12 @@ class ProjectPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Project  $project
-     * @return mixed
+     * @return bool
      */
     public function delete(User $user, Project $project)
     {
-        //
+        //Удалить проект может только владелец
+        return $project->isOwner();
     }
 
     /**

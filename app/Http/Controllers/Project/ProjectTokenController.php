@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
-use App\Models\Project;
+use App\Models\Project\Project;
 use App\Models\Token;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
@@ -19,7 +19,8 @@ class ProjectTokenController extends Controller
 
         $project = Project::findOrFail($id);
 
-        return view('project.token', compact('project'));
+        // return view('project.token', compact('project'));
+        return view('material-dashboard.project.token', compact('project'));
     }
 
 
