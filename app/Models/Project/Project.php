@@ -58,9 +58,19 @@ class Project extends Model
         return $this->hasMany(UserPermissions::class);
     }
 
-    public function emails()
+    public function emails() //Получить все e-mail адреса рассылки
     {
         return $this->hasMany(Email::class);
+    }
+
+    public function getTelegramChannelIdAttribute() //Получить идентификатор канала, на который назначен проект
+    {
+        return TelegramID::where(['project_id' => $this->id, 'type' => TelegramID::TYPE_CHANNEL])->first();
+    } //telegram_channel_id
+
+    public function getTelegramPrivateIdsAttribute() //Получить всех подписчиков личной рассылки проекта
+    {
+        return TelegramID::where(['project_id' => $this->id, 'type' => TelegramID::TYPE_PRIVATE, 'approved' => true])->get();
     }
 
     public function leads()

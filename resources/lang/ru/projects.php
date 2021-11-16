@@ -7,6 +7,9 @@ return [
     'button-save' => 'Сохранить',
     'button-delete' => 'Удалить',
     'button-cancel' => 'Отмена',
+
+    //Общие надписи
+    'not_specified' => 'Не указано',
     
     'project' => 'Проекты',
     'integrated' => 'Интеграция Rest Api',
@@ -78,6 +81,10 @@ return [
             'private' => 'Личные сообщения',
 
             'username' => 'Имя пользователя',
+            'user_id' => 'ID пользователя',
+            'status'  => 'Статус',
+            'approved' => 'Одобрен',
+            'not_approved' => 'Не одобрен',
 
             'actions' => 'Действия',
 

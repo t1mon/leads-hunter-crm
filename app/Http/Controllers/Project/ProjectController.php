@@ -112,11 +112,11 @@ class ProjectController extends Controller
         $emails = Email::where('project_id', $project->id)->get();
 
         //TODO Загрузка контактов Telegram
-        //Групповой чат
-        $telegram_groupID = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_GROUP])->first();
+        //Канал
+        $telegram_groupID = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_CHANNEL])->first();
 
         //Личные чаты
-        $telegram_privateIDs = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE])->paginate(50);
+        $telegram_privateIDs = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE, ])->paginate(50);
 
         return view( 'material-dashboard.project.settings_sync',
             compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs') );
@@ -214,9 +214,17 @@ class ProjectController extends Controller
 
         //Обновление настроек
         $new_settings = $request->all()['settings'];
+
+        $new_settings = array_merge($project->settings, $new_settings);
+
         $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
+        $new_settings['telegram']['enabled'] = (bool) $new_settings['telegram']['enabled'];
+
         if(!array_key_exists('fields', $new_settings['email']))
             $new_settings['email']['fields'] = [];
+        
+        if(!array_key_exists('fields', $new_settings['telegram']))
+            $new_settings['telegram']['fields'] = [];
 
         $project->settings = $new_settings;
 

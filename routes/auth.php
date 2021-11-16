@@ -52,6 +52,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('project/{project}/telegram', TelegramIDController::class)->only(['store', 'destroy']);
     });
 
-
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
+});
+
+Route::prefix('telegram')->group(function(){
+    Route::get('/', [TelegramIDController::class, 'telegram'])->name('telegram.main');
+
+    Route::get('updates', [TelegramIDController::class, 'getUpdates'])->name('telegram.updates');
+    
+    Route::post('webhook', [TelegramIDController::class, 'webhook'])->name('telegram.webhook');
+    Route::get('webhook/info', [TelegramIDController::class, 'webhookInfo'])->name('telegram.webhook.info');
+    Route::get('webhook/set', [TelegramIDController::class, 'setWebhook'])->name('telegram.webhook.update');
+    Route::get('webhook/delete', [TelegramIDController::class, 'deleteWebhook'])->name('telegram.webhook.delete');
 });

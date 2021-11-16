@@ -4,7 +4,7 @@
 
 {{--Скрытая форма для добавления группового чата--}}
 {!! Form::open( ['route' => ['telegram.store', $project], 'id' => 'group_id_store',] ) !!}
-{!! Form::hidden('type', \App\Models\Project\TelegramID::TYPE_GROUP) !!}
+{!! Form::hidden('type', \App\Models\Project\TelegramID::TYPE_CHANNEL) !!}
 {!! Form::close() !!}
 
 {{--Скрытая форма для отвязки группового чата--}}
@@ -46,7 +46,7 @@
 <div class="card my-3">
     <div class="card-body">
         <h5 class="card-title">@lang('projects.notifications.telegram.general_settings')</h5>
-        {!! Form::model($project/*, ['route' => ['project.update', $project] ]*/) !!}
+        {!! Form::model($project, ['method' => 'PUT', 'route' => ['project.update', $project] ]) !!}
         <p class="card-text">
             <div class="form-check form-switch ps-2">
                 {!! Form::hidden('settings[telegram][enabled]', 0) !!}
@@ -70,13 +70,17 @@
         @foreach($telegram_fields as $field)
             <p class="card-text ms-5">
                     {!! Form::checkbox(
-                        'settings[email][fields][]', 
+                        'settings[telegram][fields][]', 
                         $field, 
                         in_array($field, $project->settings['telegram']['fields']) ? true : false) 
                     !!}
                     @lang('projects.journal.' . $field)
             </p>
         @endforeach
+
+        <p class="card-text ms-5">
+            {!! Form::submit(trans('projects.button-save'), ['class' => 'btn btn-primary',]) !!}
+        </p>
 
         {!! Form::close() !!}
     </div>
@@ -95,6 +99,12 @@
                         <b>{{$telegram_groupID->name ?? trans('projects.notifications.telegram.group_none')}}</b>
                         </td>
                         
+                        <td>
+                            @if(!is_null($telegram_groupID))
+                                {{ trans('projects.notifications.telegram.' . ($telegram_groupID->approved ? 'approved' : 'not_approved') )}}
+                            @endisset
+                        </td>
+
                         <td>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_group">
                                 @isset($telegram_groupID)
@@ -136,7 +146,10 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th colspan="3">@lang('projects.notifications.telegram.username')</th>
+                        <th>@lang('projects.notifications.telegram.username')</th>
+                        <th>@lang('projects.notifications.telegram.user_id')</th>
+                        <th>@lang('projects.notifications.telegram.status')</th>
+                        <th>@lang('projects.notifications.telegram.actions')</th>
                     </tr>
                 </thead>
 
@@ -151,6 +164,8 @@
                         <tr>
                             <td>{{$id->id}}</td>
                             <td>{{$id->name}}</td>
+                            <td>{{$id->number ?? trans('projects.not_specified')}}</td>
+                            <td>{{ trans('projects.notifications.telegram.' . ($id->approved ? 'approved' : 'not_approved') )}}</td>
                             <td>
                                 {!! Form::model(
                                     $id,

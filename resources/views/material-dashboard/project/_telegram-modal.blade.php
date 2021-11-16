@@ -8,16 +8,31 @@
             </div>
             
             <div class="modal-body">
-                {!! Form::input(
-                    'text',
-                    'name',
-                    is_null($contact) ? '' : $contact->name,
-                    [
-                        'class' => 'form-control',
-                        'placeholder' => trans('projects.notifications.telegram.username'),
-                        'form' => $form_id,
-                    ])
-                !!}
+                <p class="card-text ms-1">
+                    {!! Form::input(
+                        'text',
+                        'name',
+                        is_null($contact) ? '' : $contact->name,
+                        [
+                            'class' => 'form-control',
+                            'placeholder' => trans('projects.notifications.telegram.username'),
+                            'form' => $form_id,
+                        ])
+                    !!}
+                </p>
+
+                <p class="card-text ms-1">
+                    {!! Form::input(
+                        'text',
+                        'number',
+                        is_null($contact) ? '' : $contact->number,
+                        [
+                            'class' => 'form-control',
+                            'placeholder' => trans('projects.notifications.telegram.user_id'),
+                            'form' => $form_id,
+                        ])
+                    !!}
+                </p>
             </div>
             
             <div class="modal-footer">

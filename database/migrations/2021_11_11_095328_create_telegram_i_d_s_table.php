@@ -19,8 +19,10 @@ class CreateTelegramIDSTable extends Migration
             $table->unsignedInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
 
-            $table->string('name');
-            $table->string('type');
+            $table->string('name'); //Имя контакта
+            $table->string('number')->nullable(); //Идентификатор контакта
+            $table->string('type'); //Тип контакта (канал или личка)
+            $table->boolean('approved')->default(false); //Подтверждение канала (когда контакт добавляется к роботу)
 
             $table->timestamps();
         });
