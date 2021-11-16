@@ -17,7 +17,7 @@ services:
   fpm:
     build:
        context: ./
-       dockerfile: docker/fpm.Dockerfile
+       dockerfile: docker/fpm_php8.Dockerfile
     volumes:
       - ./:/var/www/app:cached
     environment:
