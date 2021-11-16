@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2017, 2021, Oracle and/or its affiliates.
+# Copyright (c) 2021, Oracle and/or its affiliates.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-# The mysql-init-complete file is touched by the entrypoint file before the
-# main server process is started
-if [ -f /var/lib/mysql-files/mysql-init-complete ]; # The entrypoint script touches this file
-then # Ping server to see if it is ready
-  mysqladmin --defaults-extra-file=/var/lib/mysql-files/healthcheck.cnf ping
-else # Initialization still in progress
-  exit 1
-fi
+
+# Create directories needed by mysqld and make them writable by group 0
+mysql_dirs="/var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/run/mysqld"
+
+for dir in $mysql_dirs; do
+    mkdir -p $dir
+    chmod g+rwx $dir
+    chgrp -R 0 $dir
+done
