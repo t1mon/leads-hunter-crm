@@ -66,7 +66,7 @@ class TelegramID extends Model
         $settings = $this->project->settings['telegram'];
 
         //Основная часть сообщения
-        $message = "Получен лид:\nИмя: {$lead->name}\nТелефон: {$lead->phone}";
+        $message = "Получен лид по проекту {$this->project->name}:\nИмя: {$lead->name}\nТелефон: {$lead->phone}";
 
         foreach($settings['fields'] as $field)
             $message .= "\n" . trans('projects.journal.' . $field) . ": {$lead->$field}";
