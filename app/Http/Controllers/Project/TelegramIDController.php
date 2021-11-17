@@ -28,7 +28,11 @@ class TelegramIDController extends Controller
         if($request->type === TelegramID::TYPE_CHANNEL){
             TelegramID::updateOrCreate(
                 ['project_id' => $project->id, 'type' => TelegramID::TYPE_CHANNEL],
-                ['name' => $request->name]
+                [
+                    'name' => $request->name,
+                    'number' => $request->number,
+                    'approved' => is_null($request->number) ? false : true
+                ]
             );
 
             return redirect()->route('project.settings-sync', [$project, 'telegram'])
@@ -47,7 +51,8 @@ class TelegramIDController extends Controller
                 'project_id' => $project->id,
                 'name' => $request->name,
                 'number' => $request->number,
-                'type' => $request->type,
+                'type' => TelegramID::TYPE_PRIVATE,
+                'approved' => is_null($request->number) ? false : true
             ];
 
             //Если ID неизвестен. но в другом проекте уже указан для пользователя с таким именем, сразу взять его оттуда
@@ -155,9 +160,10 @@ class TelegramIDController extends Controller
                 Log::channel('leads')->info('Найден ключ new_chat_member');
                 if( $body['my_chat_member']['new_chat_member']['user']['username'] === env('TELEGRAM_BOT_NAME')
                     and
-                    $body['my_chat_member']['chat']['type'] === 'channel'
-                    and
-                    $body['my_chat_member']['new_chat_member']['status'] === 'administrator')
+                    ($body['my_chat_member']['chat']['type'] === 'channel' or $body['my_chat_member']['chat']['type'] === 'group')
+                    // and
+                    // $body['my_chat_member']['new_chat_member']['status'] === 'administrator')
+                )
                     {
                         Log::channel('leads')->info('Пройдена проверка');
                         $this->approve($body['my_chat_member']['chat']['title'], $body['my_chat_member']['chat']['id']);
