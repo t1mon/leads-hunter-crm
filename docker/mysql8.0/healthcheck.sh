@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2021, Oracle and/or its affiliates.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
 
 # The mysql-init-complete file is touched by the entrypoint file before the
 # main server process is started
-if [ -f /mysql-init-complete ]; # The entrypoint script touches this file
+if [ -f /var/lib/mysql-files/mysql-init-complete ]; # The entrypoint script touches this file
 then # Ping server to see if it is ready
-  mysqladmin --defaults-extra-file=/healthcheck.cnf ping
+  mysqladmin --defaults-extra-file=/var/lib/mysql-files/healthcheck.cnf ping
 else # Initialization still in progress
   exit 1
 fi

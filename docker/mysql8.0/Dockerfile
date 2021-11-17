@@ -1,4 +1,4 @@
-# Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2017, 2021, Oracle and/or its affiliates.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,23 +12,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
-FROM oraclelinux:7-slim
 
-ARG MYSQL_SERVER_PACKAGE=mysql-community-server-minimal-8.0.22
-ARG MYSQL_SHELL_PACKAGE=mysql-shell-8.0.22
+FROM oraclelinux:8-slim
 
-# Install server
-RUN yum install -y https://repo.mysql.com/mysql-community-minimal-release-el7.rpm \
-      https://repo.mysql.com/mysql-community-release-el7.rpm \
-  && yum-config-manager --enable mysql80-server-minimal \
-  && yum install -y \
-      $MYSQL_SERVER_PACKAGE \
-      $MYSQL_SHELL_PACKAGE \
-      libpwquality \
-  && yum clean all \
+ARG MYSQL_SERVER_PACKAGE=mysql-community-server-minimal-8.0.27
+ARG MYSQL_SHELL_PACKAGE=mysql-shell-8.0.27
+
+# Setup repositories for minimal packages (all versions)
+RUN rpm -U https://repo.mysql.com/mysql-community-minimal-release-el8.rpm \
+  && rpm -U https://repo.mysql.com/mysql80-community-release-el8.rpm
+
+# Install server and shell 8.0
+RUN microdnf update && echo "[main]" > /etc/dnf/dnf.conf \
+  && microdnf install -y $MYSQL_SHELL_PACKAGE \
+  && microdnf install -y --disablerepo=ol8_appstream \
+   --enablerepo=mysql80-server-minimal $MYSQL_SERVER_PACKAGE \
+  && rpm --nodeps -e python36 \
+  && microdnf clean all \
   && mkdir /docker-entrypoint-initdb.d
 
-VOLUME /var/lib/mysql
+COPY /docker/mysql8.0/prepare-image.sh /prepare-image.sh
+#RUN /prepare-image.sh && rm -f /prepare-image.sh
+
+ENV MYSQL_UNIX_PORT /var/lib/mysql/mysql.sock
 
 COPY /docker/mysql8.0/docker-entrypoint.sh /entrypoint.sh
 COPY /docker/mysql8.0/healthcheck.sh /healthcheck.sh
@@ -36,4 +42,3 @@ ENTRYPOINT ["/entrypoint.sh"]
 HEALTHCHECK CMD /healthcheck.sh
 EXPOSE 3306 33060 33061
 CMD ["mysqld"]
-
