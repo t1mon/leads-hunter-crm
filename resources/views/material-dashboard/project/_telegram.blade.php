@@ -68,7 +68,7 @@
 
         <h6 class="card-title">@lang('projects.notifications.telegram.fields'):</h5>
         @foreach($telegram_fields as $field)
-            <p class="card-text ms-5">
+            <p class="card-text ms-3">
                     {!! Form::checkbox(
                         'settings[telegram][fields][]', 
                         $field, 

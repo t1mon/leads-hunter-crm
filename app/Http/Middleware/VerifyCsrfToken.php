@@ -12,7 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //TODO Удалить ngrock из адреса после залива на сервер
         '/telegram/webhook',
         
     ];

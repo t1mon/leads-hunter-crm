@@ -22,9 +22,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         LeadCreated::class => [
-            SendEmailData::class
-        ],
-        LeadCreated::class => [
+            SendEmailData::class,
             SendTelegramData::class
         ],
     ];

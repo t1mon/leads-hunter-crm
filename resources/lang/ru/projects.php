@@ -58,11 +58,12 @@ return [
         
         //Таблица настроек рассылки по email
         'emails_toggle' => 'Включить рассылку по E-mail',
-        'emails_settings' => 'Настройки',
+        'emails_settings' => 'Общие настройки',
+        'emails_list' => 'Список адресов e-mail',
         'emails_fields' => 'Дополнительные поля в рассылке',
         'emails_save' => 'Сохранить',
         'emails_form_placeholder' => 'Введите e-mail',
-        'emails_button_add' => 'Добавить',
+        'emails_add' => 'Добавить адрес e-mail',
         'emails_email' => 'Адрес',
         'emails_action' => 'Действие',
         'emails_none' => 'В данный момент в базе нет адресов',
@@ -121,8 +122,9 @@ return [
         'host' => 'Хост',
         'action' => 'Действие',
         'project' => 'Проект',
-        'add-form' => 'Добавить хост',
-        'add-button' => 'Добавить',
+        'add-host' => 'Добавить хост',
+        'add-host-placeholder' => 'Введите адрес хоста',
+        'list' => 'Список хостов',
         'delete-success' => 'Хост удалён',
         'create-error' => 'Ошибка добавления хоста',
         'create-success' => 'Хост добавлен в проект',
@@ -133,7 +135,8 @@ return [
     'users' => [
         //Форма добавления пользователя в проект
         'add-form' => [
-            'button' => 'Добавить пользователя в проект',
+            'placeholder' => 'Введите e-mail пользователя',
+            'title' => 'Добавить пользователя в проект',
             'make_admin' => 'Сделать администратором',
             'view_fields' => 'Видимые поля журнала',
         ],
@@ -165,7 +168,7 @@ return [
     'sidebar' => [
         'journal' => 'Журнал',
         'hosts' => 'Хосты',
-        'users' => 'Пользователи',
+        'users' => 'Настройки доступа',
         'forwarding' => 'Рассылки',
         'integrations' => 'Интеграция'
     ],

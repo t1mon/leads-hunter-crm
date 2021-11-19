@@ -34,7 +34,7 @@ class SendTelegramData
         $private_ids = $project->telegram_private_ids;
         
         //Рассылка по Telegram
-        if($project->settings['telegram']['enabled']){
+        if($project->settings['telegram']['enabled'] and ($channel_id === null && !sizeof($private_ids))){
             //TODO Реализовать более сложную функцию составления сообщения
             // $message = "Получен лид:\nИмя: {$event->lead->name}\nТелефон: {$event->lead->phone}";
             $message = $channel_id->composeMessage($event->lead);
