@@ -56,7 +56,19 @@ class DatabaseSeeder extends Seeder
             ['user_id' => $user->id],
             [
                 'name' => 'Test Project',
-                'settings' => ['email' => ["enabled" => true, "fields" => ["name", "phone"]] ],
+                'settings' => [
+                    'email' => [
+                        "enabled" => true,
+                        "fields" => []
+                    ],
+                    
+                    'telegram' => [
+                        'enabled' => true,
+                        'fields' => [],
+                    ],
+    
+                    'timezone' => 'Europe/Samara',
+                ],
             ]
         );
 

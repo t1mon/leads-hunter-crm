@@ -161,8 +161,6 @@ class TelegramIDController extends Controller
                 if( $body['my_chat_member']['new_chat_member']['user']['username'] === env('TELEGRAM_BOT_NAME')
                     and
                     ($body['my_chat_member']['chat']['type'] === 'channel' or $body['my_chat_member']['chat']['type'] === 'group')
-                    // and
-                    // $body['my_chat_member']['new_chat_member']['status'] === 'administrator')
                 )
                     {
                         Log::channel('leads')->info('Пройдена проверка');

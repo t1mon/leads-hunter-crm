@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+
 
 use App\Models\User;
 use App\Models\Role;
@@ -71,8 +73,26 @@ class MigrateProjects extends Command
 
                 $project->settings = array_merge($project->settings, $new_settings);
 
-                $project->save();
             }
+            /* 3.
+                Добавить в настройки проекта часовой пояс (по умолчанию UTC)*/
+            if(!array_key_exists('timezone', $project->settings)){
+                $new_settings = [ 'timezone' => 'Europe/Moscow'];
+                $project->settings = array_merge($project->settings, $new_settings);
+            }
+
+            /* 4.
+                Перевести дату всех созданных проектов из Москвы в UTC*/
+                $project->created_at = Carbon::create($project->created_at)->timezone('UTC');
+            
+            /* 5.
+                Перевести даты всех лидов в проекте из Москвы в UTC*/
+                foreach($project->leads() as $lead){
+                    $lead->created_at = Carbon::create($lead->created_at)->timezone('UTC');
+                    $lead->save();
+                }
+
+            $project->save();
         }
     }
 }

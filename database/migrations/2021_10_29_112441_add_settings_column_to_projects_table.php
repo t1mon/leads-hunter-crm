@@ -22,8 +22,15 @@ class AddSettingsColumnToProjectsTable extends Migration
             'settings' => [
                 'email' => [
                     'fields' => [],
-                    'enabled' => false
-                ]
+                    'enabled' => false,
+                ],
+                
+                'telegram' => [
+                    'fields' => [],
+                    'enabled' => false,
+                ],
+
+                'timezone' => 'UTC',
             ],
         ]);
     }

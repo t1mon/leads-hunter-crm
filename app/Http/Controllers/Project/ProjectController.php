@@ -212,24 +212,36 @@ class ProjectController extends Controller
         if (Gate::denies('update', [Project::class, $project]))
             return trans('projects.not-authorized');
 
-        //Обновление настроек
-        $new_settings = $request->all()['settings'];
+        /*Атрибуты проекта делятся на две группы:
+            - properties: свойства проекта (имя, токен и т.п.)            
+            - settings: настройки (telegram, email и часовой пояс)
+        */
 
-        $new_settings = array_merge($project->settings, $new_settings);
+        //Обновление свойств проекта
+        //TODO При добавлении новых свойств необходимо убедиться, что данная инструкция не затрёт другие свойства проекта
+        if($request->properties)
+            $project->fill($request->all()['properties']);
 
-        $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
-        $new_settings['telegram']['enabled'] = (bool) $new_settings['telegram']['enabled'];
+        //Обновление настроек синхронизации
+        if($request->settings){
+            $new_settings = $request->all()['settings'];
 
-        if(!array_key_exists('fields', $new_settings['email']))
-            $new_settings['email']['fields'] = [];
-        
-        if(!array_key_exists('fields', $new_settings['telegram']))
-            $new_settings['telegram']['fields'] = [];
+            $new_settings = array_merge($project->settings, $new_settings);
 
-        $project->settings = $new_settings;
+            $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
+            $new_settings['telegram']['enabled'] = (bool) $new_settings['telegram']['enabled'];
+
+            if(!array_key_exists('fields', $new_settings['email']))
+                $new_settings['email']['fields'] = [];
+            
+            if(!array_key_exists('fields', $new_settings['telegram']))
+                $new_settings['telegram']['fields'] = [];
+
+            $project->settings = $new_settings;
+        }
 
         $project->save();
-        return redirect()->route('project.settings-sync', $project)->withSuccess('Настройки проекта обновлены');
+        return back()->withSuccess('Настройки проекта обновлены');
     } //update
 
     /**

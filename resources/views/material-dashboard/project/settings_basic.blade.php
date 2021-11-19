@@ -20,6 +20,13 @@
                 </a>
             </li>
 
+            {{--Настройки разрешений пользователей--}}
+            <li class="nav-item">
+                <a  class="nav-link" data-bs-toggle="tab" href="#properties">
+                    @lang('projects.properties.tab')
+                </a>
+            </li>
+
         </ul>
     </div>
 
@@ -29,10 +36,14 @@
             @include('material-dashboard.project._hosts')
         </div>
 
-        
         {{--Настройки разрешений пользователей--}}
         <div class="tab-pane fade" id="users" role="tabpanel">
             @include('material-dashboard.project._users')
+        </div>
+
+        {{--Свойства проекта--}}
+        <div class="tab-pane fade" id="properties" role="tabpanel">
+            @include('material-dashboard.project._properties')
         </div>
 
     </div>

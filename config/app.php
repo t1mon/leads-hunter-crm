@@ -67,8 +67,7 @@ return [
     |
     */
 
-    //'timezone' => 'Etc/UTC',
-    'timezone' => 'Europe/Moscow',
+    'timezone' => 'UTC',
 
 
     /*
