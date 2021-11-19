@@ -4,6 +4,7 @@ use App\Http\Controllers\NewsletterSubscriptionController;
 use App\Http\Controllers\Project\EmailController;
 use App\Http\Controllers\Project\HostController;
 use App\Http\Controllers\Project\ProjectController;
+use App\Http\Controllers\Project\LeadClassController;
 use App\Http\Controllers\Project\UserPermissionsController;
 use App\Http\Controllers\Project\ProjectTokenController;
 use App\Http\Controllers\UserController;
@@ -53,3 +54,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
 });
+
+Route::post('/test/lead-class/store', [LeadClassController::class, 'store']);
+Route::post('/test/lead-class/destroy', [LeadClassController::class, 'destroy']);

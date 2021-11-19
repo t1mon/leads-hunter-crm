@@ -15,10 +15,12 @@ class LeadsRequest extends FormRequest
      */
     public function authorize(\Illuminate\Http\Request $request)
     {
-        if (!$request->project_id || !$request->api_token) {
+        // if (!$request->project_id || !$request->api_token) {
+        if (!$request->api_token) {
             return false;
         }
-        if (!$project = Project::find($request->project_id)) {
+        // if (!$project = Project::find($request->project_id)) {
+        if (!$project = Project::where('api_token', $request->api_token)->first()) {
             return false;
         }
         return $project->api_token === $request->api_token;
@@ -32,7 +34,7 @@ class LeadsRequest extends FormRequest
     public function rules(Request $request)
     {
         return [
-            'project_id' => 'required|integer|exists:projects,id',
+            // 'project_id' => 'required|integer|exists:projects,id',
             'name' => 'required|string',
             'surname' => 'nullable|string',
             'patronymic' => 'nullable|string',
