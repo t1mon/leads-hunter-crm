@@ -17,6 +17,8 @@ class LeadsController extends Controller
 {
     public function store(LeadsRequest $request)
     {
+        $request->merge(['project_id' => Project::where('api_token', $request->api_token)->value('id')]);
+
         if(filter_var($request->host, FILTER_VALIDATE_URL)){
             $host = parse_url($request->host);
             $request->merge(['host' => $host['host']]);
