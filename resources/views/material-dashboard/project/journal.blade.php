@@ -37,7 +37,8 @@
       <div class="col-4">
           <div class="form-check form-switch ps-2">
                 <label class="form-check-label text-body ms-3 text-truncate w-80 mb-0">
-                    {!! Form::checkbox('double_phone', null, request()->double_phone,['class' => 'form-check-input ms-auto' ]) !!} Убрать дубликаты
+                    <input name="double_phone" type="checkbox" class="form-check-input ms-auto" value="true" {{ (request()->double_phone ? 'checked' : '') }} >
+                        Убрать дубликаты
                 </label>
           </div>
       </div>
