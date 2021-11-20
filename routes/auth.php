@@ -7,6 +7,7 @@ use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Project\LeadClassController;
 use App\Http\Controllers\Project\UserPermissionsController;
 use App\Http\Controllers\Project\ProjectTokenController;
+use App\Http\Controllers\Project\Lead\CommentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPasswordController;
 use App\Http\Controllers\UserTokenController;
@@ -49,11 +50,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('{project}/host', HostController::class)->only(['store', 'destroy']);
         Route::resource('{project}/user', UserPermissionsController::class)->only(['store', 'update', 'destroy']);
         Route::resource('project/{project}/email', EmailController::class)->only(['store', 'destroy']);
+        Route::resource('project/{project}/{lead}/comment', CommentController::class)->only(['show', 'create', 'store', 'edit', 'destroy']);
     });
 
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
 });
-
-Route::post('/test/lead-class/store', [LeadClassController::class, 'store']);
-Route::post('/test/lead-class/destroy', [LeadClassController::class, 'destroy']);

@@ -66,6 +66,7 @@
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.client')</th>
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.phone')</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
+                        <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Комментарий</th>
 
                         {{--Если пользователь создатель или менеджер проекта, ему видны все колонки --}}
                         @if($project->isOwner() or Auth::user()->isManagerFor($project))
@@ -109,6 +110,25 @@
                               </span>
                                 </div>
                             </td>
+
+                            <td>
+                                @php
+                                    $comment = \App\Models\Project\Lead\Comment::where(
+                                        ['project_id' => $project->id, 'lead_id' => $lead->id]
+                                        )->first();
+                                @endphp
+
+                                @if(is_null($comment))
+                                    <a class="btn btn-primary" href="{{route('comment.create', [$project, $lead])}}">
+                                        Добавить
+                                    </a>
+                                @else
+                                    <a class="btn btn-primary" href="{{route('comment.show', [$project, $lead, $comment])}}">
+                                        Просмотреть
+                                    </a>
+                                @endif
+                            </td>
+
                             {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
                             @if($project->isOwner() or Auth::user()->isManagerFor($project))
                                 <td class="align-middle text-center">

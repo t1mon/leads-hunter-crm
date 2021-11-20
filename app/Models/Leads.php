@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Project\Project;
+use App\Models\Project\Project\Lead\Comment;
+
 use App\Events\Leads\LeadCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +39,10 @@ class Leads extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function comment(){ //Получить комментарий к лиду
+        return $this->hasOne(Comment::class, 'lead_id');
+    } //comment
 
     public static function getEntries($projectId, $phone) //Получение номера вхождений у лида
     {
