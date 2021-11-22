@@ -25,7 +25,7 @@ class HostController extends Controller
 
 
         try {
-            if (Host::where('host', $request->host)->exists()) {
+            if (Host::where(['host' => $request->host, 'project_id' => $request->project_id])->exists()) {
                 throw new \Exception(trans('projects.hosts.create-error') . ': ' . trans('projects.hosts.error-exists'));
             }
             Host::create($request->all());

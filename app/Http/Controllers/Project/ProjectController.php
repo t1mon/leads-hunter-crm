@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\Project\Email;
+use App\Models\Project\TelegramID;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -111,9 +112,14 @@ class ProjectController extends Controller
         $emails = Email::where('project_id', $project->id)->get();
 
         //TODO Загрузка контактов Telegram
-        //...
+        //Канал
+        $telegram_groupID = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_CHANNEL])->first();
 
-        return view('material-dashboard.project.settings_sync', compact('tab', 'project', 'emails'));
+        //Личные чаты
+        $telegram_privateIDs = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE, ])->paginate(50);
+
+        return view( 'material-dashboard.project.settings_sync',
+            compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs') );
     } //sync_settings
 
     /**
@@ -206,16 +212,36 @@ class ProjectController extends Controller
         if (Gate::denies('update', [Project::class, $project]))
             return trans('projects.not-authorized');
 
-        //Обновление настроек
-        $new_settings = $request->all()['settings'];
-        $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
-        if(!array_key_exists('fields', $new_settings['email']))
-            $new_settings['email']['fields'] = [];
+        /*Атрибуты проекта делятся на две группы:
+            - properties: свойства проекта (имя, токен и т.п.)            
+            - settings: настройки (telegram, email и часовой пояс)
+        */
 
-        $project->settings = $new_settings;
+        //Обновление свойств проекта
+        //TODO При добавлении новых свойств необходимо убедиться, что данная инструкция не затрёт другие свойства проекта
+        if($request->properties)
+            $project->fill($request->all()['properties']);
+
+        //Обновление настроек синхронизации
+        if($request->settings){
+            $new_settings = $request->all()['settings'];
+
+            $new_settings = array_merge($project->settings, $new_settings);
+
+            $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
+            $new_settings['telegram']['enabled'] = (bool) $new_settings['telegram']['enabled'];
+
+            if(!array_key_exists('fields', $new_settings['email']))
+                $new_settings['email']['fields'] = [];
+            
+            if(!array_key_exists('fields', $new_settings['telegram']))
+                $new_settings['telegram']['fields'] = [];
+
+            $project->settings = $new_settings;
+        }
 
         $project->save();
-        return redirect()->route('project.settings-sync', $project)->withSuccess('Настройки проекта обновлены');
+        return back()->withSuccess('Настройки проекта обновлены');
     } //update
 
     /**

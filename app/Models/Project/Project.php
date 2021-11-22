@@ -31,7 +31,15 @@ class Project extends Model
             {
                 "enabled": true,
                 "fields": []
-            }
+            },
+
+            "telegram":
+            {
+                "enabled": true,
+                "fields": []
+            },
+
+            "timezone": "UTC"
         }',
     ];
 
@@ -52,10 +60,30 @@ class Project extends Model
         return $this->hasMany(UserPermissions::class);
     }
 
-    public function emails()
+    public function emails() //Получить все e-mail адреса рассылки
     {
         return $this->hasMany(Email::class);
     }
+
+    public function getTelegramChannelIdAttribute() //Получить идентификатор канала, на который назначен проект
+    {
+        return TelegramID::where(['project_id' => $this->id, 'type' => TelegramID::TYPE_CHANNEL])->first();
+    } //getTelegramChannelIdAttribute
+
+    public function getTelegramPrivateIdsAttribute() //Получить всех подписчиков личной рассылки проекта
+    {
+        return TelegramID::where(['project_id' => $this->id, 'type' => TelegramID::TYPE_PRIVATE, 'approved' => true])->get();
+    } //getTelegramPrivateIdsAttribute
+
+    public function getTimezoneAttribute() //Аксессор для удобного доступа к часовому поясу
+    {
+        return $this->settings['timezone'];
+    } //getTimezoneAttribute
+
+    public function setTimezoneAttribute(string $value) //Мутатор для удобного изменения часового пояса
+    {
+        $this->settings['timezone'] = $value;
+    } //setTimezoneAttribute
 
     public function leads()
     {

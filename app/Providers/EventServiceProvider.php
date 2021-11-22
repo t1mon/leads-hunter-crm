@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\Leads\LeadCreated;
 use App\Listeners\Leads\SendEmailData;
+use App\Listeners\Leads\SendTelegramData;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,7 +22,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         LeadCreated::class => [
-            SendEmailData::class
+            SendEmailData::class,
+            SendTelegramData::class
         ],
     ];
 

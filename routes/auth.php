@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NewsletterSubscriptionController;
 use App\Http\Controllers\Project\EmailController;
+use App\Http\Controllers\Project\TelegramIDController;
 use App\Http\Controllers\Project\HostController;
 use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Project\LeadClassController;
@@ -51,8 +52,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('{project}/user', UserPermissionsController::class)->only(['store', 'update', 'destroy']);
         Route::resource('project/{project}/email', EmailController::class)->only(['store', 'destroy']);
         Route::resource('project/{project}/{lead}/comment', CommentController::class)->only(['show', 'create', 'store', 'edit', 'destroy']);
+        Route::resource('project/{project}/telegram', TelegramIDController::class)->only(['store', 'destroy']);
     });
-
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
 });

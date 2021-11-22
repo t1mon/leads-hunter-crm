@@ -92,7 +92,10 @@
                                 </div>
                             </td>
                             <td>
-                                <p class="text-center text-sm font-weight-normal mb-0">{{ humanize_date($lead->created_at, 'd-m-Y H:i:s') }}</p>
+                                <p class="text-center text-sm font-weight-normal mb-0">
+                                    {{-- {{ humanize_date($lead->created_at, 'd-m-Y H:i:s') }} --}}
+                                    {{ humanize_date(\Illuminate\Support\Carbon::create($lead->created_at)->timezone($project->timezone), 'd-m-Y H:i:s') }}
+                                </p>
                             </td>
                             <td>
                                 <h6 class="text-center mb-0 font-weight-normal text-sm">{{  $lead->getClientName() }}</h6>

@@ -32,7 +32,7 @@
         
         {{--Настройки Telegram--}}
         <div class="tab-pane fade" id="telegram" role="tabpanel">
-            В работе
+            @include('material-dashboard.project._telegram')
         </div>
 
     </div>
