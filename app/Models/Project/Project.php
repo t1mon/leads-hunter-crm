@@ -102,4 +102,8 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function classes(){ //Получить классы, назначенные проекту
+        return $this->hasMany(LeadClass::class);
+    } //classes
 }

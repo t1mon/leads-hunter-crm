@@ -98,7 +98,11 @@
                                 </p>
                             </td>
                             <td>
-                                <h6 class="text-center mb-0 font-weight-normal text-sm">{{  $lead->getClientName() }}</h6>
+                                <h6 class="text-center mb-0 font-weight-normal text-sm">
+                                    <span style="color:#{{$lead->class->color ?? ''}}" data-toggle="tooltip" title="{{$lead->class->name ?? ''}}">
+                                        {{  $lead->getClientName() }}
+                                    </span>
+                                </h6>
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <p class="mb-0 font-weight-normal text-sm">{{ phone_format($lead->phone) }}</p>

@@ -14,7 +14,8 @@ class AddClassToLeads extends Migration
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->string('class')->after('id')->nullable();
+            $table->unsignedBigInteger('class_id')->after('id')->nullable();
+            $table->foreign('class_id')->references('id')->on('leads_classes');
         });
     }
 
@@ -26,7 +27,7 @@ class AddClassToLeads extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->$table->dropColumn('class');
+            $table->dropColumn('class_id');
         });
     }
 }

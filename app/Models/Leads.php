@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Project\Project;
 use App\Models\Project\Project\Lead\Comment;
+use App\Models\Project\LeadClass;
 
 use App\Events\Leads\LeadCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,6 +44,10 @@ class Leads extends Model
     public function comment(){ //Получить комментарий к лиду
         return $this->hasOne(Comment::class, 'lead_id');
     } //comment
+
+    public function class(){ //Получить класс лида
+        return $this->belongsTo(LeadClass::class, 'class_id');
+    } //class
 
     public static function getEntries($projectId, $phone) //Получение номера вхождений у лида
     {

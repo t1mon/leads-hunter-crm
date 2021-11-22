@@ -20,6 +20,13 @@
                 </a>
             </li>
 
+            {{--Классы проекта--}}
+            <li class="nav-item">
+                <a  class="nav-link" data-bs-toggle="tab" href="#classes">
+                    @lang('projects.classes.tab')
+                </a>
+            </li>
+
         </ul>
     </div>
 
@@ -33,6 +40,11 @@
         {{--Настройки разрешений пользователей--}}
         <div class="tab-pane fade" id="users" role="tabpanel">
             @include('material-dashboard.project._users')
+        </div>
+
+        {{--Классы проекта--}}
+        <div class="tab-pane fade" id="classes" role="tabpanel">
+            @include('material-dashboard.project._classes')
         </div>
 
     </div>

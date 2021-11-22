@@ -17,7 +17,7 @@ class CreateClassesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('type'); //Общий или частный
-            $table->unsignedInteger('color'); //Цвет хранится в виде 32-битного целого числа (например #ADFF2F)
+            $table->string('color');
             $table->unsignedInteger('project_id')->nullable(); //Если класс является общим, ему не нужно указывать номер проекта
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
