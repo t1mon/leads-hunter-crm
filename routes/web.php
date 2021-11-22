@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Project\TelegramIDController;
 use App\Mail\Newsletter;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
@@ -26,5 +27,6 @@ use Illuminate\Support\Facades\Route;
 //});
 
 //Route::get('newsletter-subscriptions/unsubscribe', 'NewsletterSubscriptionController@unsubscribe')->name('newsletter-subscriptions.unsubscribe');
+//Route::get('/test', [\App\Http\Controllers\Project\ProjectController::class , 'test']);
 
-Route::get('/test', [\App\Http\Controllers\Project\ProjectController::class , 'test']);
+Route::post('telegram/webhook', [TelegramIDController::class, 'webhook'])->name('telegram.webhook');

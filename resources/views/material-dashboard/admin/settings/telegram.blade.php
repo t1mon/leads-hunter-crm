@@ -7,7 +7,7 @@
             <h5 class="card-title">Получен ответ</h6>
             <p class="card-text">{{$response}}</p>
         </div>
-    </div>    
+    </div>
 @endisset
 
 
@@ -16,7 +16,7 @@
     <div class="col">
         <div class="card my-3">
             <div class="card-body">
-                <a class="btn btn-primary" href="{{route('telegram.updates')}}">
+                <a class="btn btn-primary" href="{{route('admin.settings.telegram.updates')}}">
                     Просмотреть обновления
                 </a>
             </div>
@@ -47,17 +47,17 @@
                                 </p>
                             @endforeach
                         </p>
-                    @endif 
+                    @endif
 
-                    <a class="btn btn-primary" href="{{route('telegram.webhook.update')}}">
+                    <a class="btn btn-primary" href="{{route('admin.settings.telegram.webhook.update')}}">
                         Обновить
                     </a>
 
                     @if(strlen($webhook['result']['url']))
-                        <a class="btn btn-primary" href="{{route('telegram.webhook.delete')}}">
+                        <a class="btn btn-primary" href="{{route('admin.settings.telegram.webhook.delete')}}">
                             Удалить
                         </a>
-                        <a class="btn btn-primary" href="{{route('telegram.webhook.info')}}">
+                        <a class="btn btn-primary" href="{{route('admin.settings.telegram.webhook.info')}}">
                             Подробнее
                         </a>
                     @endif
@@ -95,14 +95,14 @@
             <div class="card-body">
                 <h5 class="card-title">Сделать рассылку по проекту</h5>
                 {!! Form::open(["method" => "get"]) !!}
-                    
+
                     {!! Form::textarea("text", null, ["placeholder" => "Сообщение", "class" => "form-control"]) !!}
                     {!! Form::submit("Отправить", ["class" => "btn btn-primary"]) !!}
                 {!! Form::close() !!}
             </div>
         </div>
     </div>
-    
+
 </div>
 
 

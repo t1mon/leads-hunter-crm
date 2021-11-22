@@ -17,12 +17,12 @@ use App\Models\Project\Project;
 use App\Models\Project\TelegramID;
 
 class TelegramIDController extends Controller
-{    
+{
     public function store(Project $project, Request $request){
         //Проверка полномочий пользователя
         if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index')->withError(trans('projects.not_authorized'));
-        
+
         //Канал
         //Если идентификатор канала уже есть, он заменяется новым (тогда не нужно писать метод update)
         if($request->type === TelegramID::TYPE_CHANNEL){
@@ -38,7 +38,7 @@ class TelegramIDController extends Controller
             return redirect()->route('project.settings-sync', [$project, 'telegram'])
                 ->withSuccess( trans('projects.notifications.telegram.group_create_success') );
         }
-        
+
         //Личка
         //TODO Если у пользователя с таким юзернеймом уже есть id в базе данных, сразу взять его оттуда и одобрить
 
@@ -46,7 +46,7 @@ class TelegramIDController extends Controller
             if( TelegramID::where(['project_id' => $project->id, 'name' => $request->name])->exists() )
                 return redirect()->route('project.settings-sync', [$project, 'telegram'])
                     ->withError( trans('projects.notifications.telegram.create_error') . ': ' . trans('projects.notifications.telegram.error_exists') );
-            
+
             $parameters = [
                 'project_id' => $project->id,
                 'name' => $request->name,
@@ -62,10 +62,10 @@ class TelegramIDController extends Controller
                 if( !is_null($existing_contact) ){
                     $parameters['number'] = $existing_contact->number;
                     $parameters['approved'] = true;
-                }                    
+                }
             }
 
-            TelegramID::create($parameters);            
+            TelegramID::create($parameters);
 
             return redirect()->route('project.settings-sync', [$project, 'telegram'])
                 ->withSuccess( trans('projects.notifications.telegram.private_create_success') );
@@ -86,7 +86,7 @@ class TelegramIDController extends Controller
             TelegramID::API_SendMessageTo($id, "Уважаемый $username! Ваш контакт не указан ни в одном проекте, либо уже был одобрен.");
             return;
         }
-        
+
         //Добавление номера в контакты
         foreach($contacts as $contact){
             $contact->number = $id;
@@ -101,9 +101,9 @@ class TelegramIDController extends Controller
         //Проверка полномочий пользователя
         if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index')->withError(trans('projects.not_authorized'));
-        
+
         $contact = TelegramID::find($id);
-        
+
         $contact->delete();
         return redirect()->route('project.settings-sync', [$project, 'telegram'])
                 ->withSuccess( trans('projects.notifications.telegram.delete_success') );
@@ -113,7 +113,7 @@ class TelegramIDController extends Controller
     public function telegram(){ //Тестовая страница для проверки функций Telegram API
         $projects = Project::all();
         $contacts = TelegramID::all();
-        return view('material-dashboard.telegram', compact('projects', 'contacts'));
+        return view('material-dashboard.admin.settings.telegram', compact('projects', 'contacts'));
     } //telegram
 
     public function getUpdates(){
@@ -127,24 +127,24 @@ class TelegramIDController extends Controller
 
     public function setWebhook(){
         TelegramID::API_DeleteWebhook();
-        $response = TelegramID::API_SetWebhook(env('NGROK_URL') . '/telegram/webhook');
-        return $response['ok'] ? redirect()->route('telegram.main') : $response['description'];
+        $response = TelegramID::API_SetWebhook(env('WEBHOOK_URL') . '/telegram/webhook');
+        return $response['ok'] ? redirect()->route('admin.settings.telegram.main') : $response['description'];
     } //setWebhook
 
     public function deleteWebhook(){
         $response = TelegramID::API_DeleteWebhook();
-        return $response['ok'] ? redirect()->route('telegram.main') : $response['description'];
+        return $response['ok'] ? redirect()->route('admin.settings.telegram.main') : $response['description'];
     } //setWebhook
 
     public function webhook(Request $request){
         $body = json_decode($request->getContent(), true);
-        
+
         //Реакция на сообщения
         if( key_exists('message', $body) ){
             //Команда на подписку (пользователь будет добавлен в проект)
             if($body['message']['text'] === '/start'){
                 $this->approve($body['message']['from']['username'], $body['message']['from']['id']);
-                
+
             }
 
             //Команда на удаление пользователя из проекта
@@ -168,7 +168,7 @@ class TelegramIDController extends Controller
                     }
             }
         }
-        
+
         // Log::channel('leads')->info(print_r($body, true));
     }
 }
