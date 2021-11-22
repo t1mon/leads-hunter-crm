@@ -64,6 +64,7 @@
                         <th class="text-uppercase text-xxs font-weight-bolder opacity-7">#</th>
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.date')</th>
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.client')</th>
+                        <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.class')</th>
                         <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.phone')</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
                         <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Комментарий</th>
@@ -98,11 +99,32 @@
                                 </p>
                             </td>
                             <td>
-                                <h6 class="text-center mb-0 font-weight-normal text-sm">
-                                    <span style="color:#{{$lead->class->color ?? ''}}" data-toggle="tooltip" title="{{$lead->class->name ?? ''}}">
-                                        {{  $lead->getClientName() }}
-                                    </span>
-                                </h6>
+                                <h6 class="text-center mb-0 font-weight-normal text-sm">{{  $lead->getClientName() }}</h6>
+                            </td>
+                            <td style="background-color:#{{$lead->class->color ?? ''}}">
+                                @php
+                                    $classes = [];
+                                    $classes[0] = 'Убрать';
+                                    foreach($project->classes as $class)
+                                        $classes[$class->id] = $class->name;
+                                    
+                                @endphp
+                                
+                                {!! Form::open([
+                                    'method' => 'POST',
+                                    'route' => ['class-assign', [$project, $lead] ],
+                                ]) !!}
+                                
+                                {!! Form::select('class_id', $classes, $lead->class->id ?? $classes[0] ) !!}
+
+                                {!! Form::button(
+                                    '<i class="fa fa-save" aria-hidden="true"></i>',
+                                    [
+                                        'type' => 'submit',
+                                        'class' => 'btn btn-primary btn-sm',
+                                    ]) !!}
+
+                                {!! Form::close() !!}
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <p class="mb-0 font-weight-normal text-sm">{{ phone_format($lead->phone) }}</p>

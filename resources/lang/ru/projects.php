@@ -30,6 +30,7 @@ return [
     'journal' => [
         'date' => 'Дата',
         'client' => 'Клиент',
+        'class' => 'Класс',
         'name' => 'Имя',
         'surname' => 'Фамилия',
         'patronymic' => 'Отчество',

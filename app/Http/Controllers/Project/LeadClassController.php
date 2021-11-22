@@ -64,10 +64,19 @@ class LeadClassController extends Controller
             return redirect()->route('project.index');
 
         //Удаление класса из всех лидов в проекте
-        Leads::where(['project_id' => $project->id, 'class' => $class->name])->update(['class' => null]);
+        Leads::where(['project_id' => $project->id, 'class_id' => $class->id])->update(['class_id' => null]);
 
         $class->delete();
 
         return back()->withSuccess(trans('leads-classes.delete-success'));
     } //destroy
+
+    public function assign(Project $project, Leads $lead, Request $request){ //Назначить класс лиду        
+        $lead->class_id = $request->class_id ? $request->class_id : null;
+        $lead->timestamps = false;
+        $lead->save();
+        $lead->timestamps = true;
+        $lead->save();
+        return redirect()->route('project.journal', $project);
+    } //assign
 }

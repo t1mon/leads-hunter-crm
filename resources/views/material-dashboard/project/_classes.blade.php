@@ -7,7 +7,7 @@
     ])
 
 {{--Список классов--}}
-<div class="card my-3">
+{{-- <div class="card my-3">
     <div class="card-body">
         <div class="table-responsive">
                 <table class="table">
@@ -49,4 +49,53 @@
                 </table>
         </div>
     </div>
+</div> --}}
+
+<div class="card-group">
+    @if($project->classes->isEmpty())
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-center">
+                    <h5 class="card-header"><b>@lang('projects.classes.table.none')</b></h5>
+                </div>
+            </div>
+        </div>    
+    @else
+        <div class="row row-cols-auto row-cols-md-auto g-3">
+            @foreach($project->classes as $class)
+                <div class="col">
+                    <div class="card">
+                        <div class="card-img-top p-3" style="background-color:#{{$class->color}}">
+                        </div>
+                        
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <h6 class="card-title">{{$class->name}}</h6>
+                        </div>
+
+                        <div class="card-footer">
+                            {!! Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['class.destroy', [$project, $class] ],
+                                'id' => $loop->index . '_delete',
+                            ]) !!}
+                            {!! Form::close() !!}
+
+                            <div class="btn-group-vertical d-flex align-items-center justify-content-center">
+                                <a href="{{route('class.edit', [$project, $class])}}" class="btn btn-secondary">
+                                    @lang('projects.button-change')
+                                </a>
+                                {!! Form::submit(
+                                        trans('projects.button-delete'),
+                                        [
+                                            'class' => 'btn btn-danger',
+                                            'form' => $loop->index . '_delete',
+                                        ]
+                                ) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 </div>
