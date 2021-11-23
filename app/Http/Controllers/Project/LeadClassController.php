@@ -72,11 +72,10 @@ class LeadClassController extends Controller
     } //destroy
 
     public function assign(Project $project, Leads $lead, Request $request){ //Назначить класс лиду        
-        $lead->class_id = $request->class_id ? $request->class_id : null;
-        $lead->timestamps = false;
-        $lead->save();
-        $lead->timestamps = true;
-        $lead->save();
+        Leads::where('id', $lead->id)->update([
+            'class_id' => $request->class_id ? $request->class_id : null, 
+            'updated_at' => $lead->updated_at
+        ]);
         return redirect()->route('project.journal', $project);
     } //assign
 }

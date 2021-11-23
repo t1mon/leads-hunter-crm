@@ -54,9 +54,17 @@ return [
     //Страница рассылок
     'notifications' => [
         //Меню вкладок
-        'tab_forward_log' => 'Журнал рассылок',
+        'tab_info' => 'Информация',
         'tab_email_settings' => 'Настройки e-mail',
         'tab_telegram_settings' => 'Настройки Telegram',
+        
+        //Таблица с информацией о синхронизации
+        'info' => [
+            'info' => 'Информация о синхронизации',
+            'service' => 'Служба',
+            'status' => 'Статус',
+            'additional' => 'Дополнительные настройки'
+        ],
         
         //Таблица настроек рассылки по email
         'emails_toggle' => 'Включить рассылку по E-mail',

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Project\Project;
-use App\Models\Project\Project\Lead\Comment;
+use App\Models\Project\Lead\Comment;
 use App\Models\Project\LeadClass;
 
 use App\Events\Leads\LeadCreated;
@@ -41,9 +41,9 @@ class Leads extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function comment(){ //Получить комментарий к лиду
+    public function comment_CRM(){ //Получить комментарий к лиду из CRM
         return $this->hasOne(Comment::class, 'lead_id');
-    } //comment
+    } //getCommentCRMAttribute
 
     public function class(){ //Получить класс лида
         return $this->belongsTo(LeadClass::class, 'class_id');

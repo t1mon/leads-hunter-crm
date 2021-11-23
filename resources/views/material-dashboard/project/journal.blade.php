@@ -101,30 +101,34 @@
                             <td>
                                 <h6 class="text-center mb-0 font-weight-normal text-sm">{{  $lead->getClientName() }}</h6>
                             </td>
-                            <td style="background-color:#{{$lead->class->color ?? ''}}">
-                                @php
-                                    $classes = [];
-                                    $classes[0] = 'Убрать';
-                                    foreach($project->classes as $class)
-                                        $classes[$class->id] = $class->name;
+                            <td class="text-white text-center" style="background-color:#{{$lead->class->color ?? ''}}">
+                                @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                                    @php
+                                        $classes = [];
+                                        $classes[0] = 'Убрать';
+                                        foreach($project->classes as $class)
+                                            $classes[$class->id] = $class->name;
+                                        
+                                    @endphp
                                     
-                                @endphp
-                                
-                                {!! Form::open([
-                                    'method' => 'POST',
-                                    'route' => ['class-assign', [$project, $lead] ],
-                                ]) !!}
-                                
-                                {!! Form::select('class_id', $classes, $lead->class->id ?? $classes[0] ) !!}
-
-                                {!! Form::button(
-                                    '<i class="fa fa-save" aria-hidden="true"></i>',
-                                    [
-                                        'type' => 'submit',
-                                        'class' => 'btn btn-primary btn-sm',
+                                    {!! Form::open([
+                                        'method' => 'POST',
+                                        'route' => ['class-assign', [$project, $lead] ],
                                     ]) !!}
+                                    
+                                    {!! Form::select('class_id', $classes, $lead->class->id ?? $classes[0] ) !!}
 
-                                {!! Form::close() !!}
+                                    {!! Form::button(
+                                        '<i class="fa fa-save" aria-hidden="true"></i>',
+                                        [
+                                            'type' => 'submit',
+                                            'class' => 'btn btn-primary btn-sm',
+                                        ]) !!}
+
+                                    {!! Form::close() !!}
+                                @else
+                                        {{$lead->class->name ?? ''}}
+                                @endif
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <p class="mb-0 font-weight-normal text-sm">{{ phone_format($lead->phone) }}</p>
@@ -140,20 +144,20 @@
                                 </div>
                             </td>
 
-                            <td>
+                            <td class="align-middle text-center text-sm">
                                 @php
                                     $comment = \App\Models\Project\Lead\Comment::where(
                                         ['project_id' => $project->id, 'lead_id' => $lead->id]
                                         )->first();
                                 @endphp
 
-                                @if(is_null($comment))
-                                    <a class="btn btn-primary" href="{{route('comment.create', [$project, $lead])}}">
-                                        Добавить
-                                    </a>
+                                @if(is_null($lead->comment_CRM))
+                                    @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                                        <a class="fa fa-plus" aaria-hidden="true" href="{{route('comment.create', [$project, $lead])}}"></a>
+                                    @endif
                                 @else
-                                    <a class="btn btn-primary" href="{{route('comment.show', [$project, $lead, $comment])}}">
-                                        Просмотреть
+                                    <a href="{{route('comment.show', [$project, $lead, $lead->comment_CRM])}}" class="link-info">
+                                        {{ mb_substr($lead->comment_CRM->comment_body, 0, 15) . (mb_strlen($lead->comment_CRM->comment_body) > 15 ? '…' : '') }}
                                     </a>
                                 @endif
                             </td>
