@@ -101,14 +101,20 @@ class Project extends Model
         return count($this->settings['webhooks']) ? $objects : null;
     } //getWebhooksAttribute
 
-    public function webhook_add(array $new_webhook){ //Добавить вебхук
+    public function webhook_add(array $new_webhook){ //Добавить или обновить вебхук
         $new_settings = $this->settings;
         $new_settings['webhooks'][ $new_webhook['name'] ] = $new_webhook;
 
         $this->settings = $new_settings;
+    } //webhook_add
 
-        return $this->settings['webhooks'][ $new_webhook['name'] ]['name'];
-    } //setWebhookAttribute
+    public function webhook_update(string $webhook_name, array $params){ //Обновить параметры в вебхука
+        $new_settings = $this->settings;
+        foreach($params as $key => $value)
+            $new_settings['webhooks'][$webhook_name][$key] = $value;
+        
+        $this->settings = $new_settings;
+    } //webhook_update
 
     public function webhook_delete(string $name){ //Удалить вебхук
         if(array_key_exists($name, $this->settings['webhooks'])){

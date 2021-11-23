@@ -8,8 +8,9 @@
     <div class="card-body">
         <h6 class="card-title text-center">@lang('projects.notifications.webhooks.add')</h6>
 
-        {!! Form::open() !!}
+        {!! Form::open(['route' => ['webhook.store', $project] ]) !!}
             <div class="my-3">
+                {!! Form::hidden('enabled', true) !!}
                 {!! Form::text(
                     'name',
                     null,
@@ -33,8 +34,7 @@
                 <div class="row row-cols-3">
                     @foreach($fields as $field)
                         <div class="col my-1 mx-3">
-                            {!! Form::hidden($field, 0) !!}
-                            {!! Form::checkbox($field, $field, false, ['id' => $field . '_checkbox' ]) !!}
+                            {!! Form::checkbox('fields[]', $field, false, ['id' => $field . '_checkbox' ]) !!}
                             {!! Form::label( $field . '_checkbox', trans('projects.journal.' . $field) ) !!}
                             
                         </div>
@@ -50,5 +50,51 @@
 </div>
 
 {{--Список доступных вебхуков--}}
-<div class="table-responsive">
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>@lang('projects.notifications.webhooks.name')</th>
+                        <th>@lang('projects.notifications.webhooks.url')</th>
+                        <th>@lang('projects.notifications.webhooks.fields')</th>
+                        <th colspan="2">@lang('projects.actions')</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @isset($project->webhooks)
+                        @foreach($project->webhooks as $webhook)
+                            <tr class="{{$webhook->enabled ? '' : 'text-decoration-line-through'}}">
+                                <td>{{$loop->iteration}}</td>
+                                <td class="{{$webhook->enabled ? 'text-success' : 'text-secondary'}}">{{$webhook->name}}</td>
+                                <td class="{{$webhook->enabled ? 'text-warning' : 'text-secondary'}}">{{$webhook->url}}</td>
+                                <td  class="{{$webhook->enabled ? 'text-info' : 'text-secondary'}}">
+                                    @foreach ($webhook->fields as $field)
+                                        {{ trans('projects.journal.' . $field)  . ($loop->last ? '' : ', ') }}
+                                    @endforeach
+                                </td>
+                                <td>
+                                    {!! Form::open([ 'route' => ['webhook.update', $project, $webhook->name ], 'method' => 'PUT' ]) !!}
+                                        {!! Form::hidden('enabled', $webhook->enabled ? 0 : 1) !!}
+                                        {!! Form::button('<i class="fa fa-power-off" aria-hidden="true"></i>', ['class' => 'btn btn-' . ($webhook->enabled ? 'primary' : 'secondary'), 'type' => 'submit']) !!}
+                                    {!! Form::close() !!}
+                                </td>
+                                <td>
+                                    {!! Form::open([ 'route' => ['webhook.destroy', $project, $webhook->name ], 'method' => 'DELETE' ]) !!}
+                                        {!! Form::button('<i class="fa fa-trash" aria-hidden="true"></i>', ['class' => 'btn btn-' . ($webhook->enabled ? 'danger' : 'secondary'), 'type' => 'submit']) !!}
+                                    {!! Form::close() !!}
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5">@lang('projects.notifications.webhooks.none')</td>
+                        </tr>
+                    @endisset
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

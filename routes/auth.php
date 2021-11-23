@@ -8,6 +8,7 @@ use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Project\LeadClassController;
 use App\Http\Controllers\Project\UserPermissionsController;
 use App\Http\Controllers\Project\ProjectTokenController;
+use App\Http\Controllers\Project\WebhookController;
 use App\Http\Controllers\Project\Lead\CommentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPasswordController;
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('project/{project}/{lead}/comment', CommentController::class)->only(['show', 'create', 'store', 'edit', 'destroy']);
         Route::resource('project/{project}/telegram', TelegramIDController::class)->only(['store', 'destroy']);
         Route::resource('project/{project}/class', LeadClassController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::resource('project/{project}/webhook', WebhookController::class)->only(['store', 'update', 'destroy']);
     });
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
