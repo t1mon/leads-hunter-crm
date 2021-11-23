@@ -85,6 +85,39 @@ class Project extends Model
         $this->settings['timezone'] = $value;
     } //setTimezoneAttribute
 
+    public function webhook_get(string $name){ //Получить конкретный вебхук
+        //Вебхук возвращается в виде объекта для удобства
+        return array_key_exists($name, $this->settings['webhooks'])
+            ? json_decode(json_encode($this->settings['webhooks'][$name]))
+            : null;
+    } //webhook_get
+
+    public function getWebhooksAttribute(){ //Аксессор для удобного получения всех вебхуков
+        $objects = [];
+        foreach($this->settings['webhooks'] as $webhook)
+            $objects[] = json_decode(json_encode($webhook));
+        
+        //Возвращает null, если вебхуков нет
+        return count($this->settings['webhooks']) ? $objects : null;
+    } //getWebhooksAttribute
+
+    public function webhook_add(array $new_webhook){ //Добавить вебхук
+        $new_settings = $this->settings;
+        $new_settings['webhooks'][ $new_webhook['name'] ] = $new_webhook;
+
+        $this->settings = $new_settings;
+
+        return $this->settings['webhooks'][ $new_webhook['name'] ]['name'];
+    } //setWebhookAttribute
+
+    public function webhook_delete(string $name){ //Удалить вебхук
+        if(array_key_exists($name, $this->settings['webhooks'])){
+            $new_settings = $this->settings;
+            unset($new_settings['webhooks'][$name]);
+            $this->settings = $new_settings;
+        }
+    } //webhook_delete
+
     public function leads()
     {
         return $this->hasMany(Leads::class, 'project_id');

@@ -26,6 +26,13 @@
             </a>
         </li>
 
+        {{--Настройки вебхуков--}}
+        <li class="nav-item">
+            <a  class="nav-link" data-bs-toggle="tab" href="#webhooks">
+                @lang('projects.notifications.tab_webhooks')
+            </a>
+        </li>
+
     </ul>
 </div>
 
@@ -45,6 +52,11 @@
     {{--Настройки Telegram--}}
     <div class="tab-pane fade" id="telegram" role="tabpanel">
         @include('material-dashboard.project._telegram')
+    </div>
+
+    {{--Настройки вебхуков--}}
+    <div class="tab-pane fade" id="webhooks" role="tabpanel">
+        @include('material-dashboard.project.webhooks.index')
     </div>
 
 </div>

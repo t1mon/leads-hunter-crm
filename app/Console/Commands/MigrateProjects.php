@@ -91,6 +91,13 @@ class MigrateProjects extends Command
                     $lead->created_at = Carbon::create($lead->created_at)->timezone('UTC');
                     $lead->save();
                 }
+            
+            /* 6.
+                Добавить в настройки вебхуки*/
+                if(!array_key_exists('webhooks', $project->settings)){
+                    $new_settings = ['webhooks' => [] ];
+                    $project->settings = array_merge($project->settings, $new_settings);
+                }
 
             $project->save();
         }
