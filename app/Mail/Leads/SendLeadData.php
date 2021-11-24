@@ -14,15 +14,17 @@ class SendLeadData extends Mailable
     use Queueable, SerializesModels;
 
     public Leads $lead;
+    public $subject;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Leads $lead)
+    public function __construct(Leads $lead, string $subject)
     {
         $this->lead = $lead;
+        $this->subject = $subject;
     }
 
     /**
@@ -33,7 +35,7 @@ class SendLeadData extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'), config('app.name', 'Hunter'))
-                    ->subject(__('leads.email.subject'))
+                    ->subject(empty($this->subject) ? __('leads.email.subject') : $this->subject)
                     ->view('emails.lead.data')
                     ->with([
                         'lead' => $this->lead

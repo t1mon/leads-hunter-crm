@@ -47,6 +47,7 @@ return [
         'source' => 'Источник',
         'count' => 'Всего :count лид|Всего :count лида|Всего :count лидов',
         'count_unique' => 'Всего :count уникальный лид|Всего :count уникальных лида|Всего :count уникальных лидов',
+        'key' => 'Ключ',
         'utm' => [
             'utm_source' => '[utm_source]',
             'utm_campaign' => '[utm_campaign]',
@@ -74,6 +75,8 @@ return [
         //Таблица настроек рассылки по email
         'emails_toggle' => 'Включить рассылку по E-mail',
         'emails_settings' => 'Общие настройки',
+        'emails_subject' => 'Тема письма',
+        'emails_send_all' => 'Присылать все лиды',
         'emails_list' => 'Список адресов e-mail',
         'emails_fields' => 'Дополнительные поля в рассылке',
         'emails_save' => 'Сохранить',
@@ -116,11 +119,17 @@ return [
             'private_none' => 'В данный момент в базе нет контактов',
         ],
 
+        //Заголовки таблицы
+        'date' => 'Дата',
+        'email_notification' => 'E-mail',
+        'telegram_notification' => 'Telegram',
+
         //Вебхуки
         'webhooks' => [
             'add' => 'Добавить вебхук',
             'name' => 'Название вебхука',
             'placeholder' => 'Введите URL с параметрами',
+            'method' => 'Метод',
             'url' => 'URL',
             'fields' => 'Отправляемые поля',
 
@@ -131,11 +140,6 @@ return [
             'update-success' => 'Вебхук обновлён',
             'delete-success' => 'Вебхук удалён',
         ],
-
-        //Заголовки таблицы
-        'date' => 'Дата',
-        'email_notification' => 'E-mail',
-        'telegram_notification' => 'Telegram',
 
         //Прочее
         'none_available' => 'В данный момент уведомления отсутствуют',

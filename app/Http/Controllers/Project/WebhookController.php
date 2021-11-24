@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Leads;
+
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,4 +64,24 @@ class WebhookController extends Controller
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
                 ->withSuccess( trans('project.notifications.webhooks.delete-success') );
     } //destroy
+
+    public function sendData(Project $project, Leads $lead, Object $webhook, bool $log = true){ //Отправить данные по вебхуку
+        //Составление тела запроса
+        $parameters = [];
+        foreach($webhook->fields as $field)
+            $parameters[$field] = $lead->$field;
+        
+        $response = null;
+
+        //Отправка запроса
+        if($webhook->method === 'POST')
+            $response = Http::asForm()->post($webhook->url, $parameters);
+        elseif($webhook->method === 'GET')
+            $response = Http::asForm()->get($webhook->url, $parameters);
+
+        //TODO Запись в лог
+        //...
+
+        return $response->json();
+    } //sendData
 }

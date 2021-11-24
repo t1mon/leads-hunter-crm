@@ -59,6 +59,8 @@ class DatabaseSeeder extends Seeder
                 'settings' => [
                     'email' => [
                         "enabled" => true,
+                        "send_all" => true,
+                        "subject" => $project->name,
                         "fields" => []
                     ],
                     

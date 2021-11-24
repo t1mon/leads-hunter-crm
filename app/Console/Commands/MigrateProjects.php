@@ -61,6 +61,38 @@ class MigrateProjects extends Command
             }
 
             /* 2.
+                Добавить настройки рассылки e-mail по умолчанию */
+            if(!array_key_exists('email', $project->settings)){
+                $new_settings = [
+                    'email' =>
+                    [
+                        'enabled' => true,
+                        'send_all' => true,
+                        'subject' => $project->name,
+                        'fields' => [],
+                    ]
+                ];
+
+                $project->settings = array_merge($project->settings, $new_settings);
+            }    
+
+            /* 3.
+                Добавить тему e-mail по умолчанию */
+            if(!array_key_exists('subject', $project->settings['email'])){
+                $new_settings = $project->settings;
+                $new_settings['email']['subject'] = $project->name;
+                $project->settings = $new_settings;
+            }
+
+            /* 4.
+                Добавить рассылку всех лидов на e-mail по умолчанию */
+                if(!array_key_exists('send_all', $project->settings['email'])){
+                    $new_settings = $project->settings;
+                    $new_settings['email']['send_all'] = true;
+                    $project->settings = $new_settings;
+                }
+
+            /* 5.
                 Добавить настройки рассылки Telegram по умолчанию */
             if(!array_key_exists('telegram', $project->settings)){
                 $new_settings = [
@@ -74,25 +106,25 @@ class MigrateProjects extends Command
                 $project->settings = array_merge($project->settings, $new_settings);
 
             }
-            /* 3.
+            /* 6.
                 Добавить в настройки проекта часовой пояс (по умолчанию UTC)*/
             if(!array_key_exists('timezone', $project->settings)){
                 $new_settings = [ 'timezone' => 'Europe/Moscow'];
                 $project->settings = array_merge($project->settings, $new_settings);
             }
 
-            /* 4.
+            /* 7.
                 Перевести дату всех созданных проектов из Москвы в UTC*/
                 $project->created_at = Carbon::create($project->created_at)->timezone('UTC');
             
-            /* 5.
+            /* 8.
                 Перевести даты всех лидов в проекте из Москвы в UTC*/
                 foreach($project->leads() as $lead){
                     $lead->created_at = Carbon::create($lead->created_at)->timezone('UTC');
                     $lead->save();
                 }
             
-            /* 6.
+            /* 9.
                 Добавить в настройки вебхуки*/
                 if(!array_key_exists('webhooks', $project->settings)){
                     $new_settings = ['webhooks' => [] ];

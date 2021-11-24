@@ -58,7 +58,6 @@
     <div class="tab-pane fade" id="webhooks" role="tabpanel">
         @include('material-dashboard.project.webhooks.index')
     </div>
-
 </div>
 
 @endsection

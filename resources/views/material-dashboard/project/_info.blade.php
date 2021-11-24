@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
-        <h6 class="card-title text-center">@lang('projects.notifications.info.info')</h6>
-        <div class="table-responsive">
+        <h5 class="card-title text-center">@lang('projects.notifications.info.info')</h5>
+        <div class="table-responsive mb-3">
             <table class="table text-center align-middle">
                 <thead>
                     <tr>
@@ -13,14 +13,14 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="text-{{$project->settings['email']['enabled'] ? 'success' : 'danger'}}">E-mail</td>
-                        <td>
+                        <td class="text-start text-{{$project->settings['email']['enabled'] ? 'success' : 'danger'}}">E-mail</td>
+                        <td class="text-center">
                             <span class="badge badge-dot">
                                 <i class="bg-{{$project->settings['email']['enabled'] ? 'success' : 'secondary'}}"></i>
                             </span>
                         </td>
                         <td></td>
-                        <td>
+                        <td class="text-start">
                             <span class="text-{{$project->settings['email']['enabled'] ? 'info' : 'secondary'}}">
                                 @foreach ($project->settings['email']['fields'] as $field)
                                     {{ trans('projects.journal.' . $field)  . ($loop->last ? '' : ', ') }}
@@ -30,8 +30,8 @@
                     </tr>
 
                     <tr>
-                        <td class="text-{{$project->settings['telegram']['enabled'] ? 'success' : 'danger'}}">Telegram</td>
-                        <td>
+                        <td class="text-start text-{{$project->settings['telegram']['enabled'] ? 'success' : 'danger'}}">Telegram</td>
+                        <td class="text-center">
                             <span class="badge badge-dot">
                                 <i class="bg-{{$project->settings['telegram']['enabled'] ? 'success' : 'secondary'}}">
                             </span>
@@ -47,7 +47,7 @@
                                 <span class="text-dark text-xs"> @lang('projects.notifications.telegram.private') </span>
                             </span>
                         </td>
-                        <td>
+                        <td class="text-start">
                             <span class="text-{{$project->settings['telegram']['enabled'] ? 'info' : 'secondary'}}">
                                 @foreach ($project->settings['telegram']['fields'] as $field)
                                     {{ trans('projects.journal.' . $field)  . ($loop->last ? '' : ', ') }}
@@ -55,6 +55,40 @@
                             </span>
                         </td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <h6>@lang('projects.notifications.tab_webhooks')</h6>
+            <table class="table text-center align-middle">
+                <thead>
+                    <th>@lang('projects.notifications.webhooks.name')</th>
+                    <th>@lang('projects.notifications.info.status')</th>
+                    <th>@lang('projects.notifications.webhooks.method')</th>
+                    <th>@lang('projects.notifications.webhooks.fields')</th>
+                </thead>
+                <tbody>
+                    @foreach ($project->webhooks as $webhook)
+                        <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{$webhook->name}}</td>
+                        <td class="text-center">
+                            <span class="badge badge-dot">
+                                <i class="bg-{{$webhook->enabled ? 'success' : 'secondary'}}"></i>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-{{$webhook->enabled ? 'warning' : 'secondary'}} fw-bold">
+                                {{$webhook->method}}
+                            </span>
+                        </td>
+                        <td class="text-start">
+                            <span class="text-{{$webhook->enabled ? 'info' : 'secondary'}}">
+                                @foreach ($webhook->fields as $field)
+                                    {{ trans('projects.journal.' . $field)  . ($loop->last ? '' : ', ') }}
+                                @endforeach
+                            </span>
+                        </td>
+                    @endforeach
                 </tbody>
             </table>
         </div>

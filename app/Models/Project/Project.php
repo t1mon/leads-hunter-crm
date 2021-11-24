@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class Project extends Model
 {
@@ -30,6 +31,8 @@ class Project extends Model
             "email":
             {
                 "enabled": true,
+                "send_all": true,
+                "subject": "!Empty Subject!",
                 "fields": []
             },
 
@@ -123,6 +126,27 @@ class Project extends Model
             $this->settings = $new_settings;
         }
     } //webhook_delete
+
+    public function webhook_send(string $name, Leads $lead){ //Отправить данные по вебхуку
+        //Составление тела запроса
+        $webhook = $this->webhook_get($name);
+        $parameters = [];
+        foreach($webhook->fields as $field)
+            $parameters[$field] = $lead->$field;
+        
+        $response = null;
+
+        //Отправка запроса
+        if($webhook->method === 'POST')
+            $response = Http::asForm()->post($webhook->url, $parameters);
+        elseif($webhook->method === 'GET')
+            $response = Http::asForm()->get($webhook->url, $parameters);
+
+        //TODO Запись в лог
+        //...
+
+        return $response->json();
+    } //webhook_send
 
     public function leads()
     {
