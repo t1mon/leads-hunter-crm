@@ -29,13 +29,13 @@ class Project extends Model
         '{
             "email":
             {
-                "enabled": true,
+                "enabled": false,
                 "fields": []
             },
 
             "telegram":
             {
-                "enabled": true,
+                "enabled": false,
                 "fields": []
             },
 
