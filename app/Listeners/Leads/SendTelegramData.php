@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 class SendTelegramData implements ShouldQueue
 {
 
-    //public $queue = 'telegram';
+    public $queue = 'telegram';
     /**
      * Create the event listener.
      *

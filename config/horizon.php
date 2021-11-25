@@ -74,7 +74,7 @@ return [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default','emails','telegram'],
+                'queue' => ['default','emails','telegram','webhook'],
                 'balance' => 'auto',
                 'minProcesses' => 1,
                 'maxProcesses' => 10,
@@ -85,7 +85,7 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default','emails','telegram'],
+                'queue' => ['default','emails','telegram','webhook'],
                 'balance' => 'simple',
                 'processes' => 3,
                 'tries' => 3,
