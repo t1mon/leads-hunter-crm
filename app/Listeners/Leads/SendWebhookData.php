@@ -56,6 +56,7 @@ class SendWebhookData implements ShouldQueue
      */
     public function shouldQueue(LeadCreated $event)
     {
+        if (!is_array($event->lead->project->webhooks)) return false;
         foreach($event->lead->project->webhooks as $webhook){
             if($webhook->enabled)
                 return true;
