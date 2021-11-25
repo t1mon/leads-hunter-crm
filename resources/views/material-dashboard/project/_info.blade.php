@@ -69,6 +69,7 @@
                     <th>@lang('projects.notifications.webhooks.fields')</th>
                 </thead>
                 <tbody>
+                @if(!is_null($project->webhooks))
                     @foreach ($project->webhooks as $webhook)
                         <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{$webhook->name}}</td>
                         <td class="text-center">
@@ -89,6 +90,7 @@
                             </span>
                         </td>
                     @endforeach
+                @endif
                 </tbody>
             </table>
         </div>

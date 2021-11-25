@@ -99,7 +99,7 @@ class Project extends Model
         $objects = [];
         foreach($this->settings['webhooks'] as $webhook)
             $objects[] = json_decode(json_encode($webhook));
-        
+
         //Возвращает null, если вебхуков нет
         return count($this->settings['webhooks']) ? $objects : null;
     } //getWebhooksAttribute
@@ -115,7 +115,7 @@ class Project extends Model
         $new_settings = $this->settings;
         foreach($params as $key => $value)
             $new_settings['webhooks'][$webhook_name][$key] = $value;
-        
+
         $this->settings = $new_settings;
     } //webhook_update
 
@@ -133,7 +133,7 @@ class Project extends Model
         $parameters = [];
         foreach($webhook->fields as $field)
             $parameters[$field] = $lead->$field;
-        
+
         $response = null;
 
         //Отправка запроса
@@ -165,12 +165,10 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-<<<<<<< HEAD
+
 
     public function classes(){ //Получить классы, назначенные проекту
         return $this->hasMany(LeadClass::class);
     } //classes
 }
-=======
-}
->>>>>>> 8cfa064ddb7266f5064a2bd1b6fa957a2fddd1a5
+
