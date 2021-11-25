@@ -38,7 +38,7 @@ class Project extends Model
 
             "telegram":
             {
-                "enabled": true,
+                "enabled": false,
                 "fields": []
             },
 
@@ -165,8 +165,12 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+<<<<<<< HEAD
 
     public function classes(){ //Получить классы, назначенные проекту
         return $this->hasMany(LeadClass::class);
     } //classes
 }
+=======
+}
+>>>>>>> 8cfa064ddb7266f5064a2bd1b6fa957a2fddd1a5
