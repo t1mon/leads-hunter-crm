@@ -64,3 +64,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
 });
+
+Route::get('/test', [WebhookController::class, 'test'])->name('test');

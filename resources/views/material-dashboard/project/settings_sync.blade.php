@@ -33,6 +33,14 @@
             </a>
         </li>
 
+        {{--Настройки Bitrix24--}}
+        <li class="nav-item">
+            <a  class="nav-link" data-bs-toggle="tab" href="#bitrix24">
+                @lang('projects.notifications.tab_bitrix24')
+            </a>
+        </li>
+
+
     </ul>
 </div>
 
@@ -57,6 +65,11 @@
     {{--Настройки вебхуков--}}
     <div class="tab-pane fade" id="webhooks" role="tabpanel">
         @include('material-dashboard.project.webhooks.index')
+    </div>
+
+     {{--Настройки Bitrix24--}}
+    <div class="tab-pane fade" id="bitrix24" role="tabpanel">
+        @include('material-dashboard.project.webhooks.bitrix24')
     </div>
 </div>
 

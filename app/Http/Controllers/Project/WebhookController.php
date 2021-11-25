@@ -31,6 +31,10 @@ class WebhookController extends Controller
             return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
                 ->withError(trans('project.notifications.webhooks.error-create') . ': ' . trans('project.notifications.webhooks.error-exists'));
 
+        //Добавления пустого поля 'fields', если в форме не было указано ни одного поля
+        if(!$request->exists('fields'))
+            $request->merge(['fields' => [] ]);
+
         $project->webhook_add($request->except(['_token']));
         $project->save();
 
@@ -65,23 +69,8 @@ class WebhookController extends Controller
                 ->withSuccess( trans('project.notifications.webhooks.delete-success') );
     } //destroy
 
-    public function sendData(Project $project, Leads $lead, Object $webhook, bool $log = true){ //Отправить данные по вебхуку
-        //Составление тела запроса
-        $parameters = [];
-        foreach($webhook->fields as $field)
-            $parameters[$field] = $lead->$field;
+    public function test(){
         
-        $response = null;
-
-        //Отправка запроса
-        if($webhook->method === 'POST')
-            $response = Http::asForm()->post($webhook->url, $parameters);
-        elseif($webhook->method === 'GET')
-            $response = Http::asForm()->get($webhook->url, $parameters);
-
-        //TODO Запись в лог
-        //...
-
-        return $response->json();
     } //sendData
+
 }

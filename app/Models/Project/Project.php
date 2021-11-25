@@ -30,7 +30,7 @@ class Project extends Model
         '{
             "email":
             {
-                "enabled": true,
+                "enabled": false,
                 "send_all": true,
                 "subject": "!Empty Subject!",
                 "fields": []
@@ -45,6 +45,10 @@ class Project extends Model
             "timezone": "UTC"
         }',
     ];
+
+    //Типы вебхуков
+    public const WEBHOOK_COMMON = 'common'; //Обычный вебхук
+    public const WEBHOOK_BITRIX24 = 'bitrix24'; //Обычный вебхук
 
     protected $casts = ['settings' => 'array'];
 
@@ -131,22 +135,58 @@ class Project extends Model
         //Составление тела запроса
         $webhook = $this->webhook_get($name);
         $parameters = [];
-        foreach($webhook->fields as $field)
-            $parameters[$field] = $lead->$field;
+
+        //Упаковать параметры в зависимости от типа вебхука
+        if($webhook->type === self::WEBHOOK_COMMON)
+        $parameters = $this->webhook_makeParams_common($webhook, $lead);
+        elseif($webhook->type === self::WEBHOOK_BITRIX24)
+            $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
 
         $response = null;
 
         //Отправка запроса
         if($webhook->method === 'POST')
-            $response = Http::asForm()->post($webhook->url, $parameters);
+            $response = Http::withOptions(['verify' => false])->asForm()->post($webhook->url, $parameters);
         elseif($webhook->method === 'GET')
-            $response = Http::asForm()->get($webhook->url, $parameters);
+            $response = Http::withOptions(['verify' => false])->asForm()->get($webhook->url, $parameters);
 
         //TODO Запись в лог
         //...
 
         return $response->json();
     } //webhook_send
+
+    public function webhook_makeParams_common(Object $webhook, Leads $lead) //Упаковать параметры для обычного вебхука
+    {
+        $parameters = [];
+        foreach($webhook->fields as $field)
+            $parameters[$field] = config("webhooks-fields-correlation.common.{$field}");
+        
+        return $parameters;
+    } //webhook_makeParams_common
+
+    public function webhook_makeParams_bitrix24(Object $webhook, Leads $lead) //Упаковать параметры для Битрикс24
+    {
+        $parameters = ['fields' => [] ];
+        $parameters['fields']['TITLE'] = $this->name;
+        
+        foreach($webhook->fields as $field){
+            $corr = config("webhooks-fields-correlation.bitrix24.{$field}");
+            $parameters['fields'][$field] = $lead->$corr;
+        }
+
+        //"Правильная" упаковка номера телефона
+        if(array_key_exists('PHONE', $parameters['fields'])){
+            $parameters['fields']['PHONE'] = [ ['VALUE' => $parameters['fields']['PHONE'], 'VALUE_TYPE' => 'WORK'] ];
+        }
+
+        //"Правильная" упаковка e-mail
+        if(array_key_exists('EMAIL', $parameters['fields'])){
+            $parameters['fields']['EMAIL'] = [ ['VALUE' => $parameters['fields']['EMAIL'], 'VALUE_TYPE' => 'WORK'] ];
+        }
+
+        return $parameters;
+    } //webhook_makeParams_bitrix24
 
     public function leads()
     {

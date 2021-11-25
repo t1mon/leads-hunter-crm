@@ -26,12 +26,14 @@ class SendWebhookData
      */
     public function handle(LeadCreated $event)
     {
-        $lead = $event->lead;
-        $project = $lead->project;
-
-        foreach($project->webhooks as $webhook){
-            if($webhook->enabled)
-                $project->webhook_send($webhook->name, $lead);
+        if(!is_null($project->webhooks)){
+            $lead = $event->lead;
+            $project = $lead->project;
+        
+            foreach($project->webhooks as $webhook){
+                if($webhook->enabled)
+                    $project->webhook_send($webhook->name, $lead);
+            }
         }
     }
 }

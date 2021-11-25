@@ -142,7 +142,7 @@
             </button>
         </p>
         <div class="table-responsive">
-            <table class="table align-items-center mb-0">
+            <table class="table text-center align-middle">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -156,15 +156,15 @@
                 <tbody>
                     @if($telegram_privateIDs->isEmpty())
                         <tr>
-                            <td colspan="3">@lang('projects.notifications.telegram.private_none')</td>
+                            <td colspan="5">@lang('projects.notifications.telegram.private_none')</td>
                         </tr>
                     @endempty
 
                     @foreach($telegram_privateIDs as $id)
                         <tr>
                             <td>{{$id->id}}</td>
-                            <td>{{$id->name}}</td>
-                            <td>{{$id->number ?? trans('projects.not_specified')}}</td>
+                            <td class="text-start">{{$id->name}}</td>
+                            <td class="text-start">{{$id->number ?? trans('projects.not_specified')}}</td>
                             <td>{{ trans('projects.notifications.telegram.' . ($id->approved ? 'approved' : 'not_approved') )}}</td>
                             <td>
                                 {!! Form::model(

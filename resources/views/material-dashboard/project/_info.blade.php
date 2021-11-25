@@ -64,33 +64,39 @@
             <table class="table text-center align-middle">
                 <thead>
                     <th>@lang('projects.notifications.webhooks.name')</th>
+                    <th>@lang('projects.notifications.webhooks.types.type')</th>
                     <th>@lang('projects.notifications.info.status')</th>
                     <th>@lang('projects.notifications.webhooks.method')</th>
                     <th>@lang('projects.notifications.webhooks.fields')</th>
                 </thead>
                 <tbody>
-                @if(!is_null($project->webhooks))
+                @isset($project->webhooks)
                     @foreach ($project->webhooks as $webhook)
-                        <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{$webhook->name}}</td>
-                        <td class="text-center">
-                            <span class="badge badge-dot">
-                                <i class="bg-{{$webhook->enabled ? 'success' : 'secondary'}}"></i>
-                            </span>
-                        </td>
-                        <td>
-                            <span class="text-{{$webhook->enabled ? 'warning' : 'secondary'}} fw-bold">
-                                {{$webhook->method}}
-                            </span>
-                        </td>
-                        <td class="text-start">
-                            <span class="text-{{$webhook->enabled ? 'info' : 'secondary'}}">
-                                @foreach ($webhook->fields as $field)
-                                    {{ trans('projects.journal.' . $field)  . ($loop->last ? '' : ', ') }}
-                                @endforeach
-                            </span>
-                        </td>
+                        <tr>
+                            <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{$webhook->name}}</td>
+                            <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{trans("projects.notifications.webhooks.types.$webhook->type")}}</td>
+                            <td class="text-center">
+                                <span class="badge badge-dot">
+                                    <i class="bg-{{$webhook->enabled ? 'success' : 'secondary'}}"></i>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-{{$webhook->enabled ? 'warning' : 'secondary'}} fw-bold">
+                                    {{$webhook->method}}
+                                </span>
+                            </td>
+                            <td class="text-start">
+                                <span class="text-{{$webhook->enabled ? 'info' : 'secondary'}}">
+                                    @foreach ($webhook->fields as $field)
+                                        {{ trans("projects.notifications.webhooks.{$webhook->type}.fields.{$field}")  . ($loop->last ? '' : ', ') }}
+                                    @endforeach
+                                </span>
+                            </td>
+                        </tr>
                     @endforeach
-                @endif
+                @else
+                    <td colspan="4">@lang('projects.notifications.webhooks.none')</td>
+                @endisset
                 </tbody>
             </table>
         </div>

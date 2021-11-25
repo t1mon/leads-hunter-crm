@@ -66,7 +66,7 @@ class MigrateProjects extends Command
                 $new_settings = [
                     'email' =>
                     [
-                        'enabled' => true,
+                        'enabled' => false,
                         'send_all' => true,
                         'subject' => $project->name,
                         'fields' => [],
@@ -98,7 +98,7 @@ class MigrateProjects extends Command
                 $new_settings = [
                     'telegram' =>
                     [
-                        'enabled' => true,
+                        'enabled' => false,
                         'fields' => [],
                     ]
                 ];
