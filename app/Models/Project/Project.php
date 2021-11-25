@@ -42,6 +42,8 @@ class Project extends Model
                 "fields": []
             },
 
+            "webhooks": [],
+
             "timezone": "UTC"
         }',
     ];
