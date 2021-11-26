@@ -162,7 +162,7 @@ class Project extends Model
     {
         $parameters = [];
         foreach($webhook->fields as $field)
-            $parameters[$field] = config("webhooks-fields-correlation.common.{$field}");
+            $parameters[$field] = $lead->$field;
 
         return $parameters;
     } //webhook_makeParams_common

@@ -50,3 +50,7 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
     // Media
     Route::apiResource('media', 'MediaController')->only('index');
 });
+
+Route::get('test-webhook', function (Illuminate\Http\Request $request){
+    \Illuminate\Support\Facades\Log::info($request->all());
+});
