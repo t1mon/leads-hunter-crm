@@ -36,7 +36,7 @@ class SendLeadData extends Mailable
     {
         return $this->from(env('MAIL_FROM_ADDRESS'), config('app.name', 'Hunter'))
                     ->subject(empty($this->subject) ? __('leads.email.subject') : $this->subject)
-                    ->view('emails.lead.data')
+                    ->markdown('emails.markdown.lead.data')
                     ->with([
                         'lead' => $this->lead
                     ]);

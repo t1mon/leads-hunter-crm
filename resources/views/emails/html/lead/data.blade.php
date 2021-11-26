@@ -20,3 +20,4 @@
 <p>
     @lang('leads.email.description')
 </p>
+
