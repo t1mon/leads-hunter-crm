@@ -42,6 +42,12 @@ class WebhookController extends Controller
                 ->withSuccess( trans('project.notifications.webhooks.create-success') );
     } //store
 
+    public function edit(Project $project, string $webhook_name){
+        $webhook = $project->webhook_get($webhook_name);
+        $type = $webhook->type;
+        return view('material-dashboard.project.webhooks.edit', compact('project', 'webhook', 'type'));
+    } //edit
+
     public function update(Project $project, string $webhook_name, Request $request){
         //TODO Создать Request для валидации
 
@@ -49,12 +55,16 @@ class WebhookController extends Controller
          if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
 
-            $project->webhook_update($webhook_name, $request->except('_token'));
+        //Добавления пустого поля 'fields', если в форме не было указано ни одного поля
+        if(!$request->exists('fields'))
+        $request->merge(['fields' => [] ]);
 
-            $project->save();
+        $project->webhook_update($webhook_name, $request->except('_token', '_method'));
 
-            return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
-                ->withSuccess( trans('project.notifications.webhooks.update-success') );
+        $project->save();
+
+        return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
+            ->withSuccess( trans('project.notifications.webhooks.update-success') );
     } //update
 
     public function destroy(Project $project, string $webhook_name){

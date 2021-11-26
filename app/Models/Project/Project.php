@@ -94,6 +94,12 @@ class Project extends Model
         $this->settings['timezone'] = $value;
     } //setTimezoneAttribute
 
+    public function webhooks_active(){
+        $count = 0;
+        foreach($this->settings['webhooks'] as $webhook)
+            $count += $webhook['enabled'];
+    } //webhook_active
+
     public function webhook_get(string $name){ //Получить конкретный вебхук
         //Вебхук возвращается в виде объекта для удобства
         return array_key_exists($name, $this->settings['webhooks'])
@@ -119,6 +125,15 @@ class Project extends Model
 
     public function webhook_update(string $webhook_name, array $params){ //Обновить параметры в вебхука
         $new_settings = $this->settings;
+
+        //Переименование ключа массива, если изменилось название вебхука (чтобы не было конфликтов)
+        if(array_key_exists('name', $params)
+            and ($new_settings['webhooks'][$webhook_name] !== $params['name']) ){
+                $new_settings['webhooks'][$params['name']] = $new_settings['webhooks'][$webhook_name];
+                unset($new_settings['webhooks'][$webhook_name]);
+                $webhook_name = $params['name'];
+            }
+
         foreach($params as $key => $value)
             $new_settings['webhooks'][$webhook_name][$key] = $value;
 
