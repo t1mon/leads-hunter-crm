@@ -42,6 +42,8 @@ class Project extends Model
                 "fields": []
             },
 
+            "webhooks": [],
+
             "timezone": "UTC"
         }',
     ];
@@ -141,6 +143,8 @@ class Project extends Model
         $parameters = $this->webhook_makeParams_common($webhook, $lead);
         elseif($webhook->type === self::WEBHOOK_BITRIX24)
             $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
+        
+        return $parameters;
 
         $response = null;
 
@@ -153,15 +157,15 @@ class Project extends Model
         //TODO Запись в лог
         //...
 
-        return $response->json();
+        return $response;
     } //webhook_send
 
     public function webhook_makeParams_common(Object $webhook, Leads $lead) //Упаковать параметры для обычного вебхука
     {
         $parameters = [];
         foreach($webhook->fields as $field)
-            $parameters[$field] = config("webhooks-fields-correlation.common.{$field}");
-        
+            $parameters[$field] = $lead->$field;
+
         return $parameters;
     } //webhook_makeParams_common
 
@@ -169,7 +173,7 @@ class Project extends Model
     {
         $parameters = ['fields' => [] ];
         $parameters['fields']['TITLE'] = $this->name;
-        
+
         foreach($webhook->fields as $field){
             $corr = config("webhooks-fields-correlation.bitrix24.{$field}");
             $parameters['fields'][$field] = $lead->$corr;

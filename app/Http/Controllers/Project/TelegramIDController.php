@@ -141,16 +141,15 @@ class TelegramIDController extends Controller
 
         //Реакция на сообщения
         if( key_exists('message', $body) ){
-
-            if( key_exists('text', $body['message']){
+            if (key_exists('text', $body['message'])) {
                 //Команда на подписку (пользователь будет добавлен в проект)
-                if($body['message']['text'] === '/start'){
+                if ($body['message']['text'] === '/start') {
                     $this->approve($body['message']['from']['username'], $body['message']['from']['id']);
 
                 }
 
                 //Команда на удаление пользователя из проекта
-                if($body['message']['text'] === '/stop'){
+                if ($body['message']['text'] === '/stop') {
 
                 }
             }
