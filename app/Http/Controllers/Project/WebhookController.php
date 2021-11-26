@@ -79,6 +79,16 @@ class WebhookController extends Controller
                 ->withSuccess( trans('project.notifications.webhooks.delete-success') );
     } //destroy
 
+    public function toggle(Project $project, string $webhook_name){
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
+        
+        $project->webhook_update($webhook_name, ['enabled' => (bool)!$project->settings['webhooks'][$webhook_name]['enabled']]);
+        $project->save();
+        return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks']);
+    }
+
     public function test(){
         
     } //sendData

@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/users', [UserPermissionsController::class, 'list'])->name('project.users');
+        Route::post('{project}/webhook/{webhook}/toggle', [WebhookController::class, 'toggle'])->name('webhook.toggle');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');

@@ -94,18 +94,22 @@ class Project extends Model
         $this->settings['timezone'] = $value;
     } //setTimezoneAttribute
 
-    public function webhooks_active(){
-        $count = 0;
-        foreach($this->settings['webhooks'] as $webhook)
-            $count += $webhook['enabled'];
-    } //webhook_active
-
     public function webhook_get(string $name){ //Получить конкретный вебхук
         //Вебхук возвращается в виде объекта для удобства
         return array_key_exists($name, $this->settings['webhooks'])
             ? json_decode(json_encode($this->settings['webhooks'][$name]))
             : null;
     } //webhook_get
+
+    public function webhooks_active(){ //Возвращает включенные вебхуки
+        $active = [];
+        foreach($this->settings['webhooks'] as $webhook){
+            if($webhook['enabled']) 
+                $active[] = $this->webhook_get($webhook['name']);
+        }
+        
+        return $active;
+    } //webhook_active
 
     public function getWebhooksAttribute(){ //Аксессор для удобного получения всех вебхуков
         $objects = [];
@@ -158,8 +162,6 @@ class Project extends Model
         $parameters = $this->webhook_makeParams_common($webhook, $lead);
         elseif($webhook->type === self::WEBHOOK_BITRIX24)
             $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
-        
-        return $parameters;
 
         $response = null;
 

@@ -28,23 +28,18 @@ class SendWebhookData implements ShouldQueue
      */
     public function handle(LeadCreated $event)
     {
-        if(!is_null($event->lead->project->webhooks)){
+        if(count( $event->lead->project->webhooks_active() )){
             $lead = $event->lead;
             $project = $lead->project;
 
-            foreach($project->webhooks as $webhook){
-                if($webhook->enabled) {
-                    $response = $project->webhook_send($webhook->name, $lead);
-                    if ($response->failed()) {
-                        Log::channel('leads')->error("ProjectId:{$lead->project->id} Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
-                        throw new \Exception("ProjectId:{$lead->project->id} Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
-                    } else {
-                        Log::channel('leads')->info("ProjectId:{$lead->project->id} Отправлен WebHook {$webhook->name} по URL:{$webhook->url} Имя проекта {$lead->project->name} Идентификатор лида:{$lead->id}");
-                    }
-                }else{
-                    Log::channel('leads')->warning("ProjectId:{$lead->project->id} WebHook {$webhook->name} выключен в проекте {$lead->project->name} Идентификатор лида:{$lead->id}");
+            foreach($project->webhooks_active() as $webhook){
+                $response = $project->webhook_send($webhook->name, $lead);
+                if ($response->failed()) {
+                    Log::channel('leads')->error("ProjectId:{$lead->project->id} Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
+                    throw new \Exception("ProjectId:{$lead->project->id} Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
+                } else {
+                    Log::channel('leads')->info("ProjectId:{$lead->project->id} Отправлен WebHook {$webhook->name} по URL:{$webhook->url} Имя проекта {$lead->project->name} Идентификатор лида:{$lead->id}");
                 }
-
             }
         }
     }

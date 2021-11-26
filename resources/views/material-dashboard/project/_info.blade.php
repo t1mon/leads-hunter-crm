@@ -94,6 +94,11 @@
                             </td>
                         </tr>
                     @endforeach
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">@lang('projects.notifications.webhooks.total-active'): <b>{{count($project->webhooks_active())}}</b></td>
+                        </tr>
+                    </tfoot>
                 @else
                     <td colspan="4">@lang('projects.notifications.webhooks.none')</td>
                 @endisset
