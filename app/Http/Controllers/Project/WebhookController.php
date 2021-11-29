@@ -90,7 +90,10 @@ class WebhookController extends Controller
     }
 
     public function test(){
-        
+        $url = 'https://msk-odobrenie-credit.ru';
+        $vars = [];
+        parse_str(parse_url($url, PHP_URL_QUERY), $vars);
+        return $vars;
     } //sendData
 
 }
