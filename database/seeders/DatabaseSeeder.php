@@ -57,6 +57,8 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Test Project',
                 'settings' => [
+                    'enabled' => true,
+                    'description' => null,
                     'email' => [
                         "enabled" => true,
                         "send_all" => true,

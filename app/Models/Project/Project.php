@@ -28,6 +28,8 @@ class Project extends Model
     protected $attributes = [
         'settings' =>
         '{
+            "enabled": true,
+            "description": false,
             "email":
             {
                 "enabled": false,
@@ -188,8 +190,7 @@ class Project extends Model
 
     public function webhook_makeParams_bitrix24(Object $webhook, Leads $lead) //Упаковать параметры для Битрикс24
     {
-        $parameters = ['fields' => [] ];
-        $parameters['fields']['TITLE'] = $this->name;
+        $parameters = ['fields' => [(array)$webhook->params][0] ];
 
         foreach($webhook->fields as $field){
             $corr = config("webhooks-fields-correlation.bitrix24.{$field}");

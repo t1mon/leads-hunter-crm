@@ -90,10 +90,11 @@ class WebhookController extends Controller
     }
 
     public function test(){
-        $url = 'https://msk-odobrenie-credit.ru';
-        $vars = [];
-        parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-        return $vars;
+        
+        $project = Project::find(1);
+        $lead = Leads::find(68);
+        $webhook = $project->webhook_get('bitrix_1');
+        return $project->webhook_makeParams_bitrix24($webhook, $lead);
     } //sendData
 
 }

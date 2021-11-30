@@ -28,6 +28,8 @@ class SendWebhookData implements ShouldQueue
      */
     public function handle(LeadCreated $event)
     {
+        if(!$event->lead->project->settings['enabled']) return;
+
         if(count( $event->lead->project->webhooks_active() )){
             $lead = $event->lead;
             $project = $lead->project;
