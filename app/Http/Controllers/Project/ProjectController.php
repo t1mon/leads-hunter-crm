@@ -131,6 +131,8 @@ class ProjectController extends Controller
      */
     public function journal(Request $request, Project $project)
     {
+        Applog::recent($request);
+
         if (Gate::denies('view', $project)) {
             return redirect()->route('project.index');
         }
