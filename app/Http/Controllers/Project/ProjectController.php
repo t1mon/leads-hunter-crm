@@ -32,6 +32,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        \App\Journal\Journal::write('info', 'Пробное сообщение');
+
         $ids = UserPermissions::where(['user_id' => Auth::id()])->pluck('project_id');
         $projects = Project::whereIn('id', $ids)
                                 ->with('leads', 'leadsToday')
