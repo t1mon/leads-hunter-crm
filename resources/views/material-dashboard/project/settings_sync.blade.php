@@ -64,7 +64,7 @@
 
     {{--Настройки вебхуков--}}
     <div class="tab-pane fade" id="webhooks" role="tabpanel">
-        @include('material-dashboard.project.webhooks.index')
+        @include('material-dashboard.project.webhooks.common')
     </div>
 
      {{--Настройки Bitrix24--}}

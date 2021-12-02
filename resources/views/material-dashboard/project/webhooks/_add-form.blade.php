@@ -1,4 +1,3 @@
-{{--Форма для добавления вебхука--}}
 <div class="card align-self-center my-3">
     <div class="card-body">
         <div class="text-center">
@@ -8,10 +7,7 @@
         </div>
         
         <div class="collapse" id="add-form">
-            @include('material-dashboard.project.webhooks._form-bitrix24')
+            @include('material-dashboard.project.webhooks._form', ['type' => $type,])
         </div>        
     </div>
 </div>
-
-{{--Список доступных вебхуков--}}
-@include('material-dashboard.project.webhooks._list', ['type' => \App\Models\Project\Project::WEBHOOK_BITRIX24,])

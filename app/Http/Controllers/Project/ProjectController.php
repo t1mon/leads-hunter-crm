@@ -213,7 +213,7 @@ class ProjectController extends Controller
             return trans('projects.not-authorized');
 
         /*Атрибуты проекта делятся на две группы:
-            - properties: свойства проекта (имя, токен и т.п.)            
+            - properties: свойства проекта (имя, токен и т.п.)
             - settings: настройки (telegram, email и часовой пояс)
         */
 
@@ -233,7 +233,7 @@ class ProjectController extends Controller
 
             if(!array_key_exists('fields', $new_settings['email']))
                 $new_settings['email']['fields'] = [];
-            
+
             if(!array_key_exists('fields', $new_settings['telegram']))
                 $new_settings['telegram']['fields'] = [];
 

@@ -18,13 +18,15 @@ class Leads extends Model
     const LEAD_EXISTS = 'exists';
     const LEAD_PROCESSED = 'processed';
 
+    const SOURCE_DIRECT_ENTRY = 'DIRECT_ENTRY';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'project_id', 'name','surname','patronymic', 'phone', 'entries', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'utm','host','url_query_string'
+        'project_id', 'name','surname','patronymic', 'phone', 'entries', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'source', 'utm','host','url_query_string'
     ];
 
     protected $casts = [

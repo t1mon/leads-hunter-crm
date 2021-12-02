@@ -38,7 +38,7 @@ class SendEmailData
                 Log::channel('leads')->warning("Лид id:" . $event->lead->id . " не отправлен по Email ограничение числа вхождений лида entries > 1 ");
                 return;
             }
-            
+
             $emails = $event->lead->project->emails;
             foreach ($emails as $email) {
                 try {

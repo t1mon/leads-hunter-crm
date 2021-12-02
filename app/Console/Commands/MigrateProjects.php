@@ -130,7 +130,31 @@ class MigrateProjects extends Command
                     $new_settings = ['webhooks' => [] ];
                     $project->settings = array_merge($project->settings, $new_settings);
                 }
+            /* 10. 
+                Добавить в вебхуки битрикса поле params*/
+                foreach($project->settings['webhooks'] as $webhook){
+                    if($webhook['type'] === Project::WEBHOOK_BITRIX24){
+                        print('ОК!\n');
+                        $new_settings = $project->settings;
+                        $new_settings['webhooks'][$webhook['name']]['params'] = [
+                            'TITLE' => null,
+                            'STATUS_ID' => null,
+                            'SOURCE_ID' => null,
+                            'SOURCE_DESCRIPTION' => null,
+                            'OPENED' => 'Y',
+                        ];
 
+                        $project->settings = array_merge($project->settings, $new_settings);
+                    }
+                }
+            
+            /* 11. 
+                Добавить в настройки проекта поля "Включено" и "Описание" */
+                $new_settings = $project->settings;
+                $new_settings['enabled'] = true;
+                $new_settings['description'] = null;
+                $project->settings = array_merge($project->settings, $new_settings);
+            
             $project->save();
         }
     }

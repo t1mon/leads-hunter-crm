@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/users', [UserPermissionsController::class, 'list'])->name('project.users');
+        Route::post('{project}/webhook/{webhook}/toggle', [WebhookController::class, 'toggle'])->name('webhook.toggle');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');
         Route::get('{project}/token', [ProjectTokenController::class, 'edit'])->name('project.token');
         Route::match(['put', 'patch'], '{project}/token', [ProjectTokenController::class, 'update'])->name('project.token.update');
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('project/{project}/{lead}/comment', CommentController::class)->only(['show', 'create', 'store', 'edit', 'destroy']);
         Route::resource('project/{project}/telegram', TelegramIDController::class)->only(['store', 'destroy']);
         Route::resource('project/{project}/class', LeadClassController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('project/{project}/webhook', WebhookController::class)->only(['store', 'update', 'destroy']);
+        Route::resource('project/{project}/webhook', WebhookController::class)->only(['store', 'edit', 'update', 'destroy']);
     });
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');

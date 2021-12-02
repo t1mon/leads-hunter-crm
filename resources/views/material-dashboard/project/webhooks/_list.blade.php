@@ -9,7 +9,7 @@
                         <th>@lang('projects.notifications.webhooks.method')</th>
                         <th>@lang('projects.notifications.webhooks.url')</th>
                         <th>@lang('projects.notifications.webhooks.fields')</th>
-                        <th colspan="2">@lang('projects.actions')</th>
+                        <th colspan="3">@lang('projects.actions')</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,10 +37,15 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    {!! Form::open([ 'route' => ['webhook.update', $project, $webhook->name ], 'method' => 'PUT' ]) !!}
+                                    {!! Form::open([ 'route' => ['webhook.toggle', $project, $webhook->name ], 'method' => 'POST' ]) !!}
                                         {!! Form::hidden('enabled', $webhook->enabled ? 0 : 1) !!}
                                         {!! Form::button('<i class="fa fa-power-off" aria-hidden="true"></i>', ['class' => 'btn btn-' . ($webhook->enabled ? 'primary' : 'secondary'), 'type' => 'submit']) !!}
                                     {!! Form::close() !!}
+                                </td>
+                                <td>
+                                    <a href="{{route('webhook.edit', [$project, $webhook->name])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </a>
                                 </td>
                                 <td>
                                     {!! Form::open([ 'route' => ['webhook.destroy', $project, $webhook->name ], 'method' => 'DELETE' ]) !!}
