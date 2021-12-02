@@ -90,11 +90,16 @@ class WebhookController extends Controller
     }
 
     public function test(){
-        
-        $project = Project::find(1);
-        $lead = Leads::find(68);
-        $webhook = $project->webhook_get('bitrix_1');
-        return $project->webhook_makeParams_bitrix24($webhook, $lead);
-    } //sendData
+        $lead = Leads::find(76);
+
+        $raw = \App\Journal\Journal::recentInProject($lead->project);
+
+        $entries = [];
+
+        foreach($raw as $entry)
+            $entries[] = json_decode($entry->data);
+
+        return view('material-dashboard.project.log', compact('entries'));
+    } //test
 
 }

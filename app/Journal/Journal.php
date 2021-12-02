@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Project\Project;
-use App\Models\Project\Leads;
+use App\Models\Leads;
 
 class Journal{
     /*  1.
@@ -35,9 +35,14 @@ class Journal{
     #############
     */
 
-    static public function recent(int $amount = 10){ //Получить последние записи в логе (по умолчанию последние 10)
+    static public function recent(int $amount = 10){ //Получить последние записи в логе (по умолчанию последние 10)        
         return DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get();
     } //recent
+
+    static public function recentInProject(Project $project, int $amount = 10){ //Последние записи в логе по конкретному проекту
+        return DB::table(self::TABLE)->where('data->project->id', $project->id)
+                    ->orderBy('date', 'desc')->limit($amount)->get();
+    } //recentInProject
 
     static public function write(string $class, string $action, string $text, array $optional = []){ //Базовая функции записи
         //Базовые поля
