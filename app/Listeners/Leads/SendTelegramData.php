@@ -32,8 +32,6 @@ class SendTelegramData implements ShouldQueue
      */
     public function handle(LeadCreated $event)
     {
-        if(!$event->lead->project->settings['enabled']) return;
-
         $project = $event->lead->project;
         $channel_id = $project->telegram_channel_id;
         $private_ids = $project->telegram_private_ids;

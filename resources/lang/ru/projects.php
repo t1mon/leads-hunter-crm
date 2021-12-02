@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'enabled' => [
+        'false' => 'Проект выключен'
+    ],
+    'access' => [
+        'denied' => 'В доступе отказано.'
+    ],
     //Общие надписи на кнопках
     'button-add' => 'Добавить',
     'button-change' => 'Изменить',
@@ -16,7 +22,7 @@ return [
     'actions' => 'Действия',
     'status-active' => 'Активен',
     'status-suspended' => 'Приостановлен',
-    
+
     'project' => 'Проекты',
     'integrated' => 'Интеграция Rest Api',
     'attributes' => [
@@ -69,7 +75,7 @@ return [
         'tab_telegram_settings' => 'Настройки Telegram',
         'tab_webhooks' => 'Вебхуки',
         'tab_bitrix24' => 'Битрикс24',
-        
+
         //Таблица с информацией о синхронизации
         'info' => [
             'info' => 'Информация о синхронизации',
@@ -77,7 +83,7 @@ return [
             'status' => 'Статус',
             'additional' => 'Дополнительные настройки'
         ],
-        
+
         //Таблица настроек рассылки по email
         'emails_toggle' => 'Включить рассылку по E-mail',
         'emails_settings' => 'Общие настройки',
@@ -138,7 +144,7 @@ return [
             'method' => 'Метод',
             'url' => 'URL',
             'fields' => 'Отправляемые поля',
-            
+
             'types' => [
                 'type' => 'Тип',
                 'common' => 'Общий',
@@ -309,7 +315,7 @@ return [
             'user' => 'Пользователь',
             'creator' => 'Создатель',
         ]
-        
+
     ],
 
     //Боковая панель

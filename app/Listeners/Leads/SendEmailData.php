@@ -31,8 +31,6 @@ class SendEmailData
      */
     public function handle(LeadCreated $event)
     {
-        if(!$event->lead->project->settings['enabled']) return;
-
         //Рассылка по e-mail
         if($event->lead->project->settings['email']['enabled']){
             //Если рассылка всех лидов выключена, и количество вхождений превышает 1
@@ -40,7 +38,7 @@ class SendEmailData
                 Log::channel('leads')->warning("Лид id:" . $event->lead->id . " не отправлен по Email ограничение числа вхождений лида entries > 1 ");
                 return;
             }
-            
+
             $emails = $event->lead->project->emails;
             foreach ($emails as $email) {
                 try {

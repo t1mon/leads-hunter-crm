@@ -36,19 +36,30 @@ class LeadsController extends Controller
         $request->merge(['utm' => $this->getUTM($request)]);
 
         //Проверка хоста у лида
-        if(Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
-            return new LeadsResource(
-                Leads::addToDB($request->all())
-            );
+        if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
+            return response()->json(['data' =>
+                [
+                    'status'  => Host::HOST_NOT_FOUND,
+                    'message' => trans('leads.host-error'),
+                    'response' => Response::HTTP_PRECONDITION_FAILED,
+                ]
+            ],Response::HTTP_PRECONDITION_FAILED);
         }
 
-        return response()->json(['data' =>
-                                        [
-                                            'status'  => Host::HOST_NOT_FOUND,
-                                            'message' => trans('leads.host-error'),
-                                            'response' => Response::HTTP_PRECONDITION_FAILED,
-                                        ]
-                                    ],Response::HTTP_PRECONDITION_FAILED);
+        if(!Project::findOrFail($request->project_id)->settings['enabled']) {
+            return response()->json(['data' =>
+                [
+                    'status'  => Project::DISABLED,
+                    'message' => trans('projects.enabled.false'),
+                    'response' => Response::HTTP_FOUND,
+                ]
+            ],Response::HTTP_FOUND);
+        }
+
+
+        return new LeadsResource(
+            Leads::addToDB($request->all())
+        );
     }
 
     public function detectSource(LeadsRequest $request){ //Определить источник
@@ -67,28 +78,28 @@ class LeadsController extends Controller
             return $utm['utm_source'];
         else
             return Leads::SOURCE_DIRECT_ENTRY;
-    
+
     } //detectSource
 
     public function getUTM(LeadsRequest $request){ //Получить UTM-метки в виде массива
         $src = $request->exists('url_query_string')
                 ? $request->url_query_string
                 : ( $request->exists('referrer') ? $request->referrer : null);
-        
+
         if(is_null($src))
             return [];
 
         $vars = [];
         parse_str(parse_url($request->url_query_string, PHP_URL_QUERY), $vars);
-        
+
         $utm = [];
-        
+
         foreach(['utm_source', 'utm_campaign', 'utm_medium', 'utm_term'] as $utm_mark){
             if( array_key_exists($utm_mark, $vars) )
                 $utm[$utm_mark] = $vars[$utm_mark];
         }
 
         return $utm;
-        
+
     } //getUTM
 }

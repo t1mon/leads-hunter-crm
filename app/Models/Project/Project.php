@@ -16,6 +16,9 @@ class Project extends Model
 {
     use HasFactory;
 
+    const DISABLED = 'Project disabled';
+    const ENABLED = 'Project enabled';
+
     protected $fillable = [
         'name',
         'host',
@@ -106,10 +109,10 @@ class Project extends Model
     public function webhooks_active(){ //Возвращает включенные вебхуки
         $active = [];
         foreach($this->settings['webhooks'] as $webhook){
-            if($webhook['enabled']) 
+            if($webhook['enabled'])
                 $active[] = $this->webhook_get($webhook['name']);
         }
-        
+
         return $active;
     } //webhook_active
 
