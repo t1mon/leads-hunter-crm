@@ -16,6 +16,9 @@ class Project extends Model
 {
     use HasFactory;
 
+    const DISABLED = 'Project disabled';
+    const ENABLED = 'Project enabled';
+
     protected $fillable = [
         'name',
         'host',
@@ -28,6 +31,8 @@ class Project extends Model
     protected $attributes = [
         'settings' =>
         '{
+            "enabled": true,
+            "description": false,
             "email":
             {
                 "enabled": false,
@@ -101,6 +106,16 @@ class Project extends Model
             : null;
     } //webhook_get
 
+    public function webhooks_active(){ //Возвращает включенные вебхуки
+        $active = [];
+        foreach($this->settings['webhooks'] as $webhook){
+            if($webhook['enabled'])
+                $active[] = $this->webhook_get($webhook['name']);
+        }
+
+        return $active;
+    } //webhook_active
+
     public function getWebhooksAttribute(){ //Аксессор для удобного получения всех вебхуков
         $objects = [];
         foreach($this->settings['webhooks'] as $webhook)
@@ -119,6 +134,15 @@ class Project extends Model
 
     public function webhook_update(string $webhook_name, array $params){ //Обновить параметры в вебхука
         $new_settings = $this->settings;
+
+        //Переименование ключа массива, если изменилось название вебхука (чтобы не было конфликтов)
+        if(array_key_exists('name', $params)
+            and ($new_settings['webhooks'][$webhook_name] !== $params['name']) ){
+                $new_settings['webhooks'][$params['name']] = $new_settings['webhooks'][$webhook_name];
+                unset($new_settings['webhooks'][$webhook_name]);
+                $webhook_name = $params['name'];
+            }
+
         foreach($params as $key => $value)
             $new_settings['webhooks'][$webhook_name][$key] = $value;
 
@@ -169,8 +193,7 @@ class Project extends Model
 
     public function webhook_makeParams_bitrix24(Object $webhook, Leads $lead) //Упаковать параметры для Битрикс24
     {
-        $parameters = ['fields' => [] ];
-        $parameters['fields']['TITLE'] = $this->name;
+        $parameters = ['fields' => [(array)$webhook->params][0] ];
 
         foreach($webhook->fields as $field){
             $corr = config("webhooks-fields-correlation.bitrix24.{$field}");

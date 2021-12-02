@@ -60,15 +60,15 @@ class DatabaseSeeder extends Seeder
                     'email' => [
                         "enabled" => true,
                         "send_all" => true,
-                        "subject" => $project->name,
+                        "subject" => "test",
                         "fields" => []
                     ],
-                    
+
                     'telegram' => [
                         'enabled' => true,
                         'fields' => [],
                     ],
-    
+
                     'timezone' => 'Europe/Samara',
                 ],
             ]

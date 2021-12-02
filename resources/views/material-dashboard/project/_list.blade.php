@@ -27,10 +27,17 @@
                         </div>
                     </td>
                     <td>
-                    <span class="badge badge-dot me-4">
-                      <i class="bg-info"></i>
-                      <span class="text-dark text-xs">working</span>
-                    </span>
+                        @if($project->settings['enabled'])
+                            <span class="badge badge-dot me-4">
+                                <i class="bg-success"></i>
+                                <span class="text-dark text-xs">@lang('projects.status-active')</span>
+                            </span>
+                        @else
+                            <span class="badge badge-dot me-4">
+                                <i class="bg-danger"></i>
+                                <span class="text-dark text-xs">@lang('projects.status-suspended')</span>
+                            </span>
+                        @endif
                     </td>
                     <td>
                         <p class="text-xs font-weight-normal mb-0">{{ $project->leads->count() }}</p>

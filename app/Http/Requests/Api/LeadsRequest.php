@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use App\Models\Project\Project;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
@@ -49,5 +50,11 @@ class LeadsRequest extends FormRequest
             'referrer' => 'nullable|string',
             'url_query_string' => 'nullable|string',
         ];
+    }
+
+    protected function failedAuthorization()
+    {
+
+            throw new AuthorizationException(trans('projects.access.denied'));
     }
 }
