@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         //TODO При переделке фронта переделать или удалить этот маршрут
         Route::post('{project}/journal/{lead}/class/assign', [LeadClassController::class, 'assign'])->name('class-assign');
 
+        Route::get('{project}/log', [ProjectController::class, 'log'])->name('project.log');
         Route::get('{project}/settings_basic/{tab?}', [ProjectController::class, 'settings_basic'])->name('project.settings-basic');
         Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');

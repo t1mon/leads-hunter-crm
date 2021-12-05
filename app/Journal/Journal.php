@@ -5,6 +5,7 @@ namespace App\Journal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 use App\Models\Project\Project;
 use App\Models\Leads;
@@ -35,16 +36,26 @@ class Journal{
     #############
     */
 
-    static public function recent(int $amount = 10){ //Получить последние записи в логе (по умолчанию последние 10)        
-        return DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get();
+    public function _toCollection($rawdata){ //Служебный метод для преобразования данных из БД в коллекцию
+        return collect($rawdata)->map(function($element){
+            return json_decode($element->data);
+        });
+    } //_convert
+
+    public function recent(int $amount = 50){ //Получить все последние записи в логе (по умолчанию последние 10)        
+        return $this->_toCollection(DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get());
     } //recent
 
-    static public function recentInProject(Project $project, int $amount = 10){ //Последние записи в логе по конкретному проекту
-        return DB::table(self::TABLE)->where('data->project->id', $project->id)
-                    ->orderBy('date', 'desc')->limit($amount)->get();
+    public function allInProject(Project $project){ //Получить все имеющиеся записи по конкретному проекту
+        return $this->_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)->orderBy('date', 'desc')->get());
+    }
+
+    public function recentInProject(Project $project, int $amount = 10){ //Последние записи в логе по конкретному проекту
+        return $this->_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)
+                    ->orderBy('date', 'desc')->limit($amount)->get());
     } //recentInProject
 
-    static public function write(string $class, string $action, string $text, array $optional = []){ //Базовая функции записи
+    public function write(string $class, string $action, string $text, array $optional = []){ //Базовая функции записи
         //Базовые поля
         $entry = [
             'date' => Carbon::now(),
@@ -60,7 +71,7 @@ class Journal{
         foreach($optional as $key => $value)
             $entry[$key] = $value;
 
-        DB::table(self::TABLE)->insert(['data' => json_encode($entry), 'date' => Carbon::now()]);
+        DB::table($this->TABLE)->insert(['data' => json_encode($entry), 'date' => Carbon::now()]);
     } //write
 
 
@@ -71,19 +82,19 @@ class Journal{
                 Простые записи
                 #############
     */
-    static public function info(string $text){ //Простая информационная запись
-        // $this->write(self::CLASS_INFO, self::ACTION_LOG, self::ACTION_LOG, $text);
-        self::write(self::CLASS_INFO, self::ACTION_LOG, self::ACTION_LOG, $text);
+    public function info(string $text){ //Простая информационная запись
+        // $this->write($this->CLASS_INFO, $this->ACTION_LOG, $this->ACTION_LOG, $text);
+        $this->write($this->CLASS_INFO, $this->ACTION_LOG, $this->ACTION_LOG, $text);
     } //info
 
-    static public function warning(string $text){ //Запись о предупреждении
-        // $this->write(self::CLASS_WARNING, self::ACTION_LOG, self::ACTION_LOG, $text);
-        self::write(self::CLASS_WARNING, self::ACTION_LOG, self::ACTION_LOG, $text);
+    public function warning(string $text){ //Запись о предупреждении
+        // $this->write($this->CLASS_WARNING, $this->ACTION_LOG, $this->ACTION_LOG, $text);
+        $this->write($this->CLASS_WARNING, $this->ACTION_LOG, $this->ACTION_LOG, $text);
     } //warning
 
-    static public function error(string $text){ //Запись об ошибке
-        // $this->write(self::CLASS_ERROR, self::ACTION_LOG, self::ACTION_LOG, $text);
-        self::write(self::CLASS_ERROR, self::ACTION_LOG, self::ACTION_LOG, $text);
+    public function error(string $text){ //Запись об ошибке
+        // $this->write($this->CLASS_ERROR, $this->ACTION_LOG, $this->ACTION_LOG, $text);
+        $this->write($this->CLASS_ERROR, $this->ACTION_LOG, $this->ACTION_LOG, $text);
     } //error
 
 
@@ -93,21 +104,21 @@ class Journal{
                 Записи по проектам
                 #############
     */
-    static public function projectWrite(Project $project, string $class, string $text){ //Метод для удобного изменения
-        self::write($class, self::ACTION_PROJECT, $text, 
+    public function projectWrite(Project $project, string $class, string $text){ //Метод для удобного изменения
+        $this->write($class, $this->ACTION_PROJECT, $text, 
                     [ 'project' => ['id' => $project->id, 'name' => $project->name] ]);
     } //projectWrite
 
-    static public function project(Project $project, string $text){ //Простая информационная запись по проекту
-        self::projectWrite($project, self::CLASS_INFO, $text);
+    public function project(Project $project, string $text){ //Простая информационная запись по проекту
+        $this->projectWrite($project, $this->CLASS_INFO, $text);
     } //project
 
-    static public function projectWarning(Project $project, string $text){ //Предупреждение по проекту
-        self::projectWrite($project, self::CLASS_WARNING, $text);
+    public function projectWarning(Project $project, string $text){ //Предупреждение по проекту
+        $this->projectWrite($project, $this->CLASS_WARNING, $text);
     } //projectWarning
 
-    static public function projectError(Project $project, string $text){ //Предупреждение по проекту        
-        self::projectWrite($project, self::CLASS_ERROR, $text);
+    public function projectError(Project $project, string $text){ //Ошибка по проекту        
+        $this->projectWrite($project, $this->CLASS_ERROR, $text);
     } //projectError
 
 
@@ -117,24 +128,30 @@ class Journal{
                 Записи по лидам
                 #############
     */
-    static public function leadWrite(Leads $lead, string $class, string $text){ //Метод для удобного изменения
-        self::write($class, self::ACTION_LEAD, $text, 
-                    [
+    public function leadWrite($lead, string $class, string $text){ //Метод для удобного изменения
+        $params = $lead instanceof Leads
+                    ? [
                         'lead' => ['id' => $lead->id, 'name' => $lead->name, 'phone' => $lead->phone],
                         'project' => ['id' => $lead->project->id, 'name' => $lead->project->name] 
-                    ]);
+                    ]
+                    : [
+                        'lead' => ['name' => $lead['name'], 'phone' => $lead['phone'] ],
+                        'project' => ['id' => $lead['project_id'], 'name' => Project::find($lead['project_id']) ]
+                    ];
+        
+        $this->write($class, $this->ACTION_LEAD, $text, $params);
     } //leadWrite
 
-    static public function lead(Leads $lead, string $text){ //Простая информационная запись по лиду
-        self::leadWrite($lead, self::CLASS_INFO, $text);
+    public function lead($lead, string $text){ //Простая информационная запись по лиду
+        $this->leadWrite($lead, $this->CLASS_INFO, $text);
     } //lead
 
-    static public function leadWarning(Leads $lead, string $text){ //Предупреждение по лиду
-        self::leadWrite($lead, self::CLASS_WARNING, $text);
+    public function leadWarning($lead, string $text){ //Предупреждение по лиду
+        $this->leadWrite($lead, $this->CLASS_WARNING, $text);
     } //leadWarning
 
-    static public function leadError(Leads $lead, string $text){ //Ошибка по лиду
-        self::leadWrite($lead, self::CLASS_ERROR, $text);
+    public function leadError($lead, string $text){ //Ошибка по лиду
+        $this->leadWrite($lead, $this->CLASS_ERROR, $text);
     } //leadWarning
 };
 

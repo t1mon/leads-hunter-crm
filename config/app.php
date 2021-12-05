@@ -182,6 +182,8 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
 
+        App\Providers\JournalServiceProvider::class,
+
     ],
 
     /*
@@ -237,6 +239,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
+        'App\Journal\Facade\Journal' => App\Journal\Facade\JournalFacade::class,
     ],
 
 ];

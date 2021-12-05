@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 use App\Models\Project\Project;
 
@@ -89,17 +88,17 @@ class WebhookController extends Controller
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks']);
     }
 
-    public function test(){
+    public function test(int $amount = 50){
         $lead = Leads::find(76);
+        $project = $lead->project;
 
-        $raw = \App\Journal\Journal::recentInProject($lead->project);
+        $entries = is_null($amount) ? \App\Journal\Journal::allInProject($lead->project) : \App\Journal\Journal::recentInProject($lead->project);
 
-        $entries = [];
+        //TODO Отсеивание записей по дате и иным критериям
+        //...
+        $entries = $entries->sortDesc();
 
-        foreach($raw as $entry)
-            $entries[] = json_decode($entry->data);
-
-        return view('material-dashboard.project.log', compact('entries'));
+        return view('material-dashboard.project.log.index', compact('entries', 'project'));
     } //test
 
 }

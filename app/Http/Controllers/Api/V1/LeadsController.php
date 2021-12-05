@@ -12,6 +12,8 @@ use Illuminate\Http\Response;
 
 use Illuminate\Support\Str;
 
+//TODO Заменить на фасад
+use App\Journal\Journal;
 
 class LeadsController extends Controller
 {
@@ -37,6 +39,7 @@ class LeadsController extends Controller
 
         //Проверка хоста у лида
         if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
+            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], trans('leads.host-error') . ': ' . $request->host);
             return response()->json(['data' =>
                 [
                     'status'  => Host::HOST_NOT_FOUND,
@@ -47,6 +50,7 @@ class LeadsController extends Controller
         }
 
         if(!Project::findOrFail($request->project_id)->settings['enabled']) {
+            Journal::leadWarning(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], trans('projects.enabled.false'));
             return response()->json(['data' =>
                 [
                     'status'  => Project::DISABLED,
@@ -56,9 +60,13 @@ class LeadsController extends Controller
             ],Response::HTTP_FOUND);
         }
 
+        $new_lead = Leads::addToDB($request->all());
+        
+        //TODO Исправить, чтобы надпись менялась на "Лид присутствует в базе", если такой лид уже есть
+        Journal::lead($new_lead, trans('leads.created'));
 
         return new LeadsResource(
-            Leads::addToDB($request->all())
+            $new_lead
         );
     }
 

@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+//TODO Заменить на фасад
+use App\Journal\Facade\Journal;
+
 class ProjectController extends Controller
 {
 
@@ -72,7 +75,9 @@ class ProjectController extends Controller
                 ]);
                 Notification::create([ 'project_id' => $project->id ]);
             }, 3);  // Повторить три раза, прежде чем признать неудачу
+            Journal::project($project->id, 'Проект был создан');
         } catch (\Exception $exception) {
+            Journal::projectError($project, 'Ошибка создания проекта: ' . $exception->getMessage());
             Log::error($exception->getMessage());
             return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
         }
@@ -241,6 +246,7 @@ class ProjectController extends Controller
         }
 
         $project->save();
+        Journal::project($project, 'Пользователь ' . Auth::user()->name . ' обновил настройки проекта.');
         return back()->withSuccess('Настройки проекта обновлены');
     } //update
 
@@ -255,9 +261,31 @@ class ProjectController extends Controller
         //Проверка полномочий пользователя
         if (Gate::denies('delete', [Project::class, $project]))
             return redirect()->route('project.index');
-
+        $project_log = $project;
         $project->delete();
 
+        Journal::project($project_log, 'Пользователь ' . Auth::user()->name . ' удалил проект.');
         return redirect()->route('project.index')->withSuccess('Проект удален');
     } //destroy
+
+    public function log(Project $project, Request $request){
+        //Проверка полномочий пользователя
+        if (Gate::denies('delete', [Project::class, $project]))
+            return redirect()->route('project.index');
+
+        $entries = null;
+        if($request->has('amount')){
+            if($request->amount === 'all')
+                $entries = Journal::allInProject($project);
+            else
+                $entries = Journal::recentInProject($project, $request->amount);
+        }
+        else
+            $entries = Journal::recentInProject($project);
+
+        //TODO Отсеивание записей по дате и иным критериям
+        //...
+
+        return view('material-dashboard.project.log.index', compact('entries', 'project'));
+    } //log
 }
