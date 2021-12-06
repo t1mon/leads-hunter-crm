@@ -43,15 +43,15 @@ class Journal{
     } //_convert
 
     public function recent(int $amount = 50){ //Получить все последние записи в логе (по умолчанию последние 10)        
-        return $this->_toCollection(DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get());
+        return self::_toCollection(DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get());
     } //recent
 
     public function allInProject(Project $project){ //Получить все имеющиеся записи по конкретному проекту
-        return $this->_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)->orderBy('date', 'desc')->get());
+        return self::_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)->orderBy('date', 'desc')->get());
     }
 
     public function recentInProject(Project $project, int $amount = 10){ //Последние записи в логе по конкретному проекту
-        return $this->_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)
+        return self::_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)
                     ->orderBy('date', 'desc')->limit($amount)->get());
     } //recentInProject
 
@@ -71,7 +71,7 @@ class Journal{
         foreach($optional as $key => $value)
             $entry[$key] = $value;
 
-        DB::table($this->TABLE)->insert(['data' => json_encode($entry), 'date' => Carbon::now()]);
+        DB::table(self::TABLE)->insert(['data' => json_encode($entry), 'date' => Carbon::now()]);
     } //write
 
 
@@ -83,18 +83,18 @@ class Journal{
                 #############
     */
     public function info(string $text){ //Простая информационная запись
-        // $this->write($this->CLASS_INFO, $this->ACTION_LOG, $this->ACTION_LOG, $text);
-        $this->write($this->CLASS_INFO, $this->ACTION_LOG, $this->ACTION_LOG, $text);
+        // self::write(self::CLASS_INFO, self::ACTION_LOG, self::ACTION_LOG, $text);
+        self::write(self::CLASS_INFO, self::ACTION_LOG, self::ACTION_LOG, $text);
     } //info
 
     public function warning(string $text){ //Запись о предупреждении
-        // $this->write($this->CLASS_WARNING, $this->ACTION_LOG, $this->ACTION_LOG, $text);
-        $this->write($this->CLASS_WARNING, $this->ACTION_LOG, $this->ACTION_LOG, $text);
+        // self::write(self::CLASS_WARNING, self::ACTION_LOG, self::ACTION_LOG, $text);
+        self::write(self::CLASS_WARNING, self::ACTION_LOG, self::ACTION_LOG, $text);
     } //warning
 
     public function error(string $text){ //Запись об ошибке
-        // $this->write($this->CLASS_ERROR, $this->ACTION_LOG, $this->ACTION_LOG, $text);
-        $this->write($this->CLASS_ERROR, $this->ACTION_LOG, $this->ACTION_LOG, $text);
+        // self::write(self::CLASS_ERROR, self::ACTION_LOG, self::ACTION_LOG, $text);
+        self::write(self::CLASS_ERROR, self::ACTION_LOG, self::ACTION_LOG, $text);
     } //error
 
 
@@ -105,20 +105,20 @@ class Journal{
                 #############
     */
     public function projectWrite(Project $project, string $class, string $text){ //Метод для удобного изменения
-        $this->write($class, $this->ACTION_PROJECT, $text, 
+        self::write($class, self::ACTION_PROJECT, $text, 
                     [ 'project' => ['id' => $project->id, 'name' => $project->name] ]);
     } //projectWrite
 
     public function project(Project $project, string $text){ //Простая информационная запись по проекту
-        $this->projectWrite($project, $this->CLASS_INFO, $text);
+        self::projectWrite($project, self::CLASS_INFO, $text);
     } //project
 
     public function projectWarning(Project $project, string $text){ //Предупреждение по проекту
-        $this->projectWrite($project, $this->CLASS_WARNING, $text);
+        self::projectWrite($project, self::CLASS_WARNING, $text);
     } //projectWarning
 
     public function projectError(Project $project, string $text){ //Ошибка по проекту        
-        $this->projectWrite($project, $this->CLASS_ERROR, $text);
+        self::projectWrite($project, self::CLASS_ERROR, $text);
     } //projectError
 
 
@@ -136,23 +136,54 @@ class Journal{
                     ]
                     : [
                         'lead' => ['name' => $lead['name'], 'phone' => $lead['phone'] ],
-                        'project' => ['id' => $lead['project_id'], 'name' => Project::find($lead['project_id']) ]
+                        'project' => ['id' => $lead['project_id'], 'name' => Project::find($lead['project_id'])->name ]
                     ];
         
-        $this->write($class, $this->ACTION_LEAD, $text, $params);
+        self::write($class, self::ACTION_LEAD, $text, $params);
     } //leadWrite
 
     public function lead($lead, string $text){ //Простая информационная запись по лиду
-        $this->leadWrite($lead, $this->CLASS_INFO, $text);
+        self::leadWrite($lead, self::CLASS_INFO, $text);
     } //lead
 
     public function leadWarning($lead, string $text){ //Предупреждение по лиду
-        $this->leadWrite($lead, $this->CLASS_WARNING, $text);
+        self::leadWrite($lead, self::CLASS_WARNING, $text);
     } //leadWarning
 
     public function leadError($lead, string $text){ //Ошибка по лиду
-        $this->leadWrite($lead, $this->CLASS_ERROR, $text);
+        self::leadWrite($lead, self::CLASS_ERROR, $text);
     } //leadWarning
+
+
+    /* 3.
+                ############
+                Удаление записей
+                #############
+    */
+    public function clear(){ //Полностью очистить лог
+        DB::table(self::TABLE)->truncate();
+    } //clear
+
+    public function deleteOld(int $days = 7){ //Удалить все старые записи (по умолчанию через неделю)        
+        DB::table(self::TABLE)
+            ->where('date', '<=', Carbon::now()->subDays($days))->delete();
+
+    } //deleteOld
+
+    public function deleteOldInProject(Project $project, int $days = 7){ //Удалить старые записи по проекту
+        DB::table(self::TABLE)
+            ->where('data->project->id', $project->id)
+            ->where('date', '<=', Carbon::now()->subDays($days))->delete();
+    } //deleteOldInProject
+
+    /* 3.
+                ############
+                Сохранение в файл
+                #############
+    */
+    public function getFileFromProject(Project $project){ //Сохранить лог проекта в файл
+        
+    } //getFileFromProject
 };
 
 ?>

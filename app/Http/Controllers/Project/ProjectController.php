@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-//TODO Заменить на фасад
 use App\Journal\Facade\Journal;
 
 class ProjectController extends Controller
