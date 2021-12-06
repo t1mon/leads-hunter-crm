@@ -87,6 +87,13 @@
                 </li>
 
                 @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                    <li class="nav-item {{ request()->route()->named('project.journal') ? 'active' : '' }}">
+                        <a class="nav-link {{ request()->route()->named('project.log') ? 'active' : '' }}" href="{{ route('project.log', $project ) }}">
+                            <i class="material-icons-round opacity-10">notes</i>
+                            <span class="nav-link-text ms-2 ps-1">Лог</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#pagesExamples" class="nav-link text-white " aria-controls="pagesExamples" role="button" aria-expanded="false">
                                 <i class="material-icons-round">settings</i>

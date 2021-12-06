@@ -13,7 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 //TODO Заменить на фасад
-use App\Journal\Journal;
+use App\Journal\Facade\Journal;
 
 class LeadsController extends Controller
 {

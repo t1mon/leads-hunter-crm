@@ -175,15 +175,6 @@ class Journal{
             ->where('data->project->id', $project->id)
             ->where('date', '<=', Carbon::now()->subDays($days))->delete();
     } //deleteOldInProject
-
-    /* 3.
-                ############
-                Сохранение в файл
-                #############
-    */
-    public function getFileFromProject(Project $project){ //Сохранить лог проекта в файл
-        
-    } //getFileFromProject
 };
 
 ?>

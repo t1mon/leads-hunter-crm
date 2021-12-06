@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 //TODO Заменить на фасад
-use App\Journal\Journal;
+use App\Journal\Facade\Journal;
 
 class EmailController extends Controller
 {
