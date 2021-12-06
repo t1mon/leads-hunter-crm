@@ -9,6 +9,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
+use Illuminate\Support\Facades\Auth;
+
+use App\Journal\Facade\Journal;
+
 class ProjectTokenController extends Controller
 {
     public function edit($id): View
@@ -33,6 +37,8 @@ class ProjectTokenController extends Controller
         $project->update([
             'api_token' => Str::random(60)
         ]);
+
+        Journal::project($project, Auth::user()->name . ' обновил токен проекта: "' . $project->api_token . '".');
 
         return redirect()->route('project.token', $project->id)->withSuccess(__('tokens.updated'));
     }

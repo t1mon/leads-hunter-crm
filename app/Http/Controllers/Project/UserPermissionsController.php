@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
+use App\Journal\Facade\Journal;
+
 class UserPermissionsController extends Controller
 {
 
@@ -56,6 +58,9 @@ class UserPermissionsController extends Controller
         $request->merge(['user_id' => $user->id]);
 
         UserPermissions::create($request->all());
+
+        Journal::project($project, Auth::user()->name . ' добавил пользователя ' . $user->name . 'в проект (' . $request->role . ')');
+
         return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess( trans('projects.users.create-success') );
     } //store
 
@@ -75,6 +80,7 @@ class UserPermissionsController extends Controller
 
         $permissions->save();
 
+        Journal::project($project, Auth::user()->name . ' изменил полномочия пользователя ' . User::find($permissions->user_id)->name);
         return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess( trans('projects.users.update-success') );;
     } //update
 
@@ -93,6 +99,7 @@ class UserPermissionsController extends Controller
 
         $permissions->delete();
 
+        Journal::project($project, Auth::user()->name . ' удалил пользователя ' . User::find($permissions->user_id)->name . ' из проекта.');
         return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess(trans('projects.users.delete-success'));
     } //destroy
 }

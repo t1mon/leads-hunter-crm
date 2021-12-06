@@ -11,6 +11,9 @@ use App\Models\Project\Project;
 use App\Models\Project\LeadClass;
 use App\Models\Leads;
 
+use Illuminate\Support\Facades\Auth;
+
+use App\Journal\Facade\Journal;
 
 class LeadClassController extends Controller
 {
@@ -35,8 +38,11 @@ class LeadClassController extends Controller
                 'color' => $request->color,
                 'project_id' => $project->id,
             ])->exists()
-        )
-        return back()->withError(trans('leads-classes.create-error') . ': ' . trans('leads-classes.error-exists'));
+        ){
+            Journal::projectError($project,
+                                                trans('leads-classes.create-error') . ': ' . $request->name . ' – ' . trans('leads-classes.error-exists'));
+            return back()->withError(trans('leads-classes.create-error') . ': ' . trans('leads-classes.error-exists'));
+        }
         
         LeadClass::create([
             'name' => $request->name,
@@ -45,6 +51,7 @@ class LeadClassController extends Controller
             'project_id' => $project->id,
         ]);
 
+        Journal::project($project, Auth::user()->name . ' добавил класс "' . $request->name . '".');
         return redirect()->route('project.settings-basic', [$project, 'tab' => 'classes'])->withSuccess(trans('leads-classes.create-success'));
     } //store
 
@@ -55,6 +62,8 @@ class LeadClassController extends Controller
     public function update(Project $project, LeadClass $class, Request $request){
         $class->fill($request->all());
         $class->save();
+
+        Journal::project($project, Auth::user()->name . ' обновил класс "' . $class->name . '".');
         return redirect()->route('project.settings-basic', [$project, 'tab' => 'classes'])->withSuccess(trans('leads-classes.create-success')); 
     } //update
 
@@ -66,7 +75,10 @@ class LeadClassController extends Controller
         //Удаление класса из всех лидов в проекте
         Leads::where(['project_id' => $project->id, 'class_id' => $class->id])->update(['class_id' => null]);
 
+        $name = $class->name;
         $class->delete();
+
+        Journal::project($project, Auth::user()->name . ' удалил класс "' . $name . '".');
 
         return back()->withSuccess(trans('leads-classes.delete-success'));
     } //destroy
@@ -76,6 +88,13 @@ class LeadClassController extends Controller
             'class_id' => $request->class_id ? $request->class_id : null, 
             'updated_at' => $lead->updated_at
         ]);
+
+        if($request->class_id)
+            Journal::project($project,
+                        Auth::user()->name . ' назначил класс "' . LeadClass::find($request->class_id)->name . '" лиду №' . $lead->id . ' (' . $lead->name . ', ' . $lead->phone . ').');
+        else
+        Journal::project($project,
+        Auth::user()->name . ' убрал класс с лида №' . $lead->id . ' (' . $lead->name . ', ' . $lead->phone . ').');
         return redirect()->route('project.journal', $project);
     } //assign
 }

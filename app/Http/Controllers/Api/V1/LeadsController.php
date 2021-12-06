@@ -39,7 +39,8 @@ class LeadsController extends Controller
 
         //Проверка хоста у лида
         if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
-            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], trans('leads.host-error') . ': ' . $request->host);
+            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], 
+                        trans('leads.host-error') . ': ' . $request->host . ' (' . Host::HOST_NOT_FOUND  . ')');
             return response()->json(['data' =>
                 [
                     'status'  => Host::HOST_NOT_FOUND,
@@ -62,8 +63,7 @@ class LeadsController extends Controller
 
         $new_lead = Leads::addToDB($request->all());
         
-        //TODO Исправить, чтобы надпись менялась на "Лид присутствует в базе", если такой лид уже есть
-        Journal::lead($new_lead, trans('leads.created'));
+        Journal::lead($new_lead, $new_lead->entries == 1 ? Leads::LEAD_NEW : Leads::LEAD_EXISTS);
 
         return new LeadsResource(
             $new_lead
@@ -84,8 +84,11 @@ class LeadsController extends Controller
 
         if( array_key_exists('utm_source', $utm) )
             return $utm['utm_source'];
-        else
+        else{
+            Journal::leadWarning(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ],
+                                "Не удалось определить источник лида.");
             return Leads::SOURCE_DIRECT_ENTRY;
+        }
 
     } //detectSource
 
@@ -106,6 +109,10 @@ class LeadsController extends Controller
             if( array_key_exists($utm_mark, $vars) )
                 $utm[$utm_mark] = $vars[$utm_mark];
         }
+
+        if(!count($utm))
+            Journal::leadWarning(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ],
+                                    "Не удалось получить UTM-метки.");
 
         return $utm;
 

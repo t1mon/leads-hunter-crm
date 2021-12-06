@@ -10,6 +10,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
+use App\Journal\Facade\Journal;
+
 class SendTelegramData implements ShouldQueue
 {
 
@@ -43,15 +45,20 @@ class SendTelegramData implements ShouldQueue
             $message = $channel_id->composeMessage($event->lead);
 
             //Отправка на канал
-            if( !is_null($channel_id) )
+            if( !is_null($channel_id) ){
                 $channel_id->send($message);
+                Journal::lead($event->lead, $project, 'Лид №' . $event->lead->id . ' (' . $event->lead->name . ', ' . $event->lead->phone . ') отправлен по каналу Telegram ' . $channel_id->name);
+            }
 
             //Отправка в личку
-            foreach($private_ids as $id)
+            foreach($private_ids as $id){
                 $id->send($message);
+                Journal::lead($event->lead, $project, 'Лид №' . $event->lead->id . ' (' . $event->lead->name . ', ' . $event->lead->phone . ') отправлен личным сообщением в Telegram контакту' . $id->name);
+            }
 
-            //TODO Сделать запись в лог
+            //Запись в лог
             Log::channel('leads')->info("Lead id:" . $event->lead->id . " Отправлен по каналу Telegram");
+
             if( !is_null($channel_id) ) Log::channel('leads')->info("### номер канала {$channel_id->number}, имя канала {$channel_id->name} ###");
             if(sizeof($private_ids) > 0) Log::channel('leads')->info("### telegram список id лички {$private_ids}");
         }

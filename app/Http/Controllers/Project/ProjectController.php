@@ -74,9 +74,9 @@ class ProjectController extends Controller
                 ]);
                 Notification::create([ 'project_id' => $project->id ]);
             }, 3);  // Повторить три раза, прежде чем признать неудачу
-            Journal::project($project->id, 'Проект был создан');
+            Journal::project($project, 'Пользователь ' . Auth::user()->name . ' создал проект.');
         } catch (\Exception $exception) {
-            Journal::projectError($project, 'Ошибка создания проекта: ' . $exception->getMessage());
+            Journal::error('Ошибка создания проекта: "' . $request->name . '": ' . $exception->getMessage());
             Log::error($exception->getMessage());
             return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
         }

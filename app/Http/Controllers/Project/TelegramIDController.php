@@ -16,6 +16,8 @@ use Illuminate\Http\Client\Response;
 use App\Models\Project\Project;
 use App\Models\Project\TelegramID;
 
+use App\Journal\Facade\Journal;
+
 class TelegramIDController extends Controller
 {
     public function store(Project $project, Request $request){
@@ -35,15 +37,16 @@ class TelegramIDController extends Controller
                 ]
             );
 
+            Journal::project($project,  Auth::user()->name . ' добавил контакт группового чата Telegram: ' . $request->name);
             return redirect()->route('project.settings-sync', [$project, 'telegram'])
                 ->withSuccess( trans('projects.notifications.telegram.group_create_success') );
         }
 
         //Личка
-        //TODO Если у пользователя с таким юзернеймом уже есть id в базе данных, сразу взять его оттуда и одобрить
-
         if($request->type === TelegramID::TYPE_PRIVATE){
             if( TelegramID::where(['project_id' => $project->id, 'name' => $request->name])->exists() )
+                Journal::projectError($project,  
+                                        trans('projects.notifications.telegram.create_error') . ': ' . $request->name . ' – ' . trans('projects.notifications.telegram.error_exists'));
                 return redirect()->route('project.settings-sync', [$project, 'telegram'])
                     ->withError( trans('projects.notifications.telegram.create_error') . ': ' . trans('projects.notifications.telegram.error_exists') );
 
@@ -66,7 +69,7 @@ class TelegramIDController extends Controller
             }
 
             TelegramID::create($parameters);
-
+            Journal::project($project,  Auth::user()->name . ' добавил личный контакт Telegram: ' . $request->name);
             return redirect()->route('project.settings-sync', [$project, 'telegram'])
                 ->withSuccess( trans('projects.notifications.telegram.private_create_success') );
         }
@@ -84,6 +87,7 @@ class TelegramIDController extends Controller
         //Если контакта нет в базе данных, либо он уже одобрен, написать отказ
         if($contacts->isEmpty()){
             TelegramID::API_SendMessageTo($id, "Уважаемый $username! Ваш контакт не указан ни в одном проекте, либо уже был одобрен.");
+            Journal::projectWarning('Неудачная проверка Telegram-контакта ' . $username . ': не указан в проекте, либо уже одобрен.');
             return;
         }
 
@@ -95,6 +99,7 @@ class TelegramIDController extends Controller
         }
 
         TelegramID::API_SendMessageTo($id, "Добро пожаловать, $username!");
+        Journal::project($project,  'Telegram-контакт ' . $username . ' был одобрен.');
     }
 
     public function destroy(Project $project, $id){
@@ -104,7 +109,9 @@ class TelegramIDController extends Controller
 
         $contact = TelegramID::find($id);
 
+        $name = $contact->name;
         $contact->delete();
+        Journal::project($project, Auth::user()->name . ' удалил Telegram-контакт ' . $contact->name);
         return redirect()->route('project.settings-sync', [$project, 'telegram'])
                 ->withSuccess( trans('projects.notifications.telegram.delete_success') );
     } //destroy

@@ -9,7 +9,10 @@ use App\Models\Project\Project;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
+use App\Journal\Facade\Journal;
 
 class HostController extends Controller
 {
@@ -30,16 +33,20 @@ class HostController extends Controller
             }
             Host::create($request->all());
         } catch (\Exception $exception) {
+            Journal::projectError(Project::find($request->project_id), $exception->getMessage());
             Log::error($exception->getMessage());
             return redirect()->route('project.settings-basic', ['project' => $request->project_id])
                 ->withErrors(trans('projects.hosts.create-error') . ': ' . trans('projects.hosts.error-exists'));
         }
+        Journal::project(Project::find($request->project_id), Auth::user()->name . ' добавил хост ' . $request->host);
         return redirect()->route('project.settings-basic', ['project' => $request->project_id])->withSuccess(trans('projects.hosts.create-success'));
     } //store
 
     public function destroy(Project $project, Host $host)
     {
+        $name = $host->host;
         $host->delete();
+        Journal::project($project, Auth::user()->name . ' удалил хост ' . $name);
         return redirect()->route('project.settings-basic', $project)->withSuccess(trans('projects.hosts.delete-success'));
     } //destroy
 }

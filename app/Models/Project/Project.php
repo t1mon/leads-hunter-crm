@@ -12,6 +12,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
+use App\Journal\Facade\Journal;
+
 class Project extends Model
 {
     use HasFactory;
@@ -175,9 +177,6 @@ class Project extends Model
             $response = Http::withOptions(['verify' => false])->asForm()->post($webhook->url, $parameters);
         elseif($webhook->method === 'GET')
             $response = Http::withOptions(['verify' => false])->asForm()->get($webhook->url, $parameters);
-
-        //TODO Запись в лог
-        //...
 
         return $response;
     } //webhook_send

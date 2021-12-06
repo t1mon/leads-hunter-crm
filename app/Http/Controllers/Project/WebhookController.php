@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Project\Project;
 
+use App\Journal\Facade\Journal;
+
 class WebhookController extends Controller
 {
     public function store(Project $project, Request $request){
@@ -26,9 +28,12 @@ class WebhookController extends Controller
             return redirect()->route('project.index');
 
         //Проверка существования вебхука
-        if( !is_null($project->webhook_get($request->name)) )
+        if( !is_null($project->webhook_get($request->name)) ){
+            Journal::projectError($project,
+            trans('project.notifications.webhooks.error-create') . ': ' . $request->name . ' – ' . trans('project.notifications.webhooks.error-exists'));
             return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
                 ->withError(trans('project.notifications.webhooks.error-create') . ': ' . trans('project.notifications.webhooks.error-exists'));
+        }
 
         //Добавления пустого поля 'fields', если в форме не было указано ни одного поля
         if(!$request->exists('fields'))
@@ -37,6 +42,7 @@ class WebhookController extends Controller
         $project->webhook_add($request->except(['_token']));
         $project->save();
 
+        Journal::project($project, Auth::user()->name . ' добавил вебхук ' . $request->name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
                 ->withSuccess( trans('project.notifications.webhooks.create-success') );
     } //store
@@ -62,6 +68,7 @@ class WebhookController extends Controller
 
         $project->save();
 
+        Journal::project($project, Auth::user()->name . ' обновил настройки вебхука ' . $request->name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
             ->withSuccess( trans('project.notifications.webhooks.update-success') );
     } //update
@@ -74,6 +81,7 @@ class WebhookController extends Controller
         $project->webhook_delete($webhook_name);
         $project->save();
 
+        Journal::project($project, Auth::user()->name . ' удалил вебхук ' . $webhook_name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
                 ->withSuccess( trans('project.notifications.webhooks.delete-success') );
     } //destroy
@@ -85,6 +93,10 @@ class WebhookController extends Controller
         
         $project->webhook_update($webhook_name, ['enabled' => (bool)!$project->settings['webhooks'][$webhook_name]['enabled']]);
         $project->save();
+
+        Journal::project($project, Auth::user()->name
+        . ($project->settings['webhooks'][$webhook_name]['enabled'] === true ? ' включил' : ' выключил')
+        . ' вебхук ' . $webhook_name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks']);
     }
 

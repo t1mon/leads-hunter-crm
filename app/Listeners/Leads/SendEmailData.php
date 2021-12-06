@@ -10,6 +10,8 @@ use Illuminate\Mail\Mailer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
+use App\Journal\Facade\Journal;
+
 class SendEmailData
     //implements ShouldQueue
 {
@@ -35,7 +37,8 @@ class SendEmailData
         if($event->lead->project->settings['email']['enabled']){
             //Если рассылка всех лидов выключена, и количество вхождений превышает 1
             if(!$event->lead->project->settings['email']['send_all'] and $event->lead->entries > 1){
-                Log::channel('leads')->warning("Лид id:" . $event->lead->id . " не отправлен по Email ограничение числа вхождений лида entries > 1 ");
+                Journal::leadWarning($event->lead, $event->lead->project, "Лид id:" . $event->lead->id . " не отправлен по Email ограничение числа вхождений лида entries > 1 ");
+                Log::channel('leads')->warning("Лид id:" . $event->lead->id . " не отправлен по Email: ограничение числа вхождений лида entries > 1 ");
                 return;
             }
 
@@ -47,8 +50,11 @@ class SendEmailData
                     $message = (new SendLeadData($event->lead, $subject))->onQueue('emails');
                     Mail::to($email->email)->queue($message);
                     Log::channel('leads')->info(json_encode($event->lead) . " --> " . $email->email);
+
+                    Journal::lead($event->lead, $event->lead->project, 'Лид №' . $event->lead->id . ' (' . $event->lead->name . ', ' . $event->lead->phone . ') отправлен на ' . $email->email);
                     Log::channel('leads')->info("Lead id:" . $event->lead->id . " sent to " . $email->email);
                 } catch (\Exception $exception) {
+                    Journal::leadError($event->lead, $event->lead->project, $exception->getMessage());
                     Log::channel('leads')->error($exception->getMessage());
                 }
             }
