@@ -38,7 +38,22 @@ class SendLeadData extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS'), config('app.name', 'Hunter'))
+
+        switch ($this->type) {
+            case Project::TEMPLATE_MARKDOWN:
+                $from = env('MAIL_FROM_ADDRESS') ;
+                $sendName = config('app.name', 'Hunter');
+                break;
+            case Project::TEMPLATE_VIEW:
+                $from = env('MAIL_FROM_ADDRESS2') ;
+                $sendName = env('MAIL_SEND_NAME2');
+                break;
+            default:
+                $from = env('MAIL_FROM_ADDRESS2') ;
+                $sendName = env('MAIL_SEND_NAME2');
+        }
+
+        return $this->from($from, $sendName)
                     ->subject(empty($this->subject) ? __('leads.email.subject') : $this->subject)
                     ->markdown('emails.markdown.lead.data')
                     ->with([
