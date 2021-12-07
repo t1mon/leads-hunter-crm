@@ -15,9 +15,11 @@
                     @endif
                 @endcomponent
             @endif
-    @endslot 
+    @endslot
 
-    @lang('leads.email.data')
+    @if($type === 'markdown')
+     @lang('leads.email.data')
+    @endif
 
     @component('mail::panel')
         Имя: <b>{{ $lead->name }}</b><br>
@@ -30,13 +32,13 @@
     @endcomponent
 
     {{-- Subcopy --}}
-
+    @if($type === 'markdown')
         @slot('subcopy')
             @component('mail::subcopy')
                 @lang('leads.email.description')
             @endcomponent
         @endslot
-
+    @endif
 
     {{-- Footer --}}
     @slot('footer')
