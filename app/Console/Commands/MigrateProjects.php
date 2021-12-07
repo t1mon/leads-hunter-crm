@@ -115,46 +115,60 @@ class MigrateProjects extends Command
 
             /* 7.
                 Перевести дату всех созданных проектов из Москвы в UTC*/
-                $project->created_at = Carbon::create($project->created_at)->timezone('UTC');
+            $project->created_at = Carbon::create($project->created_at)->timezone('UTC');
             
             /* 8.
                 Перевести даты всех лидов в проекте из Москвы в UTC*/
-                foreach($project->leads() as $lead){
-                    $lead->created_at = Carbon::create($lead->created_at)->timezone('UTC');
-                    $lead->save();
-                }
+            foreach($project->leads() as $lead){
+                $lead->created_at = Carbon::create($lead->created_at)->timezone('UTC');
+                $lead->save();
+            }
             
             /* 9.
                 Добавить в настройки вебхуки*/
-                if(!array_key_exists('webhooks', $project->settings)){
-                    $new_settings = ['webhooks' => [] ];
-                    $project->settings = array_merge($project->settings, $new_settings);
-                }
+            if(!array_key_exists('webhooks', $project->settings)){
+                $new_settings = ['webhooks' => [] ];
+                $project->settings = array_merge($project->settings, $new_settings);
+            }
             /* 10. 
                 Добавить в вебхуки битрикса поле params*/
-                foreach($project->settings['webhooks'] as $webhook){
-                    if($webhook['type'] === Project::WEBHOOK_BITRIX24){
-                        print('ОК!\n');
-                        $new_settings = $project->settings;
-                        $new_settings['webhooks'][$webhook['name']]['params'] = [
-                            'TITLE' => null,
-                            'STATUS_ID' => null,
-                            'SOURCE_ID' => null,
-                            'SOURCE_DESCRIPTION' => null,
-                            'OPENED' => 'Y',
-                        ];
+            foreach($project->settings['webhooks'] as $webhook){
+                if($webhook['type'] === Project::WEBHOOK_BITRIX24){
+                    print('ОК!\n');
+                    $new_settings = $project->settings;
+                    $new_settings['webhooks'][$webhook['name']]['params'] = [
+                        'TITLE' => null,
+                        'STATUS_ID' => null,
+                        'SOURCE_ID' => null,
+                        'SOURCE_DESCRIPTION' => null,
+                        'OPENED' => 'Y',
+                    ];
 
-                        $project->settings = array_merge($project->settings, $new_settings);
-                    }
+                    $project->settings = array_merge($project->settings, $new_settings);
                 }
+            }
             
             /* 11. 
                 Добавить в настройки проекта поля "Включено" и "Описание" */
+            if(!array_key_exists('enabled', $project->settings)){
                 $new_settings = $project->settings;
                 $new_settings['enabled'] = true;
+                $project->settings = array_merge($project->settings, $new_settings);
+            }
+            if(!array_key_exists('description', $project->settings)){
+                $new_settings = $project->settings;
                 $new_settings['description'] = null;
                 $project->settings = array_merge($project->settings, $new_settings);
+            }
             
+            /* 12. 
+                Добавить в настройки email поле "Шаблон" */
+            if(!array_key_exists('template', $project->settings['email'])){
+                $new_settings = $project->settings;
+                $new_settings['email']['template'] = Project::TEMPLATE_VIEW;
+                $project->settings = array_merge($project->settings, $new_settings);
+            }
+
             $project->save();
         }
     }

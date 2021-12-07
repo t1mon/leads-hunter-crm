@@ -6,14 +6,16 @@
 @component('mail::layout')
     {{-- Header --}}
     @slot('header')
-            @component('mail::header', ['url' => config('app.url')])
-                @if( File::exists( public_path().'/media/img/logo/mail-logo.png') )
-                    <img style="max-height: 200px" src="{{asset('media/img/logo/mail-logo.png')}}">
-                @else
-                    {{ config('app.name') }}
-                @endif
-            @endcomponent
-    @endslot
+            @if($type === 'markdown')
+                @component('mail::header', ['url' => config('app.url')])
+                    @if( File::exists( public_path().'/media/img/logo/mail-logo.png') )
+                        <img style="max-height: 200px" src="{{asset('media/img/logo/mail-logo.png')}}">
+                    @else
+                        {{ config('app.name') }}
+                    @endif
+                @endcomponent
+            @endif
+    @endslot 
 
     @lang('leads.email.data')
 
@@ -38,8 +40,10 @@
 
     {{-- Footer --}}
     @slot('footer')
-        @component('mail::footer')
-            © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
-        @endcomponent
+        @if($type === 'markdown')
+            @component('mail::footer')
+                © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            @endcomponent
+        @endif
     @endslot
 @endcomponent
