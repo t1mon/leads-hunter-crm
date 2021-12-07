@@ -34,6 +34,11 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        // ->whereBetween('created_at', [
+        //     Carbon::today('Europe/Samara')->startOfDay()->subHours(4),
+        //     Carbon::today('Europe/Samara')->endOfDay()->subHours(4),
+        // ])->count();
+
         $ids = UserPermissions::where(['user_id' => Auth::id()])->pluck('project_id');
         $projects = Project::whereIn('id', $ids)
                                 ->with('leads', 'leadsToday')
