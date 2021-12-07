@@ -43,15 +43,15 @@ class Journal{
     } //_convert
 
     public function recent(int $amount = 50){ //Получить все последние записи в логе (по умолчанию последние 10)        
-        return self::_toCollection(DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get());
+        return $this->_toCollection(DB::table(self::TABLE)->orderBy('date', 'desc')->limit($amount)->get());
     } //recent
 
     public function allInProject(Project $project){ //Получить все имеющиеся записи по конкретному проекту
-        return self::_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)->orderBy('date', 'desc')->get());
+        return $this->_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)->orderBy('date', 'desc')->get());
     }
 
     public function recentInProject(Project $project, int $amount = 10){ //Последние записи в логе по конкретному проекту
-        return self::_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)
+        return $this->_toCollection(DB::table(self::TABLE)->where('data->project->id', $project->id)
                     ->orderBy('date', 'desc')->limit($amount)->get());
     } //recentInProject
 
@@ -83,18 +83,15 @@ class Journal{
                 #############
     */
     public function info(string $text){ //Простая информационная запись
-        // self::write(self::CLASS_INFO, self::ACTION_LOG, self::ACTION_LOG, $text);
-        self::write(self::CLASS_INFO, self::ACTION_LOG, self::ACTION_LOG, $text);
+        $this->write(self::CLASS_INFO, self::ACTION_LOG, $text);
     } //info
 
     public function warning(string $text){ //Запись о предупреждении
-        // self::write(self::CLASS_WARNING, self::ACTION_LOG, self::ACTION_LOG, $text);
-        self::write(self::CLASS_WARNING, self::ACTION_LOG, self::ACTION_LOG, $text);
+        $this->write(self::CLASS_WARNING, self::ACTION_LOG, $text);
     } //warning
 
     public function error(string $text){ //Запись об ошибке
-        // self::write(self::CLASS_ERROR, self::ACTION_LOG, self::ACTION_LOG, $text);
-        self::write(self::CLASS_ERROR, self::ACTION_LOG, self::ACTION_LOG, $text);
+        $this->write(self::CLASS_ERROR, self::ACTION_LOG, $text);
     } //error
 
 
@@ -105,20 +102,20 @@ class Journal{
                 #############
     */
     public function projectWrite(Project $project, string $class, string $text){ //Метод для удобного изменения
-        self::write($class, self::ACTION_PROJECT, $text, 
+        $this->write($class, self::ACTION_PROJECT, $text, 
                     [ 'project' => ['id' => $project->id, 'name' => $project->name] ]);
     } //projectWrite
 
     public function project(Project $project, string $text){ //Простая информационная запись по проекту
-        self::projectWrite($project, self::CLASS_INFO, $text);
+        $this->projectWrite($project, self::CLASS_INFO, $text);
     } //project
 
     public function projectWarning(Project $project, string $text){ //Предупреждение по проекту
-        self::projectWrite($project, self::CLASS_WARNING, $text);
+        $this->projectWrite($project, self::CLASS_WARNING, $text);
     } //projectWarning
 
     public function projectError(Project $project, string $text){ //Ошибка по проекту        
-        self::projectWrite($project, self::CLASS_ERROR, $text);
+        $this->projectWrite($project, self::CLASS_ERROR, $text);
     } //projectError
 
 
@@ -139,19 +136,19 @@ class Journal{
                         'project' => ['id' => $lead['project_id'], 'name' => Project::find($lead['project_id'])->name ]
                     ];
         
-        self::write($class, self::ACTION_LEAD, $text, $params);
+        $this->write($class, self::ACTION_LEAD, $text, $params);
     } //leadWrite
 
     public function lead($lead, string $text){ //Простая информационная запись по лиду
-        self::leadWrite($lead, self::CLASS_INFO, $text);
+        $this->leadWrite($lead, self::CLASS_INFO, $text);
     } //lead
 
     public function leadWarning($lead, string $text){ //Предупреждение по лиду
-        self::leadWrite($lead, self::CLASS_WARNING, $text);
+        $this->leadWrite($lead, self::CLASS_WARNING, $text);
     } //leadWarning
 
     public function leadError($lead, string $text){ //Ошибка по лиду
-        self::leadWrite($lead, self::CLASS_ERROR, $text);
+        $this->leadWrite($lead, self::CLASS_ERROR, $text);
     } //leadWarning
 
 

@@ -47,13 +47,13 @@ class SendTelegramData implements ShouldQueue
             //Отправка на канал
             if( !is_null($channel_id) ){
                 $channel_id->send($message);
-                Journal::lead($event->lead, $project, 'Лид №' . $event->lead->id . ' (' . $event->lead->name . ', ' . $event->lead->phone . ') отправлен по каналу Telegram ' . $channel_id->name);
+                Journal::lead($event->lead, 'Лид отправлен по каналу Telegram ' . $channel_id->name);
             }
 
             //Отправка в личку
             foreach($private_ids as $id){
                 $id->send($message);
-                Journal::lead($event->lead, $project, 'Лид №' . $event->lead->id . ' (' . $event->lead->name . ', ' . $event->lead->phone . ') отправлен личным сообщением в Telegram контакту' . $id->name);
+                Journal::lead($event->lead, 'Лид отправлен личным сообщением в Telegram контакту ' . $id->name);
             }
 
             //Запись в лог

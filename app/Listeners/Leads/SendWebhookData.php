@@ -37,11 +37,11 @@ class SendWebhookData implements ShouldQueue
             foreach($project->webhooks_active() as $webhook){
                 $response = $project->webhook_send($webhook->name, $lead);
                 if ($response->failed()) {
-                    Journal::leadError($lead, $project, "Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
+                    Journal::leadError($lead, "Попытка отправки вебхука {$webhook->name} Код статуса {$response->status()} на url {$webhook->url}");
                     Log::channel('leads')->error("ProjectId:{$lead->project->id} Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
                     throw new \Exception("ProjectId:{$lead->project->id} Попытка отправки WebHook {$webhook->name} Status Code {$response->status()} for url {$webhook->url}");
                 } else {
-                    Journal::lead($lead, $project, "Отправлен WebHook {$webhook->name} по URL:{$webhook->url} Имя проекта {$lead->project->name} Идентификатор лида:{$lead->id}");
+                    Journal::lead($event->lead, "Лид отправлен на вебхук {$webhook->name} по url {$webhook->url}");
                     Log::channel('leads')->info("ProjectId:{$lead->project->id} Отправлен WebHook {$webhook->name} по URL:{$webhook->url} Имя проекта {$lead->project->name} Идентификатор лида:{$lead->id}");
                 }
             }

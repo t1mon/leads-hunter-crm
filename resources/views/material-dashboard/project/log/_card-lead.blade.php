@@ -22,7 +22,7 @@
     <div class="card-body">
         <p class="card-text text-dark">
             <span class="fw-bold me-2">
-                [{{$entry->lead->name}}, {{phone_format($entry->lead->phone)}}]
+            {{$entry->lead->id ?? ''}} [{{$entry->lead->name}}, {{phone_format($entry->lead->phone)}}]
             </span>
             {{ $entry->text }}
         </p>

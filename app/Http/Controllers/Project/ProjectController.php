@@ -73,8 +73,9 @@ class ProjectController extends Controller
                     'view_fields' => ['email', 'city', 'host'],
                 ]);
                 Notification::create([ 'project_id' => $project->id ]);
+                Journal::project($project, Auth::user()->name . ' создал проект.');
             }, 3);  // Повторить три раза, прежде чем признать неудачу
-            Journal::project($project, 'Пользователь ' . Auth::user()->name . ' создал проект.');
+            
         } catch (\Exception $exception) {
             Journal::error('Ошибка создания проекта: "' . $request->name . '": ' . $exception->getMessage());
             Log::error($exception->getMessage());

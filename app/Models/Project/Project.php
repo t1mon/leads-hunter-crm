@@ -12,8 +12,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
-use App\Journal\Facade\Journal;
-
 class Project extends Model
 {
     use HasFactory;

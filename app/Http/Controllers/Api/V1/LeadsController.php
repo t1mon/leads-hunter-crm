@@ -40,7 +40,7 @@ class LeadsController extends Controller
         //Проверка хоста у лида
         if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
             Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], 
-                        trans('leads.host-error') . ': ' . $request->host . ' (' . Host::HOST_NOT_FOUND  . ')');
+                        'Лид не добавлен в проект: хост ' . $request->host . ' не найден');
             return response()->json(['data' =>
                 [
                     'status'  => Host::HOST_NOT_FOUND,
@@ -51,7 +51,7 @@ class LeadsController extends Controller
         }
 
         if(!Project::findOrFail($request->project_id)->settings['enabled']) {
-            Journal::leadWarning(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], trans('projects.enabled.false'));
+            Journal::leadWarning(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], "Попытка добавления лида в отключенный проект");
             return response()->json(['data' =>
                 [
                     'status'  => Project::DISABLED,
@@ -63,7 +63,7 @@ class LeadsController extends Controller
 
         $new_lead = Leads::addToDB($request->all());
         
-        Journal::lead($new_lead, $new_lead->entries == 1 ? Leads::LEAD_NEW : Leads::LEAD_EXISTS);
+        Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
 
         return new LeadsResource(
             $new_lead
