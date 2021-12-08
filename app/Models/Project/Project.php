@@ -222,7 +222,13 @@ class Project extends Model
 
     public function leadsToday()
     {
-        return $this->hasMany(Leads::class, 'project_id')->whereDate('created_at', Carbon::today($this->timezone));
+        return $this->hasMany(Leads::class, 'project_id')->whereDate('created_at', '>=', Carbon::now($this->timezone));
+    }
+
+    public function leadsTodayCount(){
+        return $this->leads->filter(function($lead){
+            return $lead->created_at >= Carbon::today($this->timezone);
+        });
     }
 
     /**

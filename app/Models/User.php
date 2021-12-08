@@ -86,7 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isInProject(Project $project): bool
     {
-        return $project->where(['project_id' => $project->id, 'user_id' => $this->id])->exists();
+        return $this->getPermissionsForProject($project)->exists();
     } //isInProject
 
     public function hasRole(string $role): bool

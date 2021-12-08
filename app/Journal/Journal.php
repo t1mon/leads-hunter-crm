@@ -55,6 +55,17 @@ class Journal{
                     ->orderBy('date', 'desc')->limit($amount)->get());
     } //recentInProject
 
+    public function todayInProject(Project $project){ //Получить все записи за сегодня
+        return $this->_toCollection(
+            DB::table(self::TABLE)->where('data->project->id', $project->id)
+                    ->orderBy('date', 'desc')
+                    ->get()
+                    ->filter(function($entry) use ($project) {
+                        return $entry->date >= Carbon::today($project->timezone);
+                    })
+        );
+    } //todayInProject
+
     public function write(string $class, string $action, string $text, array $optional = []){ //Базовая функции записи
         //Базовые поля
         $entry = [

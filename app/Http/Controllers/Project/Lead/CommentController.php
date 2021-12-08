@@ -22,7 +22,7 @@ class CommentController extends Controller
 
     public function create(Project $project, Leads $lead){
         //Проверка полномочий пользователя
-        if(Gate::denies('settings', [Project::class, $project]))
+        if(!Auth::user()->isInProject($project))
             return redirect()->route('project.index');
 
         return view('material-dashboard.project.comments.create', compact('project', 'lead'));
@@ -30,7 +30,7 @@ class CommentController extends Controller
 
     public function store(Project $project, Leads $lead, Request $request){
         //Проверка полномочий пользователя
-        if(Gate::denies('settings', [Project::class, $project]))
+        if(!Auth::user()->isInProject($project))
             return redirect()->route('project.index');
 
         //TODO Написать более развёрнутую валидацию
@@ -66,7 +66,7 @@ class CommentController extends Controller
 
     public function destroy(Project $project, Leads $lead, Comment $comment){
         //Проверка полномочий пользователя
-        if(Gate::denies('settings', [Project::class, $project]))
+        if(!Auth::user()->isInProject($project))
             return redirect()->route('project.index');
 
         $comment->delete();

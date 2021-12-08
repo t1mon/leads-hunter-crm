@@ -44,7 +44,7 @@
                     </td>
                     <td class="align-middle text-center">
                         <div class="d-flex align-items-center">
-                            <span class="me-2 text-xs">{{ $project->leadsToday->count() }}</span>
+                            <span class="me-2 text-xs">{{ $project->leadsTodayCount()->count() }}</span>
                         </div>
                     </td>
                     <td class="align-middle text-center">

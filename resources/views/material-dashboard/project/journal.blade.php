@@ -102,7 +102,7 @@
                                 <h6 class="text-center mb-0 font-weight-normal text-sm">{{  $lead->getClientName() }}</h6>
                             </td>
                             <td class="text-white text-center" style="background-color:#{{$lead->class->color ?? ''}}">
-                                @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                                @if(Auth::user()->isInProject($project))
                                     @php
                                         $classes = [];
                                         $classes[0] = 'Убрать';
@@ -152,7 +152,7 @@
                                 @endphp
 
                                 @if(is_null($lead->comment_CRM))
-                                    @if($project->isOwner() or Auth::user()->isManagerFor($project))
+                                    @if(Auth::user()->isInProject($project))
                                         <a class="fa fa-plus" aaria-hidden="true" href="{{route('comment.create', [$project, $lead])}}"></a>
                                     @endif
                                 @else
