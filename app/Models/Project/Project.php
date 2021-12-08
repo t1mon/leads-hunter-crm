@@ -220,12 +220,14 @@ class Project extends Model
         return $this->hasMany(Leads::class, 'project_id');
     }
 
-    public function leadsToday()
-    {
-        return $this->hasMany(Leads::class, 'project_id')->whereDate('created_at', '>=', Carbon::now($this->timezone));
-    }
+//    public function leadsToday()
+//    {
+//        //$date = Carbon::parse($this->leads()->created_at, $this->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+//        //$leads->where('created_at', '>=' ,$date);
+//        return $this->hasMany(Leads::class, 'project_id')->whereDate('created_at', '>=', Carbon::parse(Carbon::today(), $this->timezone)->startOfDay()->setTimezone(config('app.timezone') ));
+//    }
 
-    public function leadsTodayCount(){
+    public function leadsToday(){
         return $this->leads->filter(function($lead){
             return $lead->created_at >= Carbon::today($this->timezone);
         });

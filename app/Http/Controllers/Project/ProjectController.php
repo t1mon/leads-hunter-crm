@@ -34,12 +34,10 @@ class ProjectController extends Controller
     public function index()
     {
         $ids = UserPermissions::where(['user_id' => Auth::id()])->pluck('project_id');
-        // $projects = Project::whereIn('id', $ids)
-        //                         ->with('leads', 'leadsToday')
-        //                         ->withCount('leads', 'leadsToday')
-        //                         ->get();
-
-        $projects = Project::whereIn('id', $ids)->get();
+         $projects = Project::whereIn('id', $ids)
+                                 ->with('leads')
+                                 ->withCount('leads')
+                                 ->get();
 
         return view('material-dashboard.project.index', compact('projects'));
     }
