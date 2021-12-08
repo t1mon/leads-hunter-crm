@@ -26,46 +26,6 @@ use Maatwebsite\Excel\Facades\Excel;
 class ProjectController extends Controller
 {
 
-    public function test(){
-        // return Excel::download(new LogsExportToday(Project::find(1)), 'log.xlsx');
-
-        $project = Project::find(1);
-        $leads = $project->hasMany(\App\Models\Leads::class, 'project_id')->get();
-        $leads = \App\Models\Leads::where('project_id', 1)->get()->filter(function($lead) use ($project) {
-            return $lead->created_at >= Carbon::today($project->timezone);
-        });
-
-        return $leads->count();
-
-        // $leads = \App\Models\Leads::where('project_id', 1)->whereDate('created_at', Carbon::today('Europe/Samara') )->get();
-
-        $count = 0;
-
-        foreach($leads as $lead){
-            // if($lead->created_at >= Carbon::today('Europe/Samara')) echo('+ ');
-            echo $lead->created_at . '<br>';
-        }
-
-        echo '<br>';
-
-        $tz1 = Carbon::now('UTC');
-        $tz2 = Carbon::now('Europe/Moscow')->shiftTimezone('UTC');
-        echo $tz1->diffInHours($tz2); //should be appropriate 
-
-        echo '<br>';
-        $lead = \App\Models\Leads::find(96);
-        $lead_date = $lead->created_at;
-        $today = Carbon::today('Europe/Samara');
-
-
-        echo 'Дата создания лида (UTC): ' . $lead_date . '<br>';
-        echo 'Дата создания лида (Europe/Samara): ' . $lead_date->tz('Europe/Samara') . '<br>';
-        echo 'Начало дня: (Europe/Samara) ' . $today . '<br>';
-        
-        echo 'Дата лида больше, чем начало дня: ' . ($lead_date >= $today ? 'true' : 'false') . '<br>';
-
-        
-    }
     /**
      * Display a listing of the resource.
      *
@@ -116,7 +76,7 @@ class ProjectController extends Controller
                 Notification::create([ 'project_id' => $project->id ]);
                 Journal::project($project, Auth::user()->name . ' создал проект.');
             }, 3);  // Повторить три раза, прежде чем признать неудачу
-            
+
         } catch (\Exception $exception) {
             Journal::error('Ошибка создания проекта: "' . $request->name . '": ' . $exception->getMessage());
             Log::error($exception->getMessage());
@@ -188,14 +148,18 @@ class ProjectController extends Controller
         ]);
 
         $leads = $project->leads();
-        
 
-        if ($request->has('date_from') && !empty($request->date_from)) {
-            $leads->whereDate('created_at', '>=', Carbon::parse($request->date_from, $project->timezone)->format('Y-m-d'));
+
+        if($request->filled('date_from'))
+        {
+            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+            $leads->where('created_at', '>=' ,$date);
         }
 
-        if ($request->has('date_to') && !empty($request->date_to)) {
-            $leads->whereDate('created_at', '<=', Carbon::parse($request->date_to, $project->timezone)->format('Y-m-d'));
+        if($request->filled('date_to'))
+        {
+            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+            $leads->where('created_at', '<=' ,$end_date);
         }
 
         if ($request->has('double_phone') && !empty(request()->double_phone)) {
