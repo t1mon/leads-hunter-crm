@@ -24,7 +24,27 @@
                             </div>
                             <div class="my-2">
                                 {!! Form::label('email-subject', trans('projects.notifications.emails_subject') . ':', ['class' => 'form-label']) !!}
-                                {!! Form::text('settings[email][subject]', $project->settings['email']['subject'], ['class' => 'form-control border p-2 w-50', 'placeholder' => trans('projects.notifications.emails_subject'), 'id' => 'email-subject']) !!}
+                                {!! Form::text('settings[email][subject]', $project->settings['email']['subject'], ['class' => 'form-control border p-2', 'placeholder' => trans('projects.notifications.emails_subject'), 'id' => 'email-subject']) !!}
+                            </div>
+                            <div class="my-2 text-center">
+                                <p class="form-label text-center">Тип шаблона письма</p>                                
+                                {!! Form::radio('settings[email][template]', 'view',
+                                        $project->settings['email']['template'] === 'view' ? true : false,
+                                    [
+                                        'id' => 'template-view',
+                                        'class' => 'form-check-input'
+                                    ])
+                                !!}
+                                {!! Form::label('template-view', 'Упрощённый', ['class' => 'form-check-label me-2']) !!}
+                                
+                                {!! Form::radio('settings[email][template]', 'markdown',
+                                        $project->settings['email']['template'] === 'markdown' ? true : false,
+                                    [
+                                        'id' => 'template-markdown',
+                                        'class' => 'form-check-input',
+                                    ])
+                                !!}
+                                {!! Form::label('template-markdown', 'С разметкой', ['class' => 'form-check-label']) !!}                
                             </div>
                         </div>
                         

@@ -19,6 +19,10 @@ class Project extends Model
     const DISABLED = 'Project disabled';
     const ENABLED = 'Project enabled';
 
+    //Типы шаблона письма, в котором отправляется лид
+    const TEMPLATE_VIEW = 'view';
+    const TEMPLATE_MARKDOWN = 'markdown';
+
     protected $fillable = [
         'name',
         'host',
@@ -35,6 +39,7 @@ class Project extends Model
             "description": false,
             "email":
             {
+                "template": "view",
                 "enabled": false,
                 "send_all": true,
                 "subject": "!Empty Subject!",
