@@ -36,7 +36,7 @@ class LogsExportToday implements FromCollection
         foreach($this->entries as $entry){
             //Базовые поля
             $row = [
-                Carbon::parse($entry->date, $this->project->timezone)->format('d.m.Y H:i:s'),
+                Carbon::parse($entry->date)->setTimezone($this->project->timezone)->format('d.m.Y H:i:s'),
                 trans('logs.action.'.$entry->action),
                 trans('logs.class.'.$entry->class),
                 property_exists($entry, 'user') ? $entry->user->name : trans('logs.unauthorized-user'),

@@ -29,7 +29,7 @@ class LeadExport implements FromCollection
         foreach($this->leads as $lead){
             //Базовые поля
             $row = [
-                Carbon::parse($lead->updated_at, $this->project->timezone)->format('d.m.Y H:i:s'),
+                Carbon::parse($lead->updated_at)->setTimezone($this->project->timezone)->format('d.m.Y H:i:s'),
                 $this->project->name,
                 $lead->class->name ?? null,
                 $lead->getClientName(),
