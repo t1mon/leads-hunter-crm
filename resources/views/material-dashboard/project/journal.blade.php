@@ -54,6 +54,19 @@
 
   </div>
 
+{{--Ссылки на скачивание--}}
+<div class="card my-2">
+    <div class="card-body text-center">
+        <span class="me-6">
+            Скачать записи за сегодня:
+            <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::XLSX])}}" class="card-link">.xlsx</a>
+            <span>|</span>
+            <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::CSV])}}" class="card-link">.csv</a>
+        </span>        
+    </div>
+</div>
+
+
 <div class="row my-4">
     <div class="col-12">
         <div class="card">

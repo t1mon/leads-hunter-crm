@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
 
 use App\Journal\Facade\Journal;
 use App\Exports\LogsExportToday;
+use App\Exports\LeadExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
@@ -133,8 +134,9 @@ class ProjectController extends Controller
      * @param \App\Models\Project $project
      * @return \Illuminate\Http\Response
      */
-    public function journal(Request $request, Project $project)
+    public function journal(Project $project, Request $request)
     {
+
         if (Gate::denies('view', $project)) {
             return redirect()->route('project.index');
         }
@@ -169,6 +171,17 @@ class ProjectController extends Controller
 
         return view('material-dashboard.project.journal', compact('project', 'leads'));
     } //journal
+
+    public function journal_export(Project $project, Request $request){
+        //Проверка полномочий
+        if(!Auth::user()->isInProject($project))
+            return redirect()->route('project.index');
+
+        $format = $request->has('format') ? $request->format : \Maatwebsite\Excel\Excel::XLSX;
+
+        return (new LeadExport)->today($project)
+            ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
+    } //journal_export
 
     public function notification(Request $request, Project $project)
     {

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 use App\Journal\Facade\Journal;
 
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
 
