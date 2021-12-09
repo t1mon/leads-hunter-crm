@@ -84,12 +84,12 @@
                                     @lang('projects.journal.' . $field)
                                     {!! Form::checkbox(
                                         'view_fields[]', $field,
-                                        in_array('email', $permission->view_fields) ? true : false,
+                                        in_array($field, $permission->view_fields) ? true : false,
                                         [( (Auth::user()->isWatcher($project) or $project->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
-                                        ) 
-                                    !!}
+                                    )!!}
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;
                                 @endforeach
+                                {!! Form::hidden('view_fields[]', '') !!}
     
                                 {!! Form::submit(trans('projects.button-save'),
                                     [

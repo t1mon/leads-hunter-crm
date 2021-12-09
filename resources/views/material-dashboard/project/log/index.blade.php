@@ -1,6 +1,27 @@
 @extends('material-dashboard.layouts.app')
 
 @section('content')
+    {{--Ссылки на скачивание--}}
+    <div class="card my-2">
+        <div class="card-body text-center">
+            <span class="me-6">
+                Скачать записи за сегодня:
+                <a href="{{route('project.log-export', ['project' => $project, 'method' => 'today', 'format' => \Maatwebsite\Excel\Excel::XLSX])}}" class="card-link">.xlsx</a>
+                <span>|</span>
+                <a href="{{route('project.log-export', ['project' => $project, 'method' => 'today', 'format' => \Maatwebsite\Excel\Excel::CSV])}}" class="card-link">.csv</a>
+            </span>
+            
+            <span>
+                Скачать все записи:
+                <a href="{{route('project.log-export', ['project' => $project, 'method' => 'all', 'format' => \Maatwebsite\Excel\Excel::XLSX])}}" class="card-link">.xlsx</a>
+                <span>|</span>
+                <a href="{{route('project.log-export', ['project' => $project, 'method' => 'all', 'format' => \Maatwebsite\Excel\Excel::CSV])}}" class="card-link">.csv</a>
+            </span>
+            
+        </div>
+    </div>
+
+
     {{--Вкладки--}}
     <ul class="nav nav-tabs">
         <li class="nav-item">

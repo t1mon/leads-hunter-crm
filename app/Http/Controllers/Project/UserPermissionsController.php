@@ -12,6 +12,7 @@ use App\Models\Project\Project;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmailRequest;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -69,14 +70,22 @@ class UserPermissionsController extends Controller
         if(Gate::denies('delete', [UserPermissions::class, $project]))
             return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
 
-        //TODO Эта строка поставлена как костыль, пока не будет понятно, почему в этом контроллере $project передаётся как просто идентификатор, а не объект
+        //TODO Эта строка поставлена как костыль, пока не будет понятно, почему в этом контроллере $permissions передаётся как просто идентификатор, а не объект
         $permissions = UserPermissions::find($permissions);
 
         //Полномочия создателя проекта изменять нельзя
         if($permissions->user_id == $project->user_id)
             return 'Полномочия создателя проекта изменять нельзя'; //TODO: сделать более симпатичное представление
 
+        
         $permissions->fill($request->all());
+
+        //Отсеивание пустых значений из view_fields
+        $view_fields = Arr::where($permissions->view_fields, function($value, $key){
+            return !is_null($value);
+        });
+
+        $permissions->view_fields = $view_fields;
 
         $permissions->save();
 

@@ -11,30 +11,36 @@ use Illuminate\Support\Facades\DB;
 use App\Journal\Facade\Journal;
 
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
 
-class LogsExportToday implements FromQuery
+class LogsExportToday implements FromCollection
 {
     use Exportable;
 
-    public function __construct(Project $project)
-    {
+    public function today(Project $project){
         $this->project = $project;
+        $this->entries = Journal::todayInProject($project);
+        return $this;
     }
 
-    public function query()
-    {
-        $entries = Journal::todayInProject($this->project);
+    public function all(Project $project){
+        $this->project = $project;
+        $this->entries = Journal::allInProject($project);
+        return $this;
+    }
 
+    public function collection()
+    {
         //Форматирование записей
         $formatted = [];
-        foreach($entries as $entry){
+        foreach($this->entries as $entry){
             //Базовые поля
             $row = [
-                Carbon::parse($entry->date, $this->project->timezone),
-                $entry->action,
-                $entry->class,
-                property_exists($entry, 'user') ? $entry->user->name : 'Неавторизовавшийся пользователь',
+                Carbon::parse($entry->date, $this->project->timezone)->format('d.m.Y H:i:s'),
+                trans('logs.action.'.$entry->action),
+                trans('logs.class.'.$entry->class),
+                property_exists($entry, 'user') ? $entry->user->name : trans('logs.unauthorized-user'),
             ];
 
             //Форматирование в зависмости от типа записи
@@ -45,7 +51,7 @@ class LogsExportToday implements FromQuery
                 case 'lead':
                     $row[] = $entry->project->name;
                     if(property_exists($entry->lead, 'id'))
-                        $row[] = "Лид №{$entry->lead->id}";
+                        $row[] = trans('logs.lead-no'.$entry->lead->id);
                     $row[] = "{$entry->lead->name}, {$entry->lead->phone}";
             }
             

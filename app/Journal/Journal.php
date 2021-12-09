@@ -56,13 +56,13 @@ class Journal{
     } //recentInProject
 
     public function todayInProject(Project $project){ //Получить все записи за сегодня
+        $date = Carbon::today($project->timezone)->setTimezone(config('app.timezone'));
+        
         return $this->_toCollection(
             DB::table(self::TABLE)->where('data->project->id', $project->id)
+                    ->where('date', '>=', $date)
                     ->orderBy('date', 'desc')
                     ->get()
-                    ->filter(function($entry) use ($project) {
-                        return $entry->date >= Carbon::today($project->timezone);
-                    })
         );
     } //todayInProject
 

@@ -287,9 +287,18 @@ class ProjectController extends Controller
         else
             $entries = Journal::recentInProject($project);
 
-        //TODO Отсеивание записей по дате и иным критериям
-        //...
-
         return view('material-dashboard.project.log.index', compact('entries', 'project'));
     } //log
+
+    public function log_export(Project $project, Request $request){
+        //Проверка полномочий пользователя
+        if (Gate::denies('delete', [Project::class, $project]))
+            return redirect()->route('project.index');
+
+        $method = $request->has('method') ? $request->method : 'all'; 
+        $format = $request->has('format') ? $request->format : \Maatwebsite\Excel\Excel::XLSX;
+
+        return (new LogsExportToday)->$method($project)
+            ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
+    } //downloadLog
 }

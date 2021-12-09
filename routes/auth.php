@@ -49,6 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{project}/test', [ProjectController::class, 'test'])->name('project.test');
 
         Route::get('{project}/log', [ProjectController::class, 'log'])->name('project.log');
+        Route::get('{project}/log-export', [ProjectController::class, 'log_export'])->name('project.log-export');
+        
         Route::get('{project}/settings_basic/{tab?}', [ProjectController::class, 'settings_basic'])->name('project.settings-basic');
         Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
