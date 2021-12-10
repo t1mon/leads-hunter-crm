@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 use App\Models\Project\Project;
 
@@ -35,12 +36,13 @@ class WebhookController extends Controller
                 ->withError(trans('project.notifications.webhooks.error-create') . ': ' . trans('project.notifications.webhooks.error-exists'));
         }
 
-        //Добавления пустого поля 'fields', если в форме не было указано ни одного поля
-        if(!$request->exists('fields'))
-            $request->merge(['fields' => [] ]);
+        //Добавление пустого поля 'fields', если в форме не было указано ни одного поля
+        // if(!$request->exists('fields'))
+        //     $request->merge(['fields' => [] ]);
 
         $project->webhook_add($request->except(['_token']));
         $project->save();
+
 
         Journal::project($project, Auth::user()->name . ' добавил вебхук ' . $request->name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
@@ -100,17 +102,40 @@ class WebhookController extends Controller
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks']);
     }
 
-    public function test(int $amount = 50){
-        $lead = Leads::find(76);
-        $project = $lead->project;
+    public function test(){
+        
+        $lead = Leads::find(102);
+        return $lead->project->webhook_send('Новый вебхук', $lead);
+        
+        
+        // $string = <<<EOD
+        //     fields:
+        //       TITLE: 'Заявка с компании L-Digital'
+        //       NAME: '\$name'
+        //       STATUS_ID: 'NEW'
+        //       SOURCE_ID: '79626114910'
+        //       SOURCE_DESCRIPTION: 'L-Digital'
+        //       OPENED: 'Y'
+        //       PHONE:
+        //         -
+        //           VALUE: '\$phone'
+        //           VALUE_TYPE: 'WORK'
+        //       EMAIL:
+        //         -
+        //           VALUE: '\$email'
+        //           VALUE_TYPE: 'WORK'
+        //     params:
+        //       - REGISTER_SONET_EVENT: 'Y'
+        // EOD;
 
-        $entries = is_null($amount) ? \App\Journal\Journal::allInProject($lead->project) : \App\Journal\Journal::recentInProject($lead->project);
+        // $fields = ['name', 'phone', 'email'];
 
-        //TODO Отсеивание записей по дате и иным критериям
-        //...
-        $entries = $entries->sortDesc();
+        // foreach($fields as $field){
+        //     $string = str_replace('$'.$field, $lead->$field, $string);
+        // }
 
-        return view('material-dashboard.project.log.index', compact('entries', 'project'));
+        // $result = yaml_parse($string);
+        // return $result;
     } //test
 
 }
