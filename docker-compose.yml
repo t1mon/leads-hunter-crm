@@ -29,6 +29,22 @@ services:
     links:
       - mysql
       - redis
+
+  php74-cli:
+      build:
+        context: ./
+        dockerfile: docker/php74-cli.Dockerfile
+      volumes:
+        - ./:/var/www/app:cached
+      environment:
+        - DB_HOST=mysql
+        - DB_PORT=3306
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+      links:
+        - mysql
+        - redis
+      tty: true
   mysql:
     build:
       context: ./
