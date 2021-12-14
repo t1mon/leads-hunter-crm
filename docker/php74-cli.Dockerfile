@@ -19,6 +19,8 @@ RUN apt-get update && apt-get install -y \
 && docker-php-ext-install pdo pdo_mysql \
 && docker-php-ext-configure intl \
 && docker-php-ext-install intl \
+&& docker-php-ext-install pcntl \
+&& docker-php-ext-install zip \
 && apt install -y libmagickwand-dev --no-install-recommends \
 && pecl install imagick \
 && docker-php-ext-enable imagick \
