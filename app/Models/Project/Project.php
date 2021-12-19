@@ -174,11 +174,13 @@ class Project extends Model
         //     $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
 
         if(isset($webhook->query)){
-            $fields = ['name', 'phone', 'email']; 
+            $fields = ['name', 'phone', 'email', 'cost', 'city', 'utm_medium', 'utm_source', 'utm_campaign'];
             foreach($fields as $field){
                 $webhook->query = str_replace('$'.$field, $lead->$field, $webhook->query);
             }
         }
+
+        // return yaml_parse($webhook->query);
 
         $response = null;
 

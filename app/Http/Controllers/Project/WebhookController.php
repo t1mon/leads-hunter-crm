@@ -21,6 +21,10 @@ use App\Journal\Facade\Journal;
 
 class WebhookController extends Controller
 {
+    public function create(Project $project, Request $request){
+        return view('material-dashboard.project.webhooks.form.'.$request->form, compact('project'));
+    } //store
+
     public function store(Project $project, Request $request){
         //TODO Создать Request для валидации
 
@@ -40,19 +44,40 @@ class WebhookController extends Controller
         // if(!$request->exists('fields'))
         //     $request->merge(['fields' => [] ]);
 
-        $project->webhook_add($request->except(['_token']));
-        $project->save();
+        // $project->webhook_add($request->except(['_token']));
 
+        //Вызов соответствующего конструктора для вебхука (в зависимости от типа и формы)
+        $method = 'store_'.$request->form;
+        // return yaml_parse($this->$method($project, $request)['query']);
+
+        $this->$method($project, $request);
 
         Journal::project($project, Auth::user()->name . ' добавил вебхук ' . $request->name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
                 ->withSuccess( trans('project.notifications.webhooks.create-success') );
     } //store
 
+    public function store_simple_common(Project $project, Request $request){ //Сохранение упрощённого обычного вебхука
+        $request->merge(['query' => yaml_emit($request->fields)]);
+        $project->webhook_add($request->except('_token', 'fields', 'form'));
+        $project->save();
+    } //store_simple_common
+    
+    public function store_simple_bitrix24(Project $project, Request $request){ //Сохранение упрощённого вебхука Битрикс24
+        $request->merge(['query' => yaml_emit(['fields' => $request->fields])]);
+        $project->webhook_add($request->except('_token', 'fields', 'form'));
+        $project->save();
+    } //store_simple_bitrix24
+    
+    public function store_extended(Project $project, Request $request){ //Сохранение вебхука из расширенной форме
+        $project->webhook_add($request->except('_token'));
+        $project->save();
+    } //store_extended
+
     public function edit(Project $project, string $webhook_name){
         $webhook = $project->webhook_get($webhook_name);
-        $type = $webhook->type;
-        return view('material-dashboard.project.webhooks.edit', compact('project', 'webhook', 'type'));
+        // $type = $webhook->type;
+    return view('material-dashboard.project.webhooks.edit', compact('project', 'webhook'/*, 'type'*/));
     } //edit
 
     public function update(Project $project, string $webhook_name, Request $request){
@@ -103,29 +128,33 @@ class WebhookController extends Controller
     }
 
     public function test(){
-        
+
         $lead = Leads::find(102);
-        return $lead->project->webhook_send('Новый вебхук', $lead);
+        $lead->name = 'Test 1';
+        // return $lead->project->webhook_send('Вебхук L-Corp', $lead);
+        return $lead->project->webhook_send('webhook-extended', $lead);
+
+        return $lead->project->webhook_send('Вебхук L-Corp', $lead)->json();
         
         
         // $string = <<<EOD
-        //     fields:
-        //       TITLE: 'Заявка с компании L-Digital'
-        //       NAME: '\$name'
-        //       STATUS_ID: 'NEW'
-        //       SOURCE_ID: '79626114910'
-        //       SOURCE_DESCRIPTION: 'L-Digital'
-        //       OPENED: 'Y'
-        //       PHONE:
-        //         -
-        //           VALUE: '\$phone'
-        //           VALUE_TYPE: 'WORK'
-        //       EMAIL:
-        //         -
-        //           VALUE: '\$email'
-        //           VALUE_TYPE: 'WORK'
-        //     params:
-        //       - REGISTER_SONET_EVENT: 'Y'
+            // fields:
+            //   TITLE: 'Заявка с компании L-Digital'
+            //   NAME: '\$name'
+            //   STATUS_ID: 'NEW'
+            //   SOURCE_ID: '79626114910'
+            //   SOURCE_DESCRIPTION: 'L-Digital'
+            //   OPENED: 'Y'
+            //   PHONE:
+            //     -
+            //       VALUE: '\$phone'
+            //       VALUE_TYPE: 'WORK'
+            //   EMAIL:
+            //     -
+            //       VALUE: '\$email'
+            //       VALUE_TYPE: 'WORK'
+            // params:
+            //   - REGISTER_SONET_EVENT: 'Y'
         // EOD;
 
         // $fields = ['name', 'phone', 'email'];

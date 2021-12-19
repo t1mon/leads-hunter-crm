@@ -27,23 +27,16 @@
         </li>
 
         {{--Настройки вебхуков--}}
-        {{-- <li class="nav-item">
+        <li class="nav-item">
             <a  class="nav-link" data-bs-toggle="tab" href="#webhooks">
                 @lang('projects.notifications.tab_webhooks')
             </a>
-        </li> --}}
+        </li>
 
         {{--Настройки Bitrix24--}}
-        {{-- <li class="nav-item">
+        <li class="nav-item">
             <a  class="nav-link" data-bs-toggle="tab" href="#bitrix24">
                 @lang('projects.notifications.tab_bitrix24')
-            </a>
-        </li> --}}
-
-        {{--Новый вебхук--}}
-        <li class="nav-item">
-            <a  class="nav-link" data-bs-toggle="tab" href="#new-webhook">
-                Новые вебхуки
             </a>
         </li>
 
@@ -68,17 +61,12 @@
     </div>
 
     {{--Настройки вебхуков--}}
-    {{-- <div class="tab-pane fade" id="webhooks" role="tabpanel">
-        @include('material-dashboard.project.webhooks.common')
-    </div> --}}
+    <div class="tab-pane fade" id="webhooks" role="tabpanel">
+        @include('material-dashboard.project.webhooks.index')
+    </div>
 
-     {{--Настройки Bitrix24--}}
-    {{-- <div class="tab-pane fade" id="bitrix24" role="tabpanel">
-        @include('material-dashboard.project.webhooks.bitrix24')
-    </div> --}}
-
-    {{--Новый вебхук--}}
-    <div class="tab-pane fade" id="new-webhook" role="tabpanel">
+    {{--Настройки Bitrix24--}}
+    <div class="tab-pane fade" id="bitrix24" role="tabpanel">
         @include('material-dashboard.project.webhooks.index')
     </div>
 </div>

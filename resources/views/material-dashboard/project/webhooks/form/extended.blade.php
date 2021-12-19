@@ -1,7 +1,14 @@
+@extends('material-dashboard.layouts.app')
+
+@section('content')
+
 {!! Form::open(['route' => isset($webhook) ? ['webhook.update', $project, $webhook->name] : ['webhook.store', $project], 'method' => isset($webhook) ? 'PUT' : 'CREATE']) !!}
 <div class="border rounded-3 align-middle my-3 p-3">
     <div class="border-bottom my-2">
+        {!! Form::hidden('form', 'extended') !!}
+
         {!! Form::hidden('enabled', true) !!}
+
         {!! Form::text(
             'name',
             $webhook->name ?? null,
@@ -9,6 +16,18 @@
                 'class' => 'form-control',
                 'placeholder' => trans('projects.notifications.webhooks.name'),
             ]) !!}
+    </div>
+
+    <div class="border-bottom my-2">
+        {!! Form::text(
+            'type',
+            $webhook->type ?? null,
+            [
+                'class' => 'form-control',
+                'placeholder' => 'Тип вебхука',
+                'id' => 'type',
+            ]) 
+        !!}
     </div>
 
     <div class="my-2">
@@ -48,3 +67,5 @@
 </div>
 
 {!! Form::close() !!}
+
+@endsection
