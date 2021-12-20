@@ -15,9 +15,11 @@
                 <tbody>
                     @php
                         $webhooks = [];
-                        foreach($project->webhooks as $webhook){
-                            if($webhook->type === $type)
-                                $webhooks[] = $webhook;
+                        if(!is_null($project->webhooks)){
+                            foreach($project->webhooks as $webhook){
+                                if($webhook->type === $type)
+                                    $webhooks[] = $webhook;
+                            }
                         }
 
                     @endphp
@@ -53,7 +55,7 @@
                         </tr>
                     @endif
 
-                    
+
                 </tbody>
             </table>
         </div>
