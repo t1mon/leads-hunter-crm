@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="card-text text-center">
             <p class="my-0 py-0">
-                <a href="{{route('webhook.create', $project)}}" class="btn btn-primary">
+                <a href="{{route('webhook.create', ['project' => $project, 'form' => 'common-simple'])}}" class="btn btn-primary">
                     @lang('projects.notifications.webhooks.add')
                 </a>
             </p>
@@ -20,4 +20,4 @@
 </div>
 
 {{--Список доступных вебхуков--}}
-@include('material-dashboard.project.webhooks._list-new')
+@include('material-dashboard.project.webhooks._list-new', ['type' => 'common'])

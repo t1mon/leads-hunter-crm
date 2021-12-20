@@ -13,8 +13,17 @@
                 </thead>
 
                 <tbody>
-                    @if(count($project->webhooks))
-                        @foreach($project->webhooks as $webhook)
+                    @php
+                        $webhooks = [];
+                        foreach($project->webhooks as $webhook){
+                            if($webhook->type === $type)
+                                $webhooks[] = $webhook;
+                        }
+
+                    @endphp
+
+                    @if(count($webhooks))
+                        @foreach($webhooks as $webhook)
                             <tr class="{{$webhook->enabled ? '' : 'text-decoration-line-through'}}">
                                 <td>{{$loop->iteration}}</td>
                                 <td class="{{$webhook->enabled ? 'text-success' : 'text-secondary'}}">{{$webhook->name}}</td>
@@ -27,7 +36,7 @@
                                     {!! Form::close() !!}
                                 </td>
                                 <td>
-                                    <a href="{{route('webhook.edit', [$project, $webhook->name])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
+                                    <a href="{{route('webhook.edit', [$project, $webhook->name, 'form' => 'simple_'.$type])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
                                 </td>

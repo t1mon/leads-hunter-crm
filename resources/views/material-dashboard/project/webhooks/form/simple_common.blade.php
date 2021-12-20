@@ -44,14 +44,14 @@
                 <div class="my-4 p-2 row">
                     <div class="col form-check">
                         {!! Form::checkbox("fields[{$field[0]}]", "\${$field[0]}", 
-                                        isset($webhook) ? (ststr($webhook->query, $field[0]) ? true : false) : false,
+                                        isset($webhook) ? (array_key_exists($field[0], $webhook_fields) ? true : false) : false,
                                         ['class' => 'form-check-input', 'id' => "fields[{$field[0]}]"])
                         !!}
                         {!! Form::label("fields[{$field[0]}]", trans('projects.notifications.webhooks.common.fields.'.$field[0]), ['class' => 'form-check-label']) !!}
                     </div>
                     <div class="col form-check">
                         {!! Form::checkbox("fields[{$field[1]}]", "\${$field[1]}", 
-                                            isset($webhook) ? (ststr($webhook->query, $field[1]) ? true : false) : false,
+                                            isset($webhook) ? (array_key_exists($field[1], $webhook_fields) ? true : false) : false,
                                             ['class' => 'form-check-input', 'id' => "fields[{$field[1]}]"])
                         !!}
                         {!! Form::label("fields[{$field[1]}]", trans('projects.notifications.webhooks.common.fields.'.$field[1]), ['class' => 'form-check-label']) !!}
@@ -70,7 +70,7 @@
 
     <div class="card-footer">
         <p class="card-text text-center">
-            <a href="{{route('webhook.create', ['project' => $project, 'form' => 'extended'])}}">
+            <a href="{{isset($webhook) ? route('webhook.edit', [$project, $webhook->name, 'form' => 'extended']) : route('webhook.create', ['project' => $project, 'form' => 'extended'])}}">
                 Расширенная форма
             </a>
         </p>

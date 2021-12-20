@@ -74,11 +74,32 @@ class WebhookController extends Controller
         $project->save();
     } //store_extended
 
-    public function edit(Project $project, string $webhook_name){
-        $webhook = $project->webhook_get($webhook_name);
+    public function edit(Project $project, string $webhook_name, Request $request){
+        // $webhook = $project->webhook_get($webhook_name);
         // $type = $webhook->type;
-    return view('material-dashboard.project.webhooks.edit', compact('project', 'webhook'/*, 'type'*/));
+        // return view('material-dashboard.project.webhooks.edit', compact('project', 'webhook', 'type'));
+        $method = 'edit_'.$request->form;
+        return $this->$method($project, $webhook_name);
     } //edit
+
+    public function edit_simple_common(Project $project, string $webhook_name){
+        $webhook = $project->webhook_get($webhook_name);
+        $webhook_fields = property_exists($webhook, 'query') ? yaml_parse($webhook->query) : [];
+
+        return view('material-dashboard.project.webhooks.form.simple_common', compact('project', 'webhook', 'webhook_fields'));
+    } //edit_simple_common
+
+    public function edit_simple_bitrix24(Project $project, string $webhook_name){
+        $webhook = $project->webhook_get($webhook_name);
+        $webhook_fields = property_exists($webhook, 'query') ? yaml_parse($webhook->query) : [];
+
+        return view('material-dashboard.project.webhooks.form.simple_bitrix24', compact('project', 'webhook', 'webhook_fields'));
+    } //edit_simple_common
+
+    public function edit_extended(Project $project, string $webhook_name){
+        $webhook = $project->webhook_get($webhook_name);
+        return view('material-dashboard.project.webhooks.form.extended', compact('project', 'webhook'));
+    } //edit_extended
 
     public function update(Project $project, string $webhook_name, Request $request){
         //TODO Создать Request для валидации
@@ -88,10 +109,14 @@ class WebhookController extends Controller
             return redirect()->route('project.index');
 
         //Добавления пустого поля 'fields', если в форме не было указано ни одного поля
-        if(!$request->exists('fields'))
-        $request->merge(['fields' => [] ]);
+        // if(!$request->exists('fields'))
+        // $request->merge(['fields' => [] ]);
 
-        $project->webhook_update($webhook_name, $request->except('_token', '_method'));
+        if($request->has('fields')){
+            $request->merge(['query' => yaml_emit($request->fields)]);
+        }
+
+        $project->webhook_update($webhook_name, $request->except('_token', '_method', 'fields', 'form'));
 
         $project->save();
 
