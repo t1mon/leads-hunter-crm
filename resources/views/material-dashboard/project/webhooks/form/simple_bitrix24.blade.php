@@ -89,20 +89,20 @@
                     {!! Form::label('fields[fields][OPPORTUNITY]', trans('projects.notifications.webhooks.bitrix24.fields.OPPORTUNITY'), ['class' => 'form-check-label']) !!}
                 </div>
                 <div class="col form-check">
-                    {!! Form::hidden('fields[fields][PHONE][VALUE_TYPE]', 'WORK') !!}
-                    {!! Form::checkbox('fields[fields][PHONE][VALUE]', '$phone',
-                                            isset($webhook) ? (array_key_exists('VALUE', $webhook_fields['fields']['PHONE']) ? true : false) : false,
+                    {!! Form::hidden('fields[fields][PHONE][0][VALUE_TYPE]', 'WORK') !!}
+                    {!! Form::checkbox('fields[fields][PHONE][0][VALUE]', '$phone',
+                                            isset($webhook) ? (array_key_exists('VALUE', $webhook_fields['fields']['PHONE'][0]) ? true : false) : false,
                                             ['class' => 'form-check-input', 'id' => 'fields[fields][PHONE][VALUE]'])
                         !!}
-                    {!! Form::label('fields[fields][PHONE][VALUE]', trans('projects.notifications.webhooks.bitrix24.fields.PHONE'), ['class' => 'form-check-label']) !!}
+                    {!! Form::label('fields[fields][PHONE][0][VALUE]', trans('projects.notifications.webhooks.bitrix24.fields.PHONE'), ['class' => 'form-check-label']) !!}
                 </div>
                 <div class="col form-check">
-                    {!! Form::hidden('fields[fields][EMAIL][VALUE_TYPE]', 'WORK') !!}
-                    {!! Form::checkbox('fields[fields][EMAIL][VALUE]', '$email',
-                                            isset($webhook) ? (array_key_exists('VALUE', $webhook_fields['fields']['EMAIL']) ? true : false) : false,
-                                            ['class' => 'form-check-input', 'id' => 'fields[EMAIL][VALUE]'])
+                    {!! Form::hidden('fields[fields][EMAIL][0][VALUE_TYPE]', 'WORK') !!}
+                    {!! Form::checkbox('fields[fields][EMAIL][0][VALUE]', '$email',
+                                            isset($webhook) ? (array_key_exists('VALUE', $webhook_fields['fields']['EMAIL'][0]) ? true : false) : false,
+                                            ['class' => 'form-check-input', 'id' => 'fields[EMAIL][0][VALUE]'])
                         !!}
-                    {!! Form::label('fields[fields][EMAIL][VALUE]', trans('projects.notifications.webhooks.bitrix24.fields.EMAIL'), ['class' => 'form-check-label']) !!}
+                    {!! Form::label('fields[fields][EMAIL][0][VALUE]', trans('projects.notifications.webhooks.bitrix24.fields.EMAIL'), ['class' => 'form-check-label']) !!}
                 </div>
             </div>
             
