@@ -26,20 +26,19 @@
             </a>
         </li>
 
-        {{--Настройки вебхуков--}}
+        {{--Простые вебхуки--}}
         <li class="nav-item">
             <a  class="nav-link" data-bs-toggle="tab" href="#webhooks">
                 @lang('projects.notifications.tab_webhooks')
             </a>
         </li>
 
-        {{--Настройки Bitrix24--}}
+        {{--Вебхуки Bitrix24--}}
         <li class="nav-item">
             <a  class="nav-link" data-bs-toggle="tab" href="#bitrix24">
                 @lang('projects.notifications.tab_bitrix24')
             </a>
         </li>
-
 
     </ul>
 </div>
@@ -55,21 +54,20 @@
     <div class="tab-pane fade show" id="email" role="tabpanel">
         @include('material-dashboard.project._emails')
     </div>
-
     
     {{--Настройки Telegram--}}
     <div class="tab-pane fade" id="telegram" role="tabpanel">
         @include('material-dashboard.project._telegram')
     </div>
 
-    {{--Настройки вебхуков--}}
+    {{--Простые вебхуки--}}
     <div class="tab-pane fade" id="webhooks" role="tabpanel">
-        @include('material-dashboard.project.webhooks.common')
+        @include('material-dashboard.project.webhooks.index-common')
     </div>
 
-     {{--Настройки Bitrix24--}}
+    {{--Вебхуки Bitrix24--}}
     <div class="tab-pane fade" id="bitrix24" role="tabpanel">
-        @include('material-dashboard.project.webhooks.bitrix24')
+        @include('material-dashboard.project.webhooks.index-bitrix24')
     </div>
 </div>
 

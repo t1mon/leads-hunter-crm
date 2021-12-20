@@ -1,18 +1,14 @@
-{{--Поля--}}
-@php
-    $fields = [];
-    if($type === \App\Models\Project\Project::WEBHOOK_COMMON)
-        $fields = ['name', 'surname', 'patronymic', 'phone', 'entries', 'email', 'cost', 'comment', 'city', 'host', 'ip', 'referrer', 'url_query_string'];
-    elseif($type === \App\Models\Project\Project::WEBHOOK_BITRIX24)
-        $fields = $fields = ['DATE_CREATE', 'NAME', 'LAST_NAME', 'SECOND_NAME', 'PHONE', 'EMAIL', 'ADDRESS_CITY', 'OPPORTUNITY', 'COMMENTS',];
-@endphp
+@extends('material-dashboard.layouts.app')
 
+@section('content')
 
 {!! Form::open(['route' => isset($webhook) ? ['webhook.update', $project, $webhook->name] : ['webhook.store', $project], 'method' => isset($webhook) ? 'PUT' : 'CREATE']) !!}
 <div class="border rounded-3 align-middle my-3 p-3">
     <div class="border-bottom my-2">
+        {!! Form::hidden('form', 'extended') !!}
+
         {!! Form::hidden('enabled', true) !!}
-        {!! Form::hidden('type', $type) !!}
+
         {!! Form::text(
             'name',
             $webhook->name ?? null,
@@ -20,6 +16,18 @@
                 'class' => 'form-control',
                 'placeholder' => trans('projects.notifications.webhooks.name'),
             ]) !!}
+    </div>
+
+    <div class="border-bottom my-2">
+        {!! Form::text(
+            'type',
+            $webhook->type ?? null,
+            [
+                'class' => 'form-control',
+                'placeholder' => 'Тип вебхука',
+                'id' => 'type',
+            ]) 
+        !!}
     </div>
 
     <div class="my-2">
@@ -43,18 +51,21 @@
 </div>
 
 <div class="border rounded-3 container my-3 p-3 align-middle">
-    <h6 class="fw-bold text-secondary text-center">@lang('projects.notifications.webhooks.fields')</h6>
-    <div class="row row-cols-3">
-        @foreach($fields as $field)
-            <div class="col my-1 mx-3">
-                {!! Form::checkbox('fields[]', $field, isset($webhook) ? (in_array($field, $webhook->fields) ? true : false) : false, ['id' => $field . '_checkbox' ]) !!}
-                {!! Form::label( $field . '_checkbox', trans("projects.notifications.webhooks.$type.fields.$field") ) !!}                            
-            </div>
-        @endforeach
-    </div>
+    <h6 class="fw-bold text-secondary text-center">Параметры запроса</h6>
+    {!! Form::label('form-control', 'Введите параметры запроса в разметке YAML:', ['class' => 'form-label'])!!}
+    {!! Form::textarea('query', isset($webhook) ? $webhook->query : null,
+        [
+            'id' => 'query',
+            'class' => 'form-control border rounded-3 p-2',
+        ]
+    )!!}
+
 </div>
 
 <div class="text-center">
     {!! Form::submit(trans(isset($webhook) ? 'projects.button-save' : 'projects.button-add'), ['class' => 'btn btn-primary']) !!}
 </div>
+
 {!! Form::close() !!}
+
+@endsection

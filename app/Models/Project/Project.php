@@ -168,18 +168,29 @@ class Project extends Model
         $parameters = [];
 
         //Упаковать параметры в зависимости от типа вебхука
-        if($webhook->type === self::WEBHOOK_COMMON)
-        $parameters = $this->webhook_makeParams_common($webhook, $lead);
-        elseif($webhook->type === self::WEBHOOK_BITRIX24)
-            $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
+        // if($webhook->type === self::WEBHOOK_COMMON)
+        // $parameters = $this->webhook_makeParams_common($webhook, $lead);
+        // elseif($webhook->type === self::WEBHOOK_BITRIX24)
+        //     $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
+
+        if(isset($webhook->query)){
+            $fields = ['name', 'phone', 'email', 'cost', 'city', 'utm_medium', 'utm_source', 'utm_campaign'];
+            foreach($fields as $field){
+                $webhook->query = str_replace('$'.$field, $lead->$field, $webhook->query);
+            }
+        }
+
+        // return yaml_parse($webhook->query);
 
         $response = null;
 
         //Отправка запроса
         if($webhook->method === 'POST')
-            $response = Http::withOptions(['verify' => false])->asForm()->post($webhook->url, $parameters);
+            $response = Http::withOptions(['verify' => false])->asForm()
+                ->post($webhook->url, isset($webhook->query) ?  yaml_parse($webhook->query) : []);
         elseif($webhook->method === 'GET')
-            $response = Http::withOptions(['verify' => false])->asForm()->get($webhook->url, $parameters);
+            $response = Http::withOptions(['verify' => false])->asForm()
+                ->get(isset($webhook->query) ?  yaml_parse($webhook->query) : []);
 
         return $response;
     } //webhook_send

@@ -38,6 +38,18 @@ class Leads extends Model
         return (is_null($this->surname) ? '' : $this->surname) . $this->name . (is_null($this->patronymic) ? '' : $this->patronymic);
     }
 
+    public function getUtmMediumAttribute(){
+        return is_null($this->utm['utm_medium']) ? null : $this->utm['utm_medium'];
+    }
+
+    public function getUtmSourceAttribute(){
+        return is_null($this->utm['utm_source']) ? null : $this->utm['utm_source'];
+    }
+
+    public function getUtmCampaignAttribute(){
+        return is_null($this->utm['utm_campaign']) ? null : $this->utm['utm_campaign'];
+    }
+
     public function project()
     {
         return $this->belongsTo(Project::class);
