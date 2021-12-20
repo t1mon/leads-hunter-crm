@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
                                        libcurl4-openssl-dev \
                                        pkg-config \
                                        libpq-dev\
+                                       libyaml-dev \
 && docker-php-ext-install pdo pdo_mysql \
 && docker-php-ext-configure intl \
 && docker-php-ext-install intl \
@@ -28,6 +29,7 @@ RUN apt-get update && apt-get install -y \
 && docker-php-ext-install -j$(nproc) gd \
 && docker-php-ext-install exif
 
+RUN  pecl install yaml && docker-php-ext-enable yaml
 
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
