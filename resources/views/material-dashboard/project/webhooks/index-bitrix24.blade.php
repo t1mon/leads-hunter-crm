@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="card-text text-center">
             <p class="my-0 py-0">
-                <a href="{{route('webhook.create', ['project' => $project, 'form' => 'bitrix24-simple'])}}" class="btn btn-primary">
+                <a href="{{route('webhook.create', ['project' => $project, 'form' => 'simple_bitrix24'])}}" class="btn btn-primary">
                     @lang('projects.notifications.webhooks.add')
                 </a>
             </p>

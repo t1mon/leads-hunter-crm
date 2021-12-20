@@ -64,7 +64,7 @@ class WebhookController extends Controller
     } //store_simple_common
     
     public function store_simple_bitrix24(Project $project, Request $request){ //Сохранение упрощённого вебхука Битрикс24
-        $request->merge(['query' => yaml_emit(['fields' => $request->fields])]);
+        $request->merge(['query' => yaml_emit($request->fields)]);
         $project->webhook_add($request->except('_token', 'fields', 'form'));
         $project->save();
     } //store_simple_bitrix24
