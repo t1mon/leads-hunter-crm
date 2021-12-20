@@ -154,10 +154,9 @@ class WebhookController extends Controller
 
     public function test(){
 
-        $lead = Leads::find(102);
-        $lead->name = 'Test 1';
+        $lead = Leads::find(103);
         // return $lead->project->webhook_send('Вебхук L-Corp', $lead);
-        return $lead->project->webhook_send('webhook-extended', $lead);
+        return $lead->project->webhook_send('not-working', $lead);
 
         return $lead->project->webhook_send('Вебхук L-Corp', $lead)->json();
         
