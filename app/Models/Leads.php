@@ -39,15 +39,19 @@ class Leads extends Model
     }
 
     public function getUtmMediumAttribute(){
-        return is_null($this->utm['utm_medium']) ? null : $this->utm['utm_medium'];
+        return array_key_exists('utm_medium', $this->utm) ? $this->utm['utm_medium'] : '';
     }
 
     public function getUtmSourceAttribute(){
-        return is_null($this->utm['utm_source']) ? null : $this->utm['utm_source'];
+        return array_key_exists('utm_source', $this->utm) ? $this->utm['utm_source'] : '';
     }
 
     public function getUtmCampaignAttribute(){
-        return is_null($this->utm['utm_campaign']) ? null : $this->utm['utm_campaign'];
+        return array_key_exists('utm_campaign', $this->utm) ? $this->utm['utm_campaign'] : '';
+    }
+
+    public function getUtmContentAttribute(){
+        return array_key_exists('utm_content', $this->utm) ? $this->utm['utm_content'] : '';
     }
 
     public function project()
