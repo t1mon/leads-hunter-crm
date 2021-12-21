@@ -31,10 +31,15 @@
         <div class="border rounded-3 form-check my-3 p-3 text-center">
             <span class="fw-bold me-3">@lang('projects.notifications.webhooks.method'):</span>
         
-            {!! Form::radio('method', 'POST', isset($webhook) ? ($webhook->method === 'POST' ? true : false) : true, ['class' => 'form-check-input', 'id' => 'method-post']) !!}
+            <input type="radio" id="method-post" name="method" value="POST" {{isset($webhook) ? ($webhook->method === 'POST' ? 'checked' : '') : 'checked'}} class="form-check-input">
+            <label for="method-post" class="form-check-label me-1">POST</label>
+            <input type="radio" id="method-get" name="method" value="GET" {{isset($webhook) ? ($webhook->method === 'GET' ? 'checked' : '') : ''}} class="form-check-input">
+            <label for="method-get" class="form-check-label">GET</label>   
+
+            {{-- {!! Form::radio('method', 'POST', isset($webhook) ? ($webhook->method === 'POST' ? true : false) : true, ['class' => 'form-check-input', 'id' => 'method-post']) !!}
             {!! Form::label('method-post', 'POST', ['class' => 'form-check-label me-1']) !!}
             {!! Form::radio('method', 'GET', isset($webhook) ? ($webhook->method === 'GET' ? true : false) : false, ['class' => 'form-check-input', 'id' => 'method-get']) !!}
-            {!! Form::label('method-get', 'GET', ['class' => 'form-check-label']) !!}
+            {!! Form::label('method-get', 'GET', ['class' => 'form-check-label']) !!} --}}
         </div>
 
         <h6 class="card-title text-center">Поля</h6>
@@ -43,18 +48,29 @@
             @foreach (array_chunk($fields, 2) as $field)
                 <div class="my-4 p-2 row">
                     <div class="col form-check">
-                        {!! Form::checkbox("fields[{$field[0]}]", "\${$field[0]}", 
+                        <label class="form-check-label">
+                            <input type="checkbox" name="fields[{{$field[0]}}]" id="fields[{{$field[0]}}]" value="${{$field[0]}}" class="form-check-input"
+                            {{isset($webhook) ? (array_key_exists($field[0], $webhook_fields) ? 'checked' : '') : ''}}>
+                            @lang('projects.notifications.webhooks.common.fields.'.$field[0])
+                        </label>
+                        {{-- {!! Form::checkbox("fields[{$field[0]}]", "\${$field[0]}", 
                                         isset($webhook) ? (array_key_exists($field[0], $webhook_fields) ? true : false) : false,
                                         ['class' => 'form-check-input', 'id' => "fields[{$field[0]}]"])
                         !!}
-                        {!! Form::label("fields[{$field[0]}]", trans('projects.notifications.webhooks.common.fields.'.$field[0]), ['class' => 'form-check-label']) !!}
+                        {!! Form::label("fields[{$field[0]}]", trans('projects.notifications.webhooks.common.fields.'.$field[0]), ['class' => 'form-check-label']) !!} --}}
                     </div>
                     <div class="col form-check">
-                        {!! Form::checkbox("fields[{$field[1]}]", "\${$field[1]}", 
+                        <label class="form-check-label">
+                            <input type="checkbox" name="fields[{{$field[1]}}]" id="fields[{{$field[1]}}]" value="${{$field[1]}}" class="form-check-input"
+                            {{isset($webhook) ? (array_key_exists($field[1], $webhook_fields) ? 'checked' : '') : ''}}>
+                            @lang('projects.notifications.webhooks.common.fields.'.$field[1])
+                        </label>
+
+                        {{-- {!! Form::checkbox("fields[{$field[1]}]", "\${$field[1]}", 
                                             isset($webhook) ? (array_key_exists($field[1], $webhook_fields) ? true : false) : false,
                                             ['class' => 'form-check-input', 'id' => "fields[{$field[1]}]"])
                         !!}
-                        {!! Form::label("fields[{$field[1]}]", trans('projects.notifications.webhooks.common.fields.'.$field[1]), ['class' => 'form-check-label']) !!}
+                        {!! Form::label("fields[{$field[1]}]", trans('projects.notifications.webhooks.common.fields.'.$field[1]), ['class' => 'form-check-label']) !!} --}}
                     </div>
                 </div>
             @endforeach

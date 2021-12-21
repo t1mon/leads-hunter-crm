@@ -41,13 +41,19 @@
     </div>
 </div>
 
-<div class="border rounded-3 form-check my-3 p-3 align-middle">
+<div class="border rounded-3 form-check my-3 p-3 text-center">
     <span class="fw-bold me-3">@lang('projects.notifications.webhooks.method'):</span>
 
-    {!! Form::radio('method', 'POST', isset($webhook) ? ($webhook->method === 'POST' ? true : false) : true, ['class' => 'form-check-input', 'id' => 'method-post']) !!}
+    <input type="radio" id="method-post" name="method" value="POST" {{isset($webhook) ? ($webhook->method === 'POST' ? 'checked' : '') : 'checked'}} class="form-check-input">
+    <label for="method-post" class="form-check-label me-1">POST</label>
+
+    <input type="radio" id="method-get" name="method" value="GET" {{isset($webhook) ? ($webhook->method === 'GET' ? 'checked' : '') : ''}} class="form-check-input">
+    <label for="method-get" class="form-check-label">GET</label>        
+
+    {{-- {!! Form::radio('method', 'POST', isset($webhook) ? ($webhook->method === 'POST' ? true : false) : true, ['class' => 'form-check-input', 'id' => 'method-post']) !!}
     {!! Form::label('method-post', 'POST', ['class' => 'form-check-label me-1']) !!}
     {!! Form::radio('method', 'GET', isset($webhook) ? ($webhook->method === 'GET' ? true : false) : false, ['class' => 'form-check-input', 'id' => 'method-get']) !!}
-    {!! Form::label('method-get', 'GET', ['class' => 'form-check-label']) !!}
+    {!! Form::label('method-get', 'GET', ['class' => 'form-check-label']) !!} --}}
 </div>
 
 <div class="border rounded-3 container my-3 p-3 align-middle">

@@ -156,7 +156,7 @@ class WebhookController extends Controller
 
         $lead = Leads::find(103);
         // return $lead->project->webhook_send('Вебхук L-Corp', $lead);
-        return $lead->project->webhook_send('not-working', $lead);
+        return $lead->project->webhook_send('bitrix_1', $lead);
 
         return $lead->project->webhook_send('Вебхук L-Corp', $lead)->json();
         
