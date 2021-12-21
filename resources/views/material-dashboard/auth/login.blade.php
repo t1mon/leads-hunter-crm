@@ -50,7 +50,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-check form-switch d-flex align-items-center mb-3">
-                                        {!! Form::checkbox('remember', null, old('remember'),['id' => 'remember','class' => 'form-check-input']) !!}
+                                        <input id="remember" type="checkbox" name="remember" class="form-check-input" value="{{old('remember')}}">
                                         <label class="form-check-label mb-0 ms-2" for="remember">@lang('auth.remember_me')</label>
                                     </div>
                                     <div class="text-center">

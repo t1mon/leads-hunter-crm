@@ -17,7 +17,7 @@ services:
   fpm:
     build:
        context: ./
-       dockerfile: docker/fpm.Dockerfile
+       dockerfile: docker/php81-fpm.Dockerfile
     volumes:
       - ./:/var/www/app:cached
     environment:
@@ -30,10 +30,10 @@ services:
       - mysql
       - redis
 
-  php74-cli:
+  php81-cli:
       build:
         context: ./
-        dockerfile: docker/php74-cli.Dockerfile
+        dockerfile: docker/php81-cli.Dockerfile
       volumes:
         - ./:/var/www/app:cached
       environment:
