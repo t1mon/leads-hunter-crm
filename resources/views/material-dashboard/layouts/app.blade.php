@@ -35,7 +35,7 @@
     <link href="{{ mix('/css/nucleo-svg.css') }}" rel="stylesheet">
     <link href="{{ mix('/css/material-dashboard-app.css') }}" rel="stylesheet">
 </head>
-<body  class="g-sidenav-show  bg-gray-200">
+<body  class="g-sidenav-show g-sidenav-pinned bg-gray-200">
 <div id="app">
 @include('material-dashboard.shared.navbar-vertical-left')
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -94,21 +94,21 @@
             <div class="mt-3 d-flex">
                 <h6 class="mb-0">Navbar Fixed</h6>
                 <div class="form-check form-switch ps-0 ms-auto my-auto">
-                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed">
                 </div>
             </div>
             <hr class="horizontal dark my-3">
             <div class="mt-2 d-flex">
                 <h6 class="mb-0">Sidenav Mini</h6>
                 <div class="form-check form-switch ps-0 ms-auto my-auto">
-                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarMinimize" onclick="navbarMinimize(this)">
+                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarMinimize">
                 </div>
             </div>
             <hr class="horizontal dark my-3">
             <div class="mt-2 d-flex">
                 <h6 class="mb-0">Light / Dark</h6>
                 <div class="form-check form-switch ps-0 ms-auto my-auto">
-                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version">
                 </div>
             </div>
             <hr class="horizontal dark my-sm-4">
