@@ -48,7 +48,7 @@
                 Применить
             </button>
             <button type="submit" class="btn btn-primary" formaction="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::XLSX])}}">
-                Скачать записи
+                Скачать записи за эти даты
             </button>
         </div>
       </div>

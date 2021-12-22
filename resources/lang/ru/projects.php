@@ -192,7 +192,7 @@ return [
                     'comment' => 'Комментарий',
                     'host' => 'Посадочная',
                     'ip' => 'IP',
-                    'referrer' => 'Источник',
+                    'referrer' => 'Реферрер',
                     'url_query_string' => 'Запрос по URL',
                     'source' => 'Источник',
                     'count' => 'Всего :count лид|Всего :count лида|Всего :count лидов',

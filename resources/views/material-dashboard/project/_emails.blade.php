@@ -1,6 +1,6 @@
 {{--Объявление полей журнала (чтобы быстро добавлять/удалять в дальнейшем--}}
 @php
-    $mailing_fields = ['email', 'city', 'host'];
+    $mailing_fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
 @endphp
 
 <div class="container">
@@ -26,7 +26,7 @@
                                 {!! Form::label('email-subject', trans('projects.notifications.emails_subject') . ':', ['class' => 'form-label']) !!}
                                 {!! Form::text('settings[email][subject]', $project->settings['email']['subject'], ['class' => 'form-control border p-2', 'placeholder' => trans('projects.notifications.emails_subject'), 'id' => 'email-subject']) !!}
                             </div>
-                            <div class="my-2 text-center">
+                            <div class="my-2 text-center form-check">
                                 <p class="form-label text-center">Тип шаблона письма</p>                                
                                 {!! Form::radio('settings[email][template]', 'view',
                                         $project->settings['email']['template'] === 'view' ? true : false,
@@ -48,11 +48,12 @@
                             </div>
                         </div>
                         
-                        <div class="border rounded-3 border-primary my-3 p-2">
+                        <div class="border rounded-3 border-primary my-3 p-2 form-check">
                         <h6 class="card-title text-center">@lang('projects.notifications.emails_fields')</h6>
                             @foreach($mailing_fields as $field)
                                 <p class="card-text ms-3">
-                                    {!! Form::checkbox('settings[email][fields][]', $field, in_array($field, $project->settings['email']['fields']) ? true : false) !!} @lang('projects.journal.' . $field)
+                                    {!! Form::checkbox('settings[email][fields][]', $field, in_array($field, $project->settings['email']['fields']) ? true : false, ['class' => 'form-check-input', 'id' => "$field-label"]) !!}
+                                    {!! Form::label("$field-label", trans('projects.notifications.webhooks.common.fields.' . $field), ['class' => 'form-check-label']) !!}
                                 </p>
                             @endforeach
                         </div>
