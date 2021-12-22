@@ -190,7 +190,7 @@ class Project extends Model
                 ->post($webhook->url, isset($webhook->query) ?  yaml_parse($webhook->query) : []);
         elseif($webhook->method === 'GET')
             $response = Http::withOptions(['verify' => false])->asForm()
-                ->get(isset($webhook->query) ?  yaml_parse($webhook->query) : []);
+                ->get($webhook->url, isset($webhook->query) ?  yaml_parse($webhook->query) : []);
 
         return $response;
     } //webhook_send
