@@ -17,7 +17,7 @@ services:
   fpm:
     build:
        context: ./
-       dockerfile: docker/fpm.Dockerfile
+       dockerfile: docker/php81-fpm.Dockerfile
     volumes:
       - ./:/var/www/app:cached
     environment:
@@ -29,6 +29,23 @@ services:
     links:
       - mysql
       - redis
+
+  php81-cli:
+      build:
+        context: ./
+        dockerfile: docker/php81-cli.Dockerfile
+      volumes:
+        - ./:/var/www/app:cached
+      environment:
+        - DB_HOST=mysql
+        - DB_PORT=3306
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+        - PHP_INI_SCAN_DIR=./docker:/usr/local/etc/php/conf.d
+      links:
+        - mysql
+        - redis
+      tty: true
   mysql:
     build:
       context: ./

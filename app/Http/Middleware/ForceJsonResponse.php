@@ -14,10 +14,11 @@ class ForceJsonResponse
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        $request->headers->set('Accept', 'application/json');
-
+        if ($request->is('api/*')) {
+            $request->headers->set('Accept', 'application/json');
+        }
         return $next($request);
     }
 }

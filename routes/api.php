@@ -51,6 +51,7 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
     Route::apiResource('media', 'MediaController')->only('index');
 });
 
-Route::get('test-webhook', function (Illuminate\Http\Request $request){
-    \Illuminate\Support\Facades\Log::info($request->all());
+
+Route::fallback(function () {
+    return response()->json(['message' => 'Not Found.'], 404);
 });

@@ -8,15 +8,15 @@
                         <th>@lang('projects.notifications.webhooks.name')</th>
                         <th>@lang('projects.notifications.webhooks.method')</th>
                         <th>@lang('projects.notifications.webhooks.url')</th>
-                        <th>@lang('projects.notifications.webhooks.fields')</th>
                         <th colspan="3">@lang('projects.actions')</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @php
                         $webhooks = [];
                         if(!is_null($project->webhooks)){
-                            foreach ($project->webhooks as $webhook){
+                            foreach($project->webhooks as $webhook){
                                 if($webhook->type === $type)
                                     $webhooks[] = $webhook;
                             }
@@ -31,11 +31,6 @@
                                 <td class="{{$webhook->enabled ? 'text-success' : 'text-secondary'}}">{{$webhook->name}}</td>
                                 <td class="{{$webhook->enabled ? 'text-dark' : 'text-secondary'}}">{{$webhook->method}}</td>
                                 <td class="{{$webhook->enabled ? 'text-warning' : 'text-secondary'}}">{{$webhook->url}}</td>
-                                <td  class="{{$webhook->enabled ? 'text-info' : 'text-secondary'}}">
-                                    @foreach ($webhook->fields as $field)
-                                        {{ trans("projects.notifications.webhooks.$type.fields.$field")  . ($loop->last ? '' : ', ') }}
-                                    @endforeach
-                                </td>
                                 <td>
                                     {!! Form::open([ 'route' => ['webhook.toggle', $project, $webhook->name ], 'method' => 'POST' ]) !!}
                                         {!! Form::hidden('enabled', $webhook->enabled ? 0 : 1) !!}
@@ -43,7 +38,7 @@
                                     {!! Form::close() !!}
                                 </td>
                                 <td>
-                                    <a href="{{route('webhook.edit', [$project, $webhook->name])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
+                                    <a href="{{route('webhook.edit', [$project, $webhook->name, 'form' => 'simple_'.$type])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
@@ -56,9 +51,11 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="6">@lang('projects.notifications.webhooks.none')</td>
+                            <td colspan="7">@lang('projects.notifications.webhooks.none')</td>
                         </tr>
                     @endif
+
+
                 </tbody>
             </table>
         </div>

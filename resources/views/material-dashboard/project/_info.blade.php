@@ -74,7 +74,7 @@
                     @foreach ($project->webhooks as $webhook)
                         <tr>
                             <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{$webhook->name}}</td>
-                            <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{trans("projects.notifications.webhooks.types.$webhook->type")}}</td>
+                            <td class="text-start text-{{$webhook->enabled ? 'success' : 'danger'}}">{{isset($webhook->type) ? trans("projects.notifications.webhooks.types.$webhook->type") : ''}}</td>
                             <td class="text-center">
                                 <span class="badge badge-dot">
                                     <i class="bg-{{$webhook->enabled ? 'success' : 'secondary'}}"></i>
@@ -87,9 +87,11 @@
                             </td>
                             <td class="text-start">
                                 <span class="text-{{$webhook->enabled ? 'info' : 'secondary'}}">
-                                    @foreach ($webhook->fields as $field)
-                                        {{ trans("projects.notifications.webhooks.{$webhook->type}.fields.{$field}")  . ($loop->last ? '' : ', ') }}
-                                    @endforeach
+                                    @isset($webhook->fields)
+                                        @foreach ($webhook->fields as $field)
+                                            {{ trans("projects.notifications.webhooks.{$webhook->type}.fields.{$field}")  . ($loop->last ? '' : ', ') }}
+                                        @endforeach
+                                    @endisset
                                 </span>
                             </td>
                         </tr>

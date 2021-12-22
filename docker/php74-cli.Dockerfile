@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:7.4-cli
 
 RUN apt-get update && apt-get install -y \
                                        zlib1g-dev \
@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
 && docker-php-ext-install pdo pdo_mysql \
 && docker-php-ext-configure intl \
 && docker-php-ext-install intl \
+&& docker-php-ext-install pcntl \
+&& docker-php-ext-install zip \
 && apt install -y libmagickwand-dev --no-install-recommends \
 && pecl install imagick \
 && docker-php-ext-enable imagick \
@@ -28,6 +30,10 @@ RUN apt-get update && apt-get install -y \
 && docker-php-ext-install exif
 
 RUN  pecl install yaml && docker-php-ext-enable yaml
+
+RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /var/www/app
 

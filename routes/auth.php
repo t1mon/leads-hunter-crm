@@ -66,7 +66,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('project/{project}/{lead}/comment', CommentController::class)->only(['show', 'create', 'store', 'edit', 'destroy']);
         Route::resource('project/{project}/telegram', TelegramIDController::class)->only(['store', 'destroy']);
         Route::resource('project/{project}/class', LeadClassController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
-        Route::resource('project/{project}/webhook', WebhookController::class)->only(['store', 'edit', 'update', 'destroy']);
+        Route::resource('project/{project}/webhook', WebhookController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     });
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
