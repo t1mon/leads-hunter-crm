@@ -47,6 +47,9 @@
             <button type="submit" class="btn btn-primary">
                 Применить
             </button>
+            <button type="submit" class="btn btn-primary" formaction="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::XLSX])}}">
+                Скачать записи
+            </button>
         </div>
       </div>
 
@@ -57,12 +60,16 @@
 {{--Ссылки на скачивание--}}
 <div class="card my-2">
     <div class="card-body text-center">
-        <span class="me-6">
-            Скачать записи за сегодня:
-            <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::XLSX])}}" class="card-link">.xlsx</a>
-            <span>|</span>
-            <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::CSV])}}" class="card-link">.csv</a>
-        </span>        
+        @if ($project->leadsToday()->count())
+            <span class="me-6">
+                Скачать записи за сегодня:
+                <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::XLSX, 'method' => 'today'])}}" class="card-link">.xlsx</a>
+                <span>|</span>
+                <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::CSV, 'method' => 'today'])}}" class="card-link">.csv</a>
+            </span>   
+        @else
+            Лидов за сегодня не поступало
+        @endif             
     </div>
 </div>
 

@@ -177,10 +177,32 @@ class ProjectController extends Controller
         if(!Auth::user()->isInProject($project))
             return redirect()->route('project.index');
 
+        //Валидация
+        $this->validate($request, [
+            'date_from' => 'nullable|date_format:Y-m-d',
+            'date_to'   => 'nullable|date_format:Y-m-d',
+        ]);
+
+        //Создание дат (если указаны в форме)
+        $date_from = $request->filled('date_from') ? Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone')) : null;
+        $date_to = $request->filled('date_to') ? Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone')) : null;
+
         $format = $request->has('format') ? $request->format : \Maatwebsite\Excel\Excel::XLSX;
 
-        return (new LeadExport)->today($project)
-            ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
+        if($request->method === 'today')
+            return (new LeadExport)->today($project)
+                ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
+
+        //Составление названия файла
+        $filename = (is_null($date_from)
+                    ? Carbon::parse($project->leads->min('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
+                    : $date_from->setTimezone($project->timezone)->format('d-m-Y')) . '-' .
+                    (is_null($date_to)
+                    ? Carbon::parse($project->leads->max('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
+                    : $date_to->setTimezone($project->timezone)->format('d-m-Y ')) . ' ' . $project->name;
+
+        return (new LeadExport)->asOfDate($project, $date_from, $date_to)
+            ->download($filename.$format, $format);
     } //journal_export
 
     public function notification(Request $request, Project $project)

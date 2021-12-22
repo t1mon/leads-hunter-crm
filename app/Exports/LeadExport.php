@@ -22,6 +22,24 @@ class LeadExport implements FromCollection
         return $this;
     }
 
+    public function asOfDate(Project $project, $date_from = null, $date_to = null){
+        $this->project = $project;
+        $leads = $this->project->leads();
+
+        //Отсеивание по дате
+        if(!is_null($date_from))
+            $leads->where('created_at', '>=', $date_from);
+        
+        if(!is_null($date_to))
+            $leads->where('created_at', '<=', $date_to);
+        
+        $leads = $leads->orderBy('updated_at', 'desc')->get();
+
+        $this->leads = $leads;
+        $this->permissions = Auth::user()->getPermissionsForProject($project);
+        return $this;
+    }
+
     public function collection()
     {
         //Форматирование записей
