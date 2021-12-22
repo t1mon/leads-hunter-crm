@@ -202,7 +202,7 @@ class ProjectController extends Controller
                     : $date_to->setTimezone($project->timezone)->format('d-m-Y ')) . ' ' . $project->name;
 
         return (new LeadExport)->asOfDate($project, $date_from, $date_to)
-            ->download($filename.$format, $format);
+            ->download($filename.".".$format, $format);
     } //journal_export
 
     public function notification(Request $request, Project $project)
@@ -330,7 +330,7 @@ class ProjectController extends Controller
         if (Gate::denies('delete', [Project::class, $project]))
             return redirect()->route('project.index');
 
-        $method = $request->has('method') ? $request->method : 'all'; 
+        $method = $request->has('method') ? $request->method : 'all';
         $format = $request->has('format') ? $request->format : \Maatwebsite\Excel\Excel::XLSX;
 
         return (new LogsExportToday)->$method($project)
