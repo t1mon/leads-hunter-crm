@@ -95,9 +95,9 @@
                                 $fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
                             @endphp
                             @foreach($fields as $field)
-                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
-                                @lang('projects.notifications.webhooks.common.fields.' . $field)
-                            </th>
+                                <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                                    @lang('projects.notifications.webhooks.common.fields.' . $field)
+                                </th>
                             @endforeach
                         @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
                             @foreach($permissions->view_fields as $field)
@@ -190,12 +190,14 @@
 
                             {{--Если пользователь создатель или администратор проекта, ему видны все колонки --}}
                             @if($project->isOwner() or Auth::user()->isManagerFor($project))
-                                <td class="align-middle text-center">
-                                    <p class="text-sm font-weight-normal mb-0">{{ $lead->host }}</p>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <p class="text-sm font-weight-normal mb-0">{{ parse_url($lead->referrer , PHP_URL_HOST)  }}</p>
-                                </td>
+                                @php
+                                    $fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+                                @endphp
+                                @foreach($fields as $field)
+                                    <td class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                                        {{$lead->$field}}
+                                    </td>
+                                @endforeach
                             @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
                                 @foreach($permissions->view_fields as $field)
                                     <th class="align-middle text-center">
