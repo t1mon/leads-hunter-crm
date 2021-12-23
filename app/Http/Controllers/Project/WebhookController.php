@@ -156,39 +156,28 @@ class WebhookController extends Controller
 
         $lead = Leads::find(115);
         // return $lead->project->webhook_send('Вебхук L-Corp', $lead);
-        return $lead->project->webhook_send('bitrix_1', $lead);
+        // return $lead->project->webhook_send('bitrix_1', $lead);
 
-        return $lead->project->webhook_send('Вебхук L-Corp', $lead)->json();
+        // return $lead->project->webhook_send('Вебхук L-Corp', $lead)->json();
         
         
-        // $string = <<<EOD
-            // fields:
-            //   TITLE: 'Заявка с компании L-Digital'
-            //   NAME: '\$name'
-            //   STATUS_ID: 'NEW'
-            //   SOURCE_ID: '79626114910'
-            //   SOURCE_DESCRIPTION: 'L-Digital'
-            //   OPENED: 'Y'
-            //   PHONE:
-            //     -
-            //       VALUE: '\$phone'
-            //       VALUE_TYPE: 'WORK'
-            //   EMAIL:
-            //     -
-            //       VALUE: '\$email'
-            //       VALUE_TYPE: 'WORK'
-            // params:
-            //   - REGISTER_SONET_EVENT: 'Y'
-        // EOD;
+        $string = <<<EOD
+        data: >
+          "contractId": 100,
+          "leadId":  1000,
+          "product": ["typeId": "consumer", "amount": "\$cost", "term": ""],
+          "location": ["region": "\$city", "city": "\$city"],
+          "client": ["lastName": "\$name", "firstName": "", "patronymic": "", "birthDate": "", "age": "", "phone": "\$phone", "email": ""]
+        EOD;
 
-        // $fields = ['name', 'phone', 'email'];
+        $fields = ['name', 'phone', 'email'];
 
-        // foreach($fields as $field){
-        //     $string = str_replace('$'.$field, $lead->$field, $string);
-        // }
+        foreach($fields as $field){
+            $string = str_replace('$'.$field, $lead->$field, $string);
+        }
 
-        // $result = yaml_parse($string);
-        // return $result;
+        $result = yaml_parse($string);
+        return $result;
     } //test
 
 }
