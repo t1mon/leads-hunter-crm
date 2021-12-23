@@ -70,7 +70,7 @@ class ProjectController extends Controller
                     'user_id' => Auth::id(),
                     'project_id' => $project->id,
                     'role' => Role::ROLE_MANAGER,
-                    'view_fields' => ['email', 'city', 'host'],
+                    'view_fields' => ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'],
                 ]);
                 Notification::create([ 'project_id' => $project->id ]);
                 Journal::project($project, Auth::user()->name . ' создал проект.');

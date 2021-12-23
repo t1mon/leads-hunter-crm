@@ -91,12 +91,18 @@
 
                         {{--Если пользователь создатель или менеджер проекта, ему видны все колонки --}}
                         @if($project->isOwner() or Auth::user()->isManagerFor($project))
-                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.host')</th>
-                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">@lang('projects.journal.source')</th>
+                            @php
+                                $fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+                            @endphp
+                            @foreach($fields as $field)
+                            <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                                @lang('projects.notifications.webhooks.common.fields.' . $field)
+                            </th>
+                            @endforeach
                         @else {{--Если пользователь наблюдатель, ему видны только колонки согласно настройкам--}}
                             @foreach($permissions->view_fields as $field)
                             <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
-                                @lang('projects.journal.' . $field)
+                                @lang('projects.notifications.webhooks.common.fields.' . $field)
                             </th>
                             @endforeach
                         @endif
