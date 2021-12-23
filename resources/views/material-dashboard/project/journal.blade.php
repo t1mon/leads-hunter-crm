@@ -194,7 +194,7 @@
                                     $fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
                                 @endphp
                                 @foreach($fields as $field)
-                                    <td class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">
+                                    <td class="text-sm font-weight-normal mb-0">
                                         {{$lead->$field}}
                                     </td>
                                 @endforeach
