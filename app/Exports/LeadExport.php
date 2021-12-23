@@ -44,16 +44,44 @@ class LeadExport implements FromCollection
     {
         //Форматирование записей
         $formatted = [];
+        $row = [];
+        
+        //Добавление заголовков
+        //Базовые поля
+        $row[] = 'Дата';
+        $row[] = 'Проект';
+        $row[] = 'Класс';
+        $row[] = 'Клиент';
+        $row[] = 'Телефон';
+        $row[] = 'Кол-во вхождений';
+
+        //Поля в зависимости от разрешений пользователя
+        if($this->project->isOwner() or Auth::user()->isManagerFor($this->project)){
+            $row[] = 'E-mail';
+            $row[] = 'Сумма';
+            $row[] = 'Комментарий';
+            $row[] = 'Город';
+            $row[] = 'Посадочная';
+            $row[] = 'Источник';
+            $row[] = 'UTM';
+        }
+        else{
+            foreach($this->permissions->view_fields as $field)
+                $row[] = $lead->$field;
+        }
+        $formatted[] = [$row];
+
+        //Добавление записей
         foreach($this->leads as $lead){
+            $row = [];
+
             //Базовые поля
-            $row = [
-                Carbon::parse($lead->updated_at)->setTimezone($this->project->timezone)->format('d.m.Y H:i:s'),
-                $this->project->name,
-                $lead->class->name ?? null,
-                $lead->getClientName(),
-                $lead->phone,
-                $lead->entries,
-            ];
+            $row[] = Carbon::parse($lead->updated_at)->setTimezone($this->project->timezone)->format('d.m.Y H:i:s');
+            $row[] = $this->project->name;
+            $row[] = $lead->class->name ?? null;
+            $row[] = $lead->getClientName();
+            $row[] = $lead->phone;
+            $row[] =  $lead->entries;
 
             //Поля в зависимости от разрешений пользователя
             if($this->project->isOwner() or Auth::user()->isManagerFor($this->project)){

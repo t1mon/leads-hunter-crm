@@ -33,6 +33,17 @@ class LogsExportToday implements FromCollection
     {
         //Форматирование записей
         $formatted = [];
+        $row = [];
+
+        //Добавление заголовков
+        $row[] = 'Дата';
+        $row[] = 'Тип записи';
+        $row[] = 'Класс записи';
+        $row[] = 'Пользователь';
+        $row[] = 'Информация';
+        $formatted[] = [$row];
+
+        //Добаление записей
         foreach($this->entries as $entry){
             //Базовые поля
             $row = [
@@ -45,12 +56,12 @@ class LogsExportToday implements FromCollection
             //Форматирование в зависмости от типа записи
             switch($entry->action){
                 case 'project':
-                    $row[] = $entry->project->name;
+                    $row[] = 'Проект: ' . $entry->project->name;
                     break;
                 case 'lead':
-                    $row[] = $entry->project->name;
+                    $row[] = 'Проект: ' . $entry->project->name;
                     if(property_exists($entry->lead, 'id'))
-                        $row[] = trans('logs.lead-no'.$entry->lead->id);
+                        $row[] = trans('logs.lead-no').$entry->lead->id;
                     $row[] = "{$entry->lead->name}, {$entry->lead->phone}";
             }
             

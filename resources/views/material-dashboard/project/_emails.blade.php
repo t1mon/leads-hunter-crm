@@ -10,17 +10,17 @@
             <div class="card my-3">
                 <div class="card-body">
                     {!! Form::model($project, ['method' => 'PUT', 'route' => ['project.update', [$project]] ]) !!}
-                        <div class="border rounded-3 border-primary my-3 p-2">
+                        <div class="border border-light rounded-3 my-3 p-2">
                             <h5 class="card-title text-center">@lang('projects.notifications.emails_settings')</h5>
-                            <div class="my-1">
+                            <div class="my-1 form-check">
                                 {!! Form::hidden('settings[email][enabled]', 0) !!}
-                                {!! Form::checkbox('settings[email][enabled]', 1, $project->settings['email']['enabled'] ? true : false, ['id' => 'enabled_checkbox']) !!}
-                                {!! Form::label('enabled_checkbox', trans('projects.notifications.emails_toggle'), ['class' => 'form-label']) !!}
+                                {!! Form::checkbox('settings[email][enabled]', 1, $project->settings['email']['enabled'] ? true : false, ['id' => 'enabled_checkbox', 'class' => 'form-check-input']) !!}
+                                {!! Form::label('enabled_checkbox', trans('projects.notifications.emails_toggle'), ['class' => 'form-check-label']) !!}
                             </div>
-                            <div class="my-1">
+                            <div class="my-1 form-check">
                                 {!! Form::hidden('settings[email][send_all]', 0) !!}
-                                {!! Form::checkbox('settings[email][send_all]', 1, $project->settings['email']['send_all'] ? true : false, ['id' => 'send_all_checkbox']) !!}
-                                {!! Form::label('send_all_checkbox', trans('projects.notifications.emails_send_all'), ['class' => 'form-label']) !!}
+                                {!! Form::checkbox('settings[email][send_all]', 1, $project->settings['email']['send_all'] ? true : false, ['id' => 'send_all_checkbox', 'class' => 'form-check-input']) !!}
+                                {!! Form::label('send_all_checkbox', trans('projects.notifications.emails_send_all'), ['class' => 'form-check-label']) !!}
                             </div>
                             <div class="my-2">
                                 {!! Form::label('email-subject', trans('projects.notifications.emails_subject') . ':', ['class' => 'form-label']) !!}
@@ -47,21 +47,28 @@
                                 {!! Form::label('template-markdown', 'С разметкой', ['class' => 'form-check-label']) !!}                
                             </div>
                         </div>
-                        
-                        <div class="border rounded-3 border-primary my-3 p-2 form-check">
-                        <h6 class="card-title text-center">@lang('projects.notifications.emails_fields')</h6>
-                            @foreach($mailing_fields as $field)
-                                <p class="card-text ms-3">
-                                    {!! Form::checkbox('settings[email][fields][]', $field, in_array($field, $project->settings['email']['fields']) ? true : false, ['class' => 'form-check-input', 'id' => "$field-label"]) !!}
-                                    {!! Form::label("$field-label", trans('projects.notifications.webhooks.common.fields.' . $field), ['class' => 'form-check-label']) !!}
-                                </p>
+
+                        <div class="border border-light rounded-3 my-3 p-2">
+                            {{--Поля в рассылке--}}
+                            <h6 class="card-title text-center">@lang('projects.notifications.emails_fields')</h6>
+                            @foreach(array_chunk($mailing_fields, 2) as $columns)
+                                <div class="my-4 row">
+                                    @foreach ($columns as $column)
+                                        <div class="col form-check">
+                                            <label class="form-label-check">
+                                                <input type="checkbox" class="form-check-input" name="settings[email][fields][]" value="{{$column}}" {{in_array($column, $project->settings['email']['fields']) ? 'checked' : ''}}  id="{{$column}}-label">
+                                                @lang('projects.notifications.webhooks.common.fields.' . $column)
+                                            </label>
+                                        </div>
+                                    @endforeach                                    
+                                </div>
                             @endforeach
+                            
+                            <div class="my-3 text-center">
+                                {!! Form::button(trans('projects.notifications.emails_save'), ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
+                            </div>
+                            {!! Form::close()!!}
                         </div>
-                        
-                        <div class="my-3 text-center">
-                            {!! Form::button(trans('projects.notifications.emails_save'), ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
-                        </div>
-                    {!! Form::close()!!}
                 </div>
             </div>
         </div>

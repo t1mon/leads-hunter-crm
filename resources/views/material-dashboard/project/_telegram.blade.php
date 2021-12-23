@@ -1,5 +1,5 @@
 @php
-    $telegram_fields = ['email', 'city', 'host'];
+    $telegram_fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
 @endphp
 
 {{--Скрытая форма для добавления группового чата--}}
@@ -45,9 +45,10 @@
 {{--Таблица общих настроек--}}
 <div class="card my-3">
     <div class="card-body">
-        <h5 class="card-title">@lang('projects.notifications.telegram.general_settings')</h5>
         {!! Form::model($project, ['method' => 'PUT', 'route' => ['project.update', $project] ]) !!}
-        <p class="card-text">
+        <div class="border border-light rounded-3 my-3 p-2">
+            <h5 class="card-title text-center">@lang('projects.notifications.telegram.general_settings')</h5>
+        
             <div class="form-check form-switch ps-2">
                 {!! Form::hidden('settings[telegram][enabled]', 0) !!}
                 {!! Form::checkbox(
@@ -64,21 +65,31 @@
             <label class="ms-3" for="telegram_toggle">
                 @lang('projects.notifications.telegram.toggle')
             </label>
-        </p>
+        </div>
+        
+        <div class="border border-light rounded-3 my-3 p-2">
+            <h6 class="card-title">@lang('projects.notifications.telegram.fields'):</h5>
+                @foreach(array_chunk($telegram_fields, 3) as $columns)
+                    <div class="row my-4">
+                        @foreach ($columns as $column)
+                            <div class="col form-check">
+                                {!! Form::checkbox(
+                                    'settings[telegram][fields][]', 
+                                    $column, 
+                                    in_array($column, $project->settings['telegram']['fields']) ? true : false,
+                                    [
+                                        'class' => 'form-check-input',
+                                        'id' => "fields[$column]"
+                                    ]
+                                )!!}
+                                {!! Form::label("fields[$column]", trans('projects.notifications.webhooks.common.fields.' . $column, ['class' => 'from-check-label'])) !!}                                
+                            </div>
+                        @endforeach
+                    </div>
+                @endforeach
+        </div>
 
-        <h6 class="card-title">@lang('projects.notifications.telegram.fields'):</h5>
-        @foreach($telegram_fields as $field)
-            <p class="card-text ms-3">
-                    {!! Form::checkbox(
-                        'settings[telegram][fields][]', 
-                        $field, 
-                        in_array($field, $project->settings['telegram']['fields']) ? true : false) 
-                    !!}
-                    @lang('projects.journal.' . $field)
-            </p>
-        @endforeach
-
-        <p class="card-text ms-5">
+        <p class="card-text text-center ms-5">
             {!! Form::submit(trans('projects.button-save'), ['class' => 'btn btn-primary',]) !!}
         </p>
 

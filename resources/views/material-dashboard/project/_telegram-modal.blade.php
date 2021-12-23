@@ -8,7 +8,7 @@
             </div>
             
             <div class="modal-body">
-                <p class="card-text ms-1">
+                <div class="border border-light rounded-3 p-1 px-2 my-2">
                     {!! Form::input(
                         'text',
                         'name',
@@ -19,9 +19,9 @@
                             'form' => $form_id,
                         ])
                     !!}
-                </p>
+                </div>
 
-                <p class="card-text ms-1">
+                <div class="border border-light rounded-3 p-1 px-2 my-2">
                     {!! Form::input(
                         'text',
                         'number',
@@ -32,7 +32,7 @@
                             'form' => $form_id,
                         ])
                     !!}
-                </p>
+                </div>
             </div>
             
             <div class="modal-footer">
