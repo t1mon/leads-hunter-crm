@@ -1,7 +1,7 @@
 {
-    "name": "guillaumebriday/laravel-blog",
-    "description": "Laravel 8.0 blog.",
-    "keywords": ["framework", "laravel", "blog", "example"],
+    "name": "t1mon/leads-hunter-crm",
+    "description": "Laravel 8.0 CRM LEADS.",
+    "keywords": ["framework", "laravel", "crm"],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -74,7 +74,10 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.1"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

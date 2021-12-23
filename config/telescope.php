@@ -78,5 +78,7 @@ return [
         ],
 
         Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
+
+        Watchers\ClientRequestWatcher::class => env('TELESCOPE_CLIENT_WATCHER', true)
     ],
 ];
