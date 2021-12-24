@@ -26,7 +26,9 @@
         Телефон: <b>{{ phone_format($lead->phone) }}</b><br>
         @if(count($fields) > 0)
             @foreach($fields as $field)
-                @lang('projects.journal.' . $field): <b>{{$lead->$field}}</b> <br>
+                @if(!is_null($lead->$field))
+                    @lang('projects.notifications.webhooks.common.fields.' . $field): <b>{{$lead->$field}}</b> <br>
+                @endif
             @endforeach
         @endif
     @endcomponent
