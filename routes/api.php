@@ -33,6 +33,8 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
 
     //Проекты
     Route::post('/project.index', 'Project\ProjectController@index')->name('project.index');
+    Route::post('/project.add', 'Project\ProjectController@store')->name('project.add');
+    Route::post('/project.delete', 'Project\ProjectController@destroy')->name('project.delete');
 
     Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
 
