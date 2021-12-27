@@ -113,6 +113,10 @@ class ProjectController extends Controller
 
     public function settings_sync(Project $project, string $tab = null) //Страница настроек синхронизации
     {
+        //Проверка полномочий пользователя
+        if (Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
+
         //Загрузка списка email-адресов
         $emails = Email::where('project_id', $project->id)->get();
 
@@ -125,7 +129,7 @@ class ProjectController extends Controller
 
         return view( 'material-dashboard.project.settings_sync',
             compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs') );
-    } //sync_settings
+    } //settings_sync
 
     /**
      * Display the specified resource.

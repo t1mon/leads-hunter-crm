@@ -30,39 +30,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
 {
-    protected function _checkApiToken(Request|ProjectRequest $request){ //Проверка существования API-токена
-        //Проверка на наличия токена в запросе
-        if(!$request->filled('api_token')){
-            Journal::error('Неудачная попытка запроса по api: не указан токен');
-            return ['success' => false, 'response' => [
-                response()->json([
-                    'data' => [
-                        'status' => 'no_token_given',
-                        'message' => 'No API token is given within the request',
-                        'response' => Response::HTTP_PRECONDITION_FAILED,
-                    ],
-                ], Response::HTTP_PRECONDITION_FAILED)
-            ]];
-        }
-
-        //Загрузка данных пользователя по API_token
-        $user = User::where('api_token', $request->api_token)->first();
-        if(is_null($user)){
-            Journal::error('Неудачная попытка запроса по api: '.$request->api_token);
-            return ['success' => false, 'response' => [
-                response()->json([
-                    'data' => [
-                        'status' => User::USER_NOT_FOUND,
-                        'message' => 'No user with such API token',
-                        'response' => Response::HTTP_PRECONDITION_FAILED,
-                    ],
-                ], Response::HTTP_PRECONDITION_FAILED)
-            ]];
-        }
-
-        return ['success' => true, 'user' => $user];
-    } //_checkApiToken
-
+    /*####################
+        Служебные методы
+    ######################*/
     protected function _response($status, $message, $code){ //Составить тело ответа
         return response()->json([
             'data' => [
@@ -72,12 +42,11 @@ class ProjectController extends Controller
             ]], $code);
     } //_response
 
+    /*####################
+            CRUD
+    ######################*/
     public function index(Request $request){ //Получить список проектов, доступных текущему пользователю
-        //Проверка существования токена и загрузка пользователя
-        $check = $this->_checkApiToken($request);
-        if(!$check['success']) return $check['response'];
-
-        $user = $check['user'];
+        $user =  User::where('api_token', $request->bearerToken())->first();
 
         //Загрузка идентификаторов проекта, на которые назначен пользователь
         $project_ids = UserPermissions::where('user_id', $user->id)->pluck('project_id');
@@ -90,11 +59,7 @@ class ProjectController extends Controller
     } //index
 
     public function store(Request $request){ //Создать проект
-        //Проверка существования токена и загрузка пользователя
-        $check = $this->_checkApiToken($request);
-        if(!$check['success']) return $check['response'];
-
-        $user = $check['user'];
+        $user =  User::where('api_token', $request->bearerToken())->first();
 
         //Попытка создания проекта в DB
         try{
@@ -125,21 +90,134 @@ class ProjectController extends Controller
         }
     } //store
 
-    public function destroy(Request $request){
-        //Проверка существования токена и загрузка пользователя
-        $check = $this->_checkApiToken($request);
-        if(!$check['success']) return $check['response'];
-
-        $user = $check['user'];
-
-        //Проверка наличия в запросе номера проекта
-        if(!$request->filled('project_id'))
-            return $this->_response('project_error', 'No project ID given within the request', Response::HTTP_PRECONDITION_FAILED);
+    public function update(Project $project, Request $request){
+        $user =  User::where('api_token', $request->bearerToken())->first();
+        //Проверка полномочий пользователя
+        if (Gate::forUser($user)->denies('delete', [Project::class, $project]))
+            return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
         
-        //Проверка существования проекта
-        $project = Project::findOrFail($request->project_id);
+        /*Атрибуты проекта делятся на две группы:
+            - properties: свойства проекта (имя, токен и т.п.)
+            - settings: настройки (telegram, email и часовой пояс)
+        */
+
+        //Обновление свойств проекта
+        //TODO При добавлении новых свойств необходимо убедиться, что данная инструкция не затрёт другие свойства проекта
+        if($request->properties)
+            $project->fill($request->all()['properties']);
+
+        //Обновление настроек синхронизации
+        if($request->settings){
+            $new_settings = $request->all()['settings'];
+
+            $new_settings = array_merge($project->settings, $new_settings);
+
+            $new_settings['email']['enabled'] = (bool) $new_settings['email']['enabled'];
+            $new_settings['telegram']['enabled'] = (bool) $new_settings['telegram']['enabled'];
+
+            if(!array_key_exists('fields', $new_settings['email']))
+                $new_settings['email']['fields'] = [];
+
+            if(!array_key_exists('fields', $new_settings['telegram']))
+                $new_settings['telegram']['fields'] = [];
+
+            $project->settings = $new_settings;
+        }
+
+        $project->save();
+        Journal::project($project, 'Пользователь ' . $user()->name . ' обновил настройки проекта.');
+        return $this->_response('project_update', 'Project has been updated', Response::HTTP_OK);
+    } //update
+
+    public function destroy(Project $project, Request $request){
+        $user =  User::where('api_token', $request->bearerToken())->first();
+        //Проверка полномочий пользователя
+        if (Gate::forUser($user)->denies('delete', [Project::class, $project]))
+            return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
+        
+
+        $project_log = $project;
         $project->delete();
 
-        return $this->_response('project_deleted', 'Project was deleted', Response::HTTP_OK);
+        Journal::project($project_log, 'Пользователь ' . $user->name . ' удалил проект.');
+        return $this->_response('project_deleted', 'Project has been deleted', Response::HTTP_OK);
     } //destroy
+
+    /*####################
+        Прочие методы
+    ######################*/
+    public function journal(Project $project, Request $request){
+        $user =  User::where('api_token', $request->bearerToken())->first();
+        
+        //Проверка полномочий пользователя
+        if (Gate::forUser($user)->denies('view', $project))
+            return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
+        
+        //Валидация фильтра по датам
+        $this->validate($request, [
+            'date_from' => 'nullable|date_format:Y-m-d',
+            'date_to'   => 'nullable|date_format:Y-m-d',
+        ]);
+
+        
+        $leads = $project->leads();
+
+        //Отфильтровка по датам (если они присутствуют в запросе)
+        if($request->filled('date_from'))
+        {
+            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+            $leads->where('created_at', '>=' ,$date);
+        }
+
+        if($request->filled('date_to'))
+        {
+            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+            $leads->where('created_at', '<=' ,$end_date);
+        }
+
+        //Отсеивание дублирующихся лидов (если это указано в запросе)
+        if ($request->has('double_phone') && !empty(request()->double_phone)) {
+            $leads->where('entries', '=', 1);
+        }
+
+
+        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        return new ProjectResource($project, leads: $leads);
+    } //journal
+
+    public function settings_basic(Project $project, Request $request) //Страница основных настроек
+    {
+        $user =  User::where('api_token', $request->bearerToken())->first();
+        //Проверка полномочий пользователя
+        if (Gate::forUser($user)->denies('view', $project))
+            return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
+
+        //Загрузка хостов
+        $hosts = $project->hosts;
+
+        //Загрузка пользователей, назначенных на проект
+        $permissions = $project->user_permissions;
+
+        return new ProjectResource($project, hosts: $hosts, permissions: $permissions);
+    } //settings_basic
+
+    public function settings_sync(Project $project, Request $request) //Страница настроек синхронизации
+    {
+        $user =  User::where('api_token', $request->bearerToken())->first();
+        //Проверка полномочий пользователя
+        if (Gate::forUser($user)->denies('view', $project))
+            return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
+
+        //Загрузка списка email-адресов
+        $emails = Email::where('project_id', $project->id)->get();
+
+        //TODO Загрузка контактов Telegram
+        //Канал
+        $telegram_ids['group'] = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_CHANNEL])->first();
+
+        //Личные чаты
+        $telegram_ids['private'] = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE, ])->paginate(50);
+
+        return new ProjectResource($project, emails: $emails, telegram_ids: $telegram_ids);
+    } //settings_sync
 }

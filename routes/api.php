@@ -29,12 +29,18 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
 
         // Media
         Route::apiResource('media', 'MediaController')->only(['store', 'destroy']);
+
+        //Проекты
+        Route::apiResource('project', 'Project\ProjectController')->only(['index', 'store', 'update', 'destroy']);
+        Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
+        Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
+        Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
     });
 
     //Проекты
-    Route::post('/project.index', 'Project\ProjectController@index')->name('project.index');
-    Route::post('/project.add', 'Project\ProjectController@store')->name('project.add');
-    Route::post('/project.delete', 'Project\ProjectController@destroy')->name('project.delete');
+    // Route::post('/project.index', 'Project\ProjectController@index')->name('project.index');
+    // Route::post('/project.add', 'Project\ProjectController@store')->name('project.add');
+    // Route::post('/project.delete', 'Project\ProjectController@destroy')->name('project.delete');
 
     Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
 
