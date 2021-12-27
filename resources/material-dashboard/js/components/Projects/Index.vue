@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="card-body px-0 pb-2">
-                    <div class="table-responsive p-0">
+
                         <table class="table align-items-center justify-content-center mb-0">
                             <thead>
                             <tr>
@@ -54,14 +54,20 @@
                                     </div>
                                 </td>
                                 <td class="align-middle">
-                                    <button class="btn btn-link text-secondary mb-0">
-                                        <i class="fa fa-ellipsis-v text-xs" aria-hidden="true"></i>
-                                    </button>
+                                    <div class="dropdown">
+                                        <button data-bs-toggle="dropdown" class="btn btn-link text-secondary mb-0">
+                                            <i class="fa fa-ellipsis-v text-xs" aria-hidden="true"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink1" style="">
+                                            <a class="dropdown-item" href="javascript:;">Action</a>
+                                            <a class="dropdown-item" href="javascript:;">Another action</a>
+                                            <a class="dropdown-item" href="javascript:;">Something else here</a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -103,5 +109,10 @@ export default {
 </script>
 
 <style scoped>
-
+.dropdown-menu::before {
+    display: none;
+}
+.dropdown {
+    max-width: 80px;
+}
 </style>
