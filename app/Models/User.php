@@ -45,6 +45,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password', 'remember_token',
     ];
 
+    const USER_NOT_FOUND = 'user_not_found';
+
     /**
      * Get the user's fullname titleized.
      */
