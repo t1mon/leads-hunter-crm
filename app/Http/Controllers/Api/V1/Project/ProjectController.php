@@ -45,7 +45,8 @@ class ProjectController extends Controller
     /*####################
             CRUD
     ######################*/
-    public function index(Request $request){ //Получить список проектов, доступных текущему пользователю
+    public function index(Request $request)
+    { //Получить список проектов, доступных текущему пользователю
 
         //Загрузка идентификаторов проекта, на которые назначен пользователь
         $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');

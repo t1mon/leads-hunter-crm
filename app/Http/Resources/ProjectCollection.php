@@ -14,18 +14,16 @@ class ProjectCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
-        return [
-                $this->collection->map(function($item){
+        return $this->collection->map(function($item){
                     return [
                         'id' => $item->id,
                         'name' => $item->name,
+                        'link' => route('project.journal',$item->id),
                         'status' => $item->settings['enabled'],
                         'totalLeads' => $item->leads->count(),
                         'leadsToday' => $item->leadsToday()->count(),
                         'created_at' => $item->created_at
                     ];
-                })
-            ];
+                });
     }
 }
