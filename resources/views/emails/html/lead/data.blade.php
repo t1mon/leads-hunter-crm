@@ -11,7 +11,9 @@
     <!--Вывод остальных полей-->
     @if(count($fields) > 0)
         @foreach($fields as $field)
-            <li><b>@lang('projects.journal.' . $field)</b> {{$lead->$field}}</li>
+            @if(!is_null($lead->$field))
+                <li><b>@lang('projects.notifications.webhooks.common.fields.' . $field)</b> {{$lead->$field}}</li>    
+            @endif
         @endforeach
     @endif
 
