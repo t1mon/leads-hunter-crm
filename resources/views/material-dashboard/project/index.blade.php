@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="row">
+
     @if($projects->isNotEmpty())
 
         <div class="row mb-4 mb-md-0">

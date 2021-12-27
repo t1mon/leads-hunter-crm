@@ -14,11 +14,13 @@ mix.js('resources/material-dashboard/js/app.js', 'public/js/material-dashboard-a
   .sass('resources/material-dashboard/sass/material-dashboard.scss', 'public/css/material-dashboard-app.css')
   .postCss('resources/material-dashboard/css/nucleo-icons.css', 'public/css')
   .postCss('resources/material-dashboard/css/nucleo-svg.css', 'public/css')
+  .vue()
 
 mix.copy('resources/material-dashboard/media/', 'public/media')
 
 mix.js('resources/js/app.js', 'public/js')
   .sass('resources/sass/app.scss', 'public/css')
+  .vue()
 
 mix.js('resources/js/admin.js', 'public/js')
   .sass('resources/sass/admin.scss', 'public/css')
