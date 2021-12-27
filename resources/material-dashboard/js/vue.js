@@ -1,9 +1,11 @@
 import { createApp } from 'vue'
 import Index from './components/Projects/Index'
+import FixedPlugin from './components/FixedPlugin'
 
 const app = createApp({
   components: {
-    Index
+    Index,
+    FixedPlugin
   },
   mounted() {
     $('[data-confirm]').on('click', () => {
