@@ -1,19 +1,9 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 
-Vue.config.productionTip = false
-
-window.VueEvent = new Vue()
-
-new Vue({
-  el: '#app',
-
-  components: {
-
-  },
-
-  mounted () {
+const app = createApp({
+  mounted() {
     $('[data-confirm]').on('click', () => {
       return confirm($(this).data('confirm'))
     })
   }
-})
+}).mount("#app")
