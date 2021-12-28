@@ -9,7 +9,6 @@
                     </div>
                 </div>
                 <div class="card-body px-0 pb-2">
-
                         <table class="table align-items-center justify-content-center mb-0">
                             <thead>
                             <tr>
@@ -96,10 +95,14 @@ export default {
                 .catch(() => {
                     this.isLoading = false
                 })
+        },
+        test() {
+            this.$store.commit('increment')
+            console.log(this.$store.state.count)
         }
     },
 
-  async  created () {
+    async  created () {
     await this.getProjects()
     }
 }

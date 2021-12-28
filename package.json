@@ -22,7 +22,8 @@
         "laravel-echo": "1.8.1",
         "popper.js": "1.16.1",
         "pusher-js": "7.0.0",
-        "trumbowyg": "2.21.0"
+        "trumbowyg": "2.21.0",
+        "vuex": "^4.0.2"
     },
     "devDependencies": {
         "@vue/compiler-sfc": "^3.2.26",

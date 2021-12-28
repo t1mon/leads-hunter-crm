@@ -22,7 +22,8 @@
     @endif
 </div>
 
-{{--<index></index>--}}
+<index-rows></index-rows>
+<index-cards></index-cards>
 
 @endsection
 
