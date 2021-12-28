@@ -40,12 +40,6 @@ class WebhookController extends Controller
                 ->withError(trans('project.notifications.webhooks.error-create') . ': ' . trans('project.notifications.webhooks.error-exists'));
         }
 
-        //Добавление пустого поля 'fields', если в форме не было указано ни одного поля
-        // if(!$request->exists('fields'))
-        //     $request->merge(['fields' => [] ]);
-
-        // $project->webhook_add($request->except(['_token']));
-
         //Вызов соответствующего конструктора для вебхука (в зависимости от типа и формы)
         $method = 'store_'.$request->form;
         // return yaml_parse($this->$method($project, $request)['query']);
