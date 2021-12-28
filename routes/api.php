@@ -35,12 +35,16 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
         Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
         Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
-    });
 
-    //Проекты
-    // Route::post('/project.index', 'Project\ProjectController@index')->name('project.index');
-    // Route::post('/project.add', 'Project\ProjectController@store')->name('project.add');
-    // Route::post('/project.delete', 'Project\ProjectController@destroy')->name('project.delete');
+        //Хосты
+        Route::apiResource('project/{project}/hosts', 'Project\HostController')->only(['index', 'store', 'destroy']);
+
+        //E-mail
+        Route::apiResource('project/{project}/emails', 'Project\EmailController')->only(['index', 'store', 'destroy']);
+
+        //Вебхуки
+        Route::apiResource('project/{project}/webhooks', 'Project\WebhookController')->only(['index', 'store', 'destroy']);
+    });
 
     Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
 

@@ -93,7 +93,7 @@ class ProjectController extends Controller
     public function update(Project $project, Request $request){
         $user =  User::where('api_token', $request->bearerToken())->first();
         //Проверка полномочий пользователя
-        if (Gate::forUser($user)->denies('delete', [Project::class, $project]))
+        if (Gate::forUser($user)->denies('update', [Project::class, $project]))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
         
         /*Атрибуты проекта делятся на две группы:
@@ -182,14 +182,14 @@ class ProjectController extends Controller
 
 
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-        return new ProjectResource($project, leads: $leads);
+        return new ProjectResource($project, ['leads' => $leads]);
     } //journal
 
     public function settings_basic(Project $project, Request $request) //Страница основных настроек
     {
         $user =  User::where('api_token', $request->bearerToken())->first();
         //Проверка полномочий пользователя
-        if (Gate::forUser($user)->denies('view', $project))
+        if (Gate::forUser($user)->denies('settings', $project))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
 
         //Загрузка хостов
@@ -198,14 +198,14 @@ class ProjectController extends Controller
         //Загрузка пользователей, назначенных на проект
         $permissions = $project->user_permissions;
 
-        return new ProjectResource($project, hosts: $hosts, permissions: $permissions);
+        return new ProjectResource($project, ['hosts' => $hosts, 'permissions' => $permissions]);
     } //settings_basic
 
     public function settings_sync(Project $project, Request $request) //Страница настроек синхронизации
     {
         $user =  User::where('api_token', $request->bearerToken())->first();
         //Проверка полномочий пользователя
-        if (Gate::forUser($user)->denies('view', $project))
+        if (Gate::forUser($user)->denies('settings', $project))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
 
         //Загрузка списка email-адресов
@@ -218,6 +218,6 @@ class ProjectController extends Controller
         //Личные чаты
         $telegram_ids['private'] = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE, ])->paginate(50);
 
-        return new ProjectResource($project, emails: $emails, telegram_ids: $telegram_ids);
+        return new ProjectResource($project, ['emails' => $emails, 'telegram_ids' => $telegram_ids]);
     } //settings_sync
 }
