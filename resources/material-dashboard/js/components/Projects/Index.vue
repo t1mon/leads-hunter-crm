@@ -59,7 +59,7 @@
                                             <i class="fa fa-ellipsis-v text-xs" aria-hidden="true"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink1" style="">
-                                            <a class="dropdown-item" href="javascript:;">Action</a>
+                                            <a class="dropdown-item" :href="project.link">Журнал</a>
                                             <a class="dropdown-item" href="javascript:;">Another action</a>
                                             <a class="dropdown-item" href="javascript:;">Something else here</a>
                                         </div>
@@ -89,11 +89,9 @@ export default {
             this.isLoading = true
             axios
                 .get(this.endpoint)
-                .then(response => {
+                .then(({ data }) => {
                     this.isLoading = false
-                    console.log(response.data.data)
-                    this.projects = response.data.data
-                    console.log(this.projects)
+                    this.projects = data.data
                 })
                 .catch(() => {
                     this.isLoading = false
@@ -103,7 +101,6 @@ export default {
 
   async  created () {
     await this.getProjects()
-
     }
 }
 </script>
