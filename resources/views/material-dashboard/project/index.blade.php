@@ -22,7 +22,7 @@
     @endif
 </div>
 
-<index></index>
+{{--<index></index>--}}
 
 @endsection
 
