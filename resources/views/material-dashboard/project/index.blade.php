@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="row">
-
     @if($projects->isNotEmpty())
 
         <div class="row mb-4 mb-md-0">
@@ -22,5 +21,7 @@
         <a href="{{ route('project.create') }}" class="btn btn-primary btn-lg">Создай свой первый проект</a>
     @endif
 </div>
+
+{{--<index></index>--}}
 @endsection
 

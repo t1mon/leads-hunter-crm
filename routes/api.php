@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(function () {
+Route::prefix('v1')->namespace('Api\V1')->group(function () {
     Route::middleware(['auth:api', 'verified'])->group(function () {
         // Comments
         Route::apiResource('comments', 'CommentController')->only('destroy');
@@ -26,6 +26,8 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
 
         // Users
         Route::apiResource('users', 'UserController')->only('update');
+        // Users
+        Route::apiResource('users', 'UserController')->only(['index', 'show']);
 
         // Media
         Route::apiResource('media', 'MediaController')->only(['store', 'destroy']);
@@ -48,22 +50,20 @@ Route::prefix('v1')->namespace('Api\V1')->middleware(['json.response'])->group(f
 
     Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
 
-    Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
+    //Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
 
     // Comments
-    Route::apiResource('posts.comments', 'PostCommentController')->only('index');
-    Route::apiResource('users.comments', 'UserCommentController')->only('index');
-    Route::apiResource('comments', 'CommentController')->only(['index', 'show']);
+    //Route::apiResource('posts.comments', 'PostCommentController')->only('index');
+    //Route::apiResource('users.comments', 'UserCommentController')->only('index');
+    //Route::apiResource('comments', 'CommentController')->only(['index', 'show']);
 
     // Posts
-    Route::apiResource('posts', 'PostController')->only(['index', 'show']);
-    Route::apiResource('users.posts', 'UserPostController')->only('index');
+    //Route::apiResource('posts', 'PostController')->only(['index', 'show']);
+    //Route::apiResource('users.posts', 'UserPostController')->only('index');
 
-    // Users
-    Route::apiResource('users', 'UserController')->only(['index', 'show']);
 
     // Media
-    Route::apiResource('media', 'MediaController')->only('index');
+    //Route::apiResource('media', 'MediaController')->only('index');
 });
 
 

@@ -45,11 +45,11 @@ class ProjectController extends Controller
     /*####################
             CRUD
     ######################*/
-    public function index(Request $request){ //Получить список проектов, доступных текущему пользователю
-        $user =  User::where('api_token', $request->bearerToken())->first();
+    public function index(Request $request)
+    { //Получить список проектов, доступных текущему пользователю
 
         //Загрузка идентификаторов проекта, на которые назначен пользователь
-        $project_ids = UserPermissions::where('user_id', $user->id)->pluck('project_id');
+        $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');
 
         //Загрузка проектов по идентификаторов
         $projects = Project::whereIn('id', $project_ids)->with('leads')->withCount('leads')->get();
@@ -67,7 +67,7 @@ class ProjectController extends Controller
                 $request->merge([ 'user_id' => $user->id ]);
                 $project = Project::create($request->only('name', 'user_id'));
                 $project->update([ 'api_token' => Str::random(60) ]);
-                
+
                 //Создание разрешений пользователя на проект (создатель по умолчанию имеет все полномочия)
                 UserPermissions::create([
                     'user_id' => $user->id,
@@ -95,7 +95,7 @@ class ProjectController extends Controller
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('update', [Project::class, $project]))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
-        
+
         /*Атрибуты проекта делятся на две группы:
             - properties: свойства проекта (имя, токен и т.п.)
             - settings: настройки (telegram, email и часовой пояс)
@@ -134,7 +134,7 @@ class ProjectController extends Controller
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('delete', [Project::class, $project]))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
-        
+
 
         $project_log = $project;
         $project->delete();
@@ -148,18 +148,18 @@ class ProjectController extends Controller
     ######################*/
     public function journal(Project $project, Request $request){
         $user =  User::where('api_token', $request->bearerToken())->first();
-        
+
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('view', $project))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
-        
+
         //Валидация фильтра по датам
         $this->validate($request, [
             'date_from' => 'nullable|date_format:Y-m-d',
             'date_to'   => 'nullable|date_format:Y-m-d',
         ]);
 
-        
+
         $leads = $project->leads();
 
         //Отфильтровка по датам (если они присутствуют в запросе)
