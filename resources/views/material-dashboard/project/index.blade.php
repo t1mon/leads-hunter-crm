@@ -22,9 +22,9 @@
     @endif
 </div>
 
-<index-tabs></index-tabs>
-<index-list></index-list>
-<index-cards></index-cards>
+{{--<index-tabs></index-tabs>--}}
+{{--<index-list></index-list>--}}
+{{--<index-cards></index-cards>--}}
 
 @endsection
 
