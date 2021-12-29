@@ -38,11 +38,21 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
         Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
 
+        //Разрешения пользователей
+        Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
+
+        //Токен проекта
+        Route::apiResource('project/{project}/token', 'Project\ProjectTokenController')->only(['edit', 'update']);
+
         //Хосты
         Route::apiResource('project/{project}/hosts', 'Project\HostController')->only(['index', 'store', 'destroy']);
 
         //E-mail
         Route::apiResource('project/{project}/emails', 'Project\EmailController')->only(['index', 'store', 'destroy']);
+
+        //Контакты Telegram
+        Route::apiResource('project/{project}/telegram', 'Project\TelegramIDController')->only(['index', 'store', 'destroy']);
+        Route::post('telegram/webhook', 'Project\TelegramIDController@webhook')->name('telegram.webhook');
 
         //Вебхуки
         Route::apiResource('project/{project}/webhooks', 'Project\WebhookController')->only(['index', 'store', 'destroy']);

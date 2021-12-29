@@ -26,13 +26,13 @@ class Project extends JsonResource
     public function toArray($request)
     {
         //Основные поля
-        $fields = [
+        $main = [
             'id' => $this->id,
             'user_id' => $this->user_id,
             'name' => $this->name,
             'settings' => $this->settings,
         ];
 
-        return array_merge($fields, $this->optional);
+        return array_merge($main, $this->optional);
     }
 }

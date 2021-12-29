@@ -20,13 +20,13 @@ class WebhookController extends Controller
 {
     //Возможно, эта функция понадобится при управлении через API
     public function index(Project $project, Request $request){
-        $user =  Auth::guard('api')->user();
+        $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
         
         $webhooks = collect($project->webhooks)->map(function($item, $key){
-            return ['name' => $item->name, 'type' => $item->type];
+            return ['name' => $item->name, 'type' => $item->type, 'enabled' => $item->enabled];
         });
 
         return response()->json(['data' => $webhooks], Response::HTTP_OK);
@@ -36,7 +36,7 @@ class WebhookController extends Controller
         //TODO Создать Request для валидации
         //..
         
-        $user =  Auth::guard('api')->user();
+        $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
@@ -46,8 +46,8 @@ class WebhookController extends Controller
             if( !is_null($project->webhook_get($request->name)) )
                 throw new \Exception('Webhook already exists');
             
-            $request->merge(['query' => yaml_emit($request->fields)]);
-            $project->webhook_add($request->except('_token', 'fields', 'form'));
+            $request->merge(['query' => yaml_emit($request->fields), 'enabled' => 1]);
+            $project->webhook_add($request->except('_token', 'fields'));
             $project->save();
         }
         catch(\Exception $exception){
@@ -61,7 +61,7 @@ class WebhookController extends Controller
 
     public function destroy(Project $project, string $webhook_name, Request $request){
         //TODO Создать Request для валидации
-        $user =  Auth::guard('api')->user();
+        $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);

@@ -13,6 +13,7 @@ use App\Models\Project\Host;
 use App\Models\User;
 use App\Models\Project\Project;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -23,7 +24,7 @@ class HostController extends Controller
 {
     //Возможно, эта функция понадобится при управлении через API
     public function index(Project $project, Request $request){
-        $user =  User::where('api_token', $request->bearerToken())->first();
+        $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
@@ -34,7 +35,7 @@ class HostController extends Controller
     
     public function store(HostRequest $request)
     {
-        $user =  User::where('api_token', $request->bearerToken())->first();
+        $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
@@ -63,7 +64,7 @@ class HostController extends Controller
 
     public function destroy(Project $project, Host $host, Request $request)
     {
-        $user =  User::where('api_token', $request->bearerToken())->first();
+        $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
