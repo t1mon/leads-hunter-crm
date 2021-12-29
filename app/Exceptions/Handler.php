@@ -39,17 +39,22 @@ class Handler extends ExceptionHandler
 
     public function render($request,  $exception)
     {
-        if ($exception instanceof NotFoundHttpException) {
-            if ($request->is('api/*') || $request->is('api')) {
-                return response()->json(['error' => 'Not Found'], 404);
-            }
-            //return response()->view('404', [], 404);
-        }
+        if ($request->is('api/*') || $request->is('api')) {
 
-        if ($exception instanceof AuthenticationException) {
-            if ($request->is('api/*') || $request->is('api')) {
-                return response()->json(['message' => 'Unauthorised'], 401);
+            $request->headers->set('Accept', 'application/json');
+
+            if ($exception instanceof \Exception) {
+                return response()->json(['response' => "Project id:{$request->project} Not Found'"], 404);
             }
+
+            if ($exception instanceof NotFoundHttpException) {
+                    return response()->json(['error' => 'Not Found'], 404);
+            }
+
+            if ($exception instanceof AuthenticationException) {
+                    return response()->json(['message' => 'Unauthorised'], 401);
+            }
+
         }
 
         return parent::render($request, $exception);
