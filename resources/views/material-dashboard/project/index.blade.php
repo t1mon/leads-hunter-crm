@@ -22,7 +22,8 @@
     @endif
 </div>
 
-<index-rows></index-rows>
+<index-tabs></index-tabs>
+<index-list></index-list>
 <index-cards></index-cards>
 
 @endsection

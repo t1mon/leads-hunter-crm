@@ -1,5 +1,5 @@
 <template>
-    <div class="row mt-lg-4 mt-2">
+    <div v-if="checkCards" class="row mt-lg-4 mt-2">
         <div v-for="project in projects" class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <div class="card-body p-3">
@@ -69,7 +69,11 @@ export default {
             console.log(this.$store.state.count)
         }
     },
-
+    computed: {
+        checkCards () {
+            return this.$store.getters.stateCards
+        }
+    },
     async  created () {
         await this.getProjects()
     }

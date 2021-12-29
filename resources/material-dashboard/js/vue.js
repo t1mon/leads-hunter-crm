@@ -1,13 +1,15 @@
 import { createApp } from 'vue'
 import store from './store'
-import IndexRows from './components/Projects/IndexRows'
+import IndexList from './components/Projects/IndexList'
 import IndexCards from './components/Projects/IndexCards'
+import IndexTabs from './components/Projects/IndexTabs'
 import SettingsBar from './components/Settings/SettingsBar'
 
 const app = createApp({
   components: {
-    IndexRows,
+    IndexList,
     IndexCards,
+    IndexTabs,
     SettingsBar
   },
   mounted() {
@@ -16,5 +18,5 @@ const app = createApp({
     })
   }
 })
-app.mount("#app")
 app.use(store)
+app.mount("#app")

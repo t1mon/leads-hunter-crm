@@ -4,13 +4,21 @@ import { createStore } from 'vuex'
 const store = createStore({
   state () {
     return {
-      count: 0
+      cards: false
+    }
+  },
+  getters: {
+    stateCards: state => {
+      return state.cards
     }
   },
   mutations: {
-    // increment (state) {
-    //   state.count++
-    // }
+    checkCards (state) {
+      state.cards = true
+    },
+    checkList (state) {
+      state.cards = false
+    }
   }
 })
 
