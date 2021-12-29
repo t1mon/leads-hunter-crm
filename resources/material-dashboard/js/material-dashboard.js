@@ -7,9 +7,19 @@
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 
-const navbarFixed_ = document.querySelector('#navbarFixed'),
-      navbarMinimize_ = document.querySelector('#navbarMinimize'),
-      darkVersion_ = document.querySelector('#dark-version')
+const navbarFixed_ = document.querySelector('#navbarFixed')
+const navbarMinimize_ = document.querySelector('#navbarMinimize')
+const darkVersion_ = document.querySelector('#dark-version')
+
+if (localStorage.getItem('navbarFixed') === 'false') {
+  navbarFixed(navbarFixed_)
+};
+if (localStorage.getItem('navbarMinimize') === 'true') {
+  navbarMinimize(navbarMinimize_)
+};
+if (localStorage.getItem('darkVersion') === 'true') {
+  darkMode(darkVersion_)
+}
 
 navbarFixed_.addEventListener('change', function () {
   navbarFixed(this)

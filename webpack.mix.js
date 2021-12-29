@@ -28,5 +28,5 @@ mix.js('resources/js/admin.js', 'public/js')
 mix.copy('node_modules/trumbowyg/dist/ui/icons.svg', 'public/js/ui/icons.svg')
 
 if (mix.inProduction()) {
-  mix.version().sourceMaps();
+  mix.version().sourceMaps()
 }
