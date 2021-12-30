@@ -26,12 +26,6 @@ class UserPermissions extends Model
         'view_fields' => 'array'
     ];
 
-
-    protected $attributes = [
-        'role' => Role::ROLE_WATCHER, //Роль "Наблюдатель"
-        'view_fields' => '["email", "city", "host"]',
-    ];
-
     //#############
     //Методы
     //#############
