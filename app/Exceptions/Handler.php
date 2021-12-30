@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
             $request->headers->set('Accept', 'application/json');
 
             if ($exception instanceof \Exception) {
-                return response()->json(['response' => $exception->getMessage()], 404);
+                return response()->json(['response' => "Project id:{$request->project->id} Not Found'"], 404);
             }
 
             if ($exception instanceof NotFoundHttpException) {
