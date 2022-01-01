@@ -22,9 +22,21 @@
     @endif
 </div>
 
-{{--<index-tabs></index-tabs>--}}
-{{--<index-list></index-list>--}}
-{{--<index-cards></index-cards>--}}
+<div class="row gx-4 m-2">
+    <div class="col-auto">
+        <div class="ms-md-auto d-flex align-items-center">
+            <div class="input-group input-group-outline">
+                <label class="form-label">Search projects</label>
+                <input type="text" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
+            </div>
+        </div>
+    </div>
+
+    <index-tabs></index-tabs>
+</div>
+
+<index-list></index-list>
+<index-cards></index-cards>
 
 @endsection
 

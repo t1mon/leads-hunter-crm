@@ -63,10 +63,6 @@ export default {
                 .catch(() => {
                     this.isLoading = false
                 })
-        },
-        test() {
-            this.$store.commit('increment')
-            console.log(this.$store.state.count)
         }
     },
     computed: {

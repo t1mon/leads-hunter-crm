@@ -1,15 +1,15 @@
 <template>
-    <div class="col-lg-4 col-md-6 m-3">
+    <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
         <div class="nav-wrapper position-relative end-0">
             <ul class="nav nav-pills nav-fill p-1" role="tablist">
                 <li class="nav-item">
-                    <a @click="checkList" class="nav-link mb-0 px-0 py-1 active " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">
+                    <a @click="switchTabs('checkList')" class="nav-link mb-0 px-0 py-1 active " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">
                         <i class="material-icons text-lg position-relative">home</i>
                         <span class="ms-1">List</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a @click="checkCards" class="nav-link mb-0 px-0 py-1 " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
+                    <a @click="switchTabs('checkCards')" class="nav-link mb-0 px-0 py-1 " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
                         <i class="material-icons text-lg position-relative">email</i>
                         <span class="ms-1">Cards</span>
                     </a>
@@ -23,12 +23,7 @@
 export default {
     name: 'indexTabs',
     methods: {
-        checkCards () {
-            this.$store.commit('checkCards')
-        },
-        checkList () {
-            this.$store.commit('checkList')
-        }
+        switchTabs (check) { this.$store.commit(check) }
     }
 }
 </script>

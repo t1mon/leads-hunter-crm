@@ -84,7 +84,7 @@ export default {
         projects: null
     }),
     methods: {
-        getProjects(){
+        getProjects () {
             this.isLoading = true
             axios
                 .get(this.endpoint)
@@ -95,10 +95,6 @@ export default {
                 .catch(() => {
                     this.isLoading = false
                 })
-        },
-        test() {
-            this.$store.commit('increment')
-            console.log(this.$store.state.count)
         }
     },
     computed: {
