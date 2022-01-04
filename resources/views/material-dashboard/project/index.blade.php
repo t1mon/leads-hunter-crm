@@ -27,7 +27,7 @@
         <div class="ms-md-auto d-flex align-items-center">
             <div class="input-group input-group-outline">
                 <label class="form-label">Search projects</label>
-                <input type="text" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
+                <input type="text" id="form-control" class="form-control">
             </div>
         </div>
     </div>

@@ -1,6 +1,9 @@
 <template>
     <div v-if="checkCards" class="row mt-lg-4 mt-2">
-        <div v-for="project in projects" class="col-lg-4 col-md-6 mb-4">
+        <div v-if="stateIsLoading" class="spinner-grow" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div v-for="project in stateProjects" class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="d-flex mt-n2">
@@ -42,38 +45,30 @@
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
     name: 'Index',
     data: () => ({
-        endpoint: `/api/v1/project`,
-        isLoading: false,
-        projects: null
     }),
-    methods: {
-        getProjects(){
-            this.isLoading = true
-            axios
-                .get(this.endpoint)
-                .then(({ data }) => {
-                    this.isLoading = false
-                    this.projects = data.data
-                })
-                .catch(() => {
-                    this.isLoading = false
-                })
-        }
-    },
     computed: {
         checkCards () {
             return this.$store.getters.stateCards
+        },
+        getProjects () {
+            return this.$store.dispatch('getProjects')
+        },
+        stateIsLoading () {
+            return this.$store.getters.stateIsLoading
+        },
+        stateProjects () {
+            return this.$store.getters.stateProjects
         }
     },
-    async  created () {
-        await this.getProjects()
+    async created () {
+        await this.getProjects
     }
 }
+
 </script>
 
 <style scoped>

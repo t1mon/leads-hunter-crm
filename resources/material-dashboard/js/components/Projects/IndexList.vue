@@ -19,13 +19,13 @@
                                 <th></th>
                             </tr>
 
-                            <div v-if="isLoading" class="spinner-grow" role="status">
+                            <div v-if="stateIsLoading" class="spinner-grow" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
 
                             </thead>
                             <tbody>
-                            <tr v-for="project in projects">
+                            <tr v-for="project in stateProjects">
                                 <td>
                                     <div class="d-flex px-2">
                                         <div>
@@ -74,36 +74,27 @@
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
     name: 'Index',
     data: () => ({
-        endpoint: `/api/v1/project`,
-        isLoading: false,
-        projects: null
     }),
-    methods: {
-        getProjects () {
-            this.isLoading = true
-            axios
-                .get(this.endpoint)
-                .then(({ data }) => {
-                    this.isLoading = false
-                    this.projects = data.data
-                })
-                .catch(() => {
-                    this.isLoading = false
-                })
-        }
-    },
     computed: {
         checkCards () {
             return this.$store.getters.stateCards
+        },
+        getProjects () {
+            return this.$store.dispatch('getProjects')
+        },
+        stateIsLoading () {
+            return this.$store.getters.stateIsLoading
+        },
+        stateProjects () {
+            return this.$store.getters.stateProjects
         }
     },
-    async  created () {
-    await this.getProjects()
+    async created () {
+    await this.getProjects
     }
 }
 </script>
