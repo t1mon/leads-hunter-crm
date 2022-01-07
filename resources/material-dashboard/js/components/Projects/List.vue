@@ -25,7 +25,7 @@
 
                             </thead>
                             <tbody>
-                            <tr v-for="project in stateProjects">
+                            <tr v-for="project in filteredProject">
                                 <td>
                                     <div class="d-flex px-2">
                                         <div>
@@ -83,18 +83,18 @@ export default {
         checkCards () {
             return this.$store.getters.stateCards
         },
-        getProjects () {
-            return this.$store.dispatch('getProjects')
-        },
         stateIsLoading () {
             return this.$store.getters.stateIsLoading
         },
-        stateProjects () {
-            return this.$store.getters.stateProjects
+        filteredProject () {
+            return this.$store.getters.stateFilteredProjects
+        },
+        getProjects () {
+            return this.$store.dispatch('getProjects')
         }
     },
     async created () {
-    await this.getProjects
+        await this.getProjects
     }
 }
 </script>

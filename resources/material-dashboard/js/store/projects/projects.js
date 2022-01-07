@@ -6,7 +6,9 @@ export default {
       cards: false,
       endpoint: '/api/v1/project',
       isLoading: false,
-      projects: null
+      projects: null,
+      searchProjects: '',
+      filteredProjects: null
     }
   },
   getters: {
@@ -16,8 +18,11 @@ export default {
     stateIsLoading: state => {
       return state.isLoading
     },
-    stateProjects: state => {
-      return state.projects
+    stateSearchProjects: state => {
+      return state.searchProjects
+    },
+    stateFilteredProjects: state => {
+      return state.filteredProjects
     }
   },
   mutations: {
@@ -26,6 +31,9 @@ export default {
     },
     checkList (state) {
       state.cards = false
+    },
+    updateMessage (state, value) {
+      state.searchProjects = value
     }
   },
   actions: {
@@ -36,10 +44,16 @@ export default {
         .then(({ data }) => {
           state.isLoading = false
           state.projects = data.data
+          state.filteredProjects = data.data
         })
         .catch(() => {
           state.isLoading = false
         })
+    },
+    filterProjects ({ state }) {
+      state.filteredProjects = state.projects.filter(project => {
+        return project.name.toLowerCase().indexOf(state.searchProjects.toLowerCase()) !== -1
+      })
     }
   }
 }

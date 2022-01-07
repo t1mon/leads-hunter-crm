@@ -1,16 +1,18 @@
 import { createApp } from 'vue'
 import store from './store'
-import IndexList from './components/Projects/IndexList'
-import IndexCards from './components/Projects/IndexCards'
-import IndexTabs from './components/Projects/IndexTabs'
+import List from './components/Projects/List'
+import Cards from './components/Projects/Cards'
+import Tabs from './components/Projects/Tabs'
+import SearchProjects from './components/Projects/SearchProjects'
 import SettingsBar from './components/Settings/SettingsBar'
 
 const app = createApp({
   components: {
-    IndexList,
-    IndexCards,
-    IndexTabs,
-    SettingsBar
+    List,
+    Cards,
+    Tabs,
+    SettingsBar,
+    SearchProjects
   },
   mounted() {
     $('[data-confirm]').on('click', () => {

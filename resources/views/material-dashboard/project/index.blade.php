@@ -22,21 +22,15 @@
     @endif
 </div>
 
-<div class="row gx-4 m-2">
-    <div class="col-auto">
-        <div class="ms-md-auto d-flex align-items-center">
-            <div class="input-group input-group-outline">
-                <label class="form-label">Search projects</label>
-                <input type="text" id="form-control" class="form-control">
-            </div>
-        </div>
-    </div>
 
-    <index-tabs></index-tabs>
+<div class="row gx-4 m-2">
+    <search-projects></search-projects>
+
+    <tabs></tabs>
 </div>
 
-<index-list></index-list>
-<index-cards></index-cards>
+<list></list>
+<cards></cards>
 
 @endsection
 

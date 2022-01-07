@@ -3,7 +3,7 @@
         <div v-if="stateIsLoading" class="spinner-grow" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-        <div v-for="project in stateProjects" class="col-lg-4 col-md-6 mb-4">
+        <div v-for="project in filteredProject" class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="d-flex mt-n2">
@@ -54,18 +54,12 @@ export default {
         checkCards () {
             return this.$store.getters.stateCards
         },
-        getProjects () {
-            return this.$store.dispatch('getProjects')
-        },
         stateIsLoading () {
             return this.$store.getters.stateIsLoading
         },
-        stateProjects () {
-            return this.$store.getters.stateProjects
+        filteredProject () {
+            return this.$store.getters.stateFilteredProjects
         }
-    },
-    async created () {
-        await this.getProjects
     }
 }
 
