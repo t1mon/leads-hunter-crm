@@ -1,8 +1,5 @@
 <template>
     <div v-if="checkCards" class="row mt-lg-4 mt-2">
-        <div v-if="stateIsLoading" class="spinner-grow" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
         <div v-for="project in filteredProject" class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <div class="card-body p-3">
@@ -47,20 +44,15 @@
 <script>
 
 export default {
-    name: 'Index',
-    data: () => ({
-    }),
-    computed: {
-        checkCards () {
-            return this.$store.getters.stateCards
-        },
-        stateIsLoading () {
-            return this.$store.getters.stateIsLoading
-        },
-        filteredProject () {
-            return this.$store.getters.stateFilteredProjects
-        }
+  name: 'ProjectsCards',
+  computed: {
+    checkCards () {
+      return this.$store.getters.stateCards
+    },
+    filteredProject () {
+      return this.$store.getters.stateFilteredProjects
     }
+  }
 }
 
 </script>

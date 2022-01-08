@@ -11,7 +11,6 @@
 const navbarFixed_ = document.querySelector('#navbarFixed')
 const navbarMinimize_ = document.querySelector('#navbarMinimize')
 const darkVersion_ = document.querySelector('#dark-version')
-const formControl_ = document.querySelector('#form-control')
 
 // Local storage
 if (localStorage.getItem('navbarFixed') === 'false') {

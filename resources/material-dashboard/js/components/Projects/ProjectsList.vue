@@ -3,12 +3,13 @@
         <div class="col-12">
             <div class="card my-4">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-2 pb-2 pt-sm-4 pb-sm-3 ">
                         <h6 class="text-white text-capitalize ps-3">Projects table
                         </h6>
                     </div>
                 </div>
                 <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
                         <table class="table align-items-center justify-content-center mb-0">
                             <thead>
                             <tr>
@@ -18,10 +19,6 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
                                 <th></th>
                             </tr>
-
-                            <div v-if="stateIsLoading" class="spinner-grow" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
 
                             </thead>
                             <tbody>
@@ -67,6 +64,7 @@
                             </tr>
                             </tbody>
                         </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,26 +74,15 @@
 <script>
 
 export default {
-    name: 'Index',
-    data: () => ({
-    }),
-    computed: {
-        checkCards () {
-            return this.$store.getters.stateCards
-        },
-        stateIsLoading () {
-            return this.$store.getters.stateIsLoading
-        },
-        filteredProject () {
-            return this.$store.getters.stateFilteredProjects
-        },
-        getProjects () {
-            return this.$store.dispatch('getProjects')
-        }
+  name: 'ProjectsList',
+  computed: {
+    checkCards () {
+      return this.$store.getters.stateCards
     },
-    async created () {
-        await this.getProjects
+    filteredProject () {
+      return this.$store.getters.stateFilteredProjects
     }
+  }
 }
 </script>
 
@@ -105,5 +92,8 @@ export default {
 }
 .dropdown {
     max-width: 80px;
+}
+.table-responsive {
+    padding-bottom: 110px !important;
 }
 </style>

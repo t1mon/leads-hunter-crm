@@ -23,14 +23,7 @@
 </div>
 
 
-<div class="row gx-4 m-2">
-    <search-projects></search-projects>
-
-    <tabs></tabs>
-</div>
-
-<list></list>
-<cards></cards>
+<projects></projects>
 
 @endsection
 
