@@ -18,8 +18,8 @@
             </div>
         </div>
 
-        <projects-list></projects-list>
-        <projects-cards></projects-cards>
+        <projects-list ref="hide" class="projects__content--show" v-if="!checkCards"></projects-list>
+        <projects-cards ref="hide" class="projects__content--show" v-if="checkCards"></projects-cards>
     </div>
 </template>
 
@@ -43,6 +43,9 @@ export default {
     },
     stateIsLoading () {
       return this.$store.getters.stateIsLoading
+    },
+    checkCards () {
+      return this.$store.getters.stateCards
     }
   },
   async created () {
@@ -52,6 +55,13 @@ export default {
 </script>
 
 <style scoped>
+@keyframes show {
+    from { transform: perspective(400px) translateZ(-100px); }
+    to { transform: none; }
+}
+.projects__content--show {
+    animation: show 0.5s ease;
+}
 .spinner-grow--2 {
     animation-delay: 0.15s;
 }

@@ -45,6 +45,7 @@ export default {
           state.isLoading = false
           state.projects = data.data
           state.filteredProjects = data.data
+          console.log(data.data)
         })
         .catch(() => {
           state.isLoading = false
@@ -53,6 +54,25 @@ export default {
     filterProjects ({ state }) {
       state.filteredProjects = state.projects.filter(project => {
         return project.name.toLowerCase().indexOf(state.searchProjects.toLowerCase()) !== -1
+      })
+    },
+    dropdown (context, event) {
+      event.stopPropagation()
+      const dropMenu = event.currentTarget
+      dropMenu.firstElementChild.classList.add('projects__dropdown__menu--active')
+      for (let i = 0; i < dropMenu.firstChild.children.length; i++) {
+        dropMenu.firstChild.children[i].addEventListener('click', (e) => {
+          e.stopPropagation()
+          if (e.currentTarget.firstElementChild && e.currentTarget.firstElementChild.classList.contains('projects__dropdown__menu')) {
+            return
+          } else {
+            dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
+          }
+        })
+      }
+      document.addEventListener('click', function remActive () {
+        dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
+        document.removeEventListener('click', remActive)
       })
     }
   }

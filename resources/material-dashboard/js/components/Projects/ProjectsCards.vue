@@ -1,26 +1,31 @@
 <template>
-    <div v-if="checkCards" class="row mt-lg-4 mt-2">
+    <div class="row mt-lg-4 mt-2">
         <div v-for="project in filteredProject" class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="d-flex mt-n2">
                         <div class="avatar avatar-xl bg-gradient-dark border-radius-xl p-2 mt-n4">
-                            <img src="/assets/img/small-logos/logo-asana.svg" alt="slack_logo">
+                            <img src="media/img/project.png" alt="slack_logo">
                         </div>
                         <div class="ms-3 my-auto">
                             <a :href="project.link"><h6 class="mb-0">{{ project.name }}</h6></a>
                         </div>
                         <div class="ms-auto">
-                            <div class="dropdown">
-                                <button class="btn btn-link text-secondary ps-0 pe-2" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v text-lg" aria-hidden="true"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" :href="project.link">Журнал</a>
-                                    <a class="dropdown-item" href="javascript:;">Another action</a>
-                                    <a class="dropdown-item" href="javascript:;">Something else here</a>
-                                </div>
-                            </div>
+                            <button @click="dropdown($event)" class="projects__dropdown btn btn-link text-secondary ps-0 pe-2">
+                                <ul class="projects__dropdown__menu">
+                                    <li class="projects__dropdown__item">Lorem ipsum</li>
+                                    <li class="projects__dropdown__item">Lorem ipsum</li>
+                                    <li @click="dropdown($event)" class="projects__dropdown__item">
+                                        <ul class="projects__dropdown__menu">
+                                            <li class="projects__dropdown__title">Удалить проект?</li>
+                                            <li class="projects__dropdown__item">Да</li>
+                                            <li class="projects__dropdown__item">Нет</li>
+                                        </ul>
+                                        <span>Удалить проект</span>
+                                    </li>
+                                </ul>
+                                <i class="fa fa-ellipsis-v text-lg" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                     <p class="text-sm mt-3"> If everything I did failed - which it doesn't, I think that it actually succeeds. </p>
@@ -45,10 +50,12 @@
 
 export default {
   name: 'ProjectsCards',
-  computed: {
-    checkCards () {
-      return this.$store.getters.stateCards
+    methods: {
+        dropdown (event) {
+            return this.$store.dispatch('dropdown', event)
+        }
     },
+  computed: {
     filteredProject () {
       return this.$store.getters.stateFilteredProjects
     }
