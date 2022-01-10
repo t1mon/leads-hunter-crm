@@ -58,12 +58,22 @@ export default {
     },
     dropdown (context, event) {
       event.stopPropagation()
+      event.stopImmediatePropagation()
+      const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
       const dropMenu = event.currentTarget
+      projectsDropdownMenuActive.forEach(item => {
+        if (event.currentTarget.parentElement.classList.contains('projects__dropdown__menu--active')) {
+          return
+        } else {
+          item.classList.remove('projects__dropdown__menu--active')
+        }
+      })
       dropMenu.firstElementChild.classList.add('projects__dropdown__menu--active')
       for (let i = 0; i < dropMenu.firstChild.children.length; i++) {
         dropMenu.firstChild.children[i].addEventListener('click', (e) => {
           e.stopPropagation()
           if (e.currentTarget.firstElementChild && e.currentTarget.firstElementChild.classList.contains('projects__dropdown__menu')) {
+            console.log(1)
             return
           } else {
             dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
@@ -74,6 +84,18 @@ export default {
         dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
         document.removeEventListener('click', remActive)
       })
+    },
+    deleteProject ({ state, dispatch }, id, event) {
+      const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
+      state.filteredProjects.forEach((project, index) => {
+        if (project.id === id) {
+          state.projects.splice(index, 1)
+        }
+      })
+      projectsDropdownMenuActive.forEach(item => {
+        item.classList.remove('projects__dropdown__menu--active')
+      })
+      dispatch('toastDeleteProject')
     }
   }
 }
