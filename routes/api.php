@@ -41,6 +41,13 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         //Разрешения пользователей
         Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
 
+        //Классы лидов
+        Route::apiResource('project/{project}/class', 'Project\Lead\LeadClassController')->only(['store', 'update', 'destroy']);
+        Route::get('project/{project}/class/assign', 'Project\Lead\LeadClassController@assign')->name('class-assign');
+
+        //Комментарии к лидам
+        Route::apiResource('project/{project}/{lead}/comment', 'Project\Lead\CommentController')->only(['show', 'store', 'destroy']);
+
         //Токен проекта
         Route::apiResource('project/{project}/token', 'Project\ProjectTokenController')->only(['edit', 'update']);
 
