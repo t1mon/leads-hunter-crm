@@ -86,16 +86,26 @@ export default {
       })
     },
     deleteProject ({ state, dispatch }, id, event) {
-      const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
-      state.filteredProjects.forEach((project, index) => {
-        if (project.id === id) {
-          state.projects.splice(index, 1)
-        }
-      })
-      projectsDropdownMenuActive.forEach(item => {
-        item.classList.remove('projects__dropdown__menu--active')
-      })
-      dispatch('toastDeleteProject')
+
+      axios
+        .delete(state.endpoint + '/' + id )
+        .then(({data}) => {
+          if (data.data.response === 200) {
+            const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
+            state.filteredProjects.forEach((project, index) => {
+              if (project.id === id) {
+                state.projects.splice(index, 1)
+              }
+            })
+            projectsDropdownMenuActive.forEach(item => {
+              item.classList.remove('projects__dropdown__menu--active')
+            })
+            dispatch('toastDeleteProject')
+          }
+        }, (error) => {
+          console.error(error)
+        })
+
     }
   }
 }

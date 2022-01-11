@@ -14,8 +14,6 @@
 <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">@lang('projects.attributes.created_at')</th>-->
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Дата создания</th>
                     <th></th>
-                    <th></th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,8 +54,7 @@
                     <td class="align-middle">
                         <button @click="dropdown($event)" class="projects__dropdown btn btn-link text-secondary mb-0">
                             <ul class="projects__dropdown__menu">
-                               <li class="projects__dropdown__item">Lorem ipsum</li>
-                               <li class="projects__dropdown__item">Lorem ipsum</li>
+                               <li class="projects__dropdown__item"><a :href=" project.link ">Журнал</a></li>
                                <li @click="dropdown($event)" class="projects__dropdown__item">
                                    <ul class="projects__dropdown__menu">
                                        <li class="projects__dropdown__title">Удалить проект?</li>
@@ -69,17 +66,6 @@
                             </ul>
                             <span class="material-icons">more_vert</span>
                         </button>
-                    </td>
-                    <td>
-                        <a href="{{ route('project.journal', $project) }}" class="btn btn-primary btn-sm">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                    <td>
-
-<!--                        {!! Form::model($project, ['method' => 'DELETE', 'route' => ['project.destroy', $project], 'class' => 'form-inline', 'data-confirm' => __('forms.projects.delete')]) !!}-->
-<!--                        {!! Form::button('<i class="fa fa-trash" aria-hidden="true"></i>', ['class' => 'btn btn-danger btn-sm', 'name' => 'submit', 'type' => 'submit']) !!}-->
-<!--                        {!! Form::close() !!}-->
                     </td>
                 </tr>
                 </tbody>

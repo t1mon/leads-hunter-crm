@@ -13,8 +13,7 @@
                         <div class="ms-auto">
                             <button @click="dropdown($event)" class="projects__dropdown btn btn-link text-secondary ps-0 pe-2">
                                 <ul class="projects__dropdown__menu">
-                                    <li class="projects__dropdown__item">Lorem ipsum</li>
-                                    <li class="projects__dropdown__item">Lorem ipsum</li>
+                                    <li class="projects__dropdown__item"><a :href=" project.link ">Журнал</a></li>
                                     <li @click="dropdown($event)" class="projects__dropdown__item">
                                         <ul class="projects__dropdown__menu">
                                             <li class="projects__dropdown__title">Удалить проект?</li>
