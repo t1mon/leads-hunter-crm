@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/test', [\App\Http\Controllers\Project\ProjectController::class , 'test']);
 
 Route::post('telegram/webhook', [TelegramIDController::class, 'webhook'])->name('telegram.webhook');
-Route::resource('log', LogController::class)->only(['index', 'store', 'destroy']);
+//Route::resource('log', LogController::class)->only(['index', 'store', 'destroy']);
 
 //Route::get('/test-mail', function () {
 //    $invoice = \App\Models\Leads::findOrFail(4);
