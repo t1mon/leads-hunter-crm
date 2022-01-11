@@ -15,6 +15,7 @@ class ProjectCollection extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'link' => route('project.journal', $this->id),
             'status' => (bool)$this->settings['enabled'],

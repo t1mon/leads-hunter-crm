@@ -86,7 +86,6 @@ export default {
       })
     },
     deleteProject ({ state, dispatch }, id, event) {
-
       axios
         .delete(state.endpoint + '/' + id )
         .then(({data}) => {
