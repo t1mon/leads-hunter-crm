@@ -1,15 +1,18 @@
 import { createApp } from 'vue'
-import Index from './components/Projects/Index'
+import store from './store'
+import Projects from './components/Projects/Projects'
 import SettingsBar from './components/Settings/SettingsBar'
 
 const app = createApp({
   components: {
-    Index,
-    SettingsBar
+    SettingsBar,
+    Projects
   },
-  mounted() {
+  mounted () {
     $('[data-confirm]').on('click', () => {
       return confirm($(this).data('confirm'))
     })
   }
-}).mount("#app")
+})
+app.use(store)
+app.mount('#app')
