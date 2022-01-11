@@ -10,6 +10,16 @@
                         <div class="ms-3 my-auto">
                             <a :href="project.link"><h6 class="mb-0">{{ project.name }}</h6></a>
                         </div>
+                        <div class="mx-auto my-auto">
+                            <span v-if="project.status" class="badge badge-dot me-4">
+                                <i class="bg-success"></i>
+                                <span class="text-dark text-xs">Активен</span>
+                            </span>
+                                <span v-if="!project.status" class="badge badge-dot me-4">
+                                <i class="bg-danger"></i>
+                                <span class="text-dark text-xs">Приостановлен</span>
+                            </span>
+                        </div>
                         <div class="ms-auto">
                             <button @click="dropdown($event)" class="projects__dropdown btn btn-link text-secondary ps-0 pe-2">
                                 <ul class="projects__dropdown__menu">
@@ -17,7 +27,7 @@
                                     <li @click="dropdown($event)" class="projects__dropdown__item">
                                         <ul class="projects__dropdown__menu">
                                             <li class="projects__dropdown__title">Удалить проект?</li>
-                                            <li class="projects__dropdown__item">Да</li>
+                                            <li @click="deleteProject(project.id, $event)" class="projects__dropdown__item">Да</li>
                                             <li class="projects__dropdown__item">Нет</li>
                                         </ul>
                                         <span>Удалить проект</span>
@@ -30,13 +40,17 @@
                     <p class="text-sm mt-3"> If everything I did failed - which it doesn't, I think that it actually succeeds. </p>
                     <hr class="horizontal dark">
                     <div class="row">
-                        <div class="col-6">
-                            <h6 class="text-sm mb-0">5</h6>
-                            <p class="text-secondary text-sm font-weight-normal mb-0">Participants</p>
+                        <div class="col-4">
+                            <h6 class="text-sm mb-0">{{ project.totalLeads }}</h6>
+                            <p class="text-secondary text-sm font-weight-normal mb-0">Лидов всего</p>
                         </div>
-                        <div class="col-6 text-end">
-                            <h6 class="text-sm mb-0">02.03.22</h6>
-                            <p class="text-secondary text-sm font-weight-normal mb-0">Due date</p>
+                        <div class="col-4">
+                            <h6 class="text-sm mb-0">{{ project.leadsToday }}</h6>
+                            <p class="text-secondary text-sm font-weight-normal mb-0">Лидов сегодня</p>
+                        </div>
+                        <div class="col-4 text-end">
+                            <h6 class="text-sm mb-0">{{ project.created_at }}</h6>
+                            <p class="text-secondary text-sm font-weight-normal mb-0">Дата создания</p>
                         </div>
                     </div>
                 </div>
@@ -52,6 +66,11 @@ export default {
     methods: {
         dropdown (event) {
             return this.$store.dispatch('dropdown', event)
+        },
+        deleteProject (id, event) {
+            event.stopPropagation()
+            event.stopImmediatePropagation()
+            return this.$store.dispatch('deleteProject', id)
         }
     },
   computed: {

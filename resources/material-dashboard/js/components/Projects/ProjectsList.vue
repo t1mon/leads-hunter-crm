@@ -48,7 +48,7 @@
                     </td>
                     <td class="align-middle text-center">
                         <div class="d-flex align-items-center">
-                            <span class="me-2 text-xs">{{ dateParse(project.created_at) }}</span>
+                            <span class="me-2 text-xs">{{ project.created_at }}</span>
                         </div>
                     </td>
                     <td class="align-middle">
@@ -88,10 +88,6 @@ export default {
             event.stopPropagation()
             event.stopImmediatePropagation()
             return this.$store.dispatch('deleteProject', id)
-        },
-        dateParse (date) {
-            const currentDate = new Date(Date.parse(date))
-            return `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`
         }
     },
   computed: {
