@@ -90,7 +90,7 @@ export default {
       axios
         .delete(state.endpoint + '/' + id )
         .then(({data}) => {
-          if (data.data.response === 200) {
+          if (data.data.response === 200 ) {
             const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
             state.filteredProjects.forEach((project, index) => {
               if (project.id === id) {
