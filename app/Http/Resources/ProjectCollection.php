@@ -17,10 +17,12 @@ class ProjectCollection extends JsonResource
         return [
             'name' => $this->name,
             'link' => route('project.journal', $this->id),
-            'enabled' => $this->settings['enabled'],
+            'status' => (bool)$this->settings['enabled'],
             'totalLeads' => $this->leads->count(),
             'leadsToday' => $this->leadsToday()->count(),
-            'created_at' => humanize_date($this->created_at)
+            // 'created_at' => humanize_date($this->created_at)
+            'created_at' => $this->created_at,
+            'webhooks' => $this->settings['webhooks']
         ];
     }
 }
