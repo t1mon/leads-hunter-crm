@@ -37,6 +37,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
         Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
+        Route::get('project/{project}/toggle', 'Project\ProjectController@toggle')->name('project.toggle');
 
         //Разрешения пользователей
         Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
@@ -46,7 +47,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::get('project/{project}/class/assign', 'Project\Lead\LeadClassController@assign')->name('class-assign');
 
         //Комментарии к лидам
-        Route::apiResource('project/{project}/{lead}/comment', 'Project\Lead\CommentController')->only(['show', 'store', 'destroy']);
+        Route::apiResource('project/{project}/leads/{lead}/comment', 'Project\Lead\CommentController')->only(['show', 'store', 'destroy']);
 
         //Токен проекта
         Route::apiResource('project/{project}/token', 'Project\ProjectTokenController')->only(['edit', 'update']);

@@ -40,6 +40,8 @@ class EmailController extends Controller
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
         
         try{
+            $request->validate(['email' => 'required|email']);
+
              //Если указанный адрес уже существует и привязан к уже существующему проекту, не создавать его
             if(Email::where(['email' => $request->email, 'project_id' => $project->id])->exists())
                 throw new \Exception('E-mail '.$request->email.' already exists');

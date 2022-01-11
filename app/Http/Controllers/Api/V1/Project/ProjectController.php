@@ -63,6 +63,11 @@ class ProjectController extends Controller
 
         //Попытка создания проекта в DB
         try{
+            //Валидация
+            $request->validate([
+                'name' => 'required|string'
+            ]);
+
             DB::transaction(function () use ($request, $user) {
                 $request->merge([ 'user_id' => $user->id ]);
                 $project = Project::create($request->only('name', 'user_id'));
@@ -220,4 +225,19 @@ class ProjectController extends Controller
 
         return new ProjectResource($project, ['emails' => $emails, 'telegram_ids' => $telegram_ids]);
     } //settings_sync
+
+    public function toggle(Project $project){
+        $user = Auth::guard('api')->user();
+        //Проверка полномочий пользователя
+        if (Gate::forUser($user)->denies('settings', $project))
+            return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
+
+        $settings = $project->settings;
+        $settings['enabled'] = (bool)(!$settings['enabled']);
+
+        $project->settings = $settings;
+        $project->save();
+
+        return response()->json(['message' => 'Project has been ' .  ($project->settings['enabled'] ? 'enabled' : 'disabled')], Response::HTTP_OK);
+    }
 }

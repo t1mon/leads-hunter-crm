@@ -24,7 +24,7 @@ class LeadClassController extends Controller
         
         //Валидация
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string',
             'color' => 'required',
         ]);
 
