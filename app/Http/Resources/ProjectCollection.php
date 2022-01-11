@@ -20,7 +20,7 @@ class ProjectCollection extends JsonResource
             'enabled' => $this->settings['enabled'],
             'totalLeads' => $this->leads->count(),
             'leadsToday' => $this->leadsToday()->count(),
-            'created_at' => $this->created_at
+            'created_at' => humanize_date($this->created_at)
         ];
     }
 }
