@@ -37,12 +37,34 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
         Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
-    });
+        Route::get('project/{project}/toggle', 'Project\ProjectController@toggle')->name('project.toggle');
 
-    //Проекты
-    // Route::post('/project.index', 'Project\ProjectController@index')->name('project.index');
-    // Route::post('/project.add', 'Project\ProjectController@store')->name('project.add');
-    // Route::post('/project.delete', 'Project\ProjectController@destroy')->name('project.delete');
+        //Разрешения пользователей
+        Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
+
+        //Классы лидов
+        Route::apiResource('project/{project}/class', 'Project\Lead\LeadClassController')->only(['store', 'update', 'destroy']);
+        Route::get('project/{project}/class/assign', 'Project\Lead\LeadClassController@assign')->name('class-assign');
+
+        //Комментарии к лидам
+        Route::apiResource('project/{project}/leads/{lead}/comment', 'Project\Lead\CommentController')->only(['show', 'store', 'destroy']);
+
+        //Токен проекта
+        Route::apiResource('project/{project}/token', 'Project\ProjectTokenController')->only(['edit', 'update']);
+
+        //Хосты
+        Route::apiResource('project/{project}/hosts', 'Project\HostController')->only(['index', 'store', 'destroy']);
+
+        //E-mail
+        Route::apiResource('project/{project}/emails', 'Project\EmailController')->only(['index', 'store', 'destroy']);
+
+        //Контакты Telegram
+        Route::apiResource('project/{project}/telegram', 'Project\TelegramIDController')->only(['index', 'store', 'destroy']);
+        Route::post('telegram/webhook', 'Project\TelegramIDController@webhook')->name('telegram.webhook');
+
+        //Вебхуки
+        Route::apiResource('project/{project}/webhooks', 'Project\WebhookController')->only(['index', 'store', 'destroy']);
+    });
 
     Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
 

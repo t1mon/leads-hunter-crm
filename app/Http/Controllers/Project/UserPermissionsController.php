@@ -106,9 +106,10 @@ class UserPermissionsController extends Controller
         if($permissions->user_id == $project->user_id)
             return 'Полномочия создателя проекта удалять нельзя'; //TODO: сделать более симпатичное представление
 
+        $id = $permissions->user_id;
         $permissions->delete();
 
-        Journal::project($project, Auth::user()->name . ' удалил пользователя ' . User::find($permissions->user_id)->name . ' из проекта.');
+        Journal::project($project, Auth::user()->name . ' удалил пользователя ' . User::find($id)->name . ' из проекта.');
         return redirect()->route('project.settings-basic', [$project, 'tab' => 'users'])->withSuccess(trans('projects.users.delete-success'));
     } //destroy
 }

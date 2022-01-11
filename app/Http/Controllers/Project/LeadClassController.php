@@ -35,7 +35,6 @@ class LeadClassController extends Controller
             LeadClass::where([
                 'name' => $request->name,
                 'type' => LeadClass::TYPE_LOCAL,
-                'color' => $request->color,
                 'project_id' => $project->id,
             ])->exists()
         ){
@@ -56,10 +55,18 @@ class LeadClassController extends Controller
     } //store
 
     public function edit(Project $project, LeadClass $class){
+        //Проверка полномочий пользователя
+        if(Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
+
         return view('material-dashboard.project.class-edit', compact('project', 'class'));
     } //edit
 
     public function update(Project $project, LeadClass $class, Request $request){
+        //Проверка полномочий пользователя
+        if(Gate::denies('settings', [Project::class, $project]))
+            return redirect()->route('project.index');
+            
         $class->fill($request->all());
         $class->save();
 
@@ -93,8 +100,7 @@ class LeadClassController extends Controller
             Journal::project($project,
                         Auth::user()->name . ' назначил класс "' . LeadClass::find($request->class_id)->name . '" лиду №' . $lead->id . ' (' . $lead->name . ', ' . $lead->phone . ').');
         else
-        Journal::project($project,
-        Auth::user()->name . ' убрал класс с лида №' . $lead->id . ' (' . $lead->name . ', ' . $lead->phone . ').');
+        Journal::lead($lead, Auth::user()->name . ' убрал класс с лида');
         return redirect()->route('project.journal', $project);
     } //assign
 }

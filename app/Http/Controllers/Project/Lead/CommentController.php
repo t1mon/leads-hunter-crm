@@ -54,7 +54,7 @@ class CommentController extends Controller
 
     public function edit(Project $project, Leads $lead, Comment $comment){
         //Проверка полномочий пользователя
-        if(Gate::denies('settings', [Project::class, $project]))
+        if(!Auth::user()->isInProject($project))
             return redirect()->route('project.index');
         
         return view('material-dashboard.project.comments.create', compact('project', 'lead', 'comment'));

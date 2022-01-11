@@ -18,6 +18,8 @@ class HostController extends Controller
 {
     public function store(HostRequest $request)
     {
+        //TODO Сделать проверку полномочий
+
         if(filter_var($request->host, FILTER_VALIDATE_URL)){
             $host = parse_url($request->host);
             $request->merge([
@@ -28,8 +30,8 @@ class HostController extends Controller
 
 
         try {
-            if (Host::where(['host' => $request->host])->exists()) {
-                throw new \Exception(trans('projects.hosts.create-error') . ': ' . trans('projects.hosts.error-exists'));
+            if (Host::where(['host' => $request->host, 'project_id' => $request->project_id])->exists()) {
+                throw new \Exception(trans('projects.hosts.create-error') . ' ' . $request->host . ': ' . trans('projects.hosts.error-exists'));
             }
             Host::create($request->all());
         } catch (\Exception $exception) {
@@ -44,6 +46,8 @@ class HostController extends Controller
 
     public function destroy(Project $project, Host $host)
     {
+        //TODO Сделать проверку полномочий
+
         $name = $host->host;
         $host->delete();
         Journal::project($project, Auth::user()->name . ' удалил хост ' . $name);

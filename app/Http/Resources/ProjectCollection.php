@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectCollection extends ResourceCollection
+class ProjectCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -14,16 +14,15 @@ class ProjectCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->map(function($item){
-                    return [
-                        'id' => $item->id,
-                        'name' => $item->name,
-                        'link' => route('project.journal',$item->id),
-                        'status' => $item->settings['enabled'],
-                        'totalLeads' => $item->leads->count(),
-                        'leadsToday' => $item->leadsToday()->count(),
-                        'created_at' => $item->created_at
-                    ];
-                });
+        return [
+            'name' => $this->name,
+            'link' => route('project.journal', $this->id),
+            'status' => (bool)$this->settings['enabled'],
+            'totalLeads' => $this->leads->count(),
+            'leadsToday' => $this->leadsToday()->count(),
+            // 'created_at' => humanize_date($this->created_at)
+            'created_at' => $this->created_at,
+            'webhooks' => $this->settings['webhooks']
+        ];
     }
 }
