@@ -33,12 +33,15 @@ class HostController extends Controller
         return response()->json(['data' => $hosts], Response::HTTP_OK);
     } //index
     
-    public function store(HostRequest $request)
+    public function store(Request $request)
     {
         $user = Auth::guard('api')->user();
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
+
+        //Валидация и форматирование URL хоста
+        $request->validate(['name' => 'required', 'host' => 'required']);
 
         if(filter_var($request->host, FILTER_VALIDATE_URL)){
             $host = parse_url($request->host);
