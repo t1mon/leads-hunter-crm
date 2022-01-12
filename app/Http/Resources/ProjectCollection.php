@@ -26,7 +26,7 @@ class ProjectCollection extends JsonResource
             'created_at' => $this->created_at,
             'emailSend' =>
                  [
-                    'enabled' => $this->settings['email']['enabled'],
+                    'enabled' => (bool) $this->settings['email']['enabled'],
                     'emailsList' => ProjectEmailsSendResource::collection($this->emails)
                 ]
             ,
@@ -35,7 +35,7 @@ class ProjectCollection extends JsonResource
                         'name' => $item['name'],
                         'url' => $item['url'],
                         'type' => $item['type'],
-                        'enabled' => $item['enabled']
+                        'enabled' => (bool) $item['enabled']
                 ];
             })
         ];
