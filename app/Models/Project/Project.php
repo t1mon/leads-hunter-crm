@@ -23,6 +23,8 @@ class Project extends Model
     const TEMPLATE_VIEW = 'view';
     const TEMPLATE_MARKDOWN = 'markdown';
 
+    const DEFAULT_COLOR = '5F9EA0'; //Цвет иконки проекта по умолчанию
+
     protected $fillable = [
         'name',
         'host',
@@ -37,6 +39,7 @@ class Project extends Model
         '{
             "enabled": true,
             "description": false,
+            "color": "5F9EA0",
             "email":
             {
                 "template": "view",
