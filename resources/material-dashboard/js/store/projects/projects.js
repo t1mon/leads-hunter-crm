@@ -43,6 +43,28 @@ export default {
         .get(state.endpoint)
         .then(({ data }) => {
           state.isLoading = false
+
+          const dateParse = function (date) {
+            const addZero = (num) => {
+              if (num <= 9) {
+                return '0' + num
+              } else {
+                return num
+              }
+            }
+            const currentDate = new Date(date)
+            const day = currentDate.getDate()
+            const month = currentDate.getMonth() + 1
+            const year = currentDate.getFullYear()
+            const hours = currentDate.getHours()
+            const minutes = currentDate.getMinutes()
+            const seconds = currentDate.getSeconds()
+            return `${addZero(day)}/${addZero(month)}/${addZero(year)} ${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`
+          }
+
+          data.data.forEach(obj => {
+            obj.created_at = dateParse(obj.created_at)
+          })
           state.projects = data.data
           state.filteredProjects = data.data
           console.log(data.data)
@@ -99,12 +121,19 @@ export default {
             projectsDropdownMenuActive.forEach(item => {
               item.classList.remove('projects__dropdown__menu--active')
             })
-            dispatch('toastDeleteProject')
+            dispatch('getToast', {
+              msg: 'Проект удалён!',
+              settingsObj: {
+                type: 'danger',
+                position: 'bottom-right',
+                timeout: 3000,
+                showIcon: true
+              }
+            })
           }
         }, (error) => {
           console.error(error)
         })
-
     }
   }
 }

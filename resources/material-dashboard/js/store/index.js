@@ -9,13 +9,8 @@ const store = createStore({
     projects
   },
   actions: {
-    toastDeleteProject () {
-      return createToast('Проект удалён!', {
-        type: 'danger',
-        position: 'bottom-right',
-        timeout: 3000,
-        showIcon: true
-      })
+    getToast (context, { msg, settingsObj }) {
+      return createToast(msg, settingsObj)
     }
   }
 })
