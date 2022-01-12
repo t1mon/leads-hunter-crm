@@ -65,13 +65,20 @@ class ProjectController extends Controller
         try{
             //Валидация
             $request->validate([
-                'name' => 'required|string'
+                'name' => 'required|string',
+                'color' => ['nullable', 'regex:/^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/']
+                // 'color' => 'nullable|regex:/^\#[\da-f]{3}|\#[\da-f]{6}$'
             ]);
 
             DB::transaction(function () use ($request, $user) {
                 $request->merge([ 'user_id' => $user->id ]);
                 $project = Project::create($request->only('name', 'user_id'));
-                $project->update([ 'api_token' => Str::random(60) ]);
+
+                //Добавление цвета
+                $settings = $project->settings;
+                $settings['color'] = $request->exists('color') ? $request->color : Project::DEFAULT_COLOR;
+
+                $project->update([ 'api_token' => Str::random(60), 'settings' => $settings]);
 
                 //Создание разрешений пользователя на проект (создатель по умолчанию имеет все полномочия)
                 UserPermissions::create([
@@ -130,7 +137,7 @@ class ProjectController extends Controller
         }
 
         $project->save();
-        Journal::project($project, 'Пользователь ' . $user()->name . ' обновил настройки проекта.');
+        Journal::project($project, 'Пользователь ' . $user->name . ' обновил настройки проекта.');
         return $this->_response('project_update', 'Project has been updated', Response::HTTP_OK);
     } //update
 

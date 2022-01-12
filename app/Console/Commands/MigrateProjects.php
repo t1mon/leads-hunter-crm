@@ -169,6 +169,14 @@ class MigrateProjects extends Command
                 $project->settings = array_merge($project->settings, $new_settings);
             }
 
+            /* 13.
+                Добавить цвет по умолчанию*/
+            if(!array_key_exists('color', $project->settings)){
+                $new_settings = $project->settings;
+                $new_settings['color'] = Project::DEFAULT_COLOR;
+                $project->settings = array_merge($project->settings, $new_settings);
+            }
+
             $project->save();
         }
     }
