@@ -124,7 +124,7 @@ export default {
             dispatch('getToast', {
               msg: 'Проект удалён!',
               settingsObj: {
-                type: 'danger',
+                type: 'success',
                 position: 'bottom-right',
                 timeout: 3000,
                 showIcon: true

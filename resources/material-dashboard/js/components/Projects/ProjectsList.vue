@@ -4,6 +4,7 @@
             <table class="table align-items-center mb-0">
                 <thead>
                 <tr>
+                    <th></th>
 <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">@lang('projects.attributes.name')</th>-->
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Имя</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">status</th>
@@ -18,6 +19,13 @@
                 </thead>
                 <tbody>
                 <tr v-for="project in filteredProject">
+                    <td>
+                        <div class="d-flex justify-content-center px-2">
+                            <div class="form-check form-switch ps-0">
+                                <input class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" checked="">
+                            </div>
+                        </div>
+                    </td>
                     <td>
                         <div class="d-flex px-2">
                             <div>

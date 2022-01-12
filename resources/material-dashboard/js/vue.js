@@ -14,5 +14,20 @@ const app = createApp({
     })
   }
 })
+app.directive('tLength', {
+  mounted (el, binding) {
+    const div = document.createElement('div')
+    let dots
+    div.classList.add('tLength-div')
+    el.style.position = 'relative'
+    div.textContent = el.textContent
+
+    el.textContent.length > binding.value ? dots = '...' : dots = ''
+    const text = el.textContent.substring(0, binding.value) + dots
+    el.textContent = text
+    el.appendChild(div)
+    el.classList.add('tLength')
+  }
+})
 app.use(store)
 app.mount('#app')
