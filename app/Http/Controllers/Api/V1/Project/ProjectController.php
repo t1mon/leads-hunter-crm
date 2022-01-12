@@ -137,7 +137,7 @@ class ProjectController extends Controller
         }
 
         $project->save();
-        Journal::project($project, 'Пользователь ' . $user()->name . ' обновил настройки проекта.');
+        Journal::project($project, 'Пользователь ' . $user->name . ' обновил настройки проекта.');
         return $this->_response('project_update', 'Project has been updated', Response::HTTP_OK);
     } //update
 

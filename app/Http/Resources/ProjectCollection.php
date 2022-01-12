@@ -24,6 +24,12 @@ class ProjectCollection extends JsonResource
             'leadsToday' => $this->leadsToday()->count(),
             // 'created_at' => humanize_date($this->created_at)
             'created_at' => $this->created_at,
+            'emailSend' =>
+                 [
+                    'enabled' => $this->settings['email']['enabled'],
+                    'emailsList' => ProjectEmailsSendResource::collection($this->emails)
+                ]
+            ,
             'webhooks' => collect($this->settings['webhooks'])->map(function($item, $key){
                 return [
                         'name' => $item['name'],
