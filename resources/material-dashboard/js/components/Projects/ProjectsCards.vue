@@ -1,16 +1,14 @@
 <template>
     <div class="row mt-lg-4 mt-2">
-        <div v-for="project in filteredProject" class="col-md-8 col-lg-6 col-xxl-5 mb-4">
+        <div v-for="project in filteredProject" class="projects__card__wrap col-md-8 col-lg-6 col-xxl-5 mb-4">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="d-flex mt-n2">
-                        <div class="avatar avatar-xl bg-gradient-dark border-radius-xl p-2 mt-n4">
-                            <img src="media/img/project.png" alt="slack_logo">
-                        </div>
+                        <div v-avatar="{ background: project.color, name: project.name }" class="projects__card__avatar avatar avatar-xl bg-gradient-dark border-radius-xl p-2 mt-n4"></div>
                         <div class="ms-3 my-auto projects__card__name__wrap">
                             <a :href="project.link" class="projects__card__name"><h6 v-tLength="10" class="mb-0">{{ project.name }}</h6></a>
                         </div>
-                        <div class="mx-auto my-auto">
+                        <div class="projects__card__status mx-auto my-auto">
                             <span v-if="project.status" class="badge badge-dot">
                                 <i class="bg-success"></i>
                                 <span class="text-dark text-xs">Активен</span>
@@ -22,7 +20,7 @@
                         </div>
                         <div class="align-items-center d-flex justify-content-center px-2">
                             <div class="form-check form-switch ps-0">
-                                <input class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" checked="">
+                                <input @change="switchProject(project.id)" class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" :checked="project.status">
                             </div>
                         </div>
                         <div class="ms-auto">
@@ -119,6 +117,9 @@ export default {
             event.stopPropagation()
             event.stopImmediatePropagation()
             return this.$store.dispatch('deleteProject', id)
+        },
+        switchProject (id) {
+            return this.$store.dispatch('switchProject', id)
         }
     },
   computed: {
@@ -131,6 +132,14 @@ export default {
 </script>
 
 <style scoped>
+.projects__card__avatar {
+    background-image: none;
+    font-weight: 600;
+}
+.projects__card__status {
+    min-width: 101px;
+}
+
 .projects__card__name {
     overflow: hidden;
 }
@@ -179,12 +188,20 @@ export default {
 .projects__card__dot {
     padding: 0;
 }
+@media screen and (min-width: 1700px) {
+    .projects__card__wrap {
+        width: 33.3%;
+    }
+}
 @media screen and (max-width: 450px) {
     .projects__card__box {
         overflow: hidden;
     }
 }
 @media screen and (max-width: 380px) {
+    .projects__card__status {
+        min-width: 0;
+    }
     .projects__card__name {
         display: block;
         max-width: 45px;

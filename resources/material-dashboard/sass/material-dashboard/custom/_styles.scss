@@ -8,7 +8,11 @@
     transform: translateY(calc(-100% - 3px));
     transition: 0.5s;
     visibility: hidden;
-    opacity: 0
+    opacity: 0;
+    color: #ffffff;
+}
+.tLength {
+    position: relative;
 }
 .tLength:hover {
     .tLength-div{
