@@ -9,6 +9,7 @@ use App\Models\Project\Host;
 use App\Models\Leads;
 use App\Models\Project\Project;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
@@ -60,6 +61,9 @@ class LeadsController extends Controller
                 ]
             ],Response::HTTP_FOUND);
         }
+
+        //Добавление владельца. Если владелец не авторизован, по умолчанию ставится "API"
+        $request->merge(['owner' => Auth::check() ? Auth::user()->name : 'API']);
 
         $new_lead = Leads::addToDB($request->all());
         
