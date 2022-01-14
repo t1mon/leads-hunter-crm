@@ -111,6 +111,7 @@ export default {
       axios
         .delete(state.endpoint + '/' + id )
         .then(({data}) => {
+          console.log(data)
           if (data.data.response === 200 ) {
             const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
             state.filteredProjects.forEach((project, index) => {
@@ -124,15 +125,48 @@ export default {
             dispatch('getToast', {
               msg: 'Проект удалён!',
               settingsObj: {
-                type: 'danger',
+                type: 'success',
                 position: 'bottom-right',
-                timeout: 3000,
+                timeout: 2000,
                 showIcon: true
               }
             })
           }
         }, (error) => {
           console.error(error)
+        })
+    },
+    switchProject ({ state, dispatch }, id) {
+      let projectStatus
+      axios
+        .get(state.endpoint + '/' + id + '/' + 'toggle')
+        .then(({ data }) => {
+          state.filteredProjects.forEach((project, index) => {
+            if (project.id === id) {
+              project.status = !project.status
+              projectStatus = project.status
+            }
+          })
+          dispatch('getToast', {
+            msg: `Проект ${projectStatus ? 'включен' : 'выключен'}!`,
+            settingsObj: {
+              position: 'bottom-right',
+              timeout: 2000,
+              showIcon: true
+            }
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          dispatch('getToast', {
+            msg: 'Что-то пошло не так!',
+            settingsObj: {
+              type: 'danger',
+              position: 'bottom-right',
+              timeout: 2000,
+              showIcon: true
+            }
+          })
         })
     }
   }

@@ -1,0 +1,22 @@
+.tLength-div {
+    position: absolute;
+    left: -10px;
+    top: 0;
+    background-color: #000000;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transform: translateY(calc(-100% - 3px));
+    transition: 0.5s;
+    visibility: hidden;
+    opacity: 0;
+    color: #ffffff;
+}
+.tLength {
+    position: relative;
+}
+.tLength:hover {
+    .tLength-div{
+        visibility: visible;
+        opacity: 1;
+    }
+}

@@ -4,6 +4,7 @@
             <table class="table align-items-center mb-0">
                 <thead>
                 <tr>
+                    <th></th>
 <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">@lang('projects.attributes.name')</th>-->
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Имя</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">status</th>
@@ -19,24 +20,31 @@
                 <tbody>
                 <tr v-for="project in filteredProject">
                     <td>
-                        <div class="d-flex px-2">
-                            <div>
-                                <img src="media/img/project.png" class="avatar avatar-sm rounded-circle me-2">
+                        <div class="d-flex justify-content-center px-2">
+                            <div class="form-check form-switch ps-0">
+                                <input @change="switchProject(project.id)" class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" :checked="project.status">
                             </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex px-2">
+                            <div v-avatar="{ background: project.color, name: project.name }" class="projects__card__avatar"></div>
                             <div class="my-auto">
                                 <a :href=" project.link "><h6 class="mb-0 text-sm"  >{{ project.name }}</h6> </a>
                             </div>
                         </div>
                     </td>
                     <td>
+                        <div class="projects__card__status">
                         <span v-if="project.status" class="badge badge-dot me-4">
                             <i class="bg-success"></i>
                             <span class="text-dark text-xs">Активен</span>
                         </span>
-                        <span v-if="!project.status" class="badge badge-dot me-4">
+                            <span v-if="!project.status" class="badge badge-dot me-4">
                             <i class="bg-danger"></i>
                             <span class="text-dark text-xs">Приостановлен</span>
                         </span>
+                        </div>
                     </td>
                     <td>
                         <p class="text-xs font-weight-normal mb-0">{{ project.totalLeads }}</p>
@@ -88,6 +96,9 @@ export default {
             event.stopPropagation()
             event.stopImmediatePropagation()
             return this.$store.dispatch('deleteProject', id)
+        },
+        switchProject (id) {
+            return this.$store.dispatch('switchProject', id)
         }
     },
   computed: {
@@ -106,6 +117,20 @@ export default {
     to {
         transform: translate(-50%, -50%) scale(1);
     }
+}
+.projects__card__avatar {
+    border-radius: 0.75rem;
+    width: 74px;
+    height: 74px;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #ffffff;
+}
+.projects__card__status {
+    width: 101px;
 }
 .projects__dropdown {
     display: block;
