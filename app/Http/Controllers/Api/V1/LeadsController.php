@@ -121,4 +121,17 @@ class LeadsController extends Controller
         return $utm;
 
     } //getUTM
+
+    public function destroy(Project $project, Leads $lead){ //Удаление лида
+        //Проверка полномочий
+        //TODO Проверка: авторизация, имя владельца, полномочия админа
+
+        $lead_info = ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone];
+        $lead->delete();
+        
+        //TODO Исправить обращение к имени пользователю (сделать по токену API)
+        Journal::lead($lead_info, Auth::user()->name . ' удалил лид');
+
+        return response()->json(['messsage' => 'Lead has been deleted'], Response::HTTP_OK);
+    } //destroy
 }

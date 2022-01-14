@@ -172,9 +172,18 @@ class MigrateProjects extends Command
             /* 13.
                 Добавить цвет по умолчанию*/
             if(!array_key_exists('color', $project->settings)){
-                $new_settings = $project->settings;
-                $new_settings['color'] = Project::DEFAULT_COLOR;
-                $project->settings = array_merge($project->settings, $new_settings);
+                if($project->settings['color'] === Project::DEFAULT_COLOR){
+                    $new_settings = $project->settings;
+                    $new_settings['color'] = dechex(rand(0, 16777215));
+                    $project->settings = array_merge($project->settings, $new_settings);
+                }
+            }
+
+            /* 14.
+                Установить владельца лидов*/
+            foreach($project->leads as $lead){
+                if(isset($lead->owner) && is_null($lead->owner))
+                    $lead->owner = 'API';
             }
 
             $project->save();

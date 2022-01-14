@@ -76,7 +76,7 @@ class ProjectController extends Controller
 
                 //Добавление цвета
                 $settings = $project->settings;
-                $settings['color'] = $request->exists('color') ? $request->color : Project::DEFAULT_COLOR;
+                $settings['color'] = $request->exists('color') ? $request->color : dechex(rand(0, 16777215));
 
                 $project->update([ 'api_token' => Str::random(60), 'settings' => $settings]);
 
