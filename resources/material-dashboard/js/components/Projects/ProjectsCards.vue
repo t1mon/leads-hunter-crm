@@ -58,6 +58,7 @@
 
                             <ul class="projects__card__box__content">
                                 <li v-tLength="16" v-for="email in project.emailSend.emailsList" class="projects__card__box__item">{{ email[0] }}</li>
+                                <li v-if="project.emailSend.emailsList.length === 0" class="projects__card__box__item">Список пуст</li>
                             </ul>
                         </div>
 
@@ -80,6 +81,7 @@
                                     </div>
                                     <span>{{ webhook.name }}</span>
                                 </li>
+                                <li v-if="project.webhooks.length === 0" class="projects__card__box__item">Список пуст</li>
                             </ul>
                         </div>
                     </div>

@@ -8,7 +8,8 @@ export default {
       isLoading: false,
       projects: null,
       searchProjects: '',
-      filteredProjects: null
+      filteredProjects: null,
+      projectsLoad: false
     }
   },
   getters: {
@@ -23,6 +24,12 @@ export default {
     },
     stateFilteredProjects: state => {
       return state.filteredProjects
+    },
+    stateProjectsLoad: state => {
+      return state.projectsLoad
+    },
+    stateProjects: state => {
+      return state.projects
     }
   },
   mutations: {
@@ -43,6 +50,7 @@ export default {
         .get(state.endpoint)
         .then(({ data }) => {
           state.isLoading = false
+          state.projectsLoad = true
 
           const dateParse = function (date) {
             const addZero = (num) => {

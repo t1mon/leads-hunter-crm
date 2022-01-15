@@ -112,10 +112,10 @@ export default {
 <style>
 @keyframes showDropMenu {
     from {
-        transform: translate(-50%, -50%) scale(0.7);
+        transform: translate(-90%, 0) scale(0.7);
     }
     to {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translate(-90%, 0) scale(1);
     }
 }
 .projects__card__avatar {
@@ -144,9 +144,9 @@ export default {
     margin: 0;
     position: absolute;
     z-index: 3;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 0;
+    top: 0;
+    transform: translate(-90%, 0);
     list-style-type: none;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     transition: visibility .25s,opacity .25s,transform .25s;

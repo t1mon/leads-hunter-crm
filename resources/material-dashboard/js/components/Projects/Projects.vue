@@ -1,17 +1,26 @@
 <template>
-    <div class="projects">
-        <div class="projects__row">
-            <projects-search></projects-search>
-
-            <projects-tabs></projects-tabs>
-        </div>
-
+    <div>
         <div v-if="stateIsLoading" class="projects__spinner-wrap">
             <div class="projects__spinner"></div>
         </div>
+        <div v-show="stateProjectsLoad && stateProjects.length > 0" class="projects">
+            <div class="projects__row">
+                <projects-search></projects-search>
 
-        <projects-list ref="hide" class="projects__content--show" v-if="!checkCards"></projects-list>
-        <projects-cards ref="hide" class="projects__content--show" v-if="checkCards"></projects-cards>
+                <projects-tabs></projects-tabs>
+            </div>
+
+            <projects-list ref="hide" class="projects__content--show" v-if="!checkCards"></projects-list>
+            <projects-cards ref="hide" class="projects__content--show" v-if="checkCards"></projects-cards>
+        </div>
+        <div v-if="stateProjectsLoad && stateProjects.length === 0">
+            <h2 class="projects__title projects__title--empty">Нет ни одного проекта!</h2>
+            <div class="col-md-12 my-auto text-center">
+                <a href="/project/create" class="btn bg-gradient-primary mb-0 mt-0 mt-lg-0">
+                    <i class="material-icons text-white position-relative text-md pe-2">add</i> Добавить первый проект
+                </a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -38,6 +47,12 @@ export default {
     },
     checkCards () {
       return this.$store.getters.stateCards
+    },
+    stateProjectsLoad () {
+      return this.$store.getters.stateProjectsLoad
+    },
+    stateProjects () {
+      return this.$store.getters.stateProjects
     }
   },
   async created () {
@@ -55,6 +70,12 @@ export default {
 @keyframes spin {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
+}
+
+.projects__title--empty {
+    text-align: center;
+    padding-top: 40px;
+    margin-bottom: 30px;
 }
 
 .projects__spinner {
