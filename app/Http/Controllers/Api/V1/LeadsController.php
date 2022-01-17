@@ -7,8 +7,10 @@ use App\Http\Requests\Api\LeadsRequest;
 use App\Http\Resources\Leads as LeadsResource;
 use App\Models\Project\Host;
 use App\Models\Leads;
+use App\Models\User;
 use App\Models\Project\Project;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
@@ -63,7 +65,8 @@ class LeadsController extends Controller
         }
 
         //Добавление владельца. Если владелец не авторизован, по умолчанию ставится "API"
-        $request->merge(['owner' => Auth::check() ? Auth::user()->name : 'API']);
+        $user = User::where('api_token', $request->bearerToken())->first();
+        $request->merge(['owner' => is_null($user) ? 'API' : $user->name]);
 
         $new_lead = Leads::addToDB($request->all());
         
@@ -122,15 +125,49 @@ class LeadsController extends Controller
 
     } //getUTM
 
-    public function destroy(Project $project, Leads $lead){ //Удаление лида
+    public function update(Project $project, Leads $lead, LeadsRequest $request){
+        
+        
         //Проверка полномочий
-        //TODO Проверка: авторизация, имя владельца, полномочия админа
+        // if(!Auth::guard('api')->check())
+        //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        // $user = Auth::guard('api')->user();
+        $user = User::where('api_token', $request->bearerToken())->first();
+        if(is_null($user))
+            return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        if($user->name !== $lead->owner){
+            if(!$user->isAdmin())
+                return response()->json(['error' => 'You are not owner of this lead'], Response::HTTP_FORBIDDEN);
+        }
 
-        $lead_info = ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone];
+         $lead_copy = clone $lead; //Копия лида для записи
+         $lead->fill($request->all());
+         $lead->owner = $user->name;
+         $lead->save();
+
+        Journal::lead($lead_copy, $user->name . ' изменил лид');
+        return response()->json(['messsage' => 'Lead has been updated'], Response::HTTP_OK);
+    } //update
+
+    public function destroy(Project $project, Leads $lead, Request $request){
+        //Проверка полномочий
+        // if(!Auth::guard('api')->check())
+        //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        // $user = Auth::guard('api')->user();
+        $user = User::where('api_token', $request->bearerToken())->first();
+        if(is_null($user))
+            return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        if($user->name !== $lead->owner){
+            if(!$user->isAdmin())
+                return response()->json(['error' => 'You are not owner of this lead'], Response::HTTP_FORBIDDEN);
+        }
+
+        // $lead_info = ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone];
+        $lead_copy = clone $lead; //Копия лида для записи
         $lead->delete();
         
-        //TODO Исправить обращение к имени пользователю (сделать по токену API)
-        Journal::lead($lead_info, Auth::user()->name . ' удалил лид');
+        // Journal::lead($lead_info, $user->name . ' удалил лид');
+        Journal::lead($lead_copy, $user->name . ' удалил лид');
 
         return response()->json(['messsage' => 'Lead has been deleted'], Response::HTTP_OK);
     } //destroy

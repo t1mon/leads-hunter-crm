@@ -139,7 +139,7 @@ class Journal{
     public function leadWrite($lead, string $class, string $text){ //Метод для удобного изменения
         $params = $lead instanceof Leads
                     ? [
-                        'lead' => ['id' => $lead->id, 'name' => $lead->name, 'phone' => $lead->phone],
+                        'lead' => ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone],
                         'project' => ['id' => $lead->project->id, 'name' => $lead->project->name] 
                     ]
                     : [

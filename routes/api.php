@@ -66,7 +66,8 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::apiResource('project/{project}/webhooks', 'Project\WebhookController')->only(['index', 'store', 'destroy']);
     });
 
-    Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
+    // Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
+    Route::apiResource('/lead', 'LeadsController')->only(['store', 'update', 'destroy']);
 
     //Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
 
