@@ -292,14 +292,14 @@ class ProjectController extends Controller
         else{
             //Защищённые поля в моделях
             $protected_fields = [
-                'projects' => ['settings'],
-                'users' => ['password', 'email', 'remember_token', 'api_token'],
-                'leads' => [],
-                'user_permissions' => []
+                'Projects' => ['settings'],
+                'User' => ['password', 'email', 'remember_token', 'api_token'],
+                'Leads' => [],
+                'UserPermissions' => []
             ];
             
             $result = $model::where($request->column, $request->condition, $request->value)
-            ->get()->makeHidden($protected_fields['users']);
+            ->get()->makeHidden($protected_fields[$request->model]);
         }
 
         return response()->json(['data' =>  $result ], Response::HTTP_OK);
