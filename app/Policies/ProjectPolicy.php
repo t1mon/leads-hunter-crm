@@ -44,7 +44,7 @@ class ProjectPolicy
     public function settings(User $user, Project $project)
     {
         //Настройки может просматривать только менеджер или создатель
-        return $project->isOwner() or $user->isManagerFor($project);
+        return $project->isOwner() or $user->isManagerFor($project) or $user->isAdmin();
     }
 
     /**

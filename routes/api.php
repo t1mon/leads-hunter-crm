@@ -36,8 +36,11 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::apiResource('project', 'Project\ProjectController')->only(['index', 'store', 'update', 'destroy']);
         Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
-        Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
-        Route::get('project/{project}/toggle', 'Project\ProjectController@toggle')->name('project.toggle');
+        Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync'); 
+        Route::get('project/{project}/toggle', 'Project\ProjectController@toggle')->name('project.toggle'); //Включить/выключить проект
+
+        //Поиск по проекту
+        Route::get('project/{project}/search', 'Project\ProjectController@safeSearch')->name('project.safeSearch');
 
         //Разрешения пользователей
         Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
