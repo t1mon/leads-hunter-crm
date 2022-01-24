@@ -24,7 +24,7 @@
             @foreach($journal_fields as $field)
                 <p class="card-text ms-3">
                     <label>
-                        <input type="checkbox" name="'view_fields[]" value="{{ $field }}" checked >
+                        <input type="checkbox" name="view_fields[]" value="{{ $field }}" checked >
                         @lang('projects.notifications.webhooks.common.fields.' . $field)
                     </label>
                 </p>

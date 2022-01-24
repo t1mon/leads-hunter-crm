@@ -15,6 +15,7 @@ use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\Project\Email;
 use App\Models\Project\TelegramID;
+use App\Models\Project\Lead\Comment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -194,8 +195,12 @@ class ProjectController extends Controller
             $leads->where('entries', '=', 1);
         }
 
-
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        
+        //Загрузка комментариев к лидам
+        foreach($leads as $lead)
+            $lead->comment_crm = $lead->comment_CRM();
+        
         return new ProjectResource($project, ['leads' => $leads]);
     } //journal
 
@@ -249,59 +254,4 @@ class ProjectController extends Controller
 
         return response()->json(['message' => 'Project has been ' .  ($project->settings['enabled'] ? 'enabled' : 'disabled')], Response::HTTP_OK);
     } //toggle
-
-    public function search(Project $project, Request $request){ //Универсальный поиск по таблицам
-        /*$request должна содержать четыре поля:
-        table - таблица, в которой осуществляется поиск
-        column - колонка в таблице, по которой осуществляется поиск
-        condition - оператор сравнения (>=, == и т.п.)
-        value - значение, по которому проводится сравнение*/
-        
-        //Валидация
-        $request->validate([
-            'table' => 'required|string',
-            'column' => 'required|string',
-            'condition' => 'required',
-            'value' => 'required'
-        ]);
-
-        $results = DB::table($request->table)->where($request->column, $request->condition, $request->value)->get();
-
-        return response()->json(['data' => $results ], Response::HTTP_OK);
-    } //search
-
-    public function safeSearch(Project $project, Request $request){ //Пробная функция для безопасного поиска (чтобы не выдать секретные данные)
-        $user = Auth::guard('api')->user();
-
-        //Доступные модели для поиска
-        $models = ['Projects', 'User', 'Leads', 'UserPermissions'];
-
-        //Валидация
-        $request->validate([
-            'model' => ['required', $user->isAdmin() ? '' : Rule::in($models)],
-            'column' => 'required|string',
-            'condition' => 'required',
-            'value' => 'required'
-        ]);
-
-        //Если пользователь является администратором, поиск ведётся без ограничений
-        $result = null;
-        $model = 'App\Models\\'.$request->model;
-        if($user->isAdmin())
-            $result = $result = $model::where($request->column, $request->condition, $request->value)->get();
-        else{
-            //Защищённые поля в моделях
-            $protected_fields = [
-                'Projects' => ['settings'],
-                'User' => ['password', 'email', 'remember_token', 'api_token'],
-                'Leads' => [],
-                'UserPermissions' => []
-            ];
-            
-            $result = $model::where($request->column, $request->condition, $request->value)
-            ->get()->makeHidden($protected_fields[$request->model]);
-        }
-
-        return response()->json(['data' =>  $result ], Response::HTTP_OK);
-    } //safeSearch
 }
