@@ -62,7 +62,8 @@ class SearchController extends Controller
             //Поиск по каждому полю
             foreach($fields as $field){
                 $temp = $all->filter(function($item) use ($field, $request){
-                    return is_array($item->$field) ? false : (mb_stripos($item->$field, $request->value) !== false);
+                    // return is_array($item->$field) ? false : (mb_stripos($item->$field, $request->value) !== false);
+                    return mb_stripos( is_array($item->$field) ? json_encode($item->$field) : $item->$field, $request->value) !== false;
                     
                     // try{
                     //     return mb_stristr($item->$field, $request->value);
