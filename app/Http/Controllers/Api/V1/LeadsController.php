@@ -125,9 +125,13 @@ class LeadsController extends Controller
 
     } //getUTM
 
-    public function update(Project $project, Leads $lead, LeadsRequest $request){
-        
-        
+    public function update(LeadsRequest $request){        
+        //Проверка наличия лида
+        $lead = Leads::find($request->id);
+        if(is_null($lead))
+            return response()->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+
+
         //Проверка полномочий
         // if(!Auth::guard('api')->check())
         //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
@@ -140,6 +144,7 @@ class LeadsController extends Controller
                 return response()->json(['error' => 'You are not owner of this lead'], Response::HTTP_FORBIDDEN);
         }
 
+        //Изменение лида
          $lead_copy = clone $lead; //Копия лида для записи
          $lead->fill($request->all());
          $lead->owner = $user->name;
@@ -149,7 +154,15 @@ class LeadsController extends Controller
         return response()->json(['messsage' => 'Lead has been updated'], Response::HTTP_OK);
     } //update
 
-    public function destroy(Project $project, Leads $lead, Request $request){
+    public function destroy(Request $request){
+        //Валидация
+        $request->validate(['id' => 'required|integer']);
+
+        //Проверка наличия лида
+        $lead = Leads::find($request->id);
+        if(is_null($lead))
+            return response()->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+
         //Проверка полномочий
         // if(!Auth::guard('api')->check())
         //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
