@@ -20,10 +20,7 @@ use App\Journal\Facade\Journal;
 
 class TelegramIDController extends Controller
 {
-    public function store($project, Request $request){
-
-        $project = Project::findOrFail($project);
-
+    public function store(Project $project, Request $request){
         //Проверка полномочий пользователя
         if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index')->withError(trans('projects.not_authorized'));
