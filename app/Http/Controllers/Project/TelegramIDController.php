@@ -20,7 +20,10 @@ use App\Journal\Facade\Journal;
 
 class TelegramIDController extends Controller
 {
-    public function store(Project $project, Request $request){
+    public function store($project, Request $request){
+
+        $project = Project::findOrFail($project);
+
         //Проверка полномочий пользователя
         if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index')->withError(trans('projects.not_authorized'));
@@ -45,7 +48,7 @@ class TelegramIDController extends Controller
         //Личка
         if($request->type === TelegramID::TYPE_PRIVATE){
             if( TelegramID::where(['project_id' => $project->id, 'name' => $request->name])->exists() )
-                Journal::projectError($project,  
+                Journal::projectError($project,
                                         trans('projects.notifications.telegram.create_error') . ': ' . $request->name . ' – ' . trans('projects.notifications.telegram.error_exists'));
                 return redirect()->route('project.settings-sync', [$project, 'telegram'])
                     ->withError( trans('projects.notifications.telegram.create_error') . ': ' . trans('projects.notifications.telegram.error_exists') );
