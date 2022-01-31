@@ -87,7 +87,7 @@ class TelegramIDController extends Controller
         //Если контакта нет в базе данных, либо он уже одобрен, написать отказ
         if($contacts->isEmpty()){
             TelegramID::API_SendMessageTo($id, "Уважаемый $username! Ваш контакт не указан ни в одном проекте, либо уже был одобрен.");
-            Journal::projectWarning('Неудачная проверка Telegram-контакта ' . $username . ': не указан в проекте, либо уже одобрен.');
+            //Journal::projectWarning('Неудачная проверка Telegram-контакта ' . $username . ': не указан в проекте, либо уже одобрен.');
             return;
         }
 
