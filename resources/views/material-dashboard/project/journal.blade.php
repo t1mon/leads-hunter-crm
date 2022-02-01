@@ -66,10 +66,10 @@
                 <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::XLSX, 'method' => 'today'])}}" class="card-link">.xlsx</a>
                 <span>|</span>
                 <a href="{{route('project.journal.download', ['project' => $project, 'format' => \Maatwebsite\Excel\Excel::CSV, 'method' => 'today'])}}" class="card-link">.csv</a>
-            </span>   
+            </span>
         @else
             Лидов за сегодня не поступало
-        @endif             
+        @endif
     </div>
 </div>
 
@@ -127,21 +127,21 @@
                             <td>
                                 <h6 class="text-center mb-0 font-weight-normal text-sm">{{  $lead->getClientName() }}</h6>
                             </td>
-                            <td class="text-white text-center" style="background-color:#{{$lead->class->color ?? ''}}">
+                            <td class="text-white text-center" style="background-color: #{{$lead->class->color ?? ''}}">
                                 @if(Auth::user()->isInProject($project))
                                     @php
                                         $classes = [];
                                         $classes[0] = 'Убрать';
                                         foreach($project->classes as $class)
                                             $classes[$class->id] = $class->name;
-                                        
+
                                     @endphp
-                                    
+
                                     {!! Form::open([
                                         'method' => 'POST',
                                         'route' => ['class-assign', [$project, $lead] ],
                                     ]) !!}
-                                    
+
                                     {!! Form::select('class_id', $classes, $lead->class->id ?? $classes[0] ) !!}
 
                                     {!! Form::button(
@@ -213,10 +213,11 @@
         </div>
     </div>
 </div>
-    <div class="content-left">
-        {{ trans_choice('projects.journal.count', $leads->total()) }}
-    </div>
-    <div class="d-flex justify-content-center">
-        {{ $leads->links() }}
-    </div>
+    <journal :projectid="{{ $projectId }}"></journal>
+<div class="content-left">
+    {{ trans_choice('projects.journal.count', $leads->total()) }}
+</div>
+<div class="d-flex justify-content-center">
+    {{ $leads->links() }}
+</div>
 @endsection

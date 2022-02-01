@@ -1,8 +1,6 @@
 <template>
     <div>
-        <div v-if="stateIsLoading" class="projects__spinner-wrap">
-            <div class="projects__spinner"></div>
-        </div>
+        <spinner v-if="stateIsLoading"></spinner>
         <div v-show="stateProjectsLoad && stateProjects.length > 0" class="projects">
             <div class="projects__row">
                 <projects-search></projects-search>
@@ -29,6 +27,7 @@ import ProjectsList from './ProjectsList'
 import ProjectsCards from './ProjectsCards'
 import ProjectsTabs from './ProjectsTabs'
 import ProjectsSearch from './ProjectsSearch'
+import Spinner from '../Others/Spinner'
 
 export default {
   name: 'Index',
@@ -36,7 +35,8 @@ export default {
     ProjectsList,
     ProjectsCards,
     ProjectsTabs,
-    ProjectsSearch
+    ProjectsSearch,
+    Spinner
   },
   computed: {
     getProjects () {
@@ -67,53 +67,10 @@ export default {
     100% { transform: none; }
 }
 
-@keyframes spin {
-    0% {transform: rotate(0deg);}
-    100% {transform: rotate(360deg);}
-}
-
 .projects__title--empty {
     text-align: center;
     padding-top: 40px;
     margin-bottom: 30px;
-}
-
-.projects__spinner {
-    position: absolute;
-    height: 60px;
-    width: 60px;
-    border: 3px solid transparent;
-    border-top-color: #A04668;
-    top: 50%;
-    left: 50%;
-    margin: -30px;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-}
-
-.projects__spinner::before, .projects__spinner::after {
-    content:'';
-    position: absolute;
-    border: 3px solid transparent;
-    border-radius: 50%;
-}
-
-.projects__spinner::before{
-    border-top-color: #254E70;
-    top: -12px;
-    left: -12px;
-    right: -12px;
-    bottom: -12px;
-    animation: spin 3s linear infinite;
-}
-
-.projects__spinner::after{
-    border-top-color: #FFFBFE;
-    top: 6px;
-    left: 6px;
-    right: 6px;
-    bottom: 6px;
-    animation: spin 4s linear infinite;
 }
 
 .projects__content--show {
@@ -122,19 +79,6 @@ export default {
 
 .projects {
     position: relative;
-}
-
-.projects__spinner-wrap {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 199;
 }
 
 .projects__row {

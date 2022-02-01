@@ -56,7 +56,7 @@
                     </td>
                     <td class="align-middle text-center">
                         <div class="d-flex align-items-center">
-                            <span class="me-2 text-xs">{{ project.created_at }}</span>
+                            <span v-date="project.created_at" class="me-2 text-xs"></span>
                         </div>
                     </td>
                     <td class="align-middle">

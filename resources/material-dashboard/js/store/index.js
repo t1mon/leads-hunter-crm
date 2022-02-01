@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import axios from 'axios'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 import projects from './projects/projects'

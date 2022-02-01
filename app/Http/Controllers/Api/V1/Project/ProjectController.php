@@ -194,7 +194,8 @@ class ProjectController extends Controller
 
 
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-        return new ProjectResource($project, ['leads' => $leads]);
+        $classes = $project->classes;
+        return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
     } //journal
 
     public function settings_basic(Project $project, Request $request) //Страница основных настроек

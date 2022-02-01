@@ -1,12 +1,14 @@
 import { createApp } from 'vue'
 import store from './store'
-import Projects from './components/Projects/Projects'
 import SettingsBar from './components/Settings/SettingsBar'
+import Projects from './components/Projects/Projects'
+import Journal from './components/Journal/Journal'
 
 const app = createApp({
   components: {
     SettingsBar,
-    Projects
+    Projects,
+    Journal
   },
   mounted () {
     $('[data-confirm]').on('click', () => {
@@ -38,6 +40,31 @@ app.directive('avatar', {
     }
     el.style.backgroundColor = '#' + binding.value.background
     el.textContent = name
+  }
+})
+app.directive('date', {
+  mounted (el, binding) {
+    const addZero = (num) => {
+      if (num <= 9) {
+        return '0' + num
+      } else {
+        return num
+      }
+    }
+    const currentDate = new Date(binding.value)
+    const day = currentDate.getDate()
+    const month = currentDate.getMonth() + 1
+    const year = currentDate.getFullYear()
+    const hours = currentDate.getHours()
+    const minutes = currentDate.getMinutes()
+    const seconds = currentDate.getSeconds()
+    el.textContent = `${addZero(day)}/${addZero(month)}/${addZero(year)} ${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`
+  }
+})
+app.directive('tel', {
+  mounted (el, binding) {
+    const tel = binding.value.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
+    el.textContent = tel
   }
 })
 app.use(store)

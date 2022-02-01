@@ -141,7 +141,7 @@ class ProjectController extends Controller
      */
     public function journal(Project $project, Request $request)
     {
-
+        $projectId = $project->id;
         if (Gate::denies('view', $project)) {
             return redirect()->route('project.index');
         }
@@ -173,8 +173,7 @@ class ProjectController extends Controller
 
 
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-
-        return view('material-dashboard.project.journal', compact('project', 'leads'));
+        return view('material-dashboard.project.journal', compact('project', 'leads', 'projectId'));
     } //journal
 
     public function journal_export(Project $project, Request $request){
