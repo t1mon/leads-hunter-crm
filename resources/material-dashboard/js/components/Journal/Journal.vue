@@ -42,6 +42,7 @@
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
                                 </td>
                                 <td class="text-white text-center">
+                                    <p class="mb-0 font-weight-normal text-sm">{{ stateProject.classes }}</p>
                                 </td>
                                 <td class="align-middle text-center text-sm">
                                     <p v-tel="lead.phone" class="mb-0 font-weight-normal text-sm"></p>
@@ -123,6 +124,9 @@ export default {
         },
         stateLeads () {
             return this.$store.getters.stateLeads
+        },
+        stateProject () {
+            return this.$store.getters.stateProject
         }
     },
     async created () {

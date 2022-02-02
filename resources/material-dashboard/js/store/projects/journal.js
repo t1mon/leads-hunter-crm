@@ -2,7 +2,8 @@ export default {
   state () {
     return {
       leads: null,
-      isLoadingJ: false
+      isLoadingJ: false,
+      project: null
     }
   },
   getters: {
@@ -11,6 +12,9 @@ export default {
     },
     stateLeads: state => {
       return state.leads
+    },
+    stateProject: state => {
+      return state.project
     }
   },
   mutations: {
@@ -24,6 +28,7 @@ export default {
         .then(({ data }) => {
           state.isLoadingJ = false
           state.leads = data.data.leads.data
+          state.project = data.data
           console.log(data)
         })
         .catch(() => {
