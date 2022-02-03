@@ -19,14 +19,22 @@ const app = createApp({
 app.directive('tLength', {
   mounted (el, binding) {
     const div = document.createElement('div')
+    let value
     let dots
+    if (typeof binding.value === 'object') {
+      value = binding.value.length
+    } else {
+      value = binding.value
+    }
     div.classList.add('tLength-div')
     div.textContent = el.textContent
     el.classList.add('tLength')
-    el.textContent.length > binding.value ? dots = '...' : dots = ''
-    const text = el.textContent.substring(0, binding.value) + dots
+    el.textContent.length > value ? dots = '...' : dots = ''
+    const text = el.textContent.substring(0, value) + dots
     el.textContent = text
-    el.appendChild(div)
+    if (!binding.value.notDiv) {
+      el.appendChild(div)
+    }
   }
 })
 app.directive('avatar', {
@@ -65,6 +73,40 @@ app.directive('tel', {
   mounted (el, binding) {
     const tel = binding.value.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
     el.textContent = tel
+  }
+})
+app.directive('select', {
+  mounted (el, binding) {
+    const content = el.lastElementChild
+    let options = content.children
+    options = Array.prototype.slice.call(options)
+    function closeSelect () {
+      el.classList.remove('select--active')
+      content.style.maxHeight = '0px'
+      document.removeEventListener('click', closeSelect)
+    }
+    options.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation()
+        el.firstElementChild.textContent = item.textContent
+        closeSelect()
+        document.removeEventListener('click', closeSelect)
+      })
+    })
+    el.addEventListener('click', (e) => {
+      e.stopPropagation()
+      if (el.classList.contains('select--active')) {
+        closeSelect()
+      } else {
+        el.classList.add('select--active')
+        if (binding.value) {
+          content.style.maxHeight = binding.value * 100 + '%'
+        } else {
+          content.style.maxHeight = options.length * 100 + '%'
+        }
+        document.addEventListener('click', closeSelect)
+      }
+    })
   }
 })
 app.use(store)

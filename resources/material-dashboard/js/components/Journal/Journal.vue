@@ -42,7 +42,20 @@
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
                                 </td>
                                 <td class="text-white text-center">
-                                    <p class="mb-0 font-weight-normal text-sm">{{ stateProject.classes }}</p>
+<!--                                    <p class="mb-0 font-weight-normal text-sm">{{ stateProject.classes }}</p>-->
+                                    <div v-select="5" class="select">
+                                        <span>Не задан</span>
+                                        <span class="material-icons select__arrow">expand_more</span>
+                                        <div class="select__content">
+                                            <div @click="colorDefault($event)" class="select__option">Не задан</div>
+                                            <div v-for="projectClass in stateProject.classes" @click="color($event, projectClass.color)" class="select__option">
+                                                <div class="journal__row">
+                                                    <span v-tLength="{length: 8, notDiv: true}">{{ projectClass.name }}</span>
+                                                    <span :style="'background:' + ' ' + '#' + projectClass.color" class="journal__class-color"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="align-middle text-center text-sm">
                                     <p v-tel="lead.phone" class="mb-0 font-weight-normal text-sm"></p>
@@ -114,6 +127,12 @@ export default {
     },
     props: ['projectid'],
     methods: {
+        colorDefault (event) {
+            event.currentTarget.closest('td').previousElementSibling.style.background = ''
+        },
+        color (event, color) {
+            event.currentTarget.closest('td').previousElementSibling.style.background = '#' + color
+        },
         getLeads (id) {
             return this.$store.dispatch('getLeads', id)
         }
@@ -136,5 +155,96 @@ export default {
 </script>
 
 <style scoped>
-
+.journal__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.journal__class-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 2px;
+}
+.dark-version .select {
+    background-color: #202940;
+    color: #ffffff;
+}
+.dark-version .select__content {
+    background-color: #202940;
+    color: #ffffff;
+}
+.dark-version .select--active {
+    box-shadow: 0 0 5px rgba(255,255,255, 0.5);
+}
+.dark-version .select--active .select__content {
+    box-shadow: 0 0 5px rgba(255,255,255, 0.5);
+}
+.dark-version .select__option:hover {
+    background-color: #2e3b5d;
+}
+.select {
+    background-color: #FFFFFF;
+    border: 1px solid #e91e63;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px;
+    position: relative;
+    transition: 0.3s;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.2;
+    width: 100%;
+    color: #343767;
+    padding-right: 22px;
+}
+.select--active {
+    border-radius: 4px 4px 0 0;
+    border-bottom: none;
+    box-shadow: 0 0 5px rgba(0,0,0, 0.5);
+}
+.select--active .select__content {
+    border: 1px solid #e91e63;
+    border-top: none;
+    box-shadow: 0 0 5px rgba(0,0,0, 0.7);
+}
+.select--active .select__arrow {
+    transform: rotate(180deg);
+}
+.select__arrow {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+.select__content {
+    position: absolute;
+    width: calc( 100% + 2px );
+    left: -1px;
+    top: 100%;
+    z-index: -1;
+    background-color: #FFFFFF;
+    border-radius: 0 0 4px 4px;
+    max-height: 0px;
+    overflow: auto;
+    border: 0px;
+    transition: 0.3s;
+    z-index: 199;
+}
+.select__option {
+    border-bottom: 1px solid #e91e63;
+    padding: 4px;
+    text-align: left;
+}
+.select__option:first-child {
+    border-top: 1px solid #e91e63;
+}
+.select__option:last-child {
+    border-bottom: none;
+}
+.select__option:hover {
+    background-color: #eaeaea;
+}
 </style>

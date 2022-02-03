@@ -196,8 +196,10 @@ class ProjectController extends Controller
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
         //Загрузка комментариев к лидам
-        foreach($leads as $lead)
-            $lead->comment_crm = $lead->comment_CRM();
+        $leads->each(function($item, $key){
+            $item->comment_crm = $item->comment_CRM?->comment_body;
+            unset($item->comment_CRM);
+        });
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
     } //journal
 
