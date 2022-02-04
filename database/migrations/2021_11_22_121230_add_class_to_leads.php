@@ -27,6 +27,7 @@ class AddClassToLeads extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
+            $table->dropForeign(['class_id']);
             $table->dropColumn('class_id');
         });
     }
