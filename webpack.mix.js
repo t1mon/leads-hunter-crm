@@ -14,7 +14,7 @@ mix.js('resources/material-dashboard/js/app.js', 'public/js/material-dashboard-a
   .sass('resources/material-dashboard/sass/material-dashboard.scss', 'public/css/material-dashboard-app.css')
   .postCss('resources/material-dashboard/css/nucleo-icons.css', 'public/css')
   .postCss('resources/material-dashboard/css/nucleo-svg.css', 'public/css')
-  .vue()
+  .vue({ version: 3 })
 
 mix.copy('resources/material-dashboard/media/', 'public/media')
 
