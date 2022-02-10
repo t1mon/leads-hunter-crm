@@ -63,9 +63,7 @@ export default {
         })
     },
     filterProjects ({ state }) {
-      state.filteredProjects = state.projects.filter(project => {
-        return project.name.toLowerCase().indexOf(state.searchProjects.toLowerCase()) !== -1
-      })
+      state.filteredProjects = state.projects.filter(project => project.name.toLowerCase().includes(state.searchProjects.toLowerCase()))
     },
     dropdown (context, event) {
       event.stopPropagation()

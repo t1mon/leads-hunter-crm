@@ -42,15 +42,14 @@
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
                                 </td>
                                 <td class="text-white text-center">
-<!--                                    <p class="mb-0 font-weight-normal text-sm">{{ stateProject.classes }}</p>-->
-                                    <div v-select="5" class="select">
-                                        <span>Не задан</span>
+                                    <div v-select class="select">
+                                        <span class="select__title">Не задан</span>
                                         <span class="material-icons select__arrow">expand_more</span>
                                         <div class="select__content">
                                             <div @click="colorDefault($event)" class="select__option">Не задан</div>
                                             <div v-for="projectClass in stateProject.classes" @click="color($event, projectClass.color)" class="select__option">
                                                 <div class="journal__row">
-                                                    <span v-tLength="{length: 8, notDiv: true}">{{ projectClass.name }}</span>
+                                                    <span class="journal__class-name">{{ projectClass.name }}</span>
                                                     <span :style="'background:' + ' ' + '#' + projectClass.color" class="journal__class-color"></span>
                                                 </div>
                                             </div>
@@ -62,7 +61,7 @@
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                      <span class="badge badge-dot me-4">
+                                      <span class="badge badge-dot">
                                           <i v-if="lead.entries === 1" class="bg-success"></i>
                                           <i v-if="lead.entries === 2" class="bg-warning"></i>
                                           <i v-if="lead.entries > 2" class="bg-danger"></i>
@@ -71,23 +70,9 @@
                                     </div>
                                 </td>
 
-<!--                                <td class="align-middle text-center text-sm">-->
-<!--                                    @php-->
-<!--                                    $comment = \App\Models\Project\Lead\Comment::where(-->
-<!--                                    ['project_id' => $project->id, 'lead_id' => $lead->id]-->
-<!--                                    )->first();-->
-<!--                                    @endphp-->
-
-<!--                                    @if(is_null($lead->comment_CRM))-->
-<!--                                    @if(Auth::user()->isInProject($project))-->
-<!--                                    <a class="fa fa-plus" aaria-hidden="true" href="{{route('comment.create', [$project, $lead])}}"></a>-->
-<!--                                    @endif-->
-<!--                                    @else-->
-<!--                                    <a href="{{route('comment.show', [$project, $lead, $lead->comment_CRM])}}" class="link-info">-->
-<!--                                        {{ mb_substr($lead->comment_CRM->comment_body, 0, 15) . (mb_strlen($lead->comment_CRM->comment_body) > 15 ? '…' : '') }}-->
-<!--                                    </a>-->
-<!--                                    @endif-->
-<!--                                </td>-->
+                                <td class="align-middle text-center text-sm">
+                                    <a :href="" v-tLength="20">{{ lead.comment_crm }}</a>
+                                </td>
 
 <!--                                {{&#45;&#45;Если пользователь создатель или администратор проекта, ему видны все колонки &#45;&#45;}}-->
 <!--                                @if($project->isOwner() or Auth::user()->isManagerFor($project))-->
@@ -158,93 +143,17 @@ export default {
 .journal__row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+}
+.journal__class-name {
+    max-width: 58px;
+    white-space: normal;
 }
 .journal__class-color {
     width: 15px;
     height: 15px;
     border-radius: 2px;
 }
-.dark-version .select {
-    background-color: #202940;
-    color: #ffffff;
-}
-.dark-version .select__content {
-    background-color: #202940;
-    color: #ffffff;
-}
-.dark-version .select--active {
-    box-shadow: 0 0 5px rgba(255,255,255, 0.5);
-}
-.dark-version .select--active .select__content {
-    box-shadow: 0 0 5px rgba(255,255,255, 0.5);
-}
-.dark-version .select__option:hover {
-    background-color: #2e3b5d;
-}
-.select {
-    background-color: #FFFFFF;
-    border: 1px solid #e91e63;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 4px;
-    position: relative;
-    transition: 0.3s;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    text-align: left;
-    line-height: 1.2;
-    width: 100%;
-    color: #343767;
-    padding-right: 22px;
-}
-.select--active {
-    border-radius: 4px 4px 0 0;
-    border-bottom: none;
-    box-shadow: 0 0 5px rgba(0,0,0, 0.5);
-}
-.select--active .select__content {
-    border: 1px solid #e91e63;
-    border-top: none;
-    box-shadow: 0 0 5px rgba(0,0,0, 0.7);
-}
-.select--active .select__arrow {
-    transform: rotate(180deg);
-}
-.select__arrow {
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    font-size: 16px;
-    transition: 0.3s;
-}
-.select__content {
-    position: absolute;
-    width: calc( 100% + 2px );
-    left: -1px;
-    top: 100%;
-    z-index: -1;
-    background-color: #FFFFFF;
-    border-radius: 0 0 4px 4px;
-    max-height: 0px;
-    overflow: auto;
-    border: 0px;
-    transition: 0.3s;
-    z-index: 199;
-}
-.select__option {
-    border-bottom: 1px solid #e91e63;
-    padding: 4px;
-    text-align: left;
-}
-.select__option:first-child {
-    border-top: 1px solid #e91e63;
-}
-.select__option:last-child {
-    border-bottom: none;
-}
-.select__option:hover {
-    background-color: #eaeaea;
+.table-responsive {
+    padding-top: 50px;
 }
 </style>

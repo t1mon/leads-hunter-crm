@@ -1,15 +1,20 @@
+//v-tLength
 .tLength-div {
     position: absolute;
     left: -10px;
     top: 0;
     background-color: #000000;
-    padding: 8px 15px;
+    padding: 5px 10px;
     border-radius: 5px;
     transform: translateY(calc(-100% - 3px));
     transition: 0.5s;
     visibility: hidden;
     opacity: 0;
     color: #ffffff;
+    white-space: normal;
+    word-wrap: normal;
+    width: calc(100% + 20px);
+    max-width: 280px;
 }
 .tLength {
     position: relative;
@@ -19,4 +24,95 @@
         visibility: visible;
         opacity: 1;
     }
+}
+
+//select
+.dark-version .select {
+    background-color: #202940;
+    color: #ffffff;
+}
+.dark-version .select__content {
+    background-color: #202940;
+    color: #ffffff;
+}
+.dark-version .select--active {
+    box-shadow: 0 0 5px rgba(255,255,255, 0.5);
+}
+.dark-version .select--active .select__content {
+    box-shadow: 0 0 5px rgba(255,255,255, 0.5);
+}
+.dark-version .select__option:hover {
+    background-color: #2e3b5d;
+}
+.select {
+    background-color: #FFFFFF;
+    border: 1px solid #e91e63;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px;
+    position: relative;
+    transition: 0.3s;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.2;
+    width: 100%;
+    min-width: 100px;
+    color: #343767;
+    padding-right: 22px;
+}
+.select--active {
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid transparent;
+    box-shadow: 0 0 5px rgba(0,0,0, 0.5);
+}
+.select--active .select__content {
+    border: 1px solid #e91e63;
+    border-top: none;
+    box-shadow: 0 0 5px rgba(0,0,0, 0.7);
+}
+.select--active .select__arrow {
+    transform: rotate(180deg);
+}
+.select__title {
+    max-width: 60px;
+    display: block;
+    white-space: normal;
+}
+.select__arrow {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+.select__content {
+    position: absolute;
+    width: calc( 100% + 2px );
+    left: -1px;
+    top: 100%;
+    z-index: -1;
+    background-color: #FFFFFF;
+    border-radius: 0 0 4px 4px;
+    height: auto;
+    max-height: 0px;
+    overflow: auto;
+    border: 0px;
+    transition: 0.3s;
+    z-index: 199;
+}
+.select__option {
+    border-bottom: 1px solid #e91e63;
+    padding: 4px;
+    text-align: left;
+}
+.select__option:first-child {
+    border-top: 1px solid #e91e63;
+}
+.select__option:last-child {
+    border-bottom: none;
+}
+.select__option:hover {
+    background-color: #eaeaea;
 }
