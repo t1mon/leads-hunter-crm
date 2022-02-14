@@ -154,7 +154,6 @@ class ProjectController extends Controller
 
         $leads = $project->leads();
 
-
         if($request->filled('date_from'))
         {
             $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
@@ -167,12 +166,26 @@ class ProjectController extends Controller
             $leads->where('created_at', '<=' ,$end_date);
         }
 
-        if ($request->has('double_phone') && !empty(request()->double_phone)) {
-            $leads->where('entries', '=', 1);
-        }
-
-
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        
+        if ($request->has('double_phone') && !empty(request()->double_phone)) { //Отсеивание лидов с одинаковым номером телефона
+            
+            $filtered = $leads->getCollection()->unique('phone');
+            $filtered = $filtered->values()->all();
+            
+            $leads = new \Illuminate\Pagination\LengthAwarePaginator(
+                $filtered,
+                $leads->total(),
+                $leads->perPage(),
+                $leads->currentPage(),
+                [
+                    'path' => $leads->toArray()['path'],
+                    'query' => [
+                        'page' => $leads->currentPage()
+                    ]
+                ]
+            );
+        }
 
         return view('material-dashboard.project.journal', compact('project', 'leads'));
     } //journal

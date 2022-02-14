@@ -190,12 +190,26 @@ class ProjectController extends Controller
             $leads->where('created_at', '<=' ,$end_date);
         }
 
+        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+
         //Отсеивание дублирующихся лидов (если это указано в запросе)
         if ($request->has('double_phone') && !empty(request()->double_phone)) {
-            $leads->where('entries', '=', 1);
+            $filtered = $leads->getCollection()->unique('phone');
+            $filtered = $filtered->values()->all();
+            
+            $leads = new \Illuminate\Pagination\LengthAwarePaginator(
+                $filtered,
+                $leads->total(),
+                $leads->perPage(),
+                $leads->currentPage(),
+                [
+                    'path' => $leads->toArray()['path'],
+                    'query' => [
+                        'page' => $leads->currentPage()
+                    ]
+                ]
+            );
         }
-
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
         
         //Загрузка комментариев к лидам
         $leads->each(function($item, $key){
