@@ -77,22 +77,6 @@ class Leads extends Model
         return $this->belongsTo(LeadClass::class, 'class_id');
     } //class
 
-    // public static function getEntries($projectId, $phone) //Получение номера вхождений у лида
-    // {
-    //     $oldLead = self::where('project_id', $projectId)->where('phone', $phone)->count();
-
-    //     if ($oldLead === 0) {
-    //         return 1;
-    //     }
-
-    //     if ($oldLead === 1) {
-    //         return 2 ;
-    //     }
-
-    //     if ($oldLead > 1) {
-    //         return ++ self::where('project_id', $projectId)->where('phone', $phone)->where('entries', '>', 1)->first()->entries ;
-    //     }
-    // }
 
     public static function addToDB(array $params) //Добавить лид или обновить его количество вхождений
     {
@@ -100,7 +84,7 @@ class Leads extends Model
 
         //Проверка существования лида
         $lead = \App\Models\Leads::where([ 'project_id' => $project->id, 'phone' => $params['phone'] ])->orderBy('updated_at', 'desc')->first();
-        
+
         if(is_null($lead)){ //Если лида не существует, создать новый
             $lead = Leads::create(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
             event(new LeadCreated($lead));
@@ -121,4 +105,37 @@ class Leads extends Model
 
         return $lead;
     }
+
+    public function createOrUpdate(array $params): Leads //Добавить лид или обновить его количество вхождений
+    {
+        $project = Project::find($params['project_id']);
+
+        //Проверка существования лида
+        $lead = \App\Models\Leads::where([ 'project_id' => $project->id, 'phone' => $params['phone'] ])->orderBy('updated_at', 'desc')->first();
+
+        if(is_null($lead)){ //Если лида не существует, создать новый
+            return $this->createLead($params);
+        }
+
+        if($project->settings['leadValidDays'] > 0 && Carbon::parse($lead->updated_at)->addDays($project->settings['leadValidDays'])->lessThanOrEqualTo(Carbon::now()))
+        {
+            return $this->createLead($params);
+        }
+
+        return $this->updateLead($lead);
+    }
+
+    public function createLead(array $params): Leads
+    {
+        $lead = Leads::create(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
+        event(new LeadCreated($lead));
+        return $lead;
+    }
+
+    public function updateLead(Leads $lead): Leads
+    {
+        $lead->update(['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]);
+        return $lead;
+    }
+
 }
