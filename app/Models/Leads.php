@@ -77,54 +77,48 @@ class Leads extends Model
         return $this->belongsTo(LeadClass::class, 'class_id');
     } //class
 
-    public static function getEntries($projectId, $phone) //Получение номера вхождений у лида
-    {
-        $oldLead = self::where('project_id', $projectId)->where('phone', $phone)->count();
+    // public static function getEntries($projectId, $phone) //Получение номера вхождений у лида
+    // {
+    //     $oldLead = self::where('project_id', $projectId)->where('phone', $phone)->count();
 
-        if ($oldLead === 0) {
-            return 1;
-        }
+    //     if ($oldLead === 0) {
+    //         return 1;
+    //     }
 
-        if ($oldLead === 1) {
-            return 2 ;
-        }
+    //     if ($oldLead === 1) {
+    //         return 2 ;
+    //     }
 
-        if ($oldLead > 1) {
-            return ++ self::where('project_id', $projectId)->where('phone', $phone)->where('entries', '>', 1)->first()->entries ;
-        }
-    }
+    //     if ($oldLead > 1) {
+    //         return ++ self::where('project_id', $projectId)->where('phone', $phone)->where('entries', '>', 1)->first()->entries ;
+    //     }
+    // }
 
     public static function addToDB(array $params) //Добавить лид или обновить его количество вхождений
     {
         $project = Project::find($params['project_id']);
-        
-        //Параметры для создания или обновления лида
-        $entries = 1;
-        $status = self::LEAD_NEW;
 
         //Проверка существования лида
         $lead = \App\Models\Leads::where([ 'project_id' => $project->id, 'phone' => $params['phone'] ])->orderBy('updated_at', 'desc')->first();
-
-        //Если лид не существует, и срок годности лида уже истёк, то создаётся новый лид
-        if(
-            !is_null($lead)
-            and 
-            Carbon::parse($lead->updated_at)->addDays($project->settings['leadValidDays'])->greaterThanOrEqualTo(Carbon::now())
-          )
-        {
-                    $entries = $lead->entries + 1;
-                    $status = self::LEAD_EXISTS;
-        }
-
-        if($status === self::LEAD_NEW){
-            array_push($params, $entries, $status);
-            $lead = Leads::create($params);
+        
+        if(is_null($lead)){ //Если лида не существует, создать новый
+            $lead = Leads::create(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
             event(new LeadCreated($lead));
         }
-        else
-            $lead->update(['entries' => $entries, 'status' => $status]);
+        else{ //Если лид существует
+            if($project->settings['leadValidDays'] > 0){ //Если выставлен срок годности лида
+                // Если срок годности лда уже истёк, создать новый лид
+                if( Carbon::parse($lead->updated_at)->addDays($project->settings['leadValidDays'])->lessThanOrEqualTo(Carbon::now()) ){
+                    $lead = Leads::create(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
+                    event(new LeadCreated($lead));
+                }
+                else //Если срок годности не истёк, увеличить количество вхождений лида
+                    $lead->update(['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]);
+            }
+            else //Если срок не выставлен, просто увеличить количество вхождений лида
+                $lead->update(['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]);
+        }
 
         return $lead;
     }
-    
 }
