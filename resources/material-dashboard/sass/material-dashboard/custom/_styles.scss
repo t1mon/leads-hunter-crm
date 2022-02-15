@@ -117,3 +117,24 @@
 .select__option:hover {
     background-color: #eaeaea;
 }
+
+//sortJournal
+
+.journal__sort {
+    position: absolute;
+    top: calc(100% + 15px);
+    left: calc(50% - 106px);
+    padding: 10px 9px 9px;
+    width: 213px;
+    background-color: #ffffff;
+    &__before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translate(-50%, -50%) rotate(90deg);
+        width: 14px;
+        height: 14px;
+        background-color: #ffffff;
+    }
+}

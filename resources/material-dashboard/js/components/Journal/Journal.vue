@@ -7,23 +7,23 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                             <tr>
-                                <th class="text-uppercase text-xxs font-weight-bolder opacity-7">#</th>
-                                <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Дата</th>
-                                <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Клиент</th>
-                                <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Класс</th>
-                                <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Телефон</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
-                                <th class=" text-uppercase text-center text-xxs font-weight-bolder opacity-7">Комментарий</th>
+                                <th @click="sortJournal({event: $event})" class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">#</th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Дата</th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Клиент</th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Класс</th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Телефон</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
+                                <th class="cursor-pointer text-uppercase text-center text-xxs font-weight-bolder opacity-7">Комментарий</th>
 
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">E-MAIl</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Город</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Сумма сделки</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Посадочная</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Реферрер</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_SOURCE]</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_MEDIUM]</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_CAMPAIGN]</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">ИСТОЧНИК</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">E-MAIl</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Город</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Сумма сделки</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Посадочная</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Реферрер</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_SOURCE]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_MEDIUM]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_CAMPAIGN]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">ИСТОЧНИК</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -46,7 +46,7 @@
                                         <span class="select__title">{{ className(lead.class, 'Не задан') }}</span>
                                         <span class="material-icons select__arrow">expand_more</span>
                                         <div class="select__content">
-                                            <div @click="colorDefault($event)" class="select__option">Не задан</div>
+                                            <div @click="colorDefault($event), getLeadClass(stateProject.id, lead.id, 0)" class="select__option">Не задан</div>
                                             <div v-for="projectClass in stateProject.classes" @click="color($event, projectClass.color), getLeadClass(stateProject.id, lead.id, projectClass.id)" class="select__option">
                                                 <div class="journal__row">
                                                     <span class="journal__class-name">{{ projectClass.name }}</span>
@@ -123,6 +123,14 @@ export default {
     },
     props: ['projectid'],
     methods: {
+        sortJournal ({ event: _event }) {
+            const div = document.createElement('div')
+            div.classList.add('journal__sort')
+
+
+
+            _event.currentTarget.appendChild(div)
+        },
         async getLeadClass (projectId, leadId, classId) {
             const store = this.$store
             store.commit('switchSpinner')
