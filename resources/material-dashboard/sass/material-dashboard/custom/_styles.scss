@@ -7,12 +7,12 @@
     padding: 5px 10px;
     border-radius: 5px;
     transform: translateY(calc(-100% - 3px));
-    transition: 0.5s;
+    transition: 0.3s;
     visibility: hidden;
     opacity: 0;
     color: #ffffff;
     white-space: normal;
-    word-wrap: normal;
+    //word-wrap: normal;
     width: calc(100% + 20px);
     max-width: 280px;
 }
@@ -58,7 +58,7 @@
     text-align: left;
     line-height: 1.2;
     width: 100%;
-    min-width: 100px;
+    min-width: 150px;
     color: #343767;
     padding-right: 22px;
 }
@@ -76,7 +76,8 @@
     transform: rotate(180deg);
 }
 .select__title {
-    max-width: 60px;
+    width: 100%;
+    max-width: 120px;
     display: block;
     white-space: normal;
 }

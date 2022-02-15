@@ -19,7 +19,7 @@ export default function directives (app) {
       el.textContent.length > value ? dots = '...' : dots = ''
       const text = el.textContent.substring(0, value) + dots
       el.textContent = text
-      if (!binding.value.notDiv) {
+      if (!binding.value.notDiv && el.textContent.length > value) {
         el.appendChild(div)
       }
     }

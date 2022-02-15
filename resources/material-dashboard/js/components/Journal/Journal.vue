@@ -13,7 +13,7 @@
                                 <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Класс</th>
                                 <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7">Телефон</th>
                                 <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
-                                <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Комментарий</th>
+                                <th class=" text-uppercase text-center text-xxs font-weight-bolder opacity-7">Комментарий</th>
 
                                 <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">E-MAIl</th>
                                 <th class=" text-uppercase text-xxs font-weight-bolder opacity-7">Город</th>
@@ -38,16 +38,16 @@
                                 <td>
                                     <p v-date="lead.created_at" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
-                                <td>
+                                <td :style="'background:' + ' ' + '#' + leadColor(lead.class)">
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
                                 </td>
                                 <td class="text-white text-center">
                                     <div v-select class="select">
-                                        <span class="select__title">Не задан</span>
+                                        <span class="select__title">{{ className(lead.class, 'Не задан') }}</span>
                                         <span class="material-icons select__arrow">expand_more</span>
                                         <div class="select__content">
                                             <div @click="colorDefault($event)" class="select__option">Не задан</div>
-                                            <div v-for="projectClass in stateProject.classes" @click="color($event, projectClass.color)" class="select__option">
+                                            <div v-for="projectClass in stateProject.classes" @click="color($event, projectClass.color), getLeadClass(stateProject.id, lead.id, projectClass.id)" class="select__option">
                                                 <div class="journal__row">
                                                     <span class="journal__class-name">{{ projectClass.name }}</span>
                                                     <span :style="'background:' + ' ' + '#' + projectClass.color" class="journal__class-color"></span>
@@ -71,26 +71,37 @@
                                 </td>
 
                                 <td class="align-middle text-center text-sm">
-                                    <a :href="" v-tLength="20">{{ lead.comment_crm }}</a>
+                                    <a v-if="lead.comment_crm[1]" :href="'/project/project/' + stateProject.id + '/' + lead.id + '/comment/' + lead.comment_crm[0]" v-tLength="25">{{ lead.comment_crm[1] }}</a>
+                                    <a v-if="!lead.comment_crm[1]" :href="'/project/project/' + stateProject.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
                                 </td>
 
-<!--                                {{&#45;&#45;Если пользователь создатель или администратор проекта, ему видны все колонки &#45;&#45;}}-->
-<!--                                @if($project->isOwner() or Auth::user()->isManagerFor($project))-->
-<!--                                @php-->
-<!--                                $fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];-->
-<!--                                @endphp-->
-<!--                                @foreach($fields as $field)-->
-<!--                                <td class="text-sm font-weight-normal mb-0">-->
-<!--                                    {{$lead->$field}}-->
-<!--                                </td>-->
-<!--                                @endforeach-->
-<!--                                @else {{&#45;&#45;Если пользователь наблюдатель, ему видны только колонки согласно настройкам&#45;&#45;}}-->
-<!--                                @foreach($permissions->view_fields as $field)-->
-<!--                                <th class="align-middle text-center">-->
-<!--                                    <p class="text-sm font-weight-normal mb-0">{{ $lead->$field }}</p>-->
-<!--                                </th>-->
-<!--                                @endforeach-->
-<!--                                @endif-->
+                                <td v-tLength="25" class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.email }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.city }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.cost }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.host }}
+                                </td>
+                                <td v-tLength="25" class="text-sm font-weight-normal mb-0">
+                                    {{ lead.referrer }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.utm[0] }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.utm[1] }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.utm[2] }}
+                                </td>
+                                <td v-tLength="25" class="text-sm font-weight-normal mb-0">
+                                    {{ lead.source }}
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -112,6 +123,39 @@ export default {
     },
     props: ['projectid'],
     methods: {
+        async getLeadClass (projectId, leadId, classId) {
+            const store = this.$store
+            store.commit('switchSpinner')
+            await axios.post('/project/' + projectId + '/journal/' + leadId + '/class/assign', {
+                class_id: classId
+            })
+            .then(function (response) {
+                console.log(response)
+                store.commit('switchSpinner')
+            })
+            .catch(function (error) {
+                store.commit('switchSpinner')
+                console.log(error)
+            })
+        },
+        className (leadClass, defaultName) {
+            let name
+            if (leadClass) {
+                name = leadClass.name
+            } else {
+                name = defaultName
+            }
+            return name
+        },
+        leadColor (leadClass) {
+            let color
+            if (leadClass) {
+                color = leadClass.color
+            } else {
+                color = ''
+            }
+          return color
+        },
         colorDefault (event) {
             event.currentTarget.closest('td').previousElementSibling.style.background = ''
         },
@@ -145,7 +189,7 @@ export default {
     justify-content: space-between;
 }
 .journal__class-name {
-    max-width: 58px;
+    width: calc(100% - 20px);
     white-space: normal;
 }
 .journal__class-color {

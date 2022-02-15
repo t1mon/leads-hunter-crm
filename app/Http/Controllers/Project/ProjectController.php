@@ -170,8 +170,6 @@ class ProjectController extends Controller
         if ($request->has('double_phone') && !empty(request()->double_phone)) {
             $leads->where('entries', '=', 1);
         }
-
-
         $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
         return view('material-dashboard.project.journal', compact('project', 'leads', 'projectId'));
     } //journal
