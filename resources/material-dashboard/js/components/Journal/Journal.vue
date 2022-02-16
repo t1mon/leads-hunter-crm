@@ -128,16 +128,16 @@
                                     {{ lead.referrer }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm.utm_term }}
+                                    {{ lead.utm?.utm_term }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm.utm_medium }}
+                                    {{ lead.utm?.utm_medium }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm.utm_source }}
+                                    {{ lead.utm?.utm_source }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm.utm_campaign }}
+                                    {{ lead.utm?.utm_campaign }}
                                 </td>
                                 <td v-tLength="25" class="text-sm font-weight-normal mb-0">
                                     {{ lead.source }}
@@ -223,7 +223,7 @@ export default {
         async getLeadClass (projectId, leadId, classId) {
             const store = this.$store
             store.commit('switchSpinner')
-            await axios.post('/project/' + projectId + '/journal/' + leadId + '/class/assign', {
+            await axios.post(`/api/v1/project/${projectId}/journal/${leadId}/class/assign`, {
                 class_id: classId
             })
             .then(function (response) {

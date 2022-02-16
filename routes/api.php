@@ -44,7 +44,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 
         //Классы лидов
         Route::apiResource('project/{project}/class', 'Project\Lead\LeadClassController')->only(['store', 'update', 'destroy']);
-        Route::get('project/{project}/class/assign', 'Project\Lead\LeadClassController@assign')->name('class-assign');
+        Route::post('project/{project}/journal/{lead}/class/assign', 'Project\Lead\LeadClassController@assign')->name('class-assign');
 
         //Комментарии к лидам
         Route::apiResource('project/{project}/leads/{lead}/comment', 'Project\Lead\CommentController')->only(['show', 'store', 'destroy']);
