@@ -75,9 +75,11 @@ export default {
           return
         } else {
           item.classList.remove('projects__dropdown__menu--active')
+          item.classList.remove('dropdown--active')
         }
       })
       dropMenu.firstElementChild.classList.add('projects__dropdown__menu--active')
+      dropMenu.firstElementChild.classList.add('dropdown--active')
       for (let i = 0; i < dropMenu.firstChild.children.length; i++) {
         dropMenu.firstChild.children[i].addEventListener('click', (e) => {
           e.stopPropagation()
@@ -86,11 +88,13 @@ export default {
             return
           } else {
             dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
+            dropMenu.firstChild.classList.remove('dropdown--active')
           }
         })
       }
       document.addEventListener('click', function remActive () {
         dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
+        dropMenu.firstChild.classList.remove('dropdown--active')
         document.removeEventListener('click', remActive)
       })
     },

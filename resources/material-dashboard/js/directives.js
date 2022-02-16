@@ -1,4 +1,5 @@
 export default function directives (app) {
+  let counterDocListener = 0
   // Регулирует длину текста.
   // Выведет полный текст сверху при наведении мыши.
   // Передайте количество символов: v-tLength="8"
@@ -81,24 +82,29 @@ export default function directives (app) {
         contentHeight += item.clientHeight
       })
 
-      function closeSelect () {
-        el.classList.remove('select--active')
-        content.style.maxHeight = '0px'
-        document.removeEventListener('click', closeSelect)
+      function closeSelects () {
+        document.querySelectorAll('.select--active').forEach(item => {
+          item.classList.remove('select--active')
+          item.lastElementChild.style.maxHeight = '0px'
+        })
       }
       options.forEach(item => {
         item.addEventListener('click', (e) => {
           e.stopPropagation()
           el.firstElementChild.textContent = item.textContent
-          closeSelect()
-          document.removeEventListener('click', closeSelect)
+          closeSelects()
+          document.removeEventListener('click', closeSelects)
         })
       })
       el.addEventListener('click', (e) => {
         e.stopPropagation()
+        document.querySelectorAll('.dropdown--active').forEach(item => {
+          item.classList.remove('dropdown--active')
+        })
         if (el.classList.contains('select--active')) {
-          closeSelect()
+          closeSelects()
         } else {
+          closeSelects()
           el.classList.add('select--active')
           if (binding.value) {
             content.style.maxHeight = binding.value + 'px'
@@ -106,7 +112,14 @@ export default function directives (app) {
             content.style.overflow = 'hidden'
             content.style.maxHeight = contentHeight + 5 + 'px'
           }
-          document.addEventListener('click', closeSelect)
+          if (counterDocListener === 0) {
+            counterDocListener++
+            document.addEventListener('click', function _closeSelects () {
+              closeSelects()
+              document.removeEventListener('click', _closeSelects)
+              counterDocListener = 0
+            })
+          }
         }
       })
     }

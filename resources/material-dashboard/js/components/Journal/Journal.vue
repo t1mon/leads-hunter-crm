@@ -7,36 +7,73 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                             <tr>
-                                <th @click="sortJournal({event: $event})" class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">#</th>
-                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Дата</th>
-                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Клиент</th>
-                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Класс</th>
-                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder opacity-7">Телефон</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">№</th>
-                                <th class="cursor-pointer text-uppercase text-center text-xxs font-weight-bolder opacity-7">Комментарий</th>
+                                <th
+                                    @click="dropdownFilter({
+                                        event: $event,
+                                        coords: { left: '0' }
+                                    })"
+                                    class="cursor-pointer text-uppercase text-xxs font-weight-bolder"
+                                >
+                                    <span>#</span>
+                                    <div class="journal__sort">
+                                        <div class="journal__sort__content">
+                                            <span @click="journalReverse($event)">По убыванию</span>
+                                        </div>
+                                        <div class="journal__sort__before"></div>
+                                    </div>
+                                </th>
 
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">E-MAIl</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Город</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Сумма сделки</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Посадочная</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">Реферрер</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_SOURCE]</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_MEDIUM]</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">[UTM_CAMPAIGN]</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder opacity-7">ИСТОЧНИК</th>
+                                <th @click="dropdownFilter({
+                                        event: $event,
+                                        coords: { left: '0' }
+                                    })"
+                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder"
+                                >
+                                    <span>Дата</span>
+                                    <div class="journal__sort">
+                                        <div class="journal__sort__content">
+                                            <span @click="sortJournal('updated_at', 'sortDate', $event)">По возрастанию</span>
+                                        </div>
+                                        <div class="journal__sort__before"></div>
+                                    </div>
+                                </th>
+                                <th @click="dropdownFilter( {event: $event} )" class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <span>Клиент</span>
+                                    <div class="journal__sort">
+                                        <div class="journal__sort__content">
+                                            <span clas="journal__filter__" @click="sortJournal('name', 'sortName', $event)">По возрастанию</span>
+                                        </div>
+                                        <div class="journal__sort__before"></div>
+                                    </div>
+                                </th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">Класс</th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">Телефон</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">№</th>
+                                <th class="cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">Комментарий</th>
+
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">E-MAIl</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Город</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Сумма сделки</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Посадочная</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Реферрер</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">[UTM_TERM]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">[UTM_MEDIUM]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">[UTM_SOURCE]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">[UTM_CAMPAIGN]</th>
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">ИСТОЧНИК</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(lead, index) in stateLeads">
+                            <tr v-for="(lead) in stateLeads">
                                 <td>
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <p class="text-sm font-weight-normal mb-0">{{ index + 1 }}</p>
+                                            <p class="text-sm font-weight-normal mb-0">{{ lead.number }}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <p v-date="lead.created_at" class="text-center text-sm font-weight-normal mb-0"></p>
+                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at }}</p>
                                 </td>
                                 <td :style="'background:' + ' ' + '#' + leadColor(lead.class)">
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
@@ -57,7 +94,7 @@
                                     </div>
                                 </td>
                                 <td class="align-middle text-center text-sm">
-                                    <p v-tel="lead.phone" class="mb-0 font-weight-normal text-sm"></p>
+                                    <p class="mb-0 font-weight-normal text-sm">{{ lead.phone }}</p>
                                 </td>
                                 <td>
                                     <div class="text-center">
@@ -91,13 +128,16 @@
                                     {{ lead.referrer }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm[0] }}
+                                    {{ lead.utm.utm_term }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm[1] }}
+                                    {{ lead.utm.utm_medium }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm[2] }}
+                                    {{ lead.utm.utm_source }}
+                                </td>
+                                <td class="text-sm text-center font-weight-normal mb-0">
+                                    {{ lead.utm.utm_campaign }}
                                 </td>
                                 <td v-tLength="25" class="text-sm font-weight-normal mb-0">
                                     {{ lead.source }}
@@ -122,14 +162,63 @@ export default {
         Spinner
     },
     props: ['projectid'],
+    data () {
+      return {
+          counterDocListener: 0
+      }
+    },
     methods: {
-        sortJournal ({ event: _event }) {
-            const div = document.createElement('div')
-            div.classList.add('journal__sort')
-
-
-
-            _event.currentTarget.appendChild(div)
+        journalReverse (event) {
+            this.$store.dispatch('journalReverse', event)
+        },
+        sortJournal (_param, _sortParam, _event) {
+          this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
+        },
+        dropdownFilter ({
+            event,
+            coords: {
+                left: _left = '',
+                right: _right = '',
+                top: _top = '',
+                bottom: _bottom = ''
+            } = {}
+        }) {
+            event.stopPropagation()
+            event.stopImmediatePropagation()
+            document.querySelectorAll('.select--active').forEach(item => {
+                item.classList.remove('select--active')
+                item.lastElementChild.style.maxHeight = '0px'
+            })
+            const deleteDiv = () => {
+                document.querySelectorAll('.dropdown--active').forEach(item => {
+                    item.classList.remove('dropdown--active')
+                })
+                this.counterDocListener = 0
+                document.removeEventListener('click', deleteDiv)
+            }
+            const target = event.currentTarget
+            target.style.position = 'relative'
+            const div = target.lastElementChild
+            const divBefore = div.lastElementChild
+            div.style.left = _left + 'px'
+            div.style.right = _right + 'px'
+            div.style.top = _top + 'px'
+            div.style.bottom = _bottom + 'px'
+            divBefore.style.left = _left ? +_left + 35 + 'px' : ''
+            if (div.classList.contains('dropdown--active')) {
+                document.querySelectorAll('.dropdown--active').forEach(item => {
+                    item.classList.remove('dropdown--active')
+                })
+            } else {
+                document.querySelectorAll('.dropdown--active').forEach(item => {
+                    item.classList.remove('dropdown--active')
+                })
+                div.classList.add('dropdown--active')
+                if (this.counterDocListener === 0) {
+                    this.counterDocListener++
+                    document.addEventListener('click', deleteDiv)
+                }
+            }
         },
         async getLeadClass (projectId, leadId, classId) {
             const store = this.$store
