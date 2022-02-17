@@ -17,7 +17,7 @@
                                     <span>#</span>
                                     <div class="journal__sort">
                                         <div class="journal__sort__content">
-                                            <span @click="journalReverse($event)">По убыванию</span>
+                                            <span class="journal__filter__text" @click="sortJournal('number', 'sortNumber', $event)">По убыванию</span>
                                         </div>
                                         <div class="journal__sort__before"></div>
                                     </div>
@@ -32,7 +32,7 @@
                                     <span>Дата</span>
                                     <div class="journal__sort">
                                         <div class="journal__sort__content">
-                                            <span @click="sortJournal('updated_at', 'sortDate', $event)">По возрастанию</span>
+                                            <span class="journal__filter__text" @click="sortJournal('updated_at', 'sortDate', $event)">По возрастанию</span>
                                         </div>
                                         <div class="journal__sort__before"></div>
                                     </div>
@@ -41,14 +41,47 @@
                                     <span>Клиент</span>
                                     <div class="journal__sort">
                                         <div class="journal__sort__content">
-                                            <span clas="journal__filter__" @click="sortJournal('name', 'sortName', $event)">По возрастанию</span>
+                                            <span class="journal__filter__text" @click="sortJournal('name', 'sortName', $event)">По возрастанию</span>
                                         </div>
                                         <div class="journal__sort__before"></div>
                                     </div>
                                 </th>
                                 <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">Класс</th>
-                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">Телефон</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">№</th>
+                                <th
+                                    @click="dropdownFilter( {event: $event} )"
+                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder"
+                                >
+                                    <span>Телефон</span>
+                                    <div class="journal__sort">
+                                        <div class="journal__sort__content">
+                                            <span class="journal__filter__text" @click="sortJournal('phone', 'sortPhone', $event)">По возрастанию</span>
+                                        </div>
+                                        <div class="journal__sort__before"></div>
+                                    </div>
+                                </th>
+                                <th
+                                    @click="dropdownFilter( {event: $event} )"
+                                    class="cursor-pointer text-uppercase text-xxs font-weight-bolder"
+                                >
+                                    <span>№</span>
+                                    <div class="journal__sort">
+                                        <div class="journal__sort__content">
+                                            <span class="journal__filter__text" @click="sortJournal('entries', 'sortEntries', $event)">По возрастанию</span>
+                                            <label class="journal__sort__label">
+                                                <input v-model="first" type="checkbox" class="journal__sort__input">
+                                                <span class="material-icons journal__sort__ok">done</span>
+                                                <span class="journal__sort__text">Первичное</span>
+                                            </label>
+                                            <label class="journal__sort__label">
+                                                <input v-model="second" type="checkbox" class="journal__sort__input">
+                                                <span class="material-icons journal__sort__ok">done</span>
+                                                <span class="journal__sort__text">Вторичное</span>
+                                            </label>
+                                            <button @click="sortJournalEntries" class="journal__sort__button btn btn-primary">Отфильтровать</button>
+                                        </div>
+                                        <div class="journal__sort__before"></div>
+                                    </div>
+                                </th>
                                 <th class="cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">Комментарий</th>
 
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">E-MAIl</th>
@@ -164,12 +197,14 @@ export default {
     props: ['projectid'],
     data () {
       return {
-          counterDocListener: 0
+          counterDocListener: 0,
+          first: false,
+          second: false
       }
     },
     methods: {
-        journalReverse (event) {
-            this.$store.dispatch('journalReverse', event)
+        sortJournalEntries () {
+            this.$store.dispatch('sortJournalEntries', { first: this.first, second: this.second })
         },
         sortJournal (_param, _sortParam, _event) {
           this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
@@ -259,8 +294,8 @@ export default {
         color (event, color) {
             event.currentTarget.closest('td').previousElementSibling.style.background = '#' + color
         },
-        getLeads (id) {
-            return this.$store.dispatch('getLeads', id)
+        getLeads (_projectId, _dateFrom, _dateTo) {
+            this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo })
         }
     },
     computed: {
@@ -275,12 +310,67 @@ export default {
         }
     },
     async created () {
-        await this.getLeads(this.projectid)
+        const dateFrom = localStorage.getItem('dateFrom')
+        const dateTo = localStorage.getItem('dateTo')
+        await this.getLeads(this.projectid, dateFrom, dateTo)
     }
 }
 </script>
 
 <style scoped>
+
+.journal__sort__label {
+    position: relative;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    transition: 0.3s;
+    margin: 0;
+    margin-bottom: 4px;
+    padding: 4px;
+    padding-left: 24px;
+}
+.journal__sort__label::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-50%);
+    border: 1px solid #E91E63;
+    border-radius: 2px;
+}
+.journal__sort__label:hover {
+    background-color: #d0d0d0;
+}
+.journal__sort__button {
+    width: 100%;
+    margin-bottom: 0;
+}
+.journal__sort__input {
+    display: none;
+}
+.journal__sort__ok {
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    font-size: 16px;
+    color: #000000;
+    font-weight: 900;
+    transform: translateY(-50%);
+    display: none;
+}
+.journal__sort__text {
+    color: #000000;
+    font-size: 12px;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+.journal__sort__input:checked + .journal__sort__ok {
+    display: block;
+}
+
 .journal__row {
     display: flex;
     justify-content: space-between;
@@ -296,5 +386,14 @@ export default {
 }
 .table-responsive {
     padding-top: 50px;
+}
+.journal__filter__text {
+    display: block;
+    width: 100%;
+    padding: 4px;
+    transition: 0.3s;
+}
+.journal__filter__text:hover {
+    background-color: #d0d0d0;
 }
 </style>

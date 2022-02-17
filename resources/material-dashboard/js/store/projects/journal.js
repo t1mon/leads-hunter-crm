@@ -2,11 +2,14 @@ export default {
   state () {
     return {
       leads: null,
+      leadsOrigin: null,
       isLoadingJ: false,
       project: null,
-      leadsReverse: false,
+      sortNumber: false,
       sortDate: true,
-      sortName: true
+      sortName: true,
+      sortPhone: true,
+      sortEntries: true
     }
   },
   getters: {
@@ -26,14 +29,16 @@ export default {
     }
   },
   actions: {
-    journalReverse ({ state }, event) {
-      if (state.leadsReverse) {
-        event.currentTarget.textContent = 'По убыванию'
+    sortJournalEntries ({ state }, { first: _first, second: _second }) {
+      if (_first && !_second) {
+        state.leads = state.leadsOrigin
+        state.leads = state.leads.filter(entry => entry.entries === 1)
+      } else if (!_first && _second) {
+        state.leads = state.leadsOrigin
+        state.leads = state.leads.filter(entry => entry.entries > 1)
       } else {
-        event.currentTarget.textContent = 'По возрастанию'
+        state.leads = state.leadsOrigin
       }
-      state.leads.reverse()
-      state.leadsReverse = !state.leadsReverse
     },
     sortJournal ({ state }, { param: _param, sortParam: _sortParam, event: _event }) {
       console.log()
@@ -64,10 +69,14 @@ export default {
       }
       state[_sortParam] = !state[_sortParam]
     },
-    getLeads ({ state, commit, rootState }, id) {
+    getLeads ({ state, commit, rootState }, { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo }) {
       commit('switchSpinner')
       axios
-        .get(rootState.projects.endpoint + '/' + id + '/journal')
+        .get(rootState.projects.endpoint + '/' + _projectId + '/journal', { params: {
+            date_from: _dateFrom,
+            date_to: _dateTo
+          }
+        })
         .then(({ data }) => {
           commit('switchSpinner')
           const dataLeads = data.data.leads.data
@@ -100,10 +109,12 @@ export default {
           })
 
           state.leads = dataLeads
+          state.leadsOrigin = dataLeads
           state.project = data.data
           console.log(data)
         })
-        .catch(() => {
+        .catch(error => {
+          console.log(error)
           commit('switchSpinner')
         })
     }

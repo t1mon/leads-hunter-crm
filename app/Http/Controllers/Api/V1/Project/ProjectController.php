@@ -165,18 +165,20 @@ class ProjectController extends Controller
         if (Gate::forUser($user)->denies('view', $project))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
 
+//        dd($request->date_from);
+
         //Валидация фильтра по датам
         $this->validate($request, [
             'date_from' => 'nullable|date_format:Y-m-d',
             'date_to'   => 'nullable|date_format:Y-m-d',
         ]);
 
-
         $leads = $project->leads();
 
         //Отфильтровка по датам (если они присутствуют в запросе)
         if($request->filled('date_from'))
         {
+//            dd($request->date_from);
             $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
             $leads->where('created_at', '>=' ,$date);
         }

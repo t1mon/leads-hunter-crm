@@ -213,6 +213,7 @@
         </div>
     </div>
 </div>
+    <filter-by-date :projectid="{{ $projectId }}"></filter-by-date>
     <journal :projectid="{{ $projectId }}"></journal>
 <div class="content-left">
     {{ trans_choice('projects.journal.count', $leads->total()) }}
