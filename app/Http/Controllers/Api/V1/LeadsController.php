@@ -20,6 +20,13 @@ use App\Journal\Facade\Journal;
 
 class LeadsController extends Controller
 {
+    public $leads;
+
+    public function __construct(Leads $leads)
+    {
+        $this->leads = $leads;
+    }
+
     public function store(LeadsRequest $request)
     {
         $request->merge(['project_id' => Project::where('api_token', $request->api_token)->value('id')]);
@@ -42,7 +49,7 @@ class LeadsController extends Controller
 
         //Проверка хоста у лида
         if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
-            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], 
+            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ],
                         'Лид не добавлен в проект: хост ' . $request->host . ' не найден');
             return response()->json(['data' =>
                 [
@@ -68,8 +75,9 @@ class LeadsController extends Controller
         $user = User::where('api_token', $request->bearerToken())->first();
         $request->merge(['owner' => is_null($user) ? 'API' : $user->name]);
 
-        $new_lead = Leads::addToDB($request->all());
-        
+        //$new_lead = Leads::addToDB($request->all());
+        $new_lead = $this->leads->createOrUpdate($request->all());
+
         Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
 
         return new LeadsResource(
@@ -125,7 +133,7 @@ class LeadsController extends Controller
 
     } //getUTM
 
-    public function update(LeadsRequest $request){        
+    public function update(LeadsRequest $request){
         //Проверка наличия лида
         $lead = Leads::find($request->id);
         if(is_null($lead))
@@ -178,7 +186,7 @@ class LeadsController extends Controller
         // $lead_info = ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone];
         $lead_copy = clone $lead; //Копия лида для записи
         $lead->delete();
-        
+
         // Journal::lead($lead_info, $user->name . ' удалил лид');
         Journal::lead($lead_copy, $user->name . ' удалил лид');
 

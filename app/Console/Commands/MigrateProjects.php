@@ -85,10 +85,10 @@ class MigrateProjects extends Command
             }
 
             /* 4.
-                Добавить рассылку всех лидов на e-mail по умолчанию */
-                if(!array_key_exists('send_all', $project->settings['email'])){
+                Убрать рассылку всех лидов на e-mail по умолчанию */
+                if(array_key_exists('send_all', $project->settings['email'])){
                     $new_settings = $project->settings;
-                    $new_settings['email']['send_all'] = true;
+                    unset($new_settings['email']['send_all']);
                     $project->settings = $new_settings;
                 }
 
@@ -191,6 +191,22 @@ class MigrateProjects extends Command
                 if(isset($lead->owner) && is_null($lead->owner))
                     $lead->owner = 'API';
             }
+
+            /* 15.
+                Добавить в настройки проекта опцию "Срок годности лида" */
+            if(!array_key_exists('leadValidDays', $project->settings)){
+                $new_settings = $project->settings;
+                $new_settings['leadValidDays'] = 0;
+                $project->settings = array_merge($project->settings, $new_settings);
+            }
+
+            /* 16.*
+                Добавить в настройки опцию "Рассылка по количеству вхождений" */
+            // if(!array_key_exists('entriesNum', $project->settings)){
+            //     $new_settings = $project->settings;
+            //     $new_settings['entries'] = 1;
+            //     $project->settings = array_merge($project->settings, $new_settings);
+            // }
 
             $project->save();
         }
