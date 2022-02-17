@@ -114,28 +114,30 @@ class Leads extends Model
         $lead = \App\Models\Leads::where([ 'project_id' => $project->id, 'phone' => $params['phone'] ])->orderBy('updated_at', 'desc')->first();
 
         if(is_null($lead)){ //Если лида не существует, создать новый
-            return $this->createLead($params);
+            return $this->createLead(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
         }
 
         if($project->settings['leadValidDays'] > 0 && Carbon::parse($lead->updated_at)->addDays($project->settings['leadValidDays'])->lessThanOrEqualTo(Carbon::now()))
         {
-            return $this->createLead($params);
+            return $this->createLead(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
         }
 
-        return $this->updateLead($lead);
+        return $this->createLead(array_merge($params, ['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]));
     }
 
     public function createLead(array $params): Leads
     {
-        $lead = Leads::create(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
-        event(new LeadCreated($lead));
-        return $lead;
-    }
+        $lead = Leads::create($params);
+        if($lead->entries === 1) //Если лид новый, сделать рассылку
+            event(new LeadCreated($lead));
 
-    public function updateLead(Leads $lead): Leads
-    {
-        $lead->update(['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]);
         return $lead;
-    }
+    } //createLead
+
+    // public function updateLead(Leads $lead): Leads
+    // {
+    //     $lead->update(['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]);
+    //     return $lead;
+    // }
 
 }

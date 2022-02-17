@@ -200,6 +200,14 @@ class MigrateProjects extends Command
                 $project->settings = array_merge($project->settings, $new_settings);
             }
 
+            /* 16.*
+                Добавить в настройки опцию "Рассылка по количеству вхождений" */
+            // if(!array_key_exists('entriesNum', $project->settings)){
+            //     $new_settings = $project->settings;
+            //     $new_settings['entries'] = 1;
+            //     $project->settings = array_merge($project->settings, $new_settings);
+            // }
+
             $project->save();
         }
     }
