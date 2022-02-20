@@ -66,7 +66,6 @@ export default {
     },
     created () {
         this.getDateFromLS()
-        console.log(this.dateFrom)
     }
 }
 </script>

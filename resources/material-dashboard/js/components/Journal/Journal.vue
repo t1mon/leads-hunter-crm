@@ -116,8 +116,8 @@
                                         <span class="select__title">{{ className(lead.class, 'Не задан') }}</span>
                                         <span class="material-icons select__arrow">expand_more</span>
                                         <div class="select__content">
-                                            <div @click="colorDefault($event), getLeadClass(stateProject.id, lead.id, 0)" class="select__option">Не задан</div>
-                                            <div v-for="projectClass in stateProject.classes" @click="color($event, projectClass.color), getLeadClass(stateProject.id, lead.id, projectClass.id)" class="select__option">
+                                            <div @click="colorDefault($event), getLeadClass(stateProjectJour.id, lead.id, 0)" class="select__option">Не задан</div>
+                                            <div v-for="projectClass in stateProjectJour.classes" @click="color($event, projectClass.color), getLeadClass(stateProjectJour.id, lead.id, projectClass.id)" class="select__option">
                                                 <div class="journal__row">
                                                     <span class="journal__class-name">{{ projectClass.name }}</span>
                                                     <span :style="'background:' + ' ' + '#' + projectClass.color" class="journal__class-color"></span>
@@ -141,8 +141,8 @@
                                 </td>
 
                                 <td class="align-middle text-center text-sm">
-                                    <a v-if="lead.comment_crm[1]" :href="'/project/project/' + stateProject.id + '/' + lead.id + '/comment/' + lead.comment_crm[0]" v-tLength="25">{{ lead.comment_crm[1] }}</a>
-                                    <a v-if="!lead.comment_crm[1]" :href="'/project/project/' + stateProject.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
+                                    <a v-if="lead.comment_crm[1]" :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/' + lead.comment_crm[0]" v-tLength="25">{{ lead.comment_crm[1] }}</a>
+                                    <a v-if="!lead.comment_crm[1]" :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
                                 </td>
 
                                 <td v-tLength="25" class="text-sm text-center font-weight-normal mb-0">
@@ -183,6 +183,7 @@
             </div>
         </div>
         <spinner v-if="stateIsLoadingJ"></spinner>
+<!--        <p>{{stateProjectJour.classes}}</p>-->
     </div>
 </template>
 
@@ -305,8 +306,8 @@ export default {
         stateLeads () {
             return this.$store.getters.stateLeads
         },
-        stateProject () {
-            return this.$store.getters.stateProject
+        stateProjectJour () {
+            return this.$store.getters.stateProjectJour
         }
     },
     async created () {

@@ -4,6 +4,7 @@ import SettingsBar from './components/Settings/SettingsBar'
 import Projects from './components/Projects/Projects'
 import Journal from './components/Journal/Journal'
 import FilterByDate from './components/Journal/FilterByDate'
+import Paginate from './components/Journal/Paginate'
 import directives from './directives'
 
 const app = createApp({
@@ -11,7 +12,8 @@ const app = createApp({
     SettingsBar,
     Projects,
     Journal,
-    FilterByDate
+    FilterByDate,
+    Paginate
   },
   mounted () {
     $('[data-confirm]').on('click', () => {

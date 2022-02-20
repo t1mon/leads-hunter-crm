@@ -4,12 +4,14 @@ export default {
       leads: null,
       leadsOrigin: null,
       isLoadingJ: false,
-      project: null,
+      projectJour: null,
       sortNumber: false,
       sortDate: true,
       sortName: true,
       sortPhone: true,
-      sortEntries: true
+      sortEntries: true,
+      // TODO Найти более элегантный метод
+      dataReady: false
     }
   },
   getters: {
@@ -19,8 +21,11 @@ export default {
     stateLeads: state => {
       return state.leads
     },
-    stateProject: state => {
-      return state.project
+    stateProjectJour: state => {
+      return state.projectJour
+    },
+    stateDataReady: state => {
+      return state.dataReady
     }
   },
   mutations: {
@@ -41,7 +46,6 @@ export default {
       }
     },
     sortJournal ({ state }, { param: _param, sortParam: _sortParam, event: _event }) {
-      console.log()
       if (state[_sortParam]) {
         state.leads.sort((a, b) => {
           if (a[_param] > b[_param]) {
@@ -69,14 +73,27 @@ export default {
       }
       state[_sortParam] = !state[_sortParam]
     },
-    getLeads ({ state, commit, rootState }, { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo }) {
+    getLeads (
+      { state, commit, getters, rootState },
+      { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo, paginateNum: _paginateNum, paginatePath: _paginatePath, prevNext: _prevNext }
+    ) {
       commit('switchSpinner')
+        // путь для пагинаций
+      const page = _paginatePath ? _paginatePath + '&page=' + _paginateNum : ''
+        // номер лида, если перешёл на другую страницу по номеру
+      const numberNum = _paginateNum ? (_paginateNum - 1) * 50 : 0
+      // предыдущая или следующая страница
+      const prevNext = _prevNext || ''
+      // номер лида, если перешёл на другую страницу по стрелке
+      const numberArrow = _prevNext ? (+_prevNext.slice(-1) - 1) * 50 : 0
       axios
-        .get(rootState.projects.endpoint + '/' + _projectId + '/journal', { params: {
-            date_from: _dateFrom,
-            date_to: _dateTo
-          }
-        })
+        .get(rootState.projects.endpoint + '/' + _projectId + '/journal' + page + prevNext,
+          {
+            params: {
+              date_from: _dateFrom,
+              date_to: _dateTo
+            }
+          })
         .then(({ data }) => {
           commit('switchSpinner')
           const dataLeads = data.data.leads.data
@@ -105,12 +122,13 @@ export default {
             item.phone = item.phone.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
 
             // Присваиваем новое поле number
-            item.number = index + 1
+            item.number = index + 1 + numberNum + numberArrow
           })
 
           state.leads = dataLeads
           state.leadsOrigin = dataLeads
-          state.project = data.data
+          state.projectJour = data.data
+          state.dataReady = true
           console.log(data)
         })
         .catch(error => {
