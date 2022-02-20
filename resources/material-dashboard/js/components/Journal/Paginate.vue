@@ -1,13 +1,13 @@
 <template>
-    <div class="d-flex justify-content-center">
+    <div v-if="stateDataReady && getLinks.length > 1"  class="d-flex justify-content-center">
         <nav>
-            <ul v-if="stateDataReady" class="pagination">
+            <ul  class="pagination">
                 <li @click="prevNext(this.projectid, { prev: stateProjectJour.leads.prev_page_url })" class="page-item paginate__arrow">
                     <span class="page-link">‹</span>
                 </li>
                 <li
-                    v-for="link in getLinks()"
-                    @click="getLeads(this.projectid, link.label, stateProjectJour.leads.path)"
+                    v-for="link in getLinks"
+                    @click="getLeads(this.projectid, link.label, stateProjectJour.leads.path, link.url)"
                     class="page-item paginate__link"
                     :class="{ active : link.active }"
                 >
@@ -26,14 +26,9 @@ export default {
     name: "Paginate",
     props: ['projectid'],
     methods: {
-        getLeads (_projectId, _paginateNum, _paginatePath) {
+        getLeads (_projectId, _paginateNum, _paginatePath, _url) {
+            if (!_url) return
             this.$store.dispatch('getLeads', { projectId: _projectId, paginateNum: _paginateNum, paginatePath: _paginatePath })
-        },
-        getLinks () {
-            const links = this.stateProjectJour.leads.links.slice()
-            links.pop()
-            links.shift()
-            return links
         },
         prevNext (_projectId, { prev: _prev, next: _next }) {
             let _prevNext
@@ -51,7 +46,13 @@ export default {
         },
         stateDataReady () {
             return this.$store.getters.stateDataReady
-        }
+        },
+        getLinks () {
+            const links = this.stateProjectJour.leads.links.slice()
+            links.pop()
+            links.shift()
+            return links
+        },
     }
 }
 </script>

@@ -195,7 +195,7 @@ class ProjectController extends Controller
         }
 
 
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
 
         //Загрузка комментариев к лидам
