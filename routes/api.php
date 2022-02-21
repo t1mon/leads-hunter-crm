@@ -38,6 +38,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
         Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
         Route::get('project/{project}/toggle', 'Project\ProjectController@toggle')->name('project.toggle');
+        Route::get('project/{project}/journal/export', 'Project\ProjectController@journalExport')->name('project.journal-export');
 
         //Разрешения пользователей
         Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);

@@ -13,17 +13,13 @@
                         <input v-model="dateTo" type="date" class="form-control" name="date_to">
                     </div>
                 </div>
-                    <!--                <label class="form-check-label text-body ms-3 text-truncate w-80 mb-0 is-filled">-->
-                    <!--                    <input name="double_phone" type="checkbox" class="form-check-input ms-auto" value="true">-->
-                    <!--                    <span>Убрать дубликаты</span>-->
-                    <!--                </label>-->
                 <div class="journal__date__buttons">
                     <button type="submit" class="btn btn-primary journal__date__button"> Применить </button>
                     <button @click.prevent="getAllLeads" class="btn btn-primary journal__date__button"> Показать все </button>
                 </div>
             </div>
             <div class="d-flex justify-content-end align-items-start">
-                <button type="submit" class="journal__date__button--last btn btn-primary" formaction="https://api.home/project/37/journal/download?format=Xlsx"> Скачать записи </button>
+                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary" > Скачать записи </button>
             </div>
         </form>
     </div>
@@ -62,6 +58,16 @@ export default {
             this.dateFrom = ''
             this.dateTo = ''
             this.$store.dispatch('getLeads', { projectId: this.projectid })
+        },
+        exportJournal(){
+
+            const query = {
+                date_from: this.dateFrom,
+                date_to: this.dateTo
+
+            }
+            const url = window.location.href + `/download?` + $.param(query)
+            window.location = url;
         }
     },
     created () {

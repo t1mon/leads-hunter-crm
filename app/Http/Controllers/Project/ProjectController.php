@@ -147,31 +147,31 @@ class ProjectController extends Controller
         }
         //dd($request->date_from);
 
-        $this->validate($request, [
-            'date_from' => 'nullable|date_format:Y-m-d',
-            'date_to'   => 'nullable|date_format:Y-m-d',
-        ]);
-
-        $leads = $project->leads();
-
-
-        if($request->filled('date_from'))
-        {
-            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '>=' ,$date);
-        }
-
-        if($request->filled('date_to'))
-        {
-            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '<=' ,$end_date);
-        }
-
-        if ($request->has('double_phone') && !empty(request()->double_phone)) {
-            $leads->where('entries', '=', 1);
-        }
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-        return view('material-dashboard.project.journal', compact('project', 'leads', 'projectId'));
+//        $this->validate($request, [
+//            'date_from' => 'nullable|date_format:Y-m-d',
+//            'date_to'   => 'nullable|date_format:Y-m-d',
+//        ]);
+//
+//        $leads = $project->leads();
+//
+//
+//        if($request->filled('date_from'))
+//        {
+//            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+//            $leads->where('created_at', '>=' ,$date);
+//        }
+//
+//        if($request->filled('date_to'))
+//        {
+//            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+//            $leads->where('created_at', '<=' ,$end_date);
+//        }
+//
+//        if ($request->has('double_phone') && !empty(request()->double_phone)) {
+//            $leads->where('entries', '=', 1);
+//        }
+//        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        return view('material-dashboard.project.journal', compact('project', 'projectId'));
     } //journal
 
     public function journal_export(Project $project, Request $request){
