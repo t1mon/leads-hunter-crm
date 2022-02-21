@@ -15,6 +15,7 @@ use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\Project\Email;
 use App\Models\Project\TelegramID;
+use App\Models\Project\Lead\Comment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
+
+use Illuminate\Validation\Rule;
 
 use App\Journal\Facade\Journal;
 use App\Exports\LogsExportToday;
@@ -76,7 +79,7 @@ class ProjectController extends Controller
 
                 //Добавление цвета
                 $settings = $project->settings;
-                $settings['color'] = $request->exists('color') ? $request->color : Project::DEFAULT_COLOR;
+                $settings['color'] = $request->exists('color') ? $request->color : dechex(rand(0, 16777215));
 
                 $project->update([ 'api_token' => Str::random(60), 'settings' => $settings]);
 
@@ -259,5 +262,5 @@ class ProjectController extends Controller
         $project->save();
 
         return response()->json(['message' => 'Project has been ' .  ($project->settings['enabled'] ? 'enabled' : 'disabled')], Response::HTTP_OK);
-    }
+    } //toggle
 }

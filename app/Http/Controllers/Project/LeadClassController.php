@@ -18,7 +18,7 @@ use App\Journal\Facade\Journal;
 class LeadClassController extends Controller
 {
     public function index(Project $project){
-        
+
     } //index
 
     public function create(Project $project){
@@ -30,7 +30,7 @@ class LeadClassController extends Controller
         if(Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
 
-        //TODO Сделать отдельный запрос LeadsClassRequest с правилами валидации        
+        //TODO Сделать отдельный запрос LeadsClassRequest с правилами валидации
         if( //Проверка на наличие класса
             LeadClass::where([
                 'name' => $request->name,
@@ -42,7 +42,7 @@ class LeadClassController extends Controller
                                                 trans('leads-classes.create-error') . ': ' . $request->name . ' – ' . trans('leads-classes.error-exists'));
             return back()->withError(trans('leads-classes.create-error') . ': ' . trans('leads-classes.error-exists'));
         }
-        
+
         LeadClass::create([
             'name' => $request->name,
             'type' => LeadClass::TYPE_LOCAL,
@@ -66,12 +66,12 @@ class LeadClassController extends Controller
         //Проверка полномочий пользователя
         if(Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
-            
+
         $class->fill($request->all());
         $class->save();
 
         Journal::project($project, Auth::user()->name . ' обновил класс "' . $class->name . '".');
-        return redirect()->route('project.settings-basic', [$project, 'tab' => 'classes'])->withSuccess(trans('leads-classes.create-success')); 
+        return redirect()->route('project.settings-basic', [$project, 'tab' => 'classes'])->withSuccess(trans('leads-classes.create-success'));
     } //update
 
     public function destroy(Project $project, LeadClass $class){
@@ -90,9 +90,9 @@ class LeadClassController extends Controller
         return back()->withSuccess(trans('leads-classes.delete-success'));
     } //destroy
 
-    public function assign(Project $project, Leads $lead, Request $request){ //Назначить класс лиду        
+    public function assign(Project $project, Leads $lead, Request $request){ //Назначить класс лиду
         Leads::where('id', $lead->id)->update([
-            'class_id' => $request->class_id ? $request->class_id : null, 
+            'class_id' => $request->class_id ? $request->class_id : null,
             'updated_at' => $lead->updated_at
         ]);
 

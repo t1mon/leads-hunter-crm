@@ -1,30 +1,46 @@
 <template>
-    <div class="col-auto search">
-        <div class="ms-md-auto d-flex align-items-center">
-            <div class="input-group input-group-outline">
-                <label class="form-label">Search projects</label>
-                <input @input="filterProjects" v-model="searchProjects" type="text" id="form-control" class="form-control">
-            </div>
-        </div>
+  <div class="col-auto filter">
+    <div class="ms-md-auto d-flex align-items-center">
+      <div class="input-group input-group-outline">
+        <label class="form-label">Filter projects</label>
+        <input
+          id="form-control"
+          v-model="filter"
+          :disabled="stateIsLoading"
+          type="text"
+          class="form-control"
+        >
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'ProjectsSearch',
+  name: 'ProjectsFilter',
+  data: () => ({
+    filter: ''
+  }),
   computed: {
-    searchProjects: {
-      get () {
-        return this.$store.state.searchProjects
-      },
-      set (value) {
-        this.$store.commit('updateMessage', value)
-      }
+    stateIsLoading () {
+      return this.$store.getters.stateIsLoading
     }
+
   },
-  methods: {
-    filterProjects () {
-      return this.$store.dispatch('filterProjects')
+  watch: {
+    filter () {
+      window.history.pushState(null, document.title, `${window.location.pathname}?filter=${this.filter}`)
+      this.$store.commit('updateMessage', this.filter)
+      this.$store.dispatch('filterProjects')
+    },
+    stateIsLoading () {
+      const windowData = Object.fromEntries(
+        new URL(window.location).searchParams.entries()
+      )
+      if (windowData.filter) {
+        console.log(windowData.filter)
+        this.filter = windowData.filter
+      }
     }
   }
 }
@@ -32,7 +48,7 @@ export default {
 
 <style scoped>
 @media screen and (max-width: 575px) {
-    .search {
+    .filter {
         width: 150px;
     }
 }

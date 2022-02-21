@@ -78,6 +78,25 @@
                 </div>
             </div>
         </div>
+
+        {{-- Срок годности лида --}}
+        <div class="col">
+            <div class="card my-3">
+                <div class="card-body">
+                    <h5 class="card-title">Срок годности лида</h5>
+                    {!! Form::model($project, ['method' => 'PUT', 'route' => ['project.update', $project] ]) !!}
+                        <p class="card-text">
+                            {!! Form::label('leadValidDays', 'Кол-во дней', []) !!}
+                            {!! Form::number('settings[leadValidDays]', $project->settings['leadValidDays'], ['id' => 'leadValidDays', 'class' => 'form-control']) !!}
+                        </p>
+
+                        <p class="card-text">
+                            {!! Form::submit(trans('projects.button-change'), ['class' => 'btn btn-primary'] ) !!}
+                        </p>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

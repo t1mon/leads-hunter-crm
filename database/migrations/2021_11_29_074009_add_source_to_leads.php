@@ -26,7 +26,7 @@ class AddSourceToLeads extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->dropColumn('referrer');
+            $table->dropColumn('source');
         });
     }
 }

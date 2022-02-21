@@ -32,13 +32,18 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         // Media
         Route::apiResource('media', 'MediaController')->only(['store', 'destroy']);
 
+        //Поиск
+        Route::get('search', 'SearchController@search')->name('search');
+
         //Проекты
         Route::apiResource('project', 'Project\ProjectController')->only(['index', 'store', 'update', 'destroy']);
         Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
+
         Route::get('project/{project}/settings_sync', 'Project\ProjectController@settings_sync')->name('project.settings-sync');
         Route::get('project/{project}/toggle', 'Project\ProjectController@toggle')->name('project.toggle');
         Route::get('project/{project}/journal/export', 'Project\ProjectController@journalExport')->name('project.journal-export');
+
 
         //Разрешения пользователей
         Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
@@ -68,6 +73,10 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
     });
 
     Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
+    Route::put('/lead.update', 'LeadsController@update')->name('lead.update');
+    Route::delete('/lead.destroy', 'LeadsController@destroy')->name('lead.destroy');
+    Route::get('/lead.test', 'LeadsController@test')->name('lead.test');
+    // Route::apiResource('/lead', 'LeadsController')->only(['store', 'update', 'destroy']);
 
     //Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
 

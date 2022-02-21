@@ -45,7 +45,7 @@ class TelegramIDController extends Controller
         //Личка
         if($request->type === TelegramID::TYPE_PRIVATE){
             if( TelegramID::where(['project_id' => $project->id, 'name' => $request->name])->exists() )
-                Journal::projectError($project,  
+                Journal::projectError($project,
                                         trans('projects.notifications.telegram.create_error') . ': ' . $request->name . ' – ' . trans('projects.notifications.telegram.error_exists'));
                 return redirect()->route('project.settings-sync', [$project, 'telegram'])
                     ->withError( trans('projects.notifications.telegram.create_error') . ': ' . trans('projects.notifications.telegram.error_exists') );
@@ -87,7 +87,7 @@ class TelegramIDController extends Controller
         //Если контакта нет в базе данных, либо он уже одобрен, написать отказ
         if($contacts->isEmpty()){
             TelegramID::API_SendMessageTo($id, "Уважаемый $username! Ваш контакт не указан ни в одном проекте, либо уже был одобрен.");
-            Journal::projectWarning('Неудачная проверка Telegram-контакта ' . $username . ': не указан в проекте, либо уже одобрен.');
+            //Journal::projectWarning('Неудачная проверка Telegram-контакта ' . $username . ': не указан в проекте, либо уже одобрен.');
             return;
         }
 

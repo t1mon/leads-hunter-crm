@@ -7,8 +7,11 @@ use App\Http\Requests\Api\LeadsRequest;
 use App\Http\Resources\Leads as LeadsResource;
 use App\Models\Project\Host;
 use App\Models\Leads;
+use App\Models\User;
 use App\Models\Project\Project;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
@@ -17,6 +20,13 @@ use App\Journal\Facade\Journal;
 
 class LeadsController extends Controller
 {
+    public $leads;
+
+    public function __construct(Leads $leads)
+    {
+        $this->leads = $leads;
+    }
+
     public function store(LeadsRequest $request)
     {
         $request->merge(['project_id' => Project::where('api_token', $request->api_token)->value('id')]);
@@ -39,7 +49,7 @@ class LeadsController extends Controller
 
         //Проверка хоста у лида
         if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
-            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ], 
+            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ],
                         'Лид не добавлен в проект: хост ' . $request->host . ' не найден');
             return response()->json(['data' =>
                 [
@@ -61,8 +71,13 @@ class LeadsController extends Controller
             ],Response::HTTP_FOUND);
         }
 
-        $new_lead = Leads::addToDB($request->all());
-        
+        //Добавление владельца. Если владелец не авторизован, по умолчанию ставится "API"
+        $user = User::where('api_token', $request->bearerToken())->first();
+        $request->merge(['owner' => is_null($user) ? 'API' : $user->name]);
+
+        //$new_lead = Leads::addToDB($request->all());
+        $new_lead = $this->leads->createOrUpdate($request->all());
+
         Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
 
         return new LeadsResource(
@@ -117,4 +132,64 @@ class LeadsController extends Controller
         return $utm;
 
     } //getUTM
+
+    public function update(LeadsRequest $request){
+        //Проверка наличия лида
+        $lead = Leads::find($request->id);
+        if(is_null($lead))
+            return response()->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+
+
+        //Проверка полномочий
+        // if(!Auth::guard('api')->check())
+        //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        // $user = Auth::guard('api')->user();
+        $user = User::where('api_token', $request->bearerToken())->first();
+        if(is_null($user))
+            return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        if($user->name !== $lead->owner){
+            if(!$user->isAdmin())
+                return response()->json(['error' => 'You are not owner of this lead'], Response::HTTP_FORBIDDEN);
+        }
+
+        //Изменение лида
+         $lead_copy = clone $lead; //Копия лида для записи
+         $lead->fill($request->all());
+         $lead->owner = $user->name;
+         $lead->save();
+
+        Journal::lead($lead_copy, $user->name . ' изменил лид');
+        return response()->json(['messsage' => 'Lead has been updated'], Response::HTTP_OK);
+    } //update
+
+    public function destroy(Request $request){
+        //Валидация
+        $request->validate(['id' => 'required|integer']);
+
+        //Проверка наличия лида
+        $lead = Leads::find($request->id);
+        if(is_null($lead))
+            return response()->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
+
+        //Проверка полномочий
+        // if(!Auth::guard('api')->check())
+        //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        // $user = Auth::guard('api')->user();
+        $user = User::where('api_token', $request->bearerToken())->first();
+        if(is_null($user))
+            return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
+        if($user->name !== $lead->owner){
+            if(!$user->isAdmin())
+                return response()->json(['error' => 'You are not owner of this lead'], Response::HTTP_FORBIDDEN);
+        }
+
+        // $lead_info = ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone];
+        $lead_copy = clone $lead; //Копия лида для записи
+        $lead->delete();
+
+        // Journal::lead($lead_info, $user->name . ' удалил лид');
+        Journal::lead($lead_copy, $user->name . ' удалил лид');
+
+        return response()->json(['messsage' => 'Lead has been deleted'], Response::HTTP_OK);
+    } //destroy
 }
