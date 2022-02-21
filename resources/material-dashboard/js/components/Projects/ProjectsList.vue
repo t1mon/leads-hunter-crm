@@ -56,7 +56,7 @@
                     </td>
                     <td class="align-middle text-center">
                         <div class="d-flex align-items-center">
-                            <span class="me-2 text-xs">{{ project.created_at }}</span>
+                            <span v-date="project.created_at" class="me-2 text-xs"></span>
                         </div>
                     </td>
                     <td class="align-middle">
@@ -110,14 +110,7 @@ export default {
 </script>
 
 <style>
-@keyframes showDropMenu {
-    from {
-        transform: translate(-50%, -50%) scale(0.7);
-    }
-    to {
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
+
 .projects__card__avatar {
     border-radius: 0.75rem;
     width: 74px;
@@ -132,55 +125,5 @@ export default {
 .projects__card__status {
     width: 101px;
 }
-.projects__dropdown {
-    display: block;
-    position: relative;
-    overflow: visible;
-}
-.projects__dropdown__menu {
-    min-width: 145px;
-    padding: 8px 0;
-    border-radius: 5px;
-    margin: 0;
-    position: absolute;
-    z-index: 3;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    list-style-type: none;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    transition: visibility .25s,opacity .25s,transform .25s;
-    cursor: pointer;
-    background-color: #ffffff;
-    display: none;
-    word-wrap: normal;
-}
-.projects__dropdown__menu--active {
-    display: block;
-    animation: showDropMenu 0.5s ease;
-}
-.projects__dropdown__item {
-    padding: 4px 16px;
-    text-align: left;
-    transition: 0.25s;
-    position: relative;
-    word-wrap: normal
-}
-.projects__dropdown__title {
-    padding: 4px 16px;
-    text-align: center;
-}
-.projects__dropdown__item:hover {
-    background-color: #E9ECEF;
-}
-.table-responsive {
-    padding-bottom: 60px !important;
-}
-.dark-version .projects__dropdown__menu {
-    background-color: #202940;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-}
-.dark-version .projects__dropdown__item:hover {
-    background-color: #1A2035;
-}
+
 </style>

@@ -168,18 +168,20 @@ class ProjectController extends Controller
         if (Gate::forUser($user)->denies('view', $project))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
 
+//        dd($request->date_from);
+
         //Валидация фильтра по датам
         $this->validate($request, [
             'date_from' => 'nullable|date_format:Y-m-d',
             'date_to'   => 'nullable|date_format:Y-m-d',
         ]);
 
-
         $leads = $project->leads();
 
         //Отфильтровка по датам (если они присутствуют в запросе)
         if($request->filled('date_from'))
         {
+//            dd($request->date_from);
             $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
             $leads->where('created_at', '>=' ,$date);
         }
@@ -190,34 +192,25 @@ class ProjectController extends Controller
             $leads->where('created_at', '<=' ,$end_date);
         }
 
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-
         //Отсеивание дублирующихся лидов (если это указано в запросе)
         if ($request->has('double_phone') && !empty(request()->double_phone)) {
-            $filtered = $leads->getCollection()->unique('phone');
-            $filtered = $filtered->values()->all();
-            
-            $leads = new \Illuminate\Pagination\LengthAwarePaginator(
-                $filtered,
-                $leads->total(),
-                $leads->perPage(),
-                $leads->currentPage(),
-                [
-                    'path' => $leads->toArray()['path'],
-                    'query' => [
-                        'page' => $leads->currentPage()
-                    ]
-                ]
-            );
+            $leads->where('entries', '=', 1);
         }
-        
+
+
+        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+        $classes = $project->classes;
+
         //Загрузка комментариев к лидам
         $leads->each(function($item, $key){
-            $item->comment_crm = $item->comment_CRM?->comment_body;
+            $item->comment_crm = [$item->comment_CRM?->id, $item->comment_CRM?->comment_body];
+//            $item->color = $item->class?->color;
+            $item->class = $item->class;
+//            unset($item->class);
             unset($item->comment_CRM);
         });
-        
-        return new ProjectResource($project, ['leads' => $leads]);
+
+        return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
     } //journal
 
     public function settings_basic(Project $project, Request $request) //Страница основных настроек

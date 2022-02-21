@@ -141,53 +141,37 @@ class ProjectController extends Controller
      */
     public function journal(Project $project, Request $request)
     {
-
+        $projectId = $project->id;
         if (Gate::denies('view', $project)) {
             return redirect()->route('project.index');
         }
         //dd($request->date_from);
 
-        $this->validate($request, [
-            'date_from' => 'nullable|date_format:Y-m-d',
-            'date_to'   => 'nullable|date_format:Y-m-d',
-        ]);
-
-        $leads = $project->leads();
-
-        if($request->filled('date_from'))
-        {
-            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '>=' ,$date);
-        }
-
-        if($request->filled('date_to'))
-        {
-            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '<=' ,$end_date);
-        }
-
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
-        
-        if ($request->has('double_phone') && !empty(request()->double_phone)) { //Отсеивание лидов с одинаковым номером телефона
-            
-            $filtered = $leads->getCollection()->unique('phone');
-            $filtered = $filtered->values()->all();
-            
-            $leads = new \Illuminate\Pagination\LengthAwarePaginator(
-                $filtered,
-                $leads->total(),
-                $leads->perPage(),
-                $leads->currentPage(),
-                [
-                    'path' => $leads->toArray()['path'],
-                    'query' => [
-                        'page' => $leads->currentPage()
-                    ]
-                ]
-            );
-        }
-
-        return view('material-dashboard.project.journal', compact('project', 'leads'));
+//        $this->validate($request, [
+//            'date_from' => 'nullable|date_format:Y-m-d',
+//            'date_to'   => 'nullable|date_format:Y-m-d',
+//        ]);
+//
+//        $leads = $project->leads();
+//
+//
+//        if($request->filled('date_from'))
+//        {
+//            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+//            $leads->where('created_at', '>=' ,$date);
+//        }
+//
+//        if($request->filled('date_to'))
+//        {
+//            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+//            $leads->where('created_at', '<=' ,$end_date);
+//        }
+//
+//        if ($request->has('double_phone') && !empty(request()->double_phone)) {
+//            $leads->where('entries', '=', 1);
+//        }
+//        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->withPath("?" . $request->getQueryString());
+        return view('material-dashboard.project.journal', compact('project', 'projectId'));
     } //journal
 
     public function journal_export(Project $project, Request $request){

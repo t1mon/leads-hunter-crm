@@ -1,6 +1,9 @@
-import axios from 'axios'
+import journal from './journal'
 
 export default {
+  modules: {
+    journal
+  },
   state () {
     return {
       cards: false,
@@ -8,7 +11,8 @@ export default {
       isLoading: false,
       projects: null,
       searchProjects: '',
-      filteredProjects: null
+      filteredProjects: null,
+      projectsLoad: false
     }
   },
   getters: {
@@ -23,6 +27,12 @@ export default {
     },
     stateFilteredProjects: state => {
       return state.filteredProjects
+    },
+    stateProjectsLoad: state => {
+      return state.projectsLoad
+    },
+    stateProjects: state => {
+      return state.projects
     }
   },
   mutations: {
@@ -43,28 +53,7 @@ export default {
         .get(state.endpoint)
         .then(({ data }) => {
           state.isLoading = false
-
-          const dateParse = function (date) {
-            const addZero = (num) => {
-              if (num <= 9) {
-                return '0' + num
-              } else {
-                return num
-              }
-            }
-            const currentDate = new Date(date)
-            const day = currentDate.getDate()
-            const month = currentDate.getMonth() + 1
-            const year = currentDate.getFullYear()
-            const hours = currentDate.getHours()
-            const minutes = currentDate.getMinutes()
-            const seconds = currentDate.getSeconds()
-            return `${addZero(day)}/${addZero(month)}/${addZero(year)} ${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`
-          }
-
-          data.data.forEach(obj => {
-            obj.created_at = dateParse(obj.created_at)
-          })
+          state.projectsLoad = true
           state.projects = data.data
           state.filteredProjects = data.data
           console.log(data.data)
@@ -74,9 +63,7 @@ export default {
         })
     },
     filterProjects ({ state }) {
-      state.filteredProjects = state.projects.filter(project => {
-        return project.name.toLowerCase().indexOf(state.searchProjects.toLowerCase()) !== -1
-      })
+      state.filteredProjects = state.projects.filter(project => project.name.toLowerCase().includes(state.searchProjects.toLowerCase()))
     },
     dropdown (context, event) {
       event.stopPropagation()
@@ -88,9 +75,11 @@ export default {
           return
         } else {
           item.classList.remove('projects__dropdown__menu--active')
+          item.classList.remove('dropdown--active')
         }
       })
       dropMenu.firstElementChild.classList.add('projects__dropdown__menu--active')
+      dropMenu.firstElementChild.classList.add('dropdown--active')
       for (let i = 0; i < dropMenu.firstChild.children.length; i++) {
         dropMenu.firstChild.children[i].addEventListener('click', (e) => {
           e.stopPropagation()
@@ -99,11 +88,13 @@ export default {
             return
           } else {
             dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
+            dropMenu.firstChild.classList.remove('dropdown--active')
           }
         })
       }
       document.addEventListener('click', function remActive () {
         dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
+        dropMenu.firstChild.classList.remove('dropdown--active')
         document.removeEventListener('click', remActive)
       })
     },
