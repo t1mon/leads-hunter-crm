@@ -116,7 +116,7 @@ export default {
             const hours = currentDate.getHours()
             const minutes = currentDate.getMinutes()
             const seconds = currentDate.getSeconds()
-            item.created_at = `${addZero(day)}/${addZero(month)}/${addZero(year)} ${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`
+            //item.created_at = `${addZero(day)}/${addZero(month)}/${addZero(year)} ${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`
 
             // Приводим телефоны в читабельный формат
             item.phone = item.phone.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
