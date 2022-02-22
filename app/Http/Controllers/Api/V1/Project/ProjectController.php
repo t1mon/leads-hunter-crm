@@ -55,7 +55,7 @@ class ProjectController extends Controller
         $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');
 
         //Загрузка проектов по идентификаторам
-        $projects = Project::whereIn('id', $project_ids)->with('leads')->withCount('leads')->get();
+        $projects = Project::whereIn('id', $project_ids)->with('leads','emails')->withCount('leads')->get();
 
         //Передача полученных данных
         return ProjectCollectionResource::collection($projects);
