@@ -180,15 +180,15 @@ class ProjectController extends Controller
         //Отфильтровка по датам (если они присутствуют в запросе)
         if($request->filled('date_from'))
         {
-            //$date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
-            $date = Carbon::createFromFormat('Y-m-d',$request->date_from,config('app.timezone'))->startOfDay();
+            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+            //$date = Carbon::createFromFormat('Y-m-d',$request->date_from,config('app.timezone'))->startOfDay();
             $leads->where('created_at', '>=' ,$date);
         }
 
         if($request->filled('date_to'))
         {
-            //$end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
-            $end_date = Carbon::createFromFormat('Y-m-d',$request->date_to,config('app.timezone'))->endOfDay();
+            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+            //$end_date = Carbon::createFromFormat('Y-m-d',$request->date_to,config('app.timezone'))->endOfDay();
             $leads->where('created_at', '<=' ,$end_date);
         }
 
@@ -209,7 +209,7 @@ class ProjectController extends Controller
             $item->comment_crm = [$item->comment_CRM?->id, $item->comment_CRM?->comment_body];
             $item->class = $item->class;
             unset($item->comment_CRM);
-            $item->created_at = humanize_date(Carbon::parse($item->created_at)->setTimezone($item->project->timezone), 'Y-m-d H:i:s');
+            $item->created_at = Carbon::parse($item->created_at)->setTimezone($item->project->timezone);
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
