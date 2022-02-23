@@ -198,7 +198,7 @@ class ProjectController extends Controller
         }
 
 
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
 
         //Загрузка комментариев к лидам
@@ -208,6 +208,7 @@ class ProjectController extends Controller
             $item->class = $item->class;
 //            unset($item->class);
             unset($item->comment_CRM);
+            $item->created_at = Carbon::parse($item->created_at, config('app.timezone'))->setTimeZone($item->project->timezone);
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
