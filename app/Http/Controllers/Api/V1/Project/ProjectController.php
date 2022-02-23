@@ -191,13 +191,13 @@ class ProjectController extends Controller
             //$end_date = Carbon::createFromFormat('Y-m-d',$request->date_to,config('app.timezone'))->endOfDay();
             $leads->where('created_at', '<=' ,$end_date);
         }
-
+//        dd($request->entry_filter);
         //Отсеивание дублирующихся лидов (если это указано в запросе)
         if ($request->filled('entry_filter')) {
             $leads->where('entries',  $request->entry_filter, 1);
         }
 
-        $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('created_at', 'desc')->paginate($request->rows_num ?? 50)->onEachSide(0)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
 
         //Загрузка комментариев к лидам
