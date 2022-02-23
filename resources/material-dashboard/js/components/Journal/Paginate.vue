@@ -1,7 +1,7 @@
 <template>
     <div v-if="stateDataReady" class="journal__paginate__row">
 
-        <h6 class="journal__paginate__total">Всего лидов: {{ stateProjectJour.leads.total }}</h6>
+        <h6 class="journal__paginate__total">Всего записей: {{ stateProjectJour.leads.total }}</h6>
 
         <div
             v-if="getLinks.length > 1"
@@ -75,7 +75,7 @@ export default {
 <style scoped>
 .journal__paginate__total {
     position: absolute;
-    left: 0;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
 }

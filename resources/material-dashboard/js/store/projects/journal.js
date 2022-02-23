@@ -11,10 +11,19 @@ export default {
       sortPhone: true,
       sortEntries: true,
       // TODO Найти более элегантный метод
-      dataReady: false
+      dataReady: false,
+      // Даты из FilterByDate.vue
+      dateFrom: '',
+      dateTo: ''
     }
   },
   getters: {
+    stateDateFrom: state => {
+      return state.dateFrom
+    },
+    stateDateTo: state => {
+      return state.dateTo
+    },
     stateIsLoadingJ: state => {
       return state.isLoadingJ
     },
@@ -34,6 +43,10 @@ export default {
     }
   },
   actions: {
+    setDateFromTo ({ state }, { dateFrom: _dateFrom, dateTo: _dateTo }) {
+      state.dateFrom = _dateFrom
+      state.dateTo = _dateTo
+    },
     sortJournal ({ state }, { param: _param, sortParam: _sortParam, event: _event }) {
       if (state[_sortParam]) {
         state.leads.sort((a, b) => {
@@ -76,7 +89,7 @@ export default {
     ) {
       commit('switchSpinner')
       // считаем сколько лидов поместится
-      const rowsNum = Math.floor((document.documentElement.clientHeight - 40) / 49)
+      const rowsNum = Math.floor((document.documentElement.clientHeight - 60) / 49)
         // путь для пагинаций
       const page = _paginatePath ? _paginatePath + '&page=' + _paginateNum : ''
         // номер лида, если перешёл на другую страницу по номеру

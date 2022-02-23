@@ -36,6 +36,14 @@ export default {
             dateTo: ''
         }
     },
+    watch: {
+        dateFrom (e) {
+            this.$store.dispatch('setDateFromTo', { dateFrom: e })
+        },
+        dateTo (e) {
+            this.$store.dispatch('setDateFromTo', { dateTo: e })
+        }
+    },
     methods: {
         getDateFromLS () {
             const dateFrom = localStorage.getItem('dateFrom')

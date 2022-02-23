@@ -205,16 +205,18 @@ export default {
     },
     methods: {
         sortJournalEntries () {
+            const _dateFrom = this.$store.getters.stateDateFrom
+            const _dateTo = this.$store.getters.stateDateTo
             let _entriesOperator = null
             if (this.first && !this.second) {
                 _entriesOperator = '='
             } else if (!this.first && this.second) {
                 _entriesOperator = '>'
             }
-            this.$store.dispatch('getLeads', { projectId: this.projectid, entriesOperator: _entriesOperator })
+            this.$store.dispatch('getLeads', { projectId: this.projectid, entriesOperator: _entriesOperator, dateFrom: _dateFrom, dateTo: _dateTo })
         },
         sortJournal (_param, _sortParam, _event) {
-          this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
+            this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
         },
         dropdownFilter ({
             event,
@@ -326,7 +328,7 @@ export default {
 
 <style scoped>
 .table-responsive {
-    padding: 30px 0 !important;
+    padding: 10px 0 !important;
 }
 
 .journal__sort__label {
