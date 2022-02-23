@@ -40,6 +40,7 @@ class Project extends Model
             "enabled": true,
             "description": false,
             "color": "5F9EA0",
+            "leadValidDays": 0,
             "email":
             {
                 "template": "view",

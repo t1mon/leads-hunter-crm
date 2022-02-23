@@ -193,13 +193,9 @@ class ProjectController extends Controller
         }
 
         //Отсеивание дублирующихся лидов (если это указано в запросе)
-
         if ($request->filled('entry_filter')) {
             $leads->where('entries',  $request->entry_filter, 1);
         }
-
-
-
 
         $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
@@ -209,7 +205,7 @@ class ProjectController extends Controller
             $item->comment_crm = [$item->comment_CRM?->id, $item->comment_CRM?->comment_body];
             $item->class = $item->class;
             unset($item->comment_CRM);
-            $item->created_at = Carbon::parse($item->created_at)->setTimezone($item->project->timezone);
+            $item->created_at_format = Carbon::parse($item->created_at, config('app.timezone'))->setTimezone($item->project->timezone)->format('d.m.Y H:i:s');
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
