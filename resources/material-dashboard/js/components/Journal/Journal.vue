@@ -32,7 +32,7 @@
                                     <span>Дата</span>
                                     <div class="journal__sort">
                                         <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('updated_at', 'sortDate', $event)">По возрастанию</span>
+                                            <span class="journal__filter__text" @click="sortJournal('created_at_format', 'sortDate', $event)">По возрастанию</span>
                                         </div>
                                         <div class="journal__sort__before"></div>
                                     </div>
@@ -106,7 +106,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at }}</p>
+                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at_format }}</p>
                                 </td>
                                 <td :style="'background:' + ' ' + '#' + leadColor(lead.class)">
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>

@@ -39,11 +39,3 @@ Route::post('telegram/webhook', [TelegramIDController::class, 'webhook'])->name(
 //
 //    return new \App\Mail\Leads\SendLeadData($invoice,'');
 //});
-
-Route::get('/test', function(){
-    $stamp = Carbon::parse('15:00:55 23.02.2022', 'Europe/Samara');
-    $compare = Carbon::parse($stamp)->startOfDay()->setTimezone('UTC');
-
-    echo 'stamp: ' . $stamp->format('H:i:s d.m.Y') . '<br>';
-    echo 'stamp: ' . $compare->format('H:i:s d.m.Y') . '<br>';
-});
