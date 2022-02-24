@@ -44,8 +44,8 @@ export default {
   },
   actions: {
     setDateFromTo ({ state }, { dateFrom: _dateFrom, dateTo: _dateTo }) {
-      state.dateFrom = _dateFrom
-      state.dateTo = _dateTo
+      if (_dateFrom) state.dateFrom = _dateFrom
+      if (_dateTo) state.dateTo = _dateTo
     },
     sortJournal ({ state }, { param: _param, sortParam: _sortParam, event: _event }) {
       if (state[_sortParam]) {
