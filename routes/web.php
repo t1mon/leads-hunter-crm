@@ -29,7 +29,7 @@ use Carbon\Carbon;
 //});
 
 //Route::get('newsletter-subscriptions/unsubscribe', 'NewsletterSubscriptionController@unsubscribe')->name('newsletter-subscriptions.unsubscribe');
-//Route::get('/test', [\App\Http\Controllers\Project\ProjectController::class , 'test']);
+Route::get('/test', [\App\Http\Controllers\Project\WebhookController::class , 'test']);
 
 Route::post('telegram/webhook', [TelegramIDController::class, 'webhook'])->name('telegram.webhook');
 //Route::resource('log', LogController::class)->only(['index', 'store', 'destroy']);
