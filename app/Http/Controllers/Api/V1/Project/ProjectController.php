@@ -29,6 +29,7 @@ use Illuminate\Validation\Rule;
 use App\Journal\Facade\Journal;
 use App\Exports\LogsExportToday;
 use App\Exports\LeadExport;
+use App\Jobs\ExportLeadsToMail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
@@ -210,6 +211,26 @@ class ProjectController extends Controller
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
     } //journal
+
+    public function journal_export(Project $project, Request $request){
+        //Проверка полномочий
+        if(!Auth::user()->isInProject($project))
+            return response()->json(['message' => 'У вас нет полномочий на это действие'], Response::HTTP_FORBIDDEN);
+
+        //Валидация
+        $this->validate($request, [
+            'date_from' => 'nullable|date_format:Y-m-d',
+            'date_to'   => 'nullable|date_format:Y-m-d',
+        ]);
+
+        //Создание дат (если указаны в форме)
+        $date_from = $request->filled('date_from') ? Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone')) : null;
+        $date_to = $request->filled('date_to') ? Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone')) : null;
+
+        ExportLeadsToMail::dispatch($project, Auth::user()->email, $date_from, $date_to);
+
+        return response()->json(['message' => 'Файл будет сформирован и отправлен на Вашу почту'], Response::HTTP_OK);
+    } //journal_export
 
     public function settings_basic(Project $project, Request $request) //Страница основных настроек
     {

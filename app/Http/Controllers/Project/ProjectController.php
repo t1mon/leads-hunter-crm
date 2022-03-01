@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use App\Journal\Facade\Journal;
 use App\Exports\LogsExportToday;
 use App\Exports\LeadExport;
+use App\Jobs\ExportLeadsToMail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
@@ -195,16 +196,9 @@ class ProjectController extends Controller
             return (new LeadExport)->today($project)
                 ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
 
-        //Составление названия файла
-        $filename = (is_null($date_from)
-                    ? Carbon::parse($project->leads->min('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
-                    : $date_from->setTimezone($project->timezone)->format('d-m-Y')) . '-' .
-                    (is_null($date_to)
-                    ? Carbon::parse($project->leads->max('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
-                    : $date_to->setTimezone($project->timezone)->format('d-m-Y ')) . ' ' . $project->name;
+        ExportLeadsToMail::dispatch($project, Auth::user()->email, $date_from, $date_to);
 
-        return (new LeadExport)->asOfDate($project, $date_from, $date_to)
-            ->download($filename.".".$format, $format);
+        return back()->withSuccess('Файл будет сформирован и отправлен на Вашу почту');
     } //journal_export
 
     public function notification(Request $request, Project $project)

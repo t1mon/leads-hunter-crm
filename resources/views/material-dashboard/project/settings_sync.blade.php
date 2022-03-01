@@ -19,10 +19,17 @@
             </a>
         </li>
 
-        {{--Настройки разрешений пользователей--}}
+        {{--Настройки Telegram--}}
         <li class="nav-item">
             <a  class="nav-link" data-bs-toggle="tab" href="#telegram">
                 @lang('projects.notifications.telegram_notification')
+            </a>
+        </li>
+
+        {{--Настройки SMS--}}
+        <li class="nav-item">
+            <a  class="nav-link" data-bs-toggle="tab" href="#sms">
+                Настройки SMS
             </a>
         </li>
 
@@ -58,6 +65,10 @@
     {{--Настройки Telegram--}}
     <div class="tab-pane fade" id="telegram" role="tabpanel">
         @include('material-dashboard.project._telegram')
+    </div>
+
+    <div class="tab-pane fade" id="sms" role="tabpanel">
+        @include('material-dashboard.project._sms')
     </div>
 
     {{--Простые вебхуки--}}

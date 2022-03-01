@@ -6,6 +6,7 @@ use App\Events\Leads\LeadCreated;
 use App\Listeners\Leads\SendEmailData;
 use App\Listeners\Leads\SendTelegramData;
 use App\Listeners\Leads\SendWebhookData;
+use App\Listeners\Leads\SendSMSData;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -25,6 +26,7 @@ class EventServiceProvider extends ServiceProvider
         LeadCreated::class => [
             SendEmailData::class,
             SendTelegramData::class,
+            SendSMSData::class,
             SendWebhookData::class,
         ],
     ];

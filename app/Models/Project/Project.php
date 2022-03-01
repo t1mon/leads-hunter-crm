@@ -56,6 +56,12 @@ class Project extends Model
                 "fields": []
             },
 
+            "SMS":
+            {
+                "enabled": false,
+                "text": ""
+            },
+
             "webhooks": [],
 
             "timezone": "UTC"
