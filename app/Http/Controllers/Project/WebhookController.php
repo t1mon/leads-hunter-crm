@@ -148,30 +148,8 @@ class WebhookController extends Controller
 
     public function test(){
 
-        $lead = Leads::find(115);
-        // return $lead->project->webhook_send('Вебхук L-Corp', $lead);
-        // return $lead->project->webhook_send('bitrix_1', $lead);
-
-        // return $lead->project->webhook_send('Вебхук L-Corp', $lead)->json();
-        
-        
-        $string = <<<EOD
-        data: >
-          "contractId": 100,
-          "leadId":  1000,
-          "product": ["typeId": "consumer", "amount": "\$cost", "term": ""],
-          "location": ["region": "\$city", "city": "\$city"],
-          "client": ["lastName": "\$name", "firstName": "", "patronymic": "", "birthDate": "", "age": "", "phone": "\$phone", "email": ""]
-        EOD;
-
-        $fields = ['name', 'phone', 'email'];
-
-        foreach($fields as $field){
-            $string = str_replace('$'.$field, $lead->$field, $string);
-        }
-
-        $result = yaml_parse($string);
-        return $result;
+        $lead = Leads::latest()->first();
+        return $lead->project->webhook_send('Тестовый вебхук для bitrix24', $lead);
     } //test
 
 }

@@ -35,7 +35,7 @@ class SendWebhookData implements ShouldQueue
             $project = $lead->project;
 
             foreach($project->webhooks_active() as $webhook){
-                $response = $project->webhook_send($webhook->name, $lead);
+                $response = $project->webhook_send($webhook->name, $event->lead);
                 if ($response->failed()) {
                     Journal::leadError($lead, "Попытка отправки вебхука {$webhook->name} Код статуса {$response->status()} на url {$webhook->url}");
                     Journal::leadError($event->lead, "Ответ сервера {$response}");
