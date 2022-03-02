@@ -3,6 +3,8 @@
 namespace App\Listeners\Leads;
 
 use App\Events\Leads\LeadCreated;
+use App\Journal\Facade\Journal;
+use App\Services\Sms\SmsSender;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
@@ -15,9 +17,11 @@ class SendSMSData
      *
      * @return void
      */
-    public function __construct()
+    private $sender;
+
+    public function __construct(SmsSender $sender)
     {
-        //
+        $this->sender = $sender;
     }
 
     /**
@@ -29,13 +33,13 @@ class SendSMSData
     public function handle(LeadCreated $event)
     {
         if($event->lead->project->settings['SMS']['enabled']){
-            $response = Http::get('https://sms.ru/sms/send', [
-                'api_id' => 'D08E8C73-ED7D-835C-B9FA-9905C657B685',
-                'to' => preg_replace("/[^,.0-9]/", '', $event->lead->phone),
-                'msg' => $event->lead->project->settings['SMS']['text'],
-                'json' => 1
-            ]);
-            Log::info("SMS: ".$response);
+
+            $response = $this->sender->send($event->lead->phone, $event->lead->project->settings['SMS']['text']);
+
+            $response = json_decode($response);
+
+            Log::channel('leads')->info("send sms to ". $event->lead->phone . " --> STATUS " . $response->status);
+            Journal::lead($event->lead, 'Отправлено смс на номер ' . $event->lead->phone ." --> STATUS " . $response->status);
         }
     }
 }
