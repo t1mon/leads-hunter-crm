@@ -10,8 +10,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SendSMSData
+class SendSMSData implements ShouldQueue
 {
+    public $queue = 'sms';
     /**
      * Create the event listener.
      *
