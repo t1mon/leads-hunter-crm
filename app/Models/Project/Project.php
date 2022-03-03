@@ -56,6 +56,12 @@ class Project extends Model
                 "fields": []
             },
 
+            "SMS":
+            {
+                "enabled": false,
+                "text": ""
+            },
+
             "webhooks": [],
 
             "timezone": "UTC"
@@ -178,7 +184,7 @@ class Project extends Model
         //     $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
 
         if(isset($webhook->query)){
-            $fields = ['name', 'patronymic', 'surname', 'phone', 'email', 'cost', 'city', 'utm_medium', 'utm_source', 'utm_campaign', 'utm_content'];
+            $fields = ['name', 'patronymic', 'surname', 'phone', 'email', 'cost', 'city', 'comment', 'utm_medium', 'utm_source', 'utm_campaign', 'utm_content'];
             foreach($fields as $field){
                 $webhook->query = str_replace('$'.$field, $lead->$field, $webhook->query);
             }

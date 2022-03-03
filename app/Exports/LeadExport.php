@@ -33,7 +33,7 @@ class LeadExport implements FromCollection
         if(!is_null($date_to))
             $leads->where('created_at', '<=', $date_to);
         
-        $leads = $leads->orderBy('updated_at', 'desc')->get();
+        $leads = $leads->orderBy('created_at', 'desc')->get();
 
         $this->leads = $leads;
         $this->permissions = Auth::user()->getPermissionsForProject($project);
