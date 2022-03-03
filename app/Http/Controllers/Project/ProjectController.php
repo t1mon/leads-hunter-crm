@@ -196,9 +196,16 @@ class ProjectController extends Controller
             return (new LeadExport)->today($project)
                 ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
 
-        ExportLeadsToMail::dispatch($project, Auth::user()->email, $date_from, $date_to);
+        //Составление названия файла
+        $filename = (is_null($date_from)
+                    ? Carbon::parse($project->leads->min('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
+                    : $date_from->setTimezone($project->timezone)->format('d-m-Y')) . '-' .
+                    (is_null($date_to)
+                    ? Carbon::parse($project->leads->max('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
+                    : $date_to->setTimezone($project->timezone)->format('d-m-Y ')) . ' ' . $project->name;
 
-        return back()->withSuccess('Файл будет сформирован и отправлен на Вашу почту');
+        return (new LeadExport)->asOfDate($project, $date_from, $date_to)
+            ->download($filename.".".$format, $format);
     } //journal_export
 
     public function notification(Request $request, Project $project)
