@@ -203,7 +203,7 @@
 
                 <div class="col form-check">
                     <label class="form-check-label">
-                        <input type="checkbox" name="fields[fields][COMMENTS]" id="fields[fields][COMMENTS]" value="$comment" class="form-check-input"
+                        <input type="checkbox" name="fields[fields][COMMENTS]" id="fields[fields][COMMENTS]" value='"$comment"' class="form-check-input"
                         {{isset($webhook) ? (array_key_exists('COMMENTS', $webhook_fields['fields']) ? 'checked' : '') : ''}}>
                         Комментарий
                     </label>
