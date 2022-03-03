@@ -1,5 +1,6 @@
 <div class="card">
     <div class="card-body">
+        {{--Общая информация о синхронизации--}}
         <h5 class="card-title text-center">@lang('projects.notifications.info.info')</h5>
         <div class="table-responsive mb-3">
             <table class="table text-center align-middle">
@@ -12,6 +13,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{--E-mail--}}
                     <tr>
                         <td class="text-start text-{{$project->settings['email']['enabled'] ? 'success' : 'danger'}}">E-mail</td>
                         <td class="text-center">
@@ -29,6 +31,7 @@
                         </td>
                     </tr>
 
+                    {{--Telegram--}}
                     <tr>
                         <td class="text-start text-{{$project->settings['telegram']['enabled'] ? 'success' : 'danger'}}">Telegram</td>
                         <td class="text-center">
@@ -55,10 +58,21 @@
                             </span>
                         </td>
                     </tr>
+
+                    {{--SMS--}}
+                    <tr>
+                        <td class="text-start text-{{$project->settings['SMS']['enabled'] ? 'success' : 'danger'}}">SMS</td>
+                        <td class="text-center">
+                            <span class="badge badge-dot">
+                                <i class="bg-{{$project->settings['SMS']['enabled'] ? 'success' : 'secondary'}}">
+                            </span>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
+        {{--Вебхуки--}}
         <div class="table-responsive">
             <h6>@lang('projects.notifications.tab_webhooks')</h6>
             <table class="table text-center align-middle">
