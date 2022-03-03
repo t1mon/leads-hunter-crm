@@ -202,7 +202,7 @@ class ProjectController extends Controller
                     : $date_from->setTimezone($project->timezone)->format('d-m-Y')) . '-' .
                     (is_null($date_to)
                     ? Carbon::parse($project->leads->max('created_at'))->setTimezone($project->timezone)->format('d-m-Y')
-                    : $date_to->setTimezone($project->timezone)->format('d-m-Y ')) . ' ' . $project->name;
+                    : $date_to->setTimezone($project->timezone)->format('d-m-Y ')) . ' Project ' . $project->id;
 
         return (new LeadExport)->asOfDate($project, $date_from, $date_to)
             ->download($filename.".".$format, $format);
