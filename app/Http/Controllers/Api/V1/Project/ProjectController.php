@@ -55,7 +55,7 @@ class ProjectController extends Controller
         $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');
 
         //Загрузка проектов по идентификаторам
-        $projects = Project::whereIn('id', $project_ids)->with('leads')->withCount('leads')->get();
+        $projects = Project::whereIn('id', $project_ids)->with('leads', 'emails')->withCount('leads')->get();
 
         //Передача полученных данных
         return ProjectCollectionResource::collection($projects);
@@ -192,13 +192,12 @@ class ProjectController extends Controller
             $leads->where('created_at', '<=' ,$end_date);
         }
 
-        //Отсеивание дублирующихся лидов (если это указано в запросе)
-        if ($request->has('double_phone') && !empty(request()->double_phone)) {
-            $leads->where('entries', '=', 1);
+        //Entries Отсеивание числа вхождение лидов (если это указано в запросе)
+        if ($request->filled('entries') ) {
+            $request->entries === 1 ?  $leads->where('entries', '=', 1) : $leads->where('entries', '>', 1);
         }
 
-
-        $leads = $leads->orderBy('updated_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
 
         //Загрузка комментариев к лидам
@@ -208,6 +207,7 @@ class ProjectController extends Controller
             $item->class = $item->class;
 //            unset($item->class);
             unset($item->comment_CRM);
+            $item->created_at = Carbon::parse($item->created_at)->setTimezone(config('app.timezone'));
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
