@@ -200,7 +200,7 @@ class MigrateProjects extends Command
                 $project->settings = array_merge($project->settings, $new_settings);
             }
 
-            /* 16.*
+            /* 16.
                 Добавить в настройки проекта раздел "SMS" */
             if(!array_key_exists('SMS', $project->settings)){
                 $new_settings = $project->settings;
@@ -209,6 +209,10 @@ class MigrateProjects extends Command
 
                 $project->settings = array_merge($project->settings, $new_settings);
             }
+
+            /* 17.
+                Присвоение бесхозным хостам идентификатора создателя проекта*/
+            
 
             $project->save();
         }

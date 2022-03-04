@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class HostRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class HostRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        return Auth::check() || Auth::guard('api')->check();
     }
 
     /**
@@ -25,7 +26,11 @@ class HostRequest extends FormRequest
     public function rules()
     {
         return [
-            'host' => ['required', 'regex:~^((http|https)+?://)?(www\.)?[\w\-\.]{2,}\.[\w]{2,}$~i']
+            'host' => ['required', 'regex:~^((http|https)+?://)?(www\.)?[\w\-\.]{2,}\.[\w]{2,}$~i', 
+                        Rule::unique('hosts')->where(function($query){
+                            return $query->where(['host' => $this->host, 'user_id' => Auth::user()->id] ?? Auth::guard('api')->user()->id);
+                        })
+                      ]
         ];
     }
 
@@ -33,6 +38,7 @@ class HostRequest extends FormRequest
     {
         return [
             'host.regex' => 'url должен иметь вид https://example.ru',
+            'host.unique' => 'Вы не можете добавлять повторяющиеся url'
         ];
     }
 }
