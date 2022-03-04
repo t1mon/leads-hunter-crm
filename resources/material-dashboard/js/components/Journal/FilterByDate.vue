@@ -36,6 +36,14 @@ export default {
             dateTo: ''
         }
     },
+    watch: {
+        dateFrom (e) {
+            this.$store.dispatch('setDateFromTo', { dateFrom: e })
+        },
+        dateTo (e) {
+            this.$store.dispatch('setDateFromTo', { dateTo: e })
+        }
+    },
     methods: {
         getDateFromLS () {
             const dateFrom = localStorage.getItem('dateFrom')
@@ -59,15 +67,13 @@ export default {
             this.dateTo = ''
             this.$store.dispatch('getLeads', { projectId: this.projectid })
         },
-        exportJournal(){
-
+        exportJournal () {
             const query = {
                 date_from: this.dateFrom,
                 date_to: this.dateTo
-
             }
             const url = window.location.href + `/download?` + $.param(query)
-            window.location = url;
+            window.location = url
         }
     },
     created () {

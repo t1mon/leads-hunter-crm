@@ -28,7 +28,7 @@ class Leads extends Model
      * @var array
      */
     protected $fillable = [
-        'project_id', 'owner', 'name','surname','patronymic', 'phone', 'entries', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'source', 'utm','host','url_query_string'
+        'project_id', 'owner', 'name','surname','patronymic', 'phone', 'entries', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'source', 'utm','host','url_query_string', 'created_at'
     ];
 
     protected $casts = [

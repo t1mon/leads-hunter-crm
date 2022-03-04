@@ -29,6 +29,7 @@ use Illuminate\Validation\Rule;
 use App\Journal\Facade\Journal;
 use App\Exports\LogsExportToday;
 use App\Exports\LeadExport;
+use App\Jobs\ExportLeadsToMail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
@@ -55,7 +56,7 @@ class ProjectController extends Controller
         $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');
 
         //Загрузка проектов по идентификаторам
-        $projects = Project::whereIn('id', $project_ids)->with('leads', 'emails')->withCount('leads')->get();
+        $projects = Project::whereIn('id', $project_ids)->with('leads','emails')->withCount('leads')->get();
 
         //Передача полученных данных
         return ProjectCollectionResource::collection($projects);
@@ -168,12 +169,11 @@ class ProjectController extends Controller
         if (Gate::forUser($user)->denies('view', $project))
             return $this->_response('project_error', 'You are not authorized for this action', Response::HTTP_FORBIDDEN);
 
-//        dd($request->date_from);
-
         //Валидация фильтра по датам
         $this->validate($request, [
             'date_from' => 'nullable|date_format:Y-m-d',
             'date_to'   => 'nullable|date_format:Y-m-d',
+            'entry_filter' => 'nullable|'.Rule::in(['>','='])
         ]);
 
         $leads = $project->leads();
@@ -181,37 +181,40 @@ class ProjectController extends Controller
         //Отфильтровка по датам (если они присутствуют в запросе)
         if($request->filled('date_from'))
         {
-//            dd($request->date_from);
             $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+            //$date = Carbon::createFromFormat('Y-m-d',$request->date_from,config('app.timezone'))->startOfDay();
             $leads->where('created_at', '>=' ,$date);
         }
 
         if($request->filled('date_to'))
         {
             $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+            //$end_date = Carbon::createFromFormat('Y-m-d',$request->date_to,config('app.timezone'))->endOfDay();
             $leads->where('created_at', '<=' ,$end_date);
         }
-
-        //Entries Отсеивание числа вхождение лидов (если это указано в запросе)
-        if ($request->filled('entries') ) {
-            $request->entries === 1 ?  $leads->where('entries', '=', 1) : $leads->where('entries', '>', 1);
+//        dd($request->entry_filter);
+        //Отсеивание дублирующихся лидов (если это указано в запросе)
+        if ($request->filled('entry_filter')) {
+            $leads->where('entries',  $request->entry_filter, 1);
         }
 
-        $leads = $leads->orderBy('created_at', 'desc')->paginate(50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('created_at', 'desc')->paginate($request->rows_num ?? 50)->onEachSide(0)->withPath("?" . $request->getQueryString());
         $classes = $project->classes;
 
         //Загрузка комментариев к лидам
         $leads->each(function($item, $key){
             $item->comment_crm = [$item->comment_CRM?->id, $item->comment_CRM?->comment_body];
-//            $item->color = $item->class?->color;
             $item->class = $item->class;
-//            unset($item->class);
             unset($item->comment_CRM);
-            $item->created_at = Carbon::parse($item->created_at)->setTimezone(config('app.timezone'));
+            $item->created_at_format = Carbon::parse($item->created_at, config('app.timezone'))->setTimezone($item->project->timezone)->format('d.m.Y H:i:s');
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
     } //journal
+
+    public function journal_export(Project $project, Request $request){
+        
+    } //journal_export
 
     public function settings_basic(Project $project, Request $request) //Страница основных настроек
     {

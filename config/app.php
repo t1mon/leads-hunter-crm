@@ -183,6 +183,7 @@ return [
         App\Providers\ObserverServiceProvider::class,
 
         App\Providers\JournalServiceProvider::class,
+        App\Providers\SmsServiceProvider::class,
 
     ],
 

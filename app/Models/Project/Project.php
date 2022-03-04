@@ -40,6 +40,7 @@ class Project extends Model
             "enabled": true,
             "description": false,
             "color": "5F9EA0",
+            "leadValidDays": 0,
             "email":
             {
                 "template": "view",
@@ -53,6 +54,12 @@ class Project extends Model
             {
                 "enabled": false,
                 "fields": []
+            },
+
+            "SMS":
+            {
+                "enabled": false,
+                "text": ""
             },
 
             "webhooks": [],
@@ -177,7 +184,7 @@ class Project extends Model
         //     $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
 
         if(isset($webhook->query)){
-            $fields = ['name', 'patronymic', 'surname', 'phone', 'email', 'cost', 'city', 'utm_medium', 'utm_source', 'utm_campaign', 'utm_content'];
+            $fields = ['name', 'patronymic', 'surname', 'phone', 'email', 'cost', 'city', 'comment', 'utm_medium', 'utm_source', 'utm_campaign', 'utm_content'];
             foreach($fields as $field){
                 $webhook->query = str_replace('$'.$field, $lead->$field, $webhook->query);
             }

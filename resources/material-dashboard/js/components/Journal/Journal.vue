@@ -32,7 +32,7 @@
                                     <span>Дата</span>
                                     <div class="journal__sort">
                                         <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('updated_at', 'sortDate', $event)">По возрастанию</span>
+                                            <span class="journal__filter__text" @click="sortJournal('created_at_format', 'sortDate', $event)">По возрастанию</span>
                                         </div>
                                         <div class="journal__sort__before"></div>
                                     </div>
@@ -106,7 +106,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at }}</p>
+                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at_format }}</p>
                                 </td>
                                 <td :style="'background:' + ' ' + '#' + leadColor(lead.class)">
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
@@ -205,10 +205,18 @@ export default {
     },
     methods: {
         sortJournalEntries () {
-            this.$store.dispatch('sortJournalEntries', { first: this.first, second: this.second })
+            const _dateFrom = this.$store.getters.stateDateFrom
+            const _dateTo = this.$store.getters.stateDateTo
+            let _entriesOperator = null
+            if (this.first && !this.second) {
+                _entriesOperator = '='
+            } else if (!this.first && this.second) {
+                _entriesOperator = '>'
+            }
+            this.$store.dispatch('getLeads', { projectId: this.projectid, entriesOperator: _entriesOperator, dateFrom: _dateFrom, dateTo: _dateTo })
         },
         sortJournal (_param, _sortParam, _event) {
-          this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
+            this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
         },
         dropdownFilter ({
             event,
@@ -295,8 +303,8 @@ export default {
         color (event, color) {
             event.currentTarget.closest('td').previousElementSibling.style.background = '#' + color
         },
-        getLeads (_projectId, _dateFrom, _dateTo) {
-            this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo })
+        getLeads (_projectId, _dateFrom, _dateTo, _rowsNum) {
+            this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo, rowsNum: _rowsNum })
         }
     },
     computed: {
@@ -319,6 +327,9 @@ export default {
 </script>
 
 <style scoped>
+.table-responsive {
+    padding: 10px 0 !important;
+}
 
 .journal__sort__label {
     position: relative;
