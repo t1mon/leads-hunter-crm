@@ -89,7 +89,7 @@ export default {
     ) {
       commit('switchSpinner')
       // считаем сколько лидов поместится
-      const rowsNum = Math.floor((document.documentElement.clientHeight - 60) / 49)
+      const rowsNum = Math.floor((document.documentElement.clientHeight - 205) / 49)
         // путь для пагинаций
       const page = _paginatePath ? _paginatePath + '&page=' + _paginateNum : ''
         // номер лида, если перешёл на другую страницу по номеру

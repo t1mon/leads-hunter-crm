@@ -40,7 +40,7 @@
 @include('material-dashboard.shared.navbar-vertical-left')
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     @include('material-dashboard.shared.navbar-main-horizontal')
-    <div class="container-fluid px-3 py-4">
+    <div class="container-fluid px-3">
 
             @yield('content')
 

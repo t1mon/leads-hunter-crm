@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <div class="row my-4">
-            <div class="col-12">
-                <div class="card">
+    <div class="journal">
+        <div class="row journal__box">
+            <div class="col-12 journal__wrap">
+                <div class="card journal__card">
                     <div class="table-responsive">
                         <table class="table align-items-center mb-0">
                             <thead>
@@ -154,11 +154,11 @@
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.cost }}
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
+                                <td @click="test()" class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.host }}
                                 </td>
-                                <td v-tLength="25" class="text-sm font-weight-normal mb-0">
-                                    {{ lead.referrer }}
+                                <td v-tLengthDyn="{text: lead.referrer, length: 25 }" class="text-sm font-weight-normal mb-0">
+<!--                                    {{ lead.referrer }}-->
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm?.utm_term }}
@@ -198,12 +198,17 @@ export default {
     props: ['projectid'],
     data () {
       return {
+          testtest: false,
           counterDocListener: 0,
           first: false,
           second: false
       }
     },
     methods: {
+        test() {
+          this.testtest = !this.testtest
+            console.log(this.testtest)
+        },
         sortJournalEntries () {
             const _dateFrom = this.$store.getters.stateDateFrom
             const _dateTo = this.$store.getters.stateDateTo
@@ -241,7 +246,6 @@ export default {
                 document.removeEventListener('click', deleteDiv)
             }
             const target = event.currentTarget
-            target.style.position = 'relative'
             const div = target.lastElementChild
             const divBefore = div.lastElementChild
             div.style.left = _left + 'px'
@@ -327,8 +331,25 @@ export default {
 </script>
 
 <style scoped>
+th {
+    position: relative;
+}
+.journal {
+    height: calc(100vh - 160px);
+}
+.journal__box {
+    height: 100%;
+}
+.journal__card {
+    height: 100%;
+}
+.journal__wrap {
+    height: 100%;
+}
 .table-responsive {
-    padding: 10px 0 !important;
+    padding: 0 !important;
+    overflow: auto !important;
+    height: 100% !important;
 }
 
 .journal__sort__label {
@@ -407,5 +428,15 @@ export default {
 }
 .journal__filter__text:hover {
     background-color: #d0d0d0;
+}
+@media screen and (max-width: 991px) {
+    .journal {
+        height: calc(100vh - 205px);
+    }
+}
+@media screen and (max-width: 767px) {
+    .journal {
+        height: calc(100vh - 310px);
+    }
 }
 </style>

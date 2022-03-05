@@ -1,25 +1,25 @@
 <template>
 
-    <div class="row">
+    <div class="row filter-by-date">
         <form @submit.prevent="getFilteredLeads(this.projectid, dateFrom, dateTo)" action="#" accept-charset="UTF-8" class="journal__date__form d-flex justify-content-between">
             <div class="journal__date__box">
                 <div class="d-flex journal__date__dates">
-                    <div class="input-group input-group-static my-3 p-2">
+                    <div class="input-group input-group-static px-2">
                         <label>Дата от</label>
                         <input v-model="dateFrom" type="date" class="form-control" name="date_from">
                     </div>
-                    <div class="input-group input-group-static my-3 p-2">
+                    <div class="input-group input-group-static px-2">
                         <label> до</label>
                         <input v-model="dateTo" type="date" class="form-control" name="date_to">
                     </div>
                 </div>
                 <div class="journal__date__buttons">
-                    <button type="submit" class="btn btn-primary journal__date__button"> Применить </button>
-                    <button @click.prevent="getAllLeads" class="btn btn-primary journal__date__button"> Показать все </button>
+                    <button type="submit" class="mb-0  btn btn-primary journal__date__button journal__date__button--first"> Применить </button>
+                    <button @click.prevent="getAllLeads" class="btn mb-0 btn-primary journal__date__button"> Показать все </button>
                 </div>
             </div>
-            <div class="d-flex justify-content-end align-items-start">
-                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary" > Скачать записи </button>
+            <div class="d-flex justify-content-end align-items-end">
+                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0" > Скачать записи </button>
             </div>
         </form>
     </div>
@@ -83,6 +83,12 @@ export default {
 </script>
 
 <style scoped>
+.filter-by-date {
+    margin-bottom: 5px;
+}
+.form-control {
+    padding: 0 !important;
+}
 
 .journal__date__dates {
     margin-right: 16px;
@@ -93,38 +99,31 @@ export default {
 }
 
 .journal__date__button {
-    width: 100%;
 }
-
 .journal__date__buttons {
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
+}
+.journal__date__button--first {
+    margin-right: 16px;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 991px) {
     .journal__date__box {
         flex-direction: column;
     }
-    .journal__date__buttons {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .journal__date__button {
-        margin-right: 16px;
-        margin-bottom: 0;
-    }
-    .journal__date__button:last-of-type {
-        margin-right: 0;
-    }
     .journal__date__dates {
         margin-right: 0;
+        margin-bottom: 5px;
     }
-    .journal__date__button--last {
-        margin-top: 24px;
+    .journal__date__button {
+        width: 100%;
+    }
+    .journal__date__buttons {
+        padding: 0 4px;
     }
 }
-
-@media screen and (max-width: 575px) {
+@media screen and (max-width: 767px) {
     .journal__date__form {
         flex-direction: column-reverse;
     }
@@ -135,5 +134,6 @@ export default {
         margin: 0;
     }
 }
+
 
 </style>

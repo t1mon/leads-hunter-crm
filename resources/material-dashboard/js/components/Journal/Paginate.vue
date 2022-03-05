@@ -8,7 +8,7 @@
             class="journal__paginate__box"
         >
             <nav>
-                <ul class="pagination">
+                <ul class="pagination m-0">
                     <li
                         class="page-item paginate__arrow"
                         @click="prevNext(this.projectid, { prev: stateProjectJour.leads.prev_page_url })"
@@ -84,6 +84,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 5px;
 }
 .paginate__arrow {
     cursor: pointer;
@@ -92,7 +93,7 @@ export default {
     cursor: pointer;
 }
 
-@media screen and (max-width: 575px) {
+@media screen and (max-width: 767px) {
     .journal__paginate__row {
         flex-direction: column;
     }

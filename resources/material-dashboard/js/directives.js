@@ -15,14 +15,70 @@ export default function directives (app) {
         value = binding.value
       }
       div.classList.add('tLength-div')
-      div.textContent = el.textContent
       el.classList.add('tLength')
+      div.textContent = el.textContent
       el.textContent.length > value ? dots = '...' : dots = ''
       const text = el.textContent.substring(0, value) + dots
       el.textContent = text
       if (!binding.value.notDiv && el.textContent.length > value) {
         el.appendChild(div)
       }
+    }
+  })
+
+  app.directive('tLengthDyn', {
+    mounted (el, binding) {
+      const div = document.createElement('div')
+      div.classList.add('tLength-div')
+      el.classList.add('tLength')
+      let dots
+      let _text
+      const text = binding.value.text
+      const length = binding.value.length
+      div.textContent = text
+      if (text) {
+        text.length > length ? dots = '...' : dots = ''
+        _text = text.substring(0, length) + dots
+      }
+      el.textContent = _text
+      if (el.textContent.length > length) {
+        el.appendChild(div)
+      } else {
+        div.remove()
+      }
+    },
+    updated (el, bind) {
+      let div = el.querySelector('.tLength-div')
+      const text = bind.value.text
+      const length = bind.value.length
+      let dots
+      let _text
+      if (div) {
+        div.textContent = text
+      } else {
+        div = document.createElement('div')
+        div.classList.add('tLength-div')
+        div.textContent = text
+      }
+      if (text) {
+        text.length > length ? dots = '...' : dots = ''
+        _text = text.substring(0, length) + dots
+      }
+      el.textContent = _text
+      if (el.textContent.length > length) {
+        el.appendChild(div)
+      } else {
+        div.remove()
+      }
+    }
+  })
+
+  app.directive('test', {
+    mounted (el, binding) {
+      el.textContent = binding.value
+    },
+    updated (el, binding) {
+      el.textContent = binding.value
     }
   })
 
