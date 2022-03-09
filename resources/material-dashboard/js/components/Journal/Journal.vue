@@ -346,6 +346,9 @@ th {
     top: 0;
     width: 100%;
     z-index: 200;
+    background-color: #FCFCFE;
+}
+.dark-version .journal__thead {
     background-color: #202940;
 }
 .journal__thead::after {
