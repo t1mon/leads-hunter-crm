@@ -13,7 +13,7 @@ class Host extends Model
     const HOST_NOT_FOUND = 'host_not_found';
 
     //Свойства
-    protected $fillable = ['host', 'project_id'];
+    protected $fillable = ['host', 'project_id', 'user_id'];
 
 
     //Методы

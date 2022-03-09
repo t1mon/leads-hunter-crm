@@ -33,15 +33,13 @@ class HostController extends Controller
         return response()->json(['data' => $hosts], Response::HTTP_OK);
     } //index
     
-    public function store(Request $request)
+    public function store($project_id, HostRequest $request)
     {
         $user = Auth::guard('api')->user();
+        $project = Project::findOrFail($project_id);
         //Проверка полномочий пользователя
         if (Gate::forUser($user)->denies('settings', $project))
             return response()->json(['message' => 'You are not authorized for this action'], Response::HTTP_FORBIDDEN);
-
-        //Валидация и форматирование URL хоста
-        $request->validate(['name' => 'required', 'host' => 'required']);
 
         if(filter_var($request->host, FILTER_VALIDATE_URL)){
             $host = parse_url($request->host);
@@ -49,19 +47,19 @@ class HostController extends Controller
                 'host' => $host['host'],
             ]);
         }
-        $request->merge(['host' =>  Str::lower($request->host)]); //Перевод в нижний регистр
+        $request->merge(['host' =>  Str::lower($request->host), 'user_id' => $user->id, 'project_id' => $project->id]); //Перевод в нижний регистр
 
         try {
-            if (Host::where(['host' => $request->host, 'project_id' => $request->project_id])->exists()) {
+            if (Host::where(['host' => $request->host, 'project_id' => $project->id, 'user_id' => $user->id])->exists()) {
                 throw new \Exception(trans('projects.hosts.create-error') . ' ' . $request->host . ': ' . trans('projects.hosts.error-exists'));
             }
             Host::create($request->all());
         } catch (\Exception $exception) {
-            Journal::projectError(Project::find($request->project_id), $exception->getMessage());
+            Journal::projectError($project, $exception->getMessage());
             Log::error($exception->getMessage());
             return response()->json(['message' => 'Such host already exists'], Response::HTTP_PRECONDITION_FAILED);
         }
-        Journal::project(Project::find($request->project_id), $user->name . ' добавил хост ' . $request->host);
+        Journal::project($project, $user->name . ' добавил хост ' . $request->host);
         return response()->json(['message' => 'Host has been created'], Response::HTTP_CREATED);
     } //store
 

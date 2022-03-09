@@ -26,7 +26,7 @@ class HostController extends Controller
                 'host' => $host['host'],
             ]);
         }
-        $request->merge(['host' =>  Str::lower($request->host)]); //Перевод в нижний регистр
+        $request->merge(['host' =>  Str::lower($request->host), 'user_id' => Auth::user()->id]); //Перевод в нижний регистр
 
 
         try {

@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Project\Project;
+use App\Models\Project\Host;
 use App\Models\Project\UserPermissions;
 
 class MigrateProjects extends Command
@@ -200,7 +201,7 @@ class MigrateProjects extends Command
                 $project->settings = array_merge($project->settings, $new_settings);
             }
 
-            /* 16.*
+            /* 16.
                 Добавить в настройки проекта раздел "SMS" */
             if(!array_key_exists('SMS', $project->settings)){
                 $new_settings = $project->settings;
@@ -209,6 +210,10 @@ class MigrateProjects extends Command
 
                 $project->settings = array_merge($project->settings, $new_settings);
             }
+
+            /* 17.
+                Присвоение бесхозным хостам идентификатора создателя проекта*/
+            Host::where(['project_id' => $project->id, 'user_id' => 0])->update(['user_id' => $project->user_id]);
 
             $project->save();
         }
