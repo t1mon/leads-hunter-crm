@@ -5,7 +5,7 @@
                 <div class="card journal__card">
                     <div class="table-responsive">
                         <table class="table align-items-center mb-0">
-                            <thead>
+                            <thead class="journal__thead">
                             <tr>
                                 <th
                                     @click="dropdownFilter({
@@ -96,7 +96,7 @@
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">ИСТОЧНИК</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="journal__tbody">
                             <tr v-for="(lead) in stateLeads">
                                 <td>
                                     <div class="d-flex px-2 py-1">
@@ -158,7 +158,7 @@
                                     {{ lead.host }}
                                 </td>
                                 <td v-tLengthDyn="{text: lead.referrer, length: 25 }" class="text-sm font-weight-normal mb-0">
-<!--                                    {{ lead.referrer }}-->
+                                    <!--                                    {{ lead.referrer }}-->
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm?.utm_term }}
@@ -337,19 +337,35 @@ th {
 .journal {
     height: calc(100vh - 160px);
 }
+.table {
+    position: relative;
+}
+.journal__thead {
+    position: sticky;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+    background-color: #202940;
+}
+.journal__thead::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: 0;
+    background-color: #797F8D;
+}
 .journal__box {
     height: 100%;
 }
 .journal__card {
     height: 100%;
+    overflow: hidden;
 }
 .journal__wrap {
     height: 100%;
-}
-.table-responsive {
-    padding: 0 !important;
-    overflow: auto !important;
-    height: 100% !important;
 }
 
 .journal__sort__label {
@@ -419,7 +435,11 @@ th {
 }
 .table-responsive {
     padding-top: 50px;
+    padding: 0 !important;
+    overflow: auto !important;
+    height: 100% !important;
 }
+
 .journal__filter__text {
     display: block;
     width: 100%;
