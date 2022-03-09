@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Project\Project;
+use App\Models\Project\Host;
 use App\Models\Project\UserPermissions;
 
 class MigrateProjects extends Command
@@ -212,7 +213,7 @@ class MigrateProjects extends Command
 
             /* 17.
                 Присвоение бесхозным хостам идентификатора создателя проекта*/
-            
+            Host::where(['project_id' => $project->id, 'user_id' => 0])->update(['user_id' => $project->user_id]);
 
             $project->save();
         }
