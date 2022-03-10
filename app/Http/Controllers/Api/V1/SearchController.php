@@ -30,16 +30,16 @@ class SearchController extends Controller
 {
     public function __construct(){
         $this->models = collect([
-            'Role' => Role::class,
-            'Leads' => Leads::class,
-            'User' => User::class,
-            'Email' => Email::class,
+//            'Role' => Role::class,
+//            'Leads' => Leads::class,
+//            'User' => User::class,
+//            'Email' => Email::class,
             'Host' => Host::class,
-            'LeadClass' => LeadClass::class,
-            'Project' => Project::class,
-            'TelegramID' => TelegramID::class,
-            'UserPermissions' => UserPermissions::class,
-            'Comment' => Comment::class,
+//            'LeadClass' => LeadClass::class,
+//            'Project' => Project::class,
+//            'TelegramID' => TelegramID::class,
+//            'UserPermissions' => UserPermissions::class,
+//            'Comment' => Comment::class,
         ]);
     } // __construct
 
@@ -56,7 +56,7 @@ class SearchController extends Controller
         foreach($this->models as $model_key => $model){
             $all = $model::all(); //Список всех записей по данной модели
             if(is_null($all)) continue;
-    
+
             $fields = collect($all[0]->toArray())->keys(); //Список доступных полей в модели
 
             //Поиск по каждому полю
@@ -64,7 +64,7 @@ class SearchController extends Controller
                 $temp = $all->filter(function($item) use ($field, $request){
                     // return is_array($item->$field) ? false : (mb_stripos($item->$field, $request->value) !== false);
                     return mb_stripos( is_array($item->$field) ? json_encode($item->$field) : $item->$field, $request->value) !== false;
-                    
+
                     // try{
                     //     return mb_stristr($item->$field, $request->value);
                     // }
@@ -100,7 +100,7 @@ class SearchController extends Controller
         }
         else
             return response()->json(['message' => 'Результатов по запросу не найдено'], Response::HTTP_OK);
-        
+
     } //search
 
     /*###############
