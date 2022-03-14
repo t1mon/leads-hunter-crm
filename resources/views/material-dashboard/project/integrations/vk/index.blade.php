@@ -29,7 +29,6 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>URL</th>
                         <th>Ответ</th>
                         <th>Идентификатор группы</th>
                         <th>Посадочная</th>
@@ -41,7 +40,7 @@
                 <tbody>
                     {{-- Форма для добавления --}}
                     <tr>
-                        <td class="text-info fw-bold" colspan="2">Новая:</td>
+                        <td class="text-info fw-bold">Новая:</td>
                         <td>
                             <div class="border border-dark rounded-1 px-2">
                                 {!! Form::text('confirmation_response', null, ['class' => 'form-control', 'form' => 'vk_add']) !!}
@@ -64,7 +63,7 @@
                         </td>
                         <td>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" form="vk_add" id="form-enable">
+                                <input type="checkbox" name="enabled" class="form-check-input" value="1" form="vk_add" id="form-enable" checked>
                                 {!! Form::label('form-enable', 'Включить', ['class' => 'form-check-label']) !!}
                             </div>
                         </td>
@@ -78,7 +77,18 @@
                         @foreach ($project->vk_forms as $form)
                             <tr>
                                 <td>{{$form->id}}</td>
-                                <td>{{$form->id}}</td>
+                                <td>{{$form->confirmation_response}}</td>
+                                <td>{{$form->group_id}}</td>
+                                <td>{{$form->host}}</td>
+                                <td>{{$form->source}}</td>
+                                <td>{{$form->enabled ? 'Включен' : 'Выключен' }}</td>
+                                <td>
+                                    {!! Form::model($form, ['route' => ['vk_forms.destroy', [$project, $form]], 'method' => 'DELETE']) !!}
+                                    <button class="btn btn-danger">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                    {!! Form::close() !!}
+                                </td>
                             </tr>
                         @endforeach
                     @else
