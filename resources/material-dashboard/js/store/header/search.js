@@ -34,11 +34,6 @@ export default {
     },
     closeHeaderSearchPopup ({ state, commit }, event) {
       commit('closeHeaderSearchPopup')
-    },
-    closeHeaderSearchPopupTarget ({ state, commit }, event) {
-      if (event.target.classList.contains('modal')) {
-        commit('closeHeaderSearchPopup')
-      }
     }
   }
 }

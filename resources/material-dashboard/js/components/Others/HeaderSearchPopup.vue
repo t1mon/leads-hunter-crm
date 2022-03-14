@@ -1,23 +1,15 @@
 <template>
-    <div @click="closeHeaderSearchPopupTarget($event)" class="modal fade show" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: block;" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title font-weight-normal" id="exampleModalLabel">Список ссылок:</h6>
-                    <button @click="closeHeaderSearchPopup" type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul class="modal__ul">
-                        <li class="modal__li" v-for="link in links"><a :href="link">{{link}}</a></li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
-        </div>
-    </div>
+   <div class="headerSearchPopup">
+       <span @click="closeHeaderSearchPopup" class="headerSearchPopup__close material-icons">close</span>
+       <p class="headerSearchPopup__title">Ссылки:</p>
+       <div class="headerSearchPopup__content">
+           <ul ref="ul" class="headerSearchPopup__ul">
+               <li v-for="(link) in links" :key="link" class="headerSearchPopup__li">
+                   <a :href="link"><span :title="link">{{ link }}</span></a>
+               </li>
+           </ul>
+       </div>
+   </div>
 </template>
 
 <script>
@@ -31,6 +23,11 @@ export default {
               'LoremIpsumDolorSitOmlet',
               'LoremIpsumDolorSitOleg',
               'LoremIpsumDolorSitArbalet',
+              'LoremIpsumDolorSitArbaletasdasdasdasdadad',
+              'LoremIpsumDolorSitArbalet',
+              'LoremIpsumDolorSitArbalet',
+              'LoremIpsumDolorSitArbalet',
+              'LoremIpsumDolorSitArbalet',
               'LoremIpsumDolorSitAAAAA'
           ]
       }
@@ -38,27 +35,83 @@ export default {
     methods: {
         closeHeaderSearchPopup () {
             this.$store.dispatch('closeHeaderSearchPopup')
-        },
-        closeHeaderSearchPopupTarget (event) {
-            this.$store.dispatch('closeHeaderSearchPopupTarget', event)
+        }
+    },
+    computed: {
+        stateHeaderSearchPopup () {
+           return this.$store.getters.stateHeaderSearchPopup
         }
     }
 }
 </script>
 
 <style scoped>
-.modal {
-    background-color: rgba(0,0,0, 0.6);
-    z-index: 10000;
+.dark-version .headerSearchPopup {
+    background-color: #202940;
+}
+.headerSearchPopup {
+    position: absolute;
+    top: 100%;
+    left: -1px;
+    z-index: 201;
+    width: calc(100% + 1px);
+    background-color: #FCFCFE;
+    border: 1px solid #d2d6da;
+    border-top: none;
+    border-radius: 0 0 0.375rem 0.375rem !important;
+    overflow: hidden;
     animation: fade-in 0.3s;
 }
-.dark-version .modal-content {
-    background-color: #41485A;
+.headerSearchPopup__content {
+    overflow-y: auto;
+    max-height: 200px;
 }
-.modal__ul {
+.headerSearchPopup__close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    cursor: pointer;
+    z-index: 2;
+}
+.headerSearchPopup__title {
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    position: relative;
+}
+.headerSearchPopup__title::after {
+    content: '';
+    position: absolute;
+    width: calc(100% - 24px);
+    height: 1px;
+    background-color: #d2d6da;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.headerSearchPopup__ul {
     list-style-type: none;
+    padding: 0;
+    margin: 0;
+    padding: 0 12px 12px;
 }
-.modal__li {
+.headerSearchPopup__li span:hover {
+    color: #e91e63 !important;
+}
+.headerSearchPopup__li {
     color: #495057 !important;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.headerSearchPopup__li:last-of-type {
+    margin-bottom: 0;
+}
+.headerSearchPopup__li a {
+    display: block;
+}
+.headerSearchPopup__li span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>
