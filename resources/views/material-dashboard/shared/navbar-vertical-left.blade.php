@@ -116,6 +116,12 @@
                                             <span class="sidenav-normal  ms-2  ps-1"> @lang('projects.sidebar.integrations') </span>
                                         </a>
                                     </li>
+
+                                    <li class="nav-item ">
+                                        <a class="nav-link text-white " href={{route('project.integrations', $project->id)}}>
+                                            <span class="sidenav-normal  ms-2  ps-1"> (+) Интеграции </span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                     </li>

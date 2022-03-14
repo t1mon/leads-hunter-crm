@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('{project}/settings_basic/{tab?}', [ProjectController::class, 'settings_basic'])->name('project.settings-basic');
         Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
+        Route::get('{project}/integrations', [ProjectController::class, 'integrations'])->name('project.integrations');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/users', [UserPermissionsController::class, 'list'])->name('project.users');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');

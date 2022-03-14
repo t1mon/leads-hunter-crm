@@ -78,6 +78,8 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
     Route::get('/lead.test', 'LeadsController@test')->name('lead.test');
     // Route::apiResource('/lead', 'LeadsController')->only(['store', 'update', 'destroy']);
 
+    Route::post('vk/project/{project}/lead.add', 'Project\VKFormController@leadAdd')->name('lead.vk.add'); //Добавление лида через VK API
+
     //Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
 
     // Comments
