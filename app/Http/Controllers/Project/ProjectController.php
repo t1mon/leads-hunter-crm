@@ -133,6 +133,11 @@ class ProjectController extends Controller
             compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs') );
     } //settings_sync
 
+    public function integrations(Project $project){ //Страница интеграций
+        $project->vk_forms;
+        return view('material-dashboard.project.integrations.index', compact('project'));
+    } //integrations
+
     /**
      * Display the specified resource.
      *

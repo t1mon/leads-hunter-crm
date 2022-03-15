@@ -9,6 +9,7 @@ use App\Http\Controllers\Project\LeadClassController;
 use App\Http\Controllers\Project\UserPermissionsController;
 use App\Http\Controllers\Project\ProjectTokenController;
 use App\Http\Controllers\Project\WebhookController;
+use App\Http\Controllers\Project\VKFormController;
 use App\Http\Controllers\Project\Lead\CommentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPasswordController;
@@ -54,6 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('{project}/settings_basic/{tab?}', [ProjectController::class, 'settings_basic'])->name('project.settings-basic');
         Route::get('{project}/settings_sync/{tab?}', [ProjectController::class, 'settings_sync'])->name('project.settings-sync');
+        Route::get('{project}/integrations', [ProjectController::class, 'integrations'])->name('project.integrations');
         Route::get('{project}/hosts', [ProjectController::class, 'hosts'])->name('project.hosts');
         Route::get('{project}/users', [UserPermissionsController::class, 'list'])->name('project.users');
         Route::get('{project}/notification', [ProjectController::class, 'notification'])->name('project.notification');
@@ -67,6 +69,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('project/{project}/class', LeadClassController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('project/{project}/webhook', WebhookController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
         Route::post('{project}/webhook/{webhook}/toggle', [WebhookController::class, 'toggle'])->name('webhook.toggle');
+        Route::resource('project/{project}/vk_forms', VKFormController::class)->only(['store', 'edit', 'update', 'destroy']);
+
     });
 
     Route::resource('newsletter-subscriptions', NewsletterSubscriptionController::class)->only('store');
