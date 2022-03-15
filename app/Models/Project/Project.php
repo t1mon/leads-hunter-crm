@@ -235,5 +235,9 @@ class Project extends Model
     public function classes(){ //Получить классы, назначенные проекту
         return $this->hasMany(LeadClass::class);
     } //classes
+
+    public function vk_forms(){ //Получить формы, привязанные к проекту
+        return $this->hasMany(VKForm::class);
+    } //vk_forms
 }
 
