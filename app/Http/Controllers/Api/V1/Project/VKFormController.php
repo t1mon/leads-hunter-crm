@@ -35,7 +35,8 @@ class VKFormController extends Controller
         $form = VKForm::where(['group_id' => $request->group_id, 'project_id' => $project->id])->first();
 
         //TODO Выяснить причину появления debugbar в теле запроса
-        app('debugbar')->disable();
+        if (env('APP_DEBUG') === true )
+            app('debugbar')->disable();
 
         if($request->type === 'confirmation')
             return is_null($form) ? response(false, 404) : response($form->confirmation_response, 200);
