@@ -21,7 +21,9 @@
     {{-- Форма для добавления (указывается отдельно, поскольку её нельзя поместить в таблицу) --}}
     {!! Form::open(['url' => route('vk_forms.store', $project), 'method' => 'CREATE', 'id' => 'vk_add']) !!}
     {!! Form::close() !!}
-
+    <div>
+        <h4> Адрес: {{ \Illuminate\Support\Facades\URL::route('vk.webhook',$project) }}</h4>
+    </div>
     {{-- Таблица с формами --}}
     <div class="card">
         <div class="card-body">
@@ -101,6 +103,6 @@
         </div>
     </div>
 
-    
+
 </div>
 

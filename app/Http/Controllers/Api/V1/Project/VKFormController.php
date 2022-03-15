@@ -31,9 +31,9 @@ class VKFormController extends Controller
     CRUD-методы
     ##############
     */
-    public function leadAdd(Project $project, Request $request){ //Подтверждение адреса и добавление лида
+    public function webHook(Project $project, Request $request){ //Подтверждение адреса и добавление лида
         $form = VKForm::where(['group_id' => $request->group_id, 'project_id' => $project->id])->first();
-        
+
         //TODO Выяснить причину появления debugbar в теле запроса
         app('debugbar')->disable();
 
@@ -49,7 +49,7 @@ class VKFormController extends Controller
             'source' => $form->source,
             'owner' => 'API (VK)',
         ]);
-        
+
         $this->leads->createOrUpdate($request->all());
 
         Log::info($request->all());

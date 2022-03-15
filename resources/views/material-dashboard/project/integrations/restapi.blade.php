@@ -1,10 +1,22 @@
 <div class="card">
     <div class="card-body">
-        <p class="card-text text-info text-center fs-4">Сюда будет перенесено управление API-токеном проекта.</p>
-        <p class="card-text text-danger text-center fs-4">Оставайтесь на связи</p>
-        <p class="text-secondary text-center fs-6">Ваше мнение совсем не важно для нас</p>
-        <img src="{{asset('media/img/cat.jpg')}}" class="card-img-bottom" alt="мэу">
-        
+        <h1>@lang('projects.integrated')</h1>
+        <hr class="my-4">
+        <div class="form-group">
+            {!! Form::label('project_id', __('projects.attributes.project_id')) !!}
+            {!! Form::text('project_id', $project->id, ['class' => 'form-control', 'readonly']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('api_token', __('projects.attributes.api_token')) !!}
+            {!! Form::text('api_token', $project->api_token ?? __('projects.empty_api_token'), ['class' => 'form-control', 'readonly']) !!}
+        </div>
+
+        <div class="d-flex justify-content-start">
+            {!! Form::model($project, ['method' => 'PATCH', 'route' => ['project.token.update', $project], 'class' => 'ml-auto']) !!}
+            {!! Form::submit(__('forms.actions.generate'), ['class'=> 'btn btn-success', 'data-confirm' => __('forms.tokens.generate')]) !!}
+            {!! Form::close() !!}
+        </div>
+
     </div>
 
 </div>
