@@ -1,12 +1,16 @@
 export default {
   state () {
     return {
-      headerSearchPopup: false
+      headerSearchPopup: false,
+      searchData: null
     }
   },
   getters: {
     stateHeaderSearchPopup: state => {
       return state.headerSearchPopup
+    },
+    stateSearchData: state => {
+      return state.searchData
     }
   },
   mutations: {
@@ -27,6 +31,8 @@ export default {
         })
         .then((data) => {
           console.log(data)
+          state.searchData = data.data.data || null
+          console.log(state.searchData)
         })
         .catch(error => {
           console.log(error)

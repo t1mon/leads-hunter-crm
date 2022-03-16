@@ -4,8 +4,8 @@
        <p class="headerSearchPopup__title">Ссылки:</p>
        <div class="headerSearchPopup__content">
            <ul ref="ul" class="headerSearchPopup__ul">
-               <li v-for="(link) in links" :key="link" class="headerSearchPopup__li">
-                   <a :href="link"><span :title="link">{{ link }}</span></a>
+               <li v-if="stateSearchData" v-for="(link) in stateSearchData.Host" :key="link" class="headerSearchPopup__li">
+                   <a :href="'/project/' + link.project_id + '/settings_basic'"><span :title="link">{{ link.host }}</span></a>
                </li>
            </ul>
        </div>
@@ -40,6 +40,9 @@ export default {
     computed: {
         stateHeaderSearchPopup () {
            return this.$store.getters.stateHeaderSearchPopup
+        },
+        stateSearchData () {
+            return this.$store.getters.stateSearchData
         }
     }
 }

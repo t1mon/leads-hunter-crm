@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import store from './store'
 import SettingsBar from './components/Settings/SettingsBar'
+import SettingsBasic from './components/Settings/SettingsBasic/SettingsBasic'
 import Projects from './components/Projects/Projects'
 import Journal from './components/Journal/Journal'
 import FilterByDate from './components/Journal/FilterByDate'
@@ -11,6 +12,7 @@ import directives from './directives'
 const app = createApp({
   components: {
     SettingsBar,
+    SettingsBasic,
     Projects,
     Journal,
     FilterByDate,
