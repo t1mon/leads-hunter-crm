@@ -1,7 +1,6 @@
 @extends('material-dashboard.layouts.app')
 
 @section('content')
-    
 
     <div class="card">
         <div class="card-body">
@@ -37,7 +36,7 @@
                     <div class="col-3">
                         {!! Form::label('source', 'Источник', ['class' => 'form-label']) !!}
                         <div class="border rounded px-2">
-                            {!! Form::text('group_id', $form->source, ['id' => 'source', 'class' => 'form-control']) !!}
+                            {!! Form::text('source', $form->source, ['id' => 'source', 'class' => 'form-control']) !!}
                         </div>
                     </div>
                 </div>
@@ -46,9 +45,9 @@
                     {{-- Источник --}}
                     <div class="col-1">
                         {!! Form::submit('Сохранить', ['class' => 'btn btn-info']) !!}
-                    </div>    
+                    </div>
                 </div>
-                
+
 
                 {!! Form::close() !!}
             </div>

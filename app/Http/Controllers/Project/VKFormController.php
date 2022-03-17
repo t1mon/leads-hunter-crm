@@ -36,6 +36,7 @@ class VKFormController extends Controller
     } //edit
 
     public function update(Project $project, VKForm $vk_form, Request $request){
+
         $vk_form->fill($request->all());
         $vk_form->save();
         return redirect()->route('project.integrations', $project)->withSuccess('Изменения сохранены');
