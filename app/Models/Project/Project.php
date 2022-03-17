@@ -50,6 +50,11 @@ class Project extends Model
                 "fields": []
             },
 
+            "vk":
+            {
+                "enabled": false
+            },
+
             "telegram":
             {
                 "enabled": false,
