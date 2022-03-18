@@ -43,4 +43,17 @@ class SendSMSData implements ShouldQueue
             Journal::lead($event->lead, 'Отправлено смс на номер ' . $event->lead->phone ." --> STATUS " . $response->status);
         }
     }
+
+    /**
+     * Определить, следует ли ставить слушателя в очередь.
+     *
+     * @param  \App\Events\Leads\LeadCreated  $event
+     * @return bool
+     */
+    public function shouldQueue(LeadCreated $event)
+    {
+        $project = $event->lead->project;
+
+        return $project->settings['SMS']['enabled'];
+    }
 }
