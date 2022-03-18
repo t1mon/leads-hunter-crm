@@ -5,9 +5,11 @@ namespace App\Models\Project;
 use App\Models\User;
 use App\Models\Leads;
 
+use http\Exception\BadMethodCallException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -177,50 +179,42 @@ class Project extends Model
         }
     } //webhook_delete
 
-    public function webhook_send(string $name, Leads $lead){ //Отправить данные по вебхуку
+    public function webhook_send(string $name, Leads $lead)
+    { //Отправить данные по вебхуку
         //Составление тела запроса
         $webhook = $this->webhook_get($name);
-        $parameters = [];
 
-        //Упаковать параметры в зависимости от типа вебхука
-        // if($webhook->type === self::WEBHOOK_COMMON)
-        // $parameters = $this->webhook_makeParams_common($webhook, $lead);
-        // elseif($webhook->type === self::WEBHOOK_BITRIX24)
-        //     $parameters = $this->webhook_makeParams_bitrix24($webhook, $lead);
-
-        if(isset($webhook->query)){
+        if (isset($webhook->query)) {
             $fields = ['name', 'patronymic', 'surname', 'phone', 'email', 'cost', 'city', 'comment', 'utm_medium', 'utm_source', 'utm_campaign', 'utm_content'];
-            foreach($fields as $field){
-                $webhook->query = str_replace('$'.$field, $lead->$field, $webhook->query);
+            foreach ($fields as $field) {
+                $webhook->query = str_replace('$' . $field, $lead->$field, $webhook->query);
             }
         }
 
-        // return yaml_parse($webhook->query);
-
-        $response = null;
-
-        //Отправка запроса
-        if($webhook->method === 'POST')
-            $response = Http::withOptions(['verify' => false])->asForm()
-                ->post($webhook->url, isset($webhook->query) ?  yaml_parse($webhook->query) : []);
-        elseif($webhook->method === 'GET')
-            $response = Http::withOptions(['verify' => false])->asForm()
-                ->get($webhook->url, isset($webhook->query) ?  yaml_parse($webhook->query) : []);
-
-        return $response;
+        return $this->doRequest(
+            $webhook->url,
+            isset($webhook->query) ? yaml_parse($webhook->query) : [],
+            mb_strtolower($webhook->method),
+            (isset($webhook->as_form) && $webhook->as_form === "1")
+        );
     } //webhook_send
+
+    public function doRequest(string $url, array $data, $method = 'post', $asForm = false) : Response
+    {
+        if (!in_array($method,['post','get']))
+            throw new \BadMethodCallException("wrong method '$method', only 'POST' or 'GET' ");
+
+        return $asForm ?
+                Http::withOptions(['verify' => false])->asForm()->$method($url, $data)
+                :
+                Http::withOptions(['verify' => false])->$method($url, $data);
+    }
 
     public function leads()
     {
         return $this->hasMany(Leads::class, 'project_id');
     }
 
-//    public function leadsToday()
-//    {
-//        //$date = Carbon::parse($this->leads()->created_at, $this->timezone)->startOfDay()->setTimezone(config('app.timezone'));
-//        //$leads->where('created_at', '>=' ,$date);
-//        return $this->hasMany(Leads::class, 'project_id')->whereDate('created_at', '>=', Carbon::parse(Carbon::today(), $this->timezone)->startOfDay()->setTimezone(config('app.timezone') ));
-//    }
 
     public function leadsToday(){
         return $this->leads->filter(function($lead){
