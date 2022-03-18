@@ -50,4 +50,6 @@
     </div>
 </div>
 
+{{--    <settings-basic></settings-basic>--}}
+
 @endsection

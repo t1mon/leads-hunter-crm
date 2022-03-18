@@ -215,6 +215,15 @@ class MigrateProjects extends Command
                 Присвоение бесхозным хостам идентификатора создателя проекта*/
             Host::where(['project_id' => $project->id, 'user_id' => 0])->update(['user_id' => $project->user_id]);
 
+            /* 18.
+                Добавить в настройки проекта раздел "VK"*/
+            if(!array_key_exists('vk', $project->settings)){
+                $new_settings = $project->settings;
+                $new_settings['vk']['enabled'] = false;
+
+                $project->settings = array_merge($project->settings, $new_settings);
+            }  
+
             $project->save();
         }
     }
