@@ -55,5 +55,6 @@
 <!-- Scripts -->
 <script src="{{ mix('/js/material-dashboard-app.js') }}" async defer></script>
 
+
 </body>
 </html>

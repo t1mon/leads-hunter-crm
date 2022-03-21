@@ -3,24 +3,24 @@
 @section('content')
 
 <div>
-    {{--Навигационное меню--}}
+    Навигационное меню
     <div>
         <ul class="nav nav-tabs">
-            {{--Настройки хостов--}}
+            Настройки хостов
             <li class="nav-item">
                 <a  class="nav-link active" data-bs-toggle="tab" href="#hosts">
                     @lang('projects.properties.tab')
                 </a>
             </li>
 
-            {{--Настройки разрешений пользователей--}}
+            Настройки разрешений пользователей
             <li class="nav-item">
                 <a  class="nav-link" data-bs-toggle="tab" href="#users">
                     @lang('projects.sidebar.users')
                 </a>
             </li>
 
-            {{--Классы проекта--}}
+            Классы проекта
             <li class="nav-item">
                 <a  class="nav-link" data-bs-toggle="tab" href="#classes">
                     @lang('projects.classes.tab')
@@ -31,18 +31,18 @@
     </div>
 
     <div class="tab-content">
-        {{--Настройки хостов--}}
+        Настройки хостов
         <div class="tab-pane fade show active" id="hosts" role="tabpanel">
             @include('material-dashboard.project._properties')
             @include('material-dashboard.project._hosts')
         </div>
 
-        {{--Настройки разрешений пользователей--}}
+        Настройки разрешений пользователей
         <div class="tab-pane fade" id="users" role="tabpanel">
             @include('material-dashboard.project._users')
         </div>
 
-        {{--Классы проекта--}}
+        Классы проекта
         <div class="tab-pane fade" id="classes" role="tabpanel">
             @include('material-dashboard.project._classes')
         </div>
