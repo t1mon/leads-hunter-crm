@@ -9,10 +9,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
+
 
 class SendSMSData implements ShouldQueue
 {
+    use InteractsWithQueue;
+
     public $queue = 'sms';
+    //public $tries = 5;
     /**
      * Create the event listener.
      *
@@ -24,6 +29,11 @@ class SendSMSData implements ShouldQueue
     {
         $this->sender = $sender;
     }
+
+//    public function middleware()
+//    {
+//        return [(new ThrottlesExceptions(1, 2))->backoff(1)];
+//    }
 
     /**
      * Handle the event.
@@ -56,4 +66,17 @@ class SendSMSData implements ShouldQueue
 
         return $project->settings['SMS']['enabled'];
     }
+
+//    public function failed()
+//    {
+//        //Log::error('failed!');
+//        //$this->release(10);
+//
+//    }
+
+//    public function retryUntil()
+//    {
+//        return now()->addMinutes(3);
+//    }
+
 }
