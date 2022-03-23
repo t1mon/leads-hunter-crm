@@ -41,7 +41,7 @@ class SendEmailData
                     // $subject = 'Test_Subject';
                     $subject = $event->lead->project->settings['email']['subject'];
                     $message = (new SendLeadData($event->lead, $subject, $event->lead->project->settings['email']['template']))->onQueue('emails');
-                    Mail::to($email->email)->queue($message);
+                    Mail::to($email->email)->later(5|10,$message);
                     Log::channel('leads')->info(json_encode($event->lead) . " --> " . $email->email);
 
                     Journal::lead($event->lead, 'Лид отправлен на ' . $email->email);
