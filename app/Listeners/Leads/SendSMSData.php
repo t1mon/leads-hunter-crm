@@ -67,11 +67,17 @@ class SendSMSData implements ShouldQueue
         return $project->settings['SMS']['enabled'];
     }
 
+
 //    public function failed()
 //    {
 //        //Log::error('failed!');
 //        //$this->release(10);
 //
+//    }
+
+//    public function failed(Throwable $exception)
+//    {
+//        // Send user notification of failure, etc...
 //    }
 
 //    public function retryUntil()
