@@ -22,7 +22,15 @@
                                 {!! Form::text('settings[email][subject]', $project->settings['email']['subject'], ['class' => 'form-control border p-2', 'placeholder' => trans('projects.notifications.emails_subject'), 'id' => 'email-subject']) !!}
                             </div>
                             <div class="my-2 text-center form-check">
-                                <p class="form-label text-center">Тип шаблона письма</p>                                
+                                <p class="form-label text-center">Тип шаблона письма</p>
+                                {!! Form::radio('settings[email][template]', 'text',
+                                        $project->settings['email']['template'] === 'text' ? true : false,
+                                    [
+                                        'id' => 'template-text',
+                                        'class' => 'form-check-input'
+                                    ])
+                                !!}
+                                {!! Form::label('template-text', 'Текст', ['class' => 'form-check-label me-2']) !!}
                                 {!! Form::radio('settings[email][template]', 'view',
                                         $project->settings['email']['template'] === 'view' ? true : false,
                                     [
@@ -31,7 +39,7 @@
                                     ])
                                 !!}
                                 {!! Form::label('template-view', 'Упрощённый', ['class' => 'form-check-label me-2']) !!}
-                                
+
                                 {!! Form::radio('settings[email][template]', 'markdown',
                                         $project->settings['email']['template'] === 'markdown' ? true : false,
                                     [
@@ -39,7 +47,7 @@
                                         'class' => 'form-check-input',
                                     ])
                                 !!}
-                                {!! Form::label('template-markdown', 'С разметкой', ['class' => 'form-check-label']) !!}                
+                                {!! Form::label('template-markdown', 'Leads-Hunter', ['class' => 'form-check-label']) !!}
                             </div>
                         </div>
 
@@ -55,10 +63,10 @@
                                                 @lang('projects.notifications.webhooks.common.fields.' . $column)
                                             </label>
                                         </div>
-                                    @endforeach                                    
+                                    @endforeach
                                 </div>
                             @endforeach
-                            
+
                             <div class="my-3 text-center">
                                 {!! Form::button(trans('projects.notifications.emails_save'), ['class' => 'btn btn-primary', 'type' => 'submit']) !!}
                             </div>
@@ -67,7 +75,7 @@
                 </div>
             </div>
         </div>
-        
+
         {{--Форма добавления новых e-mail--}}
         <div class='col'>
             <div class="card my-3">

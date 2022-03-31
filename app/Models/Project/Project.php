@@ -24,6 +24,7 @@ class Project extends Model
     //Типы шаблона письма, в котором отправляется лид
     const TEMPLATE_VIEW = 'view';
     const TEMPLATE_MARKDOWN = 'markdown';
+    const TEMPLATE_TEXT = 'text';
 
     const DEFAULT_COLOR = '5F9EA0'; //Цвет иконки проекта по умолчанию
 
@@ -45,7 +46,7 @@ class Project extends Model
             "leadValidDays": 0,
             "email":
             {
-                "template": "view",
+                "template": "text",
                 "enabled": false,
                 "send_all": true,
                 "subject": "!Empty Subject!",
