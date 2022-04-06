@@ -5,7 +5,7 @@ namespace App\Http\Resources\Project;
 use App\Http\Resources\ProjectEmailsSendResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LeadsCount extends JsonResource
+class LeadsCountCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.

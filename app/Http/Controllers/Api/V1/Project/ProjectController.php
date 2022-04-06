@@ -4,18 +4,15 @@ namespace App\Http\Controllers\Api\V1\Project;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\Project as ProjectResource;
-use App\Http\Resources\ProjectCollection as ProjectCollectionResource;
-use App\Http\Resources\Project\LeadsCount as LeadsCountCollectionResource;
+use App\Http\Resources\Project\ProjectCollection as ProjectCollectionResource;
+use App\Http\Resources\Project\LeadsCountCollection as LeadsCountCollectionResource;
 use App\Models\Notification;
-use App\Models\User;
 use App\Models\Role;
 use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\Project\Email;
 use App\Models\Project\TelegramID;
-use App\Models\Project\Lead\Comment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,10 +24,7 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 
 use App\Journal\Facade\Journal;
-use App\Exports\LogsExportToday;
-use App\Exports\LeadExport;
-use App\Jobs\ExportLeadsToMail;
-use Maatwebsite\Excel\Facades\Excel;
+
 
 class ProjectController extends Controller
 {
@@ -71,7 +65,6 @@ class ProjectController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'color' => ['nullable', 'regex:/^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/']
-                // 'color' => 'nullable|regex:/^\#[\da-f]{3}|\#[\da-f]{6}$'
             ]);
 
             DB::transaction(function () use ($request, $user) {
@@ -267,7 +260,7 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Project has been ' .  ($project->settings['enabled'] ? 'enabled' : 'disabled')], Response::HTTP_OK);
     } //toggle
 
-    public function allLeadsCount(Request $request)
+    public function leadsCountCollection(Request $request)
     {
         //Загрузка идентификаторов проекта, на которые назначен пользователь
         $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');
