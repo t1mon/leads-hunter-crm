@@ -37,6 +37,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 
         //Проекты
         Route::apiResource('project', 'Project\ProjectController')->only(['index', 'store', 'update', 'destroy']);
+        Route::post('project/leads-count', 'Project\ProjectController@allLeadsCount')->name('project.leads.count');
         Route::get('project/{project}/journal', 'Project\ProjectController@journal')->name('project.journal');
         Route::get('project/{project}/settings_basic', 'Project\ProjectController@settings_basic')->name('project.settings-basic');
 

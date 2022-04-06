@@ -20,8 +20,10 @@ class ProjectCollection extends JsonResource
             'color' => array_key_exists('color', $this->settings) ? $this->settings['color'] : null,
             'link' => route('project.journal', $this->id),
             'status' => (bool)$this->settings['enabled'],
-            'totalLeads' => $this->leads->count(),
-            'leadsToday' => $this->leadsToday()->count(),
+            //'totalLeads' => $this->leads->count(),
+            //'leadsToday' => $this->leadsToday()->count(),
+            'totalLeads' => 0,
+            'leadsToday' => 0,
             // 'created_at' => humanize_date($this->created_at)
             'created_at' => $this->created_at,
             'emailSend' =>
