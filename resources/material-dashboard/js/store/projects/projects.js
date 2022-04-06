@@ -12,10 +12,15 @@ export default {
       projects: null,
       searchProjects: '',
       filteredProjects: null,
-      projectsLoad: false
+      projectsLoad: false,
+      projectsLeadsCountLoad: false,
+      projectsLeadsCount: null
     }
   },
   getters: {
+    stateProjectsLeadsCount: state => {
+      return state.projectsLeadsCount
+    },
     stateCards: state => {
       return state.cards
     },
@@ -60,6 +65,21 @@ export default {
         })
         .catch(() => {
           state.isLoading = false
+        })
+    },
+    getLeadsCount ({ state }) {
+      axios
+        .post(state.endpoint + '/leads-count')
+        .then(({ data }) => {
+          state.projectsLeadsCountLoad = true
+          // state.projectsLeadsCount = data.data.map( item => {
+          //   return item
+          // })
+          state.projectsLeadsCount = Object.assign({}, ...data.data.map(i => ({ [i.id]: { totalLeads: i.totalLeads, leadsToday: i.leadsToday } })))
+          console.log(state.projectsLeadsCount)
+        })
+        .catch(() => {
+          state.projectsLeadsCountLoad = false
         })
     },
     filterProjects ({ state }) {
