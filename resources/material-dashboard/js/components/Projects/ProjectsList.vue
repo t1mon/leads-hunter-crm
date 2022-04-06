@@ -9,9 +9,9 @@
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Имя</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">status</th>
 <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">@lang('projects.attributes.leads_all')</th>-->
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Лидов всего</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Лидов всего</th>
 <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">@lang('projects.attributes.leads_today')</th>-->
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Лидов сегодня</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Лидов сегодня</th>
 <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">@lang('projects.attributes.created_at')</th>-->
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Дата создания</th>
                     <th></th>
@@ -46,12 +46,20 @@
                         </span>
                         </div>
                     </td>
-                    <td>
-                        <p class="text-xs font-weight-normal mb-0">{{ project.totalLeads }}</p>
+                    <td class="text-center">
+<!--                        <p class="text-xs font-weight-normal mb-0">{{ project.totalLeads }}</p>-->
+                        <p v-if="stateProjectsLeadsCount" class="text-xs font-weight-normal mb-0">{{ stateProjectsLeadsCount[project.id].totalLeads }}</p>
+                        <div v-if="!stateProjectsLeadsCount" class="spinner-border text-default m-auto" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </td>
-                    <td class="align-middle text-center">
-                        <div class="d-flex align-items-center">
-                            <span class="me-2 text-xs">{{ project.leadsToday }}</span>
+                    <td class="align-middle">
+                        <div class="d-flex align-items-center justify-content-center">
+<!--                            <span class="me-2 text-xs">{{ project.leadsToday }}</span>-->
+                            <span v-if="stateProjectsLeadsCount" class="me-2 text-xs">{{ stateProjectsLeadsCount[project.id].leadsToday }}</span>
+                            <div v-if="!stateProjectsLeadsCount" class="spinner-border text-default m-auto" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
                     </td>
                     <td class="align-middle text-center">
@@ -102,6 +110,9 @@ export default {
         }
     },
   computed: {
+      stateProjectsLeadsCount () {
+          return this.$store.getters.stateProjectsLeadsCount
+      },
     filteredProject () {
       return this.$store.getters.stateFilteredProjects
     }

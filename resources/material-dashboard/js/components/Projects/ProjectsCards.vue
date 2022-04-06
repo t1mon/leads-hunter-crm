@@ -89,11 +89,17 @@
                     <hr class="horizontal dark">
                     <div class="row">
                         <div class="col-4">
-                            <h6 class="text-sm mb-0">{{ project.totalLeads }}</h6>
+                            <div v-if="!stateProjectsLeadsCount" class="spinner-border text-default m-auto" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <h6 v-if="stateProjectsLeadsCount" class="text-sm mb-0">{{ stateProjectsLeadsCount[project.id].totalLeads }}</h6>
                             <p class="text-secondary text-sm font-weight-normal mb-0">Лидов всего</p>
                         </div>
                         <div class="col-4">
-                            <h6 class="text-sm mb-0">{{ project.leadsToday }}</h6>
+                            <div v-if="!stateProjectsLeadsCount" class="spinner-border text-default m-auto" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <h6 v-if="stateProjectsLeadsCount" class="text-sm mb-0">{{ stateProjectsLeadsCount[project.id].leadsToday }}</h6>
                             <p class="text-secondary text-sm font-weight-normal mb-0">Лидов сегодня</p>
                         </div>
                         <div class="col-4 text-end">
@@ -125,6 +131,9 @@ export default {
         }
     },
   computed: {
+      stateProjectsLeadsCount () {
+          return this.$store.getters.stateProjectsLeadsCount
+      },
     filteredProject () {
       return this.$store.getters.stateFilteredProjects
     }

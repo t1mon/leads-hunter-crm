@@ -42,6 +42,9 @@ export default {
     getProjects () {
       return this.$store.dispatch('getProjects')
     },
+      getLeadsCount () {
+          return this.$store.dispatch('getLeadsCount')
+      },
     stateIsLoading () {
       return this.$store.getters.stateIsLoading
     },
@@ -57,6 +60,7 @@ export default {
   },
   async created () {
     await this.getProjects
+    await this.getLeadsCount
   }
 }
 </script>

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Project;
 
+use App\Http\Resources\ProjectEmailsSendResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectCollection extends JsonResource
@@ -20,9 +21,6 @@ class ProjectCollection extends JsonResource
             'color' => array_key_exists('color', $this->settings) ? $this->settings['color'] : null,
             'link' => route('project.journal', $this->id),
             'status' => (bool)$this->settings['enabled'],
-            'totalLeads' => $this->leads->count(),
-            'leadsToday' => $this->leadsToday()->count(),
-            // 'created_at' => humanize_date($this->created_at)
             'created_at' => $this->created_at,
             'emailSend' =>
                  [
