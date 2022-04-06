@@ -18,6 +18,9 @@ export default {
     }
   },
   getters: {
+    stateProjectsLeadsCount: state => {
+      return state.projectsLeadsCount
+    },
     stateCards: state => {
       return state.cards
     },
