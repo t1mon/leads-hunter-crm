@@ -46,7 +46,12 @@
                 @lang('projects.notifications.tab_bitrix24')
             </a>
         </li>
-
+        {{--Вебхуки AmoCRM--}}
+        <li class="nav-item">
+            <a  class="nav-link" data-bs-toggle="tab" href="#amocrm">
+                AmoCRM
+            </a>
+        </li>
     </ul>
 </div>
 
@@ -79,6 +84,11 @@
     {{--Вебхуки Bitrix24--}}
     <div class="tab-pane fade" id="bitrix24" role="tabpanel">
         @include('material-dashboard.project.webhooks.index-bitrix24')
+    </div>
+
+    {{--AmoCRM--}}
+    <div class="tab-pane fade" id="amocrm" role="tabpanel">
+        @include('material-dashboard.project.webhooks.index-amocrm')
     </div>
 </div>
 

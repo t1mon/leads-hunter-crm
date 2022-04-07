@@ -14,6 +14,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
+use App\Journal\Facade\Journal;
+
 class Project extends Model
 {
     use HasFactory;
@@ -78,7 +80,8 @@ class Project extends Model
 
     //Типы вебхуков
     public const WEBHOOK_COMMON = 'common'; //Обычный вебхук
-    public const WEBHOOK_BITRIX24 = 'bitrix24'; //Обычный вебхук
+    public const WEBHOOK_BITRIX24 = 'bitrix24'; //Вебхук Bitrix24
+    public const WEBHOOK_AMOCRM = 'amocrm'; //Вебхук AmoCRM
 
     protected $casts = ['settings' => 'array'];
 
@@ -149,13 +152,18 @@ class Project extends Model
     } //getWebhooksAttribute
 
     public function webhook_add(array $new_webhook){ //Добавить или обновить вебхук
+        //Установка срока годности токена у вебхука AmoCRM
+        if($new_webhook['type'] === self::WEBHOOK_AMOCRM)
+            $new_webhook['expires_at'] = Carbon::now()->addSeconds(86400);
+        
+        
         $new_settings = $this->settings;
         $new_settings['webhooks'][ $new_webhook['name'] ] = $new_webhook;
 
         $this->settings = $new_settings;
     } //webhook_add
 
-    public function webhook_update(string $webhook_name, array $params){ //Обновить параметры в вебхука
+    public function webhook_update(string $webhook_name, array $params, bool $save = false){ //Обновить параметры в вебхука
         $new_settings = $this->settings;
 
         //Переименование ключа массива, если изменилось название вебхука (чтобы не было конфликтов)
@@ -169,7 +177,12 @@ class Project extends Model
         foreach($params as $key => $value)
             $new_settings['webhooks'][$webhook_name][$key] = $value;
 
+        //Установка срока годности токена у вебхука AmoCRM
+        if($new_settings['webhooks'][$webhook_name]['type'] === self::WEBHOOK_AMOCRM)
+            $new_settings['webhooks'][$webhook_name]['expires_at'] = Carbon::now()->addSeconds(86400);
+
         $this->settings = $new_settings;
+        if($save) $this->save();
     } //webhook_update
 
     public function webhook_delete(string $name){ //Удалить вебхук
@@ -192,12 +205,23 @@ class Project extends Model
             }
         }
 
-        return $this->doRequest(
-            $webhook->url,
-            isset($webhook->query) ? yaml_parse($webhook->query) : [],
-            mb_strtolower($webhook->method),
-            (isset($webhook->as_form) && $webhook->as_form === "1")
-        );
+        try{
+            if($webhook->type === "amocrm")
+                return $this->webhook_send_amocrm($webhook);
+
+            return $this->doRequest(
+                $webhook->url,
+                isset($webhook->query) ? yaml_parse($webhook->query) : [],
+                mb_strtolower($webhook->method),
+                (isset($webhook->as_form) && $webhook->as_form === "1")
+            );
+        }
+        catch(\Illuminate\Http\Client\ConnectionException | \Illuminate\Http\Client\RequestException $e){
+            Journal::leadError($lead, "Ошибка отправления вебхука \"$name\": ".mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8').". Вебхук автоматически отключен.");
+            $this->webhook_update($name, ['enabled' => 0], true);
+            return response()->json(['error' => mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8')]);
+        }
+        
     } //webhook_send
 
     public function doRequest(string $url, array $data, $method = 'post', $asForm = false) : Response
@@ -209,6 +233,39 @@ class Project extends Model
                 Http::withOptions(['verify' => false])->asForm()->$method($url, $data)
                 :
                 Http::withOptions(['verify' => false])->$method($url, $data);
+    }
+
+    public function webhook_send_amocrm($webhook){ //Отправка специального запроса на AmoCRM
+        //Обновление access_token
+        if( Carbon::now()->greaterThan( Carbon::parse($webhook->expires_at)) )
+            $this->webhook_amocrm_update_token($webhook);
+        
+        //Отправка запроса
+        $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 100)->post($webhook->url);
+        if($response->failed() and $response['status'] == 401) //Если попытка подключения не удалась из-за устаревшего токена
+            $this->webhook_amocrm_update_token($webhook);
+
+        return Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 100)->post($webhook->url);
+    } //webhook_send_amocrm
+
+    public function webhook_amocrm_update_token($webhook){ //Обновление access_token у вебхука AmoCRM
+        $body = [
+            'client_id' => $webhook->client_id,
+            'client_secret' => $webhook->client_secret,
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $webhook->refresh_token
+        ];
+
+        //Отправка запроса
+        $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 100)->post($webhook->auth_url);
+        $response->throw(); //Выбросить исключение, если произошла ошибка запроса
+
+        //Парсинг ответа
+        $this->webhook_update($webhook->name, [
+            'expires_at' => Carbon::now()->addSeconds($response['expires_in']),
+            'access_token' => $response['access_token'],
+            'refresh_token' => $response['refresh_token'],
+        ], true);
     }
 
     public function leads()

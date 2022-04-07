@@ -95,6 +95,11 @@ class WebhookController extends Controller
         return view('material-dashboard.project.webhooks.form.extended', compact('project', 'webhook'));
     } //edit_extended
 
+    public function edit_extended_amocrm(Project $project, string $webhook_name){
+        $webhook = $project->webhook_get($webhook_name);
+        return view('material-dashboard.project.webhooks.form.extended_amocrm', compact('project', 'webhook'));
+    } //edit_extended_amocrm
+
     public function update(Project $project, string $webhook_name, Request $request){
         //TODO Создать Request для валидации
 
@@ -149,7 +154,7 @@ class WebhookController extends Controller
     public function test(){
 
         $lead = Leads::latest()->first();
-        return $lead->project->webhook_send('Тестовый вебхук для bitrix24', $lead);
+        return $lead->project->webhook_send('AmoCRM', $lead);
     } //test
 
 }
