@@ -241,11 +241,11 @@ class Project extends Model
             $this->webhook_amocrm_update_token($webhook);
         
         //Отправка запроса
-        $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 100)->post($webhook->url);
+        $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
         if($response->failed() and $response['status'] == 401) //Если попытка подключения не удалась из-за устаревшего токена
             $this->webhook_amocrm_update_token($webhook);
 
-        return Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 100)->post($webhook->url);
+        return Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
     } //webhook_send_amocrm
 
     public function webhook_amocrm_update_token($webhook){ //Обновление access_token у вебхука AmoCRM
@@ -257,7 +257,7 @@ class Project extends Model
         ];
 
         //Отправка запроса
-        $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 100)->post($webhook->auth_url);
+        $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->auth_url);
         $response->throw(); //Выбросить исключение, если произошла ошибка запроса
 
         //Парсинг ответа
