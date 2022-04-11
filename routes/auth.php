@@ -69,6 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('project/{project}/class', LeadClassController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('project/{project}/webhook', WebhookController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
         Route::post('{project}/webhook/{webhook}/toggle', [WebhookController::class, 'toggle'])->name('webhook.toggle');
+        Route::post('{project}/webhook/amocrm_reauthorize', [WebhookController::class, 'amocrm_reauthorize'])->name('webhook.amocrm_reauthorize');
         Route::resource('{project}/vk_forms', VKFormController::class)->only(['store', 'edit', 'update', 'destroy']);
         Route::post('{project}/vk_forms/{vk_form}/toggle', [VKFormController::class, 'toggle'])->name('vk_forms.toggle');
 

@@ -154,14 +154,42 @@ class Project extends Model
     public function webhook_add(array $new_webhook){ //Добавить или обновить вебхук
         //Установка срока годности токена у вебхука AmoCRM
         if($new_webhook['type'] === self::WEBHOOK_AMOCRM)
-            $new_webhook['expires_at'] = Carbon::now()->addSeconds(86400);
+            $this->webhook_add_amocrm($new_webhook);
+        else{    
+            $new_settings = $this->settings;
+            $new_settings['webhooks'][ $new_webhook['name'] ] = $new_webhook;
+
+            $this->settings = $new_settings;
+        }
+    } //webhook_add
+
+    public function webhook_add_amocrm(array $new_webhook){
+        //Вычисление URL для обновления access_token
+        $new_webhook['auth_url'] = 'https://' . parse_url($new_webhook['url'], PHP_URL_HOST) . '/oauth2/access_token';
         
+        //Отправка кода авторизации для получения токенов
+        $body = [
+            'client_id' => $new_webhook['client_id'],
+            'client_secret' => $new_webhook['client_secret'],
+            'grant_type' => 'authorization_code',
+            'code' => $new_webhook['authorization_code'],
+            'redirect_uri' => $new_webhook['redirect_uri'],
+        ];
+
+        $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 500)->post($new_webhook['auth_url']);
+        $response->throw(); //Выбросить исключение, если произошла ошибка запроса
+
+        //Парсинг ответа
+        $new_webhook['access_token'] = $response['access_token'];
+        $new_webhook['refresh_token'] = $response['refresh_token'];
         
+        //Установка срока годности токена у вебхука AmoCRM
+        $new_webhook['expires_at'] = Carbon::now()->addSeconds(86400);
+
         $new_settings = $this->settings;
         $new_settings['webhooks'][ $new_webhook['name'] ] = $new_webhook;
-
         $this->settings = $new_settings;
-    } //webhook_add
+    } //webhook_add_amocrm
 
     public function webhook_update(string $webhook_name, array $params, bool $save = false){ //Обновить параметры в вебхука
         $new_settings = $this->settings;
@@ -237,15 +265,20 @@ class Project extends Model
 
     public function webhook_send_amocrm($webhook){ //Отправка специального запроса на AmoCRM
         //Обновление access_token
-        if( Carbon::now()->greaterThan( Carbon::parse($webhook->expires_at)) )
+        if( Carbon::now()->greaterThan( Carbon::parse($webhook->expires_at)) ){
             $this->webhook_amocrm_update_token($webhook);
+            $webhook = $this->webhook_get($webhook->name);
+        }
         
-        //Отправка запроса
+        // Отправка запроса
         $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
-        if($response->failed() and $response['status'] == 401) //Если попытка подключения не удалась из-за устаревшего токена
+        if($response->failed()){ //Если попытка подключения не удалась из-за устаревшего токена
             $this->webhook_amocrm_update_token($webhook);
+            $webhook = $this->webhook_get($webhook->name);
+            $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
+        }
 
-        return Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
+        return $response;
     } //webhook_send_amocrm
 
     public function webhook_amocrm_update_token($webhook){ //Обновление access_token у вебхука AmoCRM
@@ -253,7 +286,8 @@ class Project extends Model
             'client_id' => $webhook->client_id,
             'client_secret' => $webhook->client_secret,
             'grant_type' => 'refresh_token',
-            'refresh_token' => $webhook->refresh_token
+            'refresh_token' => $webhook->refresh_token,
+            'redirect_uri' => $webhook->redirect_uri,
         ];
 
         //Отправка запроса
