@@ -147,9 +147,9 @@ class WebhookController extends Controller
     }
 
     public function test(){
-
+        
         $lead = Leads::latest()->first();
-        return $lead->project->webhook_send('Тестовый вебхук для bitrix24', $lead);
+        return json_decode($lead->project->webhook_send('AmoCRM', $lead));
     } //test
 
 }
