@@ -7,9 +7,9 @@
                     <a href="{{route('webhook.create', ['project' => $project, 'form' => 'extended_amocrm_create'])}}" class="btn btn-primary">
                         @lang('projects.notifications.webhooks.add')
                     </a>
-                </p> 
+                </p>
             </div>
-        </div>>
+        </div>
     </div>
 </div>
 
