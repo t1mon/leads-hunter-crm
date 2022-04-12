@@ -245,7 +245,7 @@ class Project extends Model
             );
         }
         catch(\Illuminate\Http\Client\ConnectionException | \Illuminate\Http\Client\RequestException $e){
-            Journal::leadError($lead, "Ошибка отправления вебхука \"$name\": ".mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8').". Вебхук автоматически отключен.");
+            Journal::leadError($lead, "Ошибка отправления вебхука \"$name\": ".mb_convert_encoding($e->response, 'UTF-8', 'UTF-8').". Вебхук автоматически отключен.");
             $this->webhook_update($name, ['enabled' => 0], true);
             return json_decode($e->response);
         }
