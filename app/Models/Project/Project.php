@@ -176,7 +176,7 @@ class Project extends Model
             'redirect_uri' => $new_webhook['redirect_uri'],
         ];
 
-        $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 500)->post($new_webhook['auth_url']);
+        $response = Http::withBody(json_encode($body), 'application/json')->post($new_webhook['auth_url']);
         $response->throw(); //Выбросить исключение, если произошла ошибка запроса
 
         //Парсинг ответа
@@ -247,7 +247,7 @@ class Project extends Model
         catch(\Illuminate\Http\Client\ConnectionException | \Illuminate\Http\Client\RequestException $e){
             Journal::leadError($lead, "Ошибка отправления вебхука \"$name\": ".mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8').". Вебхук автоматически отключен.");
             $this->webhook_update($name, ['enabled' => 0], true);
-            return response()->json(['error' => mb_convert_encoding($e->getMessage(), 'UTF-8', 'UTF-8')]);
+            return json_decode($e->response);
         }
         
     } //webhook_send
@@ -267,16 +267,24 @@ class Project extends Model
         //Обновление access_token
         if( Carbon::now()->greaterThan( Carbon::parse($webhook->expires_at)) ){
             $this->webhook_amocrm_update_token($webhook);
+            $old_query = $webhook->query; //Сохранение уже составленного запроса
             $webhook = $this->webhook_get($webhook->name);
+            $webhook->query = $old_query;
         }
-        
+    
         // Отправка запроса
-        $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
-        if($response->failed()){ //Если попытка подключения не удалась из-за устаревшего токена
+        $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->post($webhook->url);
+        
+        if($response->failed() and $response['status'] == 401){ //Если попытка подключения не удалась из-за устаревшего токена
             $this->webhook_amocrm_update_token($webhook);
+            $old_query = $webhook->query; //Сохранение уже составленного запроса
             $webhook = $this->webhook_get($webhook->name);
-            $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->url);
+            $webhook->query = $old_query;
+            $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->post($webhook->url);
+            $response->throw();
         }
+        else
+            $response->throw();
 
         return $response;
     } //webhook_send_amocrm
@@ -291,7 +299,7 @@ class Project extends Model
         ];
 
         //Отправка запроса
-        $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->auth_url);
+        $response = Http::withBody(json_encode($body), 'application/json')->post($webhook->auth_url);
         $response->throw(); //Выбросить исключение, если произошла ошибка запроса
 
         //Парсинг ответа

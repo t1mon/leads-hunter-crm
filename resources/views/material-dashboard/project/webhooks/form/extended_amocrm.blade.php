@@ -8,6 +8,7 @@
             {!! Form::hidden('enabled', true) !!}
             {!! Form::hidden('type', 'amocrm') !!}
             {!! Form::hidden('method', 'POST') !!}
+            {!! Form::hidden('auth_url', $webhook->auth_url ?? null) !!}
             
             <div class="row justify-content-center mb-5">
                 <h5 class="card-title text-center">Общие настройки</h5>
