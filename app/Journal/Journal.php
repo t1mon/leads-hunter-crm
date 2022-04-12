@@ -79,8 +79,8 @@ class Journal{
         if(Auth::check())
             $entry['user'] = ['name' => Auth::user()->name, 'id' => Auth::id()];
 
-        foreach($optional as $key => $value)
-            $entry[$key] = $value;
+        if(count($optional))
+            $entry = array_merge($entry, $optional);
 
         DB::table(self::TABLE)->insert(['data' => json_encode($entry), 'date' => Carbon::now()]);
     } //write
