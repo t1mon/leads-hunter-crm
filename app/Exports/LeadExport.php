@@ -64,6 +64,7 @@ class LeadExport implements FromCollection
             $row[] = 'Посадочная';
             $row[] = 'Источник';
             $row[] = 'UTM';
+            $row[] = 'referrer';
         }
         else{
             foreach($this->permissions->view_fields as $field)
@@ -92,6 +93,7 @@ class LeadExport implements FromCollection
                 $row[] = $lead->host;
                 $row[] = $lead->source;
                 $row[] = $lead->utm;
+                $row[] = $lead->referrer;
             }
             else{
                 foreach($this->permissions->view_fields as $field)
