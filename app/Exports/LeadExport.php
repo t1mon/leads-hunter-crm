@@ -29,10 +29,10 @@ class LeadExport implements FromCollection
         //Отсеивание по дате
         if(!is_null($date_from))
             $leads->where('created_at', '>=', $date_from);
-        
+
         if(!is_null($date_to))
             $leads->where('created_at', '<=', $date_to);
-        
+
         $leads = $leads->orderBy('created_at', 'desc')->get();
 
         $this->leads = $leads;
@@ -45,7 +45,7 @@ class LeadExport implements FromCollection
         //Форматирование записей
         $formatted = [];
         $row = [];
-        
+
         //Добавление заголовков
         //Базовые поля
         $row[] = 'Дата';
@@ -64,6 +64,7 @@ class LeadExport implements FromCollection
             $row[] = 'Посадочная';
             $row[] = 'Источник';
             $row[] = 'UTM';
+            $row[] = 'referrer';
         }
         else{
             foreach($this->permissions->view_fields as $field)
@@ -92,6 +93,7 @@ class LeadExport implements FromCollection
                 $row[] = $lead->host;
                 $row[] = $lead->source;
                 $row[] = $lead->utm;
+                $row[] = $lead->referrer;
             }
             else{
                 foreach($this->permissions->view_fields as $field)

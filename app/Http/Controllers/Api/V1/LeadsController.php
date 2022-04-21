@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
-//TODO Заменить на фасад
 use App\Journal\Facade\Journal;
 
 class LeadsController extends Controller

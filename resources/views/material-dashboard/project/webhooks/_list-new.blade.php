@@ -38,7 +38,7 @@
                                     {!! Form::close() !!}
                                 </td>
                                 <td>
-                                    <a href="{{route('webhook.edit', [$project, $webhook->name, 'form' => 'simple_'.$type])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
+                                    <a href="{{route('webhook.edit', [$project, $webhook->name, 'form' => ($form ?? 'simple_').$type])}}" class="btn btn-{{$webhook->enabled ? 'info' : 'secondary'}}">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
