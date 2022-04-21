@@ -1,7 +1,7 @@
 <template>
     <div>
 <!--        Навигационное меню-->
-        <div>
+        <div class="mb-3">
             <ul class="nav nav-tabs">
 <!--                Настройки хостов-->
                 <li class="nav-item">
@@ -25,7 +25,6 @@
 <!--            Настройки хостов-->
             <div class="tab-pane fade show active" id="hosts" role="tabpanel">
                 <settings-basic-properties></settings-basic-properties>
-                <settings-basic-hosts></settings-basic-hosts>
             </div>
 
 <!--            Настройки разрешений пользователей-->
@@ -44,10 +43,10 @@
 
 <script>
 
-import SettingsBasicProperties from './SettingsBasicProperties'
-import SettingsBasicHosts from './SettingsBasicHosts'
-import SettingsBasicUsers from './SettingsBasicUsers'
-import SettingsBasicClasses from './SettingsBasicClasses'
+import SettingsBasicProperties from './Properties/SettingsBasicProperties'
+import SettingsBasicHosts from './Properties/SettingsBasicHosts'
+import SettingsBasicUsers from './Users/SettingsBasicUsers'
+import SettingsBasicClasses from './Classes/SettingsBasicClasses'
 
 export default {
     name: 'SettingsBasic',
