@@ -63,10 +63,9 @@ class LeadExport implements FromCollection
             $row[] = 'Город';
             $row[] = 'Посадочная';
             $row[] = 'Источник';
+            $row[] = 'UTM term';
             $row[] = 'UTM source';
-            $row[] = 'cid';
-            $row[] = 'campaign_id';
-            $row[] = 'source_type';
+            $row[] = 'UTM campaign';
             $row[] = 'UTM medium';
             $row[] = 'referrer';
         }
@@ -96,20 +95,9 @@ class LeadExport implements FromCollection
                 $row[] = $lead->city;
                 $row[] = $lead->host;
                 $row[] = $lead->source;
+                $row[] = $lead->utm['utm_term'] ?? '';
                 $row[] = $lead->utm['utm_source'] ?? '';
-
-                $tmp = explode('|', $lead->utm['utm_campaign'] ?? '');
-                if(count($tmp)){
-                    $row[] = $tmp[0] ?? '';
-                    $row[] = $tmp[1] ?? '';
-                    $row[] = $tmp[2] ?? '';
-                }
-                else{
-                    $row[] = '';
-                    $row[] = '';
-                    $row[] = '';
-                }
-
+                $row[] = $lead->utm['utm_campaign'] ?? '';
                 $row[] = $lead->utm['utm_medium'] ?? '';
                 $row[] = $lead->referrer;
             }
