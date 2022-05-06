@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Project\Project;
@@ -28,10 +28,10 @@ class LeadExport implements FromCollection
 
         //Отсеивание по дате
         if(!is_null($date_from))
-            $leads->where('created_at', '>=', $date_from);
+            $leads->where('created_at', '>=', Carbon::parse($date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone')));
 
         if(!is_null($date_to))
-            $leads->where('created_at', '<=', $date_to);
+            $leads->where('created_at', '<=', Carbon::parse($date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone')));
 
         $leads = $leads->orderBy('created_at', 'desc')->get();
 
