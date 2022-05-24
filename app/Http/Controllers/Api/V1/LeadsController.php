@@ -42,6 +42,8 @@ class LeadsController extends Controller
             $request->merge(['phone' => $phone]);
         }
 
+        $request->merge(['cost' => preg_replace("/[^0-9]/", '', trim($request->cost))]);
+
         //Получение источника и UTM-меток
         $request->merge(['source' => $this->detectSource($request)]);
         $request->merge(['utm' => $this->getUTM($request)]);
