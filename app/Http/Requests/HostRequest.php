@@ -26,7 +26,9 @@ class HostRequest extends FormRequest
     public function rules()
     {
         return [
-            'host' => ['required', 'regex:~^((http|https)+?://)?(www\.)?[\w\-\.]{2,}\.[\w]{2,}$~i', 
+            //Предыдущая регулярка:
+            // 'host' => ['required', 'regex:~^((http|https)+?://)?(www\.)?[\w\-\.]{2,}\.[\w]{2,}$~i', 
+            'host' => ['required', 'regex:~^((http|https)+?://)?(www\.)?[^.]+\.\S{2,4}$~iu', 
                         Rule::unique('hosts')->where(function($query){
                             return $query->where(['host' => $this->host, 'user_id' => Auth::user()->id] ?? Auth::guard('api')->user()->id);
                         })
