@@ -26,29 +26,34 @@ class WebhookController extends Controller
     } //store
 
     public function store(Project $project, Request $request){
-        //TODO Создать Request для валидации
+        try{
+            //TODO Создать Request для валидации
 
-         //Проверка полномочий пользователя
-         if (Gate::denies('settings', [Project::class, $project]))
-            return redirect()->route('project.index');
+            //Проверка полномочий пользователя
+            if (Gate::denies('settings', [Project::class, $project]))
+                return redirect()->route('project.index');
 
-        //Проверка существования вебхука
-        if( !is_null($project->webhook_get($request->name)) ){
-            Journal::projectError($project,
-            trans('project.notifications.webhooks.error-create') . ': ' . $request->name . ' – ' . trans('project.notifications.webhooks.error-exists'));
+            //Проверка существования вебхука
+            if( !is_null($project->webhook_get($request->name)) ){
+                Journal::projectError($project,
+                trans('project.notifications.webhooks.error-create') . ': ' . $request->name . ' – ' . trans('project.notifications.webhooks.error-exists'));
+                return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
+                    ->withError(trans('project.notifications.webhooks.error-create') . ': ' . trans('project.notifications.webhooks.error-exists'));
+            }
+
+            //Вызов соответствующего конструктора для вебхука (в зависимости от типа и формы)
+            $method = 'store_'.$request->form;
+            // return yaml_parse($this->$method($project, $request)['query']);
+
+            $this->$method($project, $request);
+
+            Journal::project($project, Auth::user()->name . ' добавил вебхук ' . $request->name);
             return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
-                ->withError(trans('project.notifications.webhooks.error-create') . ': ' . trans('project.notifications.webhooks.error-exists'));
+                    ->withSuccess( trans('project.notifications.webhooks.create-success') );
         }
-
-        //Вызов соответствующего конструктора для вебхука (в зависимости от типа и формы)
-        $method = 'store_'.$request->form;
-        // return yaml_parse($this->$method($project, $request)['query']);
-
-        $this->$method($project, $request);
-
-        Journal::project($project, Auth::user()->name . ' добавил вебхук ' . $request->name);
-        return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks'])
-                ->withSuccess( trans('project.notifications.webhooks.create-success') );
+        catch(\Illuminate\Http\Client\RequestException $e){
+            return 'Ошибка добавления вебхука: ' . json_encode($e->response);
+        }
     } //store
 
     public function store_simple_common(Project $project, Request $request){ //Сохранение упрощённого обычного вебхука
@@ -63,7 +68,7 @@ class WebhookController extends Controller
         $project->save();
     } //store_simple_bitrix24
     
-    public function store_extended(Project $project, Request $request){ //Сохранение вебхука из расширенной форме
+    public function store_extended(Project $project, Request $request){ //Сохранение вебхука из расширенной формы
         $project->webhook_add($request->except('_token'));
         $project->save();
     } //store_extended
@@ -94,6 +99,11 @@ class WebhookController extends Controller
         $webhook = $project->webhook_get($webhook_name);
         return view('material-dashboard.project.webhooks.form.extended', compact('project', 'webhook'));
     } //edit_extended
+
+    public function edit_extended_amocrm(Project $project, string $webhook_name){
+        $webhook = $project->webhook_get($webhook_name);
+        return view('material-dashboard.project.webhooks.form.extended_amocrm', compact('project', 'webhook'));
+    } //edit_extended_amocrm
 
     public function update(Project $project, string $webhook_name, Request $request){
         //TODO Создать Request для валидации
@@ -144,12 +154,38 @@ class WebhookController extends Controller
         . ($project->settings['webhooks'][$webhook_name]['enabled'] === true ? ' включил' : ' выключил')
         . ' вебхук ' . $webhook_name);
         return redirect()->route('project.settings-sync', ['project' => $project, 'tab' => 'webhooks']);
-    }
+    } //toggle
+
+    public function amocrm_reauthorize(Project $project, Request $request){
+        try{
+            $webhook = $project->webhook_get($request['webhook_name']);
+
+            //Отправка кода авторизации для получения токенов
+            $body = [
+                'client_id' => $webhook->client_id,
+                'client_secret' => $webhook->client_secret,
+                'grant_type' => 'authorization_code',
+                'code' => $request['authorization_code'],
+                'redirect_uri' => $webhook->redirect_uri,
+            ];
+
+            $response = Http::withBody(json_encode($body), 'application/json')->timeout(5)->retry(3, 500)->post($webhook->auth_url);
+            $response->throw(); //Выбросить исключение, если произошла ошибка запроса
+
+            $project->webhook_update($webhook->name, [
+                'access_token' => $response['access_token'],
+                'refresh_token' => $response['refresh_token'],
+                'expires_at' => Carbon::now()->addSeconds(86400),
+            ], true);
+        }
+        catch(\Illuminate\Http\Client\RequestException $e){
+            return $e->response;
+        }
+        return redirect()->route('project.settings-sync', $project)->withSuccess('Вебхук прошёл повторную авторизацию');
+    } //amocrm_reauthorize
 
     public function test(){
-        
         $lead = Leads::latest()->first();
-        return json_decode($lead->project->webhook_send('AmoCRM', $lead));
+        return $lead->project->webhook_send('AmoCRM-4', $lead);
     } //test
-
 }

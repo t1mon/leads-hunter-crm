@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
-//TODO Заменить на фасад
 use App\Journal\Facade\Journal;
 
 class LeadsController extends Controller
@@ -42,6 +41,8 @@ class LeadsController extends Controller
             $phone = preg_replace('/^./','7', $phone);
             $request->merge(['phone' => $phone]);
         }
+
+        $request->merge(['cost' => preg_replace("/[^0-9]/", '', trim($request->cost))]);
 
         //Получение источника и UTM-меток
         $request->merge(['source' => $this->detectSource($request)]);
