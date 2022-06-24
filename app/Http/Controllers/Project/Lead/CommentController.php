@@ -40,11 +40,11 @@ class CommentController extends Controller
 
         Comment::updateOrCreate(
             [
-                'user_id' => Auth::id(),
                 'lead_id' => $lead->id,
                 'project_id' => $project->id,
             ],
             [
+                'user_id' => Auth::id(),
                 'comment_body' => $request->comment_body,
             ]
         );
