@@ -11,7 +11,7 @@
             <p class="card-text text-end text-info">Автор: {{$comment->user->name}}</p>
             <p class="card-text text-secondary fst-italic">Дата: {{humanize_date($comment->created_at)}}</p>
         </div>
-        @if($project->isOwner() or Auth::user()->isManagerFor($project))
+        @if(Auth::user()->isInProject($project))
             <div class="card-footer">
                 {!! Form::model($comment, ['id' => 'delete-form', 'method' => 'DELETE', 'route' => ['comment.destroy', $project, $lead, $comment] ]) !!}
                 {!! Form::close() !!}

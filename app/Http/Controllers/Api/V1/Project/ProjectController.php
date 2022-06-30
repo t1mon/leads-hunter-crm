@@ -191,15 +191,16 @@ class ProjectController extends Controller
             $leads->where('entries',  $request->entry_filter, 1);
         }
 
-        $leads = $leads->orderBy('created_at', 'desc')->paginate($request->rows_num ?? 50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+        $leads = $leads->orderBy('created_at', 'desc')->with(['comment_CRM'])->paginate($request->rows_num ?? 50)->onEachSide(0)->withPath("?" . $request->getQueryString());
+
         $classes = $project->classes;
 
         //Загрузка комментариев к лидам
-        $leads->each(function($item, $key){
+        $leads->each(function($item, $key) use ($project) {
             $item->comment_crm = [$item->comment_CRM?->id, $item->comment_CRM?->comment_body];
             $item->class = $item->class;
             unset($item->comment_CRM);
-            $item->created_at_format = Carbon::parse($item->created_at, config('app.timezone'))->setTimezone($item->project->timezone)->format('d.m.Y H:i:s');
+            $item->created_at_format = Carbon::parse($item->created_at, config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y H:i:s');
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);

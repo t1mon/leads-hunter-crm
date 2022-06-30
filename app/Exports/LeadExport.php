@@ -71,7 +71,7 @@ class LeadExport implements FromCollection
         }
         else{
             foreach($this->permissions->view_fields as $field)
-                $row[] = $lead->$field;
+                $row[] = __('projects.journal.'.$field);
         }
         $formatted[] = [$row];
 
