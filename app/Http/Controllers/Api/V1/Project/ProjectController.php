@@ -207,6 +207,7 @@ class ProjectController extends Controller
             if(!$userIsAuthorized) {
                 $item->referrer = '';
                 $item->host = '';
+                $item->source = '';
             }
         });
 
