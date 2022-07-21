@@ -204,8 +204,10 @@ class ProjectController extends Controller
             $item->created_at_format = Carbon::parse($item->created_at, config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y H:i:s');
 
             //Ограничение видимых полей
-            if(!$userIsAuthorized)
+            if(!$userIsAuthorized) {
+                $item->referrer = '';
                 $item->host = '';
+            }
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
