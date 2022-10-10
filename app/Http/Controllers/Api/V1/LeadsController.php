@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use App\Journal\Facade\Journal;
+use App\Models\Project\Integrations\Mango;
+use Illuminate\Support\Facades\Http;
 
 class LeadsController extends Controller
 {
@@ -193,4 +195,20 @@ class LeadsController extends Controller
 
         return response()->json(['messsage' => 'Lead has been deleted'], Response::HTTP_OK);
     } //destroy
+
+    public function test(Request $request){
+        $mango = Mango::first();
+        $lead = Leads::latest()->first();
+
+        $json = $mango->json($lead);
+        $sign = $mango->sign($json);
+
+        return response($sign);
+
+        $response = $mango->sendLead($lead);
+        $response->throw();
+
+        // return response('OK');
+        return response($json);
+    } //test
 }

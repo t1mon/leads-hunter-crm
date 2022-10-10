@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Project\Integrations\MangoController;
 use App\Http\Controllers\Project\TelegramIDController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ Route::resource('users', 'UserController')->only(['index', 'edit', 'update']);
 Route::resource('comments', 'CommentController')->only(['index', 'edit', 'update', 'destroy']);
 Route::resource('media', 'MediaLibraryController')->only(['index', 'show', 'create', 'store', 'destroy']);
 
+//Настройки
 Route::prefix('settings')->as('settings.')->group(function() {
 
     Route::prefix('telegram')->as('telegram.')->group(function () {
