@@ -194,13 +194,21 @@ class ProjectController extends Controller
         $leads = $leads->orderBy('created_at', 'desc')->with(['comment_CRM'])->paginate($request->rows_num ?? 50)->onEachSide(0)->withPath("?" . $request->getQueryString());
 
         $classes = $project->classes;
+        $userIsAuthorized = $project->isOwner();
 
         //Загрузка комментариев к лидам
-        $leads->each(function($item, $key) use ($project) {
+        $leads->each(function($item, $key) use ($project, $userIsAuthorized) {
             $item->comment_crm = [$item->comment_CRM?->id, $item->comment_CRM?->comment_body];
             $item->class = $item->class;
             unset($item->comment_CRM);
             $item->created_at_format = Carbon::parse($item->created_at, config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y H:i:s');
+
+            //Ограничение видимых полей
+            if(!$userIsAuthorized) {
+                $item->referrer = '';
+                $item->host = '';
+                $item->source = '';
+            }
         });
 
         return new ProjectResource($project, ['leads' => $leads, 'classes' => $classes]);
