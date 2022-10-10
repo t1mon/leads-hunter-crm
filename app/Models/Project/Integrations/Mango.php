@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Nette\Utils\Json;
 
 class Mango extends Model
@@ -40,15 +41,24 @@ class Mango extends Model
     
     private const TEMPLATE = [ //Заготовка тела запроса
         'data' => [
-            'type' => 0,
-            'name' => '',
-            'phones' => [
-                [
-                    'type' => 1, //Мобильный телефон
-                    'phone' => '',
-                    'is_default' => true, //Главный телефон в группе
+            [
+                'type' => 0,
+                'name' => '',
+                'comment' => 'Контакт с Leads Hunter CRM',
+                'phones' => [
+                    [
+                        'type' => 1, //Мобильный телефон
+                        'phone' => '',
+                        'is_default' => true, //Главный телефон в группе
+                    ]
+                ],
+                'emails' => [
+                    [
+                        'email' => '',
+                        'is_default' => true,
+                    ],
                 ]
-            ],
+            ]
         ]
     ];
 
@@ -63,8 +73,9 @@ class Mango extends Model
     public function json(Leads $lead): string //Сгенерировать json-строку для запроса на основе данных лида
     {
         $data = self::TEMPLATE;
-        Arr::set(array: $data, key: 'data.name', value: $lead->getClientName());
-        Arr::set(array: $data, key: 'data.phones.0.phone', value: $lead->phone);
+        Arr::set(array: $data, key: 'data.0.name', value: $lead->getClientName());
+        Arr::set(array: $data, key: 'data.0.phones.0.phone', value: Str::replaceFirst(search: '7', replace: '8', subject: $lead->phone));
+        Arr::set(array: $data, key: 'data.0.emails.0.email', value: $lead->email ?? 'example@mail.com');
 
         // return Json::encode(value: $data);
         return json_encode(value: $data);
@@ -91,7 +102,7 @@ class Mango extends Model
             'sign' => $this->sign($json),
         ];
 
-        $response = Http::post(url: self::API_URL, data: $data);
+        $response = Http::asForm()->post(url: self::API_URL, data: $data);
 
         return $response;
     } //sendLead
