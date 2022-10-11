@@ -18,9 +18,7 @@ class SendWebhookData implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(
-        private MangoService $mangoService
-    )
+    public function __construct()
     {
         //
     }

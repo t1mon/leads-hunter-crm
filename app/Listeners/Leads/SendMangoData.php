@@ -38,7 +38,7 @@ class SendMangoData
             $integrations->each(function($item, $key) use ($lead){
                 if($item->enabled){
                     $response = $item->sendLead($lead);
-                    $response->throw();
+                    // $response->throw();
                     Journal::lead(lead: $lead, text: 'Лид отправлен на интеграцию Mango Office: ' . $item->name);
                 }   
             });
