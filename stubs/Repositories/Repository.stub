@@ -7,7 +7,7 @@ use App\Models\$FULL_MODEL$;
 class Repository{
     public function create(
         // ...
-    ): $SHORT_MODEL
+    ): $SHORT_MODEL$
     {
         return $SHORT_MODEL$::create([
             // ...
@@ -19,9 +19,11 @@ class Repository{
         // ...
     ): $SHORT_MODEL$
     {
-        return $$variable$->update([
+        $$variable$->update([
             // ...
         ]);
+
+        return $$variable$;
     } //update
 
     public function remove($SHORT_MODEL$ $$variable$): void

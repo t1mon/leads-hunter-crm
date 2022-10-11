@@ -72,6 +72,11 @@ return [
         'stubs' => [
             'driver' => 'local',
             'root' => base_path('stubs'),
+        ],
+
+        'repositories' => [
+            'driver' => 'local',
+            'root' => app_path('Repositories'),
         ]
 
     ],

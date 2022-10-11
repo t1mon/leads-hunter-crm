@@ -42,12 +42,6 @@ class MakeRepository extends Command
     public function __construct()
     {
         parent::__construct();
-
-        // $this->type = Arr::hasAny(array: [self::TYPE_CUD, self::TYPE_READ], keys: $this->option('type')) ? $this->argument('type') : self::TYPE_CUD;
-        // $this->namespace = $this->argument('namespace');
-        // $this->fullModel = $this->option('model');
-        // $this->shortModel = Str::of($this->fullModel)->explode('/')->last();
-        // $this->variable = Str::of('shortModel')->lower()->snake();
     }
 
     /**
@@ -55,35 +49,77 @@ class MakeRepository extends Command
      *
      * @return int
      */
-    public function handle()
-    {
-        if($this->type === self::TYPE_CUD)
-            return $this->_makeCUD();
-        elseif($this->type === self::TYPE_READ)
-            return $this->_makeRead();
-        else
+    public function handle(): int
+    {   
+        //Загрузка данных из консоли
+        $this->_load();
+
+        //Проверка существования данных
+        if($this->_checkIfExists()){
+            $this->error('Репозиторий ' . $this->_savePath() . ' уже существует');
             return 0;
+        }
+
+        if($this->_make()){
+            $this->info('Создан репозиторий ' . $this->_savePath());
+            return 1;
+        }
+        else{
+            $this->info('Ошибка создания ' . $this->_savePath());
+            return 0;
+        }
     }
 
     //
     //  Служебные методы
     //
-    private function _stubPath(): string{
+    private function _checkIfExists(): bool
+    {
+        return Storage::disk('repositories')->exists($this->_savePath());
+    } //_checkIfExists
+
+    private function _load(): void
+    {
+        $this->type = in_array(needle: $this->option('type'), haystack: [self::TYPE_CUD, self::TYPE_READ]) ? $this->option('type') : self::TYPE_CUD;
+        $this->namespace = $this->argument('namespace');
+        $this->fullModel = $this->option('model');
+        $this->shortModel = Str::of($this->fullModel)->explode('/')->last();
+        $this->variable = Str::of($this->shortModel)->lower()->snake();
+    } //_load
+
+    private function _stubPath(): string
+    {
         if($this->type === self::TYPE_READ)
             return 'Repositories/ReadRepository.stub';
         else
             return 'Repositories/Repository.stub';
     } //_stubPath
 
-    private function _loadStub(){
+    private function _loadStub(): string
+    {
         return Storage::disk('stubs')->get( $this->_stubPath() );
     } //_loadStub
 
-    private function _makeCUD(): int{
-        return 1;
-    } //_makeCUD
+    private function _savePath(): string
+    {
+        $name = $this->type === self::TYPE_READ ? 'ReadRepository.php' : 'Repository.php';
+        return Str::of($this->namespace)->append('/')->append($name);
+    } //_savePath
+    private function _make(): int
+    {
+        $file = $this->_loadStub();
 
-    private function _makeRead(): int{
-        return 1;
-    } //_makeRead
+        //Подстановка переменных
+        $file = Str::replace(search: '$NAMESPACE$', replace: $this->namespace, subject: $file);
+        $file = Str::replace(search: '$FULL_MODEL$', replace: $this->fullModel, subject: $file);
+        $file = Str::replace(search: '$SHORT_MODEL$', replace: $this->shortModel, subject: $file);
+        $file = Str::replace(search: '$variable$', replace: $this->variable, subject: $file);
+
+        //Создание директории
+        if(!Storage::disk('repositories')->makeDirectory($this->namespace))
+            return 0;
+
+        //Сохранение файла
+        return Storage::disk('repositories')->put(path: $this->_savePath(), contents: $file) ? 1 : 0;
+    } //_makeCUD
 }

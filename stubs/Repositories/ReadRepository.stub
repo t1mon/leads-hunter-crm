@@ -29,11 +29,14 @@ class ReadRepository{
     public function find(int $$variable$, bool $fail = false, string|array $with = null): ?$SHORT_MODEL$ //Общая функция поиска для удобства
     {
         //Поиск по id
-        $result = $this->findById(id: $$argument$, with: $with);
+        $result = $this->findById(id: $$variable$, with: $with);
 
         //Поиск по другим результатам
         // ...
         //
+
+        if(is_null($result) && $fail === true )
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
 
         return $result;
     } //find

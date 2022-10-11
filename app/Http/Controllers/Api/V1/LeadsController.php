@@ -201,21 +201,6 @@ class LeadsController extends Controller
     } //destroy
 
     public function test(Request $request){
-        $mango = Mango::first();
-        $lead = Leads::latest()->first();
 
-        $json = $mango->json($lead);
-        $sign = $mango->sign($json);
-
-        // return response($lead->toArray());
-
-        // return response($json);
-        // return response()->json(['sign' => $sign, 'json' => $json]);
-
-        $response = $mango->sendLead($lead);
-        $response->throw();
-
-        return response($response);
-        // return response($json);
     } //test
 }
