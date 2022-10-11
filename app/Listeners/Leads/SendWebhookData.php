@@ -51,21 +51,6 @@ class SendWebhookData implements ShouldQueue
                 }
             }
         }
-
-        //Отправка в Mango Office
-        $mangos = $this->mangoService->findByProjectId($event->lead->project_id);
-        if( $mangos->isNotEmpty() ){
-            foreach($mangos as $mango){
-                if(!$mango->enabled)
-                    continue;
-
-                $response = $mango->sendLead($event->lead);
-                if($response->ok())
-                    Journal::lead(lead: $event->lead, text: 'Лид отправлен на интеграцию Mango Office ' . $mango->name . '. Ответ сервера: ' . $response);
-                elseif($response->failed())
-                    Journal::leadError(lead: $event->lead, text: 'Ошибка отправления лида на интеграцию Mango Office ' . $mango->name . '. Ответ сервера: ' . $response);
-            }
-        }
     }
     /**
      * Определить, следует ли ставить слушателя в очередь.
@@ -80,15 +65,6 @@ class SendWebhookData implements ShouldQueue
             if($webhook->enabled)
                 return true;
         }
-
-        //Отправка на Mango Office
-        $mangos = $this->mangoService->findByProjectId($event->lead->project_id);
-        if($mangos->isEmpty())
-            return false;
-        
-        foreach($mangos as $mango)
-            if($mango->enabled)
-                return true;
 
         return false;
     }
