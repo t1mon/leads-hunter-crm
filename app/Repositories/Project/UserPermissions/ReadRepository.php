@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\$NAMESPACE$;
+namespace App\Repositories\Project\UserPermissions;
 
-use App\Models\$FULL_MODEL$;
+use App\Models\Project\UserPermissions;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -12,23 +12,23 @@ class ReadRepository{
     //
     public function query(): \Illuminate\Database\Eloquent\Builder //Общая функция для запросов
     {
-        return $SHORT_MODEL$::query();
+        return UserPermissions::query();
     } //query
 
     public function findAll(int $perPage = 50): LengthAwarePaginator
     {
-        return $SHORT_MODEL$::paginate($perPage);
+        return UserPermissions::paginate($perPage);
     } //findAll
 
-    public function findById(int $id, bool $fail = false, string|array $with = null): ?$SHORT_MODEL$
+    public function findById(int $id, bool $fail = false, string|array $with = null): ?UserPermissions
     {
         return $this->_findByData(field: 'id', value: $id, fail: $fail, with: $with);
     } //findById
 
-    public function find(int $$variable$, bool $fail = false, string|array $with = null): ?$SHORT_MODEL$ //Общая функция поиска для удобства
+    public function find(int $userPermissions, bool $fail = false, string|array $with = null): ?UserPermissions //Общая функция поиска для удобства
     {
         //Поиск по id
-        $result = $this->findById(id: $$variable$, with: $with);
+        $result = $this->findById(id: $userPermissions, with: $with);
 
         //Поиск по другим результатам
         // ...
@@ -40,12 +40,17 @@ class ReadRepository{
         return $result;
     } //find
 
+    public function findProjectIdsByUser(int $userId): array
+    {
+        return UserPermissions::where('user_id', $userId)->select('project_id')->pluck('project_id')->all();
+    } //findProjectsByUser
+
     //
     //  Скрытые методы
     //
-    protected function _findByData(string $field, int|string $value, int $perPage = 1, bool $fail = false, null|string|array $with = null): null|$SHORT_MODEL$|LengthAwarePaginator //Общий метод для поиска по атрибутам модели
+    protected function _findByData(string $field, int|string $value, int $perPage = 1, bool $fail = false, null|string|array $with = null): null|UserPermissions|LengthAwarePaginator //Общий метод для поиска по атрибутам модели
     {
-        $query = $SHORT_MODEL$::where($field, $value)
+        $query = UserPermissions::where($field, $value)
             ->when($with, function($q) use ($with){
               return $q->with($with);
             });

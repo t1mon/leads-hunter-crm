@@ -8,7 +8,7 @@ use App\Services\Project\Integrations\MangoService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendMangoData
+class SendMangoData implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -43,5 +43,5 @@ class SendMangoData
                 }   
             });
         }
-    }
+    } //handle
 }

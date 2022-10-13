@@ -82,10 +82,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
     Route::post('vk/project/{project}/webhook', 'Project\VKFormController@webHook')->name('vk.webhook'); //Добавление лида через VK API
 
     //Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
-
-    // Comments
-    //Route::apiResource('posts.comments', 'PostCommentController')->only('index');
-    //Route::apiResource('users.comments', 'UserCommentController')->only('index');
+//Проекты
     //Route::apiResource('comments', 'CommentController')->only(['index', 'show']);
 
     // Posts
@@ -95,6 +92,17 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 
     // Media
     //Route::apiResource('media', 'MediaController')->only('index');
+});
+
+Route::prefix('v2')->name('v2.')->group(function(){
+    Route::middleware(['auth:api', 'verified'])->group(function (){
+        Route::get('dashboard', [ \App\Http\Controllers\Api\V2\Project\ProjectController::class, 'index'])->name('dashboard');
+        
+        //Проекты
+        Route::prefix('project')->name('project.')->group(function(){
+            
+        });
+    });
 });
 
 

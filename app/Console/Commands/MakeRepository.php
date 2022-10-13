@@ -57,16 +57,16 @@ class MakeRepository extends Command
         //Проверка существования данных
         if($this->_checkIfExists()){
             $this->error('Репозиторий ' . $this->_savePath() . ' уже существует');
-            return 0;
+            return 1;
         }
 
         if($this->_make()){
             $this->info('Создан репозиторий ' . $this->_savePath());
-            return 1;
+            return 0;
         }
         else{
             $this->info('Ошибка создания ' . $this->_savePath());
-            return 0;
+            return 1;
         }
     }
 
@@ -81,10 +81,10 @@ class MakeRepository extends Command
     private function _load(): void
     {
         $this->type = in_array(needle: $this->option('type'), haystack: [self::TYPE_CUD, self::TYPE_READ]) ? $this->option('type') : self::TYPE_CUD;
-        $this->namespace = $this->argument('namespace');
-        $this->fullModel = $this->option('model');
-        $this->shortModel = Str::of($this->fullModel)->explode('/')->last();
-        $this->variable = Str::of($this->shortModel)->lower()->snake();
+        $this->namespace = Str::replace(search: '/', replace: '\\', subject: $this->argument('namespace'));
+        $this->fullModel = Str::of($this->option('model'))->replace(search: '/', replace: '\\');
+        $this->shortModel = Str::of($this->fullModel)->explode('\\')->last();
+        $this->variable = Str::of($this->shortModel)->camel();
     } //_load
 
     private function _stubPath(): string
@@ -103,8 +103,9 @@ class MakeRepository extends Command
     private function _savePath(): string
     {
         $name = $this->type === self::TYPE_READ ? 'ReadRepository.php' : 'Repository.php';
-        return Str::of($this->namespace)->append('/')->append($name);
+        return Str::of($this->namespace)->replace(search: '\\', replace: '/')->append('/')->append($name);
     } //_savePath
+
     private function _make(): int
     {
         $file = $this->_loadStub();
