@@ -60,7 +60,7 @@ export default {
   },
   async created () {
     await this.getProjects
-    //await this.getLeadsCount
+    await this.getLeadsCount
   }
 }
 </script>

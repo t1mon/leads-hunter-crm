@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Repositories\$NAMESPACE$;
+
+use App\Models\$FULL_MODEL$;
+
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class ReadRepository{
+    //
+    //  Открытые методы
+    //
+    public function query(): \Illuminate\Database\Eloquent\Builder //Общая функция для запросов
+    {
+        return $SHORT_MODEL$::query();
+    } //query
+
+    public function findAll(int $perPage = 50): LengthAwarePaginator
+    {
+        return $SHORT_MODEL$::paginate($perPage);
+    } //findAll
+
+    public function findById(int $id, bool $fail = false, string|array $with = null): ?$SHORT_MODEL$
+    {
+        return $this->_findByData(field: 'id', value: $id, fail: $fail, with: $with);
+    } //findById
+
+    public function find(int $$variable$, bool $fail = false, string|array $with = null): ?$SHORT_MODEL$ //Общая функция поиска для удобства
+    {
+        //Поиск по id
+        $result = $this->findById(id: $$variable$, with: $with);
+
+        //Поиск по другим результатам
+        // ...
+        //
+
+        if(is_null($result) && $fail === true )
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
+
+        return $result;
+    } //find
+
+    //
+    //  Скрытые методы
+    //
+    protected function _findByData(string $field, int|string $value, int $perPage = 1, bool $fail = false, null|string|array $with = null): null|$SHORT_MODEL$|LengthAwarePaginator //Общий метод для поиска по атрибутам модели
+    {
+        $query = $SHORT_MODEL$::where($field, $value)
+            ->when($with, function($q) use ($with){
+              return $q->with($with);
+            });
+
+        //Если нужно загрузить более одной модели, использовать пагинацию
+        if($perPage > 1)
+            return $query->paginate($perPage);
+
+        //Если загружается только одна модель, проверить условие fail
+        return $fail ? $query->firstOrFail() : $query->first();
+    } //_findByProjectData
+
+};
+
+?>

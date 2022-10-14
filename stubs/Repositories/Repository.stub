@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Repositories\$NAMESPACE$;
+
+use App\Models\$FULL_MODEL$;
+
+class Repository{
+    public function create(
+        // ...
+    ): $SHORT_MODEL$
+    {
+        return $SHORT_MODEL$::create([
+            // ...
+        ]);
+    } //create
+
+    public function update(
+        $SHORT_MODEL$ $$variable$,
+        // ...
+    ): $SHORT_MODEL$
+    {
+        $$variable$->update([
+            // ...
+        ]);
+
+        return $$variable$;
+    } //update
+
+    public function remove($SHORT_MODEL$ $$variable$): void
+    {
+        $$variable$->delete();
+    } //remove
+
+};
+
+?>

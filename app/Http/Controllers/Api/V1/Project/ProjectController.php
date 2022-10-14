@@ -275,8 +275,22 @@ class ProjectController extends Controller
         $project_ids = UserPermissions::where('user_id', Auth::guard('api')->id())->pluck('project_id');
 
         //Загрузка проектов по идентификаторам
-        $projects = Project::whereIn('id', $project_ids)->with('leads')->withCount('leads')->get();
+        // $projects = Project::whereIn('id', $project_ids)->with('leads')->withCount('leads')->get();
 
-        return  LeadsCountCollectionResource::collection($projects);
+        // return  LeadsCountCollectionResource::collection($projects);
+
+        $leadsCount = DB::table('leads_count')->whereIn('project_id', $project_ids)->get()->all();
+
+        $array = array_map(function($value){
+                return [
+                    'id' => $value->project_id,
+                    'totalLeads' => $value->total_leads,
+                    'leadsToday' => $value->leads_today,
+                ];
+            },
+            $leadsCount
+        );
+
+        return response()->json(['data' => $array]);
     }
 }

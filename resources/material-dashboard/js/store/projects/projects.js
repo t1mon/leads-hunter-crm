@@ -71,6 +71,7 @@ export default {
       axios
         .post(state.endpoint + '/leads-count')
         .then(({ data }) => {
+          console.log('Вывод данных: ' + data)
           state.projectsLeadsCountLoad = true
           // state.projectsLeadsCount = data.data.map( item => {
           //   return item
