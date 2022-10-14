@@ -34,6 +34,11 @@ class ReadRepository{
         return $this->_findByData(field: 'project_id', value: $project_id, perPage: $perPage, with: $with);
     } //findByProjectId
 
+    public function findByProjectIdEnabled(int $project_id, int $perPage = 50): LengthAwarePaginator
+    {
+        return Mango::where(['project_id' => $project_id, 'enabled' => true])->paginate($perPage);
+    } //findByProjectIdEnabled
+
     public function find(int|string $mango, bool $fail = false, string|array $with = null): ?Mango //Общая функция поиска для удобства
     {
         //Поиск по id

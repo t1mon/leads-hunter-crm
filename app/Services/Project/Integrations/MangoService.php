@@ -84,6 +84,11 @@ class MangoService{
         return $this->readRepository->findByProjectId(project_id: $project instanceof Project ? $project->id : $project, perPage: $perPage, with: $with);
     } //findByProjectId
 
+    public function findByProjectIdEnabled(int $project_id, int $perPage = 50): LengthAwarePaginator
+    {
+        return $this->readRepository->findByProjectIdEnabled(project_id: $project_id, perPage: $perPage);
+    } //findByProjectIdEnabled
+
     public function find(int|string $mango, bool $fail = false, string|array $with = null): ?Mango //Общая функция поиска для удобства
     {
         return $this->readRepository->find(mango: $mango, fail: $fail, with: $with);

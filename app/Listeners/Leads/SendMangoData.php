@@ -31,8 +31,7 @@ class SendMangoData implements ShouldQueue
     public function handle(LeadCreated $event)
     {
         $lead = $event->lead;
-        $project = $event->lead->project;
-        $integrations = $this->service->findByProjectId(project: $project->id);
+        $integrations = $this->service->findByProjectIdEnabled(project_id: $lead->project_id);
         
         if($integrations->isNotEmpty()){
             $integrations->each(function($item, $key) use ($lead){
@@ -44,4 +43,11 @@ class SendMangoData implements ShouldQueue
             });
         }
     } //handle
+
+    public function shouldQueue(LeadCreated $event)
+    {
+        $lead = $event->lead;
+        $integrations = $this->service->findByProjectIdEnabled(project_id: $lead->project_id);
+        return $integrations->isNotEmpty();
+    } //shouldQueue
 }
