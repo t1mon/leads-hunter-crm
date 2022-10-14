@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Project\Integrations\MangoController;
 use App\Http\Controllers\NewsletterSubscriptionController;
 use App\Http\Controllers\Project\EmailController;
 use App\Http\Controllers\Project\TelegramIDController;
@@ -72,6 +73,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('{project}/webhook/amocrm_reauthorize', [WebhookController::class, 'amocrm_reauthorize'])->name('webhook.amocrm_reauthorize');
         Route::resource('{project}/vk_forms', VKFormController::class)->only(['store', 'edit', 'update', 'destroy']);
         Route::post('{project}/vk_forms/{vk_form}/toggle', [VKFormController::class, 'toggle'])->name('vk_forms.toggle');
+
+        //Интеграции
+        Route::name('project.')->group(function(){
+            Route::prefix('integrations')->name('integrations.')->group(function(){
+                Route::get('mango/{project_id}/index', [MangoController::class, 'index'])->name('mango.index');
+                Route::get('mango/{project_id}/create', [MangoController::class, 'create'])->name('mango.create');
+                Route::get('mango/{mango}/toggle', [MangoController::class, 'toggle'])->name('mango.toggle');
+                Route::resource('mango', MangoController::class)->except(['index', 'create']);
+            });
+        });
+        
 
     });
 

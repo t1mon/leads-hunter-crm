@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\Leads\LeadDeleted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LeadsRequest;
 use App\Http\Resources\Leads as LeadsResource;
@@ -16,14 +17,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use App\Journal\Facade\Journal;
+use App\Models\Project\Integrations\Mango;
+use App\Services\Project\Integrations\MangoService;
+use Illuminate\Support\Facades\Http;
 
 class LeadsController extends Controller
 {
     public $leads;
+    
+    public MangoService $mangoService;
 
-    public function __construct(Leads $leads)
+    public function __construct(Leads $leads, MangoService $mangoService)
     {
         $this->leads = $leads;
+        $this->mangoService = $mangoService;
     }
 
     public function store(LeadsRequest $request)
@@ -79,7 +86,7 @@ class LeadsController extends Controller
         //$new_lead = Leads::addToDB($request->all());
         $new_lead = $this->leads->createOrUpdate($request->all());
 
-        Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
+        Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');            
 
         return new LeadsResource(
             $new_lead
@@ -172,10 +179,6 @@ class LeadsController extends Controller
         if(is_null($lead))
             return response()->json(['error' => 'Lead not found'], Response::HTTP_NOT_FOUND);
 
-        //Проверка полномочий
-        // if(!Auth::guard('api')->check())
-        //     return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
-        // $user = Auth::guard('api')->user();
         $user = User::where('api_token', $request->bearerToken())->first();
         if(is_null($user))
             return response()->json(['error' => 'You are not authorized for this action'], Response::HTTP_UNAUTHORIZED);
@@ -184,13 +187,16 @@ class LeadsController extends Controller
                 return response()->json(['error' => 'You are not owner of this lead'], Response::HTTP_FORBIDDEN);
         }
 
-        // $lead_info = ['id' => $lead->id, 'name' => $lead->getClientName(), 'phone' => $lead->phone];
         $lead_copy = clone $lead; //Копия лида для записи
         $lead->delete();
 
-        // Journal::lead($lead_info, $user->name . ' удалил лид');
+        event(new LeadDeleted($lead_copy));
         Journal::lead($lead_copy, $user->name . ' удалил лид');
 
         return response()->json(['messsage' => 'Lead has been deleted'], Response::HTTP_OK);
     } //destroy
+
+    public function test(Request $request){
+
+    } //test
 }
