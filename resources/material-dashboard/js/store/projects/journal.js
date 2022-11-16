@@ -12,7 +12,7 @@ export default {
       sortEntries: true,
       // TODO Найти более элегантный метод
       dataReady: false,
-      // Даты из FilterByDate.vue
+      // Даты из JournalPanel.vue
       dateFrom: '',
       dateTo: ''
     }
@@ -75,7 +75,7 @@ export default {
       }
       state[_sortParam] = !state[_sortParam]
     },
-    getLeads (
+    async getLeads (
       { state, commit, getters, rootState },
       {
         projectId: _projectId,
@@ -99,7 +99,7 @@ export default {
       const prevNext = _prevNext || ''
       // номер лида, если перешёл на другую страницу по стрелке
       const numberArrow = _prevNext ? (+_prevNext.slice(-1) - 1) * rowsNum : 0
-      axios
+      await axios
         .get(rootState.projects.endpoint + '/' + _projectId + '/journal' + page + prevNext,
           {
             params: {
@@ -144,7 +144,7 @@ export default {
           state.leadsOrigin = dataLeads
           state.projectJour = data.data
           state.dataReady = true
-          console.log(data)
+          console.log(data, 1)
         })
         .catch(error => {
           console.log(error)
