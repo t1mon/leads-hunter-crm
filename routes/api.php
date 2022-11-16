@@ -100,7 +100,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
         
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
-            
+            Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
         });
     });
 });

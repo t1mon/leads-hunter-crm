@@ -165,6 +165,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
 
+        Joselfonseca\LaravelTactician\Providers\LaravelTacticianServiceProvider::class,
+
         /*
          * Package Service Providers...
          */

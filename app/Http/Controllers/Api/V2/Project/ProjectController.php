@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Api\V2\Project;
 
+use App\Commands\V2\Project\Journal\JournalCommand;
+use App\Commands\V2\Project\Journal\JournalHandler;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\Api\V2\Project\Project\Journal as JournalRequest;
 
 use App\Services\Api\V2\Project\Service as ProjectService;
+use Joselfonseca\LaravelTactician\CommandBusInterface;
 
 class ProjectController extends Controller
 {
 
     public function __construct(
-        private ProjectService $service
+        private ProjectService $service,
+        private CommandBusInterface $bus,
     )
     {} //Конструктор
 
@@ -24,6 +29,22 @@ class ProjectController extends Controller
     {
         return $this->service->dashboard();
     }
+
+    /**
+     *  ЕЖЛ
+     * 
+     *  @return \Illuminate\Http\Response
+     */
+    public function journal(int $project, JournalRequest $request)
+    {
+        $this->bus->addHandler(JournalCommand::class, JournalHandler::class);
+        return $this->bus->dispatch(
+            command: JournalCommand::class,
+            input: [
+                'project_id' => $project,
+                'request' => $request]
+        );
+    } //journal
 
     /**
      * Store a newly created resource in storage.
