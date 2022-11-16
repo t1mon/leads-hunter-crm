@@ -108,12 +108,14 @@
                                 <td>
                                     <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at_format }}</p>
                                 </td>
-                                <td :style="'background:' + ' ' + '#' + leadColor(lead.class)">
+                                <td>
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
                                 </td>
                                 <td class="text-white text-center">
                                     <div v-select class="select">
-                                        <span class="select__title">{{ className(lead.class, 'Не задан') }}</span>
+                                        <span
+                                            :style="'background: ' + '#' + leadColor(lead.class) + '; ' + (lead.class ? 'color: #ffffff' : '')"
+                                            class="select__title">{{ className(lead.class, 'Не задан') }}</span>
                                         <span class="material-icons select__arrow">expand_more</span>
                                         <div class="select__content">
                                             <div @click="colorDefault($event), getLeadClass(stateProjectJour.id, lead.id, 0)" class="select__option">Не задан</div>
@@ -302,10 +304,11 @@ export default {
           return color
         },
         colorDefault (event) {
-            event.currentTarget.closest('td').previousElementSibling.style.background = ''
+            event.target.closest('td').firstChild.firstChild.style = ''
         },
         color (event, color) {
-            event.currentTarget.closest('td').previousElementSibling.style.background = '#' + color
+            event.target.closest('td').firstChild.firstChild.style.background = '#' + color
+            event.target.closest('td').firstChild.firstChild.style.color = '#ffffff'
         },
         getLeads (_projectId, _dateFrom, _dateTo, _rowsNum) {
             this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo, rowsNum: _rowsNum })
