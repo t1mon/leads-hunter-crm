@@ -82,6 +82,10 @@ class ReadRepository{
             ->paginate($perPage);
     } //findByIdsWithLeadsCount_q
 
+    public function getTotalLeads(Project|int $project): int
+    {
+        //...
+    }
     //
     //  Скрытые методы
     //

@@ -28,13 +28,32 @@ class Leads extends Model
      * @var array
      */
     protected $fillable = [
-        'project_id', 'owner', 'name','surname','patronymic', 'phone', 'entries', 'email', 'cost', 'comment', 'city', 'ip', 'referrer', 'source', 'utm','host','url_query_string', 'created_at'
+        'project_id',
+        'owner',
+        'name',
+        'surname',
+        'patronymic',
+        'phone',
+        'entries',
+        'email',
+        'cost',
+        'comment',
+        'city',
+        'ip',
+        'referrer',
+        'source',
+        'utm',
+        'host',
+        'url_query_string'
     ];
 
     protected $casts = [
         'utm' => 'array'
     ];
 
+    /**
+     *      Геттеры
+     */
     public function getClientName(): string
     {
         return (is_null($this->surname) ? '' : $this->surname) . $this->name . (is_null($this->patronymic) ? '' : $this->patronymic);
@@ -64,6 +83,10 @@ class Leads extends Model
                 : (array_key_exists('utm_content', $this->utm) ? $this->utm['utm_content'] : '');
     }
 
+
+    /**
+     *      Отношения
+     */
     public function project()
     {
         return $this->belongsTo(Project::class);
@@ -77,7 +100,44 @@ class Leads extends Model
         return $this->belongsTo(LeadClass::class, 'class_id');
     } //class
 
+    /**
+     *      Фильтры
+     */
+    public function scopeFrom($query, int $project_id)
+    {
+        return $query->where('project_id', $project_id);
+    } //scopeFrom
 
+    public function scopeOwner($query, string $owner)
+    {
+        return $query->where('owner', $owner);
+    } //scopeOwner
+
+    public function scropeEntries($query, int $entries)
+    {
+        return $entries > 2
+           ? $query->where('entries', '>', 2)
+           : $query->where('entries', $entries);
+    } //scropeEntries
+
+    public function scopeHost($query, string $host)
+    {
+        return $query->where('host', $host);
+    } //scopeHost
+
+    public function scopeCity($query, string $city)
+    {
+        return $query->where('city', $city);
+    } //scopeCity
+
+    public function scopeSource($query, string $source)
+    {
+        return $query->where('source', $source);
+    } //scopeSource
+
+    /**
+     *      Рабочие методы
+     */
     public static function addToDB(array $params) //Добавить лид или обновить его количество вхождений
     {
         $project = Project::find($params['project_id']);

@@ -28,7 +28,13 @@ class Journal extends FormRequest
         return [
             'date_from' => 'nullable|date_format:Y-m-d',
             'date_to'   => 'nullable|date_format:Y-m-d',
-            'entry_filter' => 'nullable|'.Rule::in(['>','='])
+            'entry_filter' => 'nullable|integer|gte:1',
+            'owner' => 'nullable|string|max:256',
+            'host' => 'nullable|string|max:256',
+            'city' => 'nullable|string|max:256',
+            'source' => 'nullable|string|max:256',
+            'cost_from' => 'nullable|integer|gte:0',
+            'cost_to' => 'nullable|integer|gte:0',
         ];
     }
 }
