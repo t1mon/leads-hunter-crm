@@ -17,6 +17,8 @@ class JournalCommand
     public $cost_from;
     public $cost_to;
 
+    public $user;
+
     /**
      * JournalCommand constructor.
      */
@@ -35,5 +37,7 @@ class JournalCommand
         $this->source = $request->source;
         $this->cost_from = $request->cost_from;
         $this->cost_to = $request->cost_to;
+
+        $this->user = $request->user();
     }
 }

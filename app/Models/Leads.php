@@ -92,7 +92,7 @@ class Leads extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function comment_CRM(){ //Получить комментарий к лиду из CRM
+    public function comment_crm(){ //Получить комментарий к лиду из CRM
         return $this->hasOne(Comment::class, 'lead_id');
     } //getCommentCRMAttribute
 

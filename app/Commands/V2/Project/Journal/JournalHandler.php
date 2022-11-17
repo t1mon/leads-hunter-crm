@@ -5,20 +5,26 @@ namespace App\Commands\V2\Project\Journal;
 use App\Models\Project\Project;
 use App\Repositories\Project\ReadRepository as ProjectReadRepository;
 use App\Repositories\Lead\ReadRepository as LeadReadRepository;
-use App\Http\Resources\Project as ProjectResource;
+use App\Repositories\Project\UserPermissions\ReadRepository as UserPermissionsRepository;
+use App\Http\Resources\V2\Project\Project\Journal as ProjectResource;
+use App\Http\Resources\V2\Leads\Journal as LeadResource;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 
 class JournalHandler
 {
+    private User $user;
+
     /**
      * JournalHandler constructor.
      */
     public function __construct(
         private ProjectReadRepository $projectReadRepository,
         private LeadReadRepository $leadReadRepository,
+        private UserPermissionsRepository $permissionsRepository,
     )
-    {
-    }
+    {}
 
     /**
      * @param JournalCommand $command
@@ -28,22 +34,25 @@ class JournalHandler
         //Загрузка проекта
         $project = $this->projectReadRepository->findById(id: $command->project_id, fail: true, with: 'classes');
 
-        //TODO Если в проекте нет лидов, не осуществлять запрос и сразу вернуть пустую коллекцию
-        //...
-
-        //Проверка полномочий пользователя
-        // ...
+        //Загрузка разрешений пользователя
+        if($command->user->cannot('view', $project))
+            return response('Unauthorized', Response::HTTP_FORBIDDEN);
+        
+        $permissions = $this->permissionsRepository->findByUserInProject(
+            user: $command->user,
+            project: $project
+        );
 
         //Загрузка лидов
         $leads = $this->_loadLeads(project: $project, command: $command);
 
-        return new ProjectResource($project, ['leads' => $leads, 'classes' => $project->classes]);
+        return new ProjectResource(resource: $project, user: $command->user, permissions: $permissions, leads: $leads);
     } //handle
 
     private function _loadLeads(Project $project, JournalCommand $command)
     {
         $leads = $this->leadReadRepository->query()
-            ->with('comment_CRM')
+            ->with(['comment_crm', 'class:id'])
             ->from($command->project_id);
 
         //Фильтрация по дате
