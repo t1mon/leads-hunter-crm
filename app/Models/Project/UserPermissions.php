@@ -24,6 +24,14 @@ class UserPermissions extends Model
         'view_fields' => 'array'
     ];
 
+    public const ALLOWED_BASIC_FIELDS = [ //Базовые поля лида, которые доступны любому пользователю
+        'id',
+        'name',
+        'patronymic',
+        'surname',
+        'phone',
+    ];
+
     /**
      *      Фильтры
      */
@@ -67,4 +75,12 @@ class UserPermissions extends Model
     {
         return $this->role === Role::ROLE_WATCHER;
     } //isWatcher
+
+    public function fieldAllowed(string $field): bool //Проверяет, доступно ли поле пользователю
+    {
+        if(in_array(needle: $field, haystack: self::ALLOWED_BASIC_FIELDS) )
+            return true;
+        
+        return in_array(needle: $field, haystack: $this->view_fields);
+    }
 }

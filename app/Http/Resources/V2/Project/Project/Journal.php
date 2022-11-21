@@ -44,6 +44,7 @@ class Journal extends JsonResource
 
     private function collectFields(): array
     {
+        //TODO Брать базовые поля из репозитория UserPermissions
         return array_merge([
             'id',
             'name',

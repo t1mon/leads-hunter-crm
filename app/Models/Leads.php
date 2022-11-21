@@ -103,15 +103,24 @@ class Leads extends Model
     /**
      *      Фильтры
      */
-    public function scopeFrom($query, int $project_id)
+    public function scopeFrom($query, Project|int $project)
     {
-        return $query->where('project_id', $project_id);
+        return $query->where('project_id', $project instanceof Project ? $project->id : $project);
     } //scopeFrom
 
-    public function scopeOwner($query, string $owner)
+    public function scopeOwner($query, string|array $owner)
     {
-        return $query->where('owner', $owner);
+        return is_array($owner)
+            ? $query->whereIn('owner', $owner)
+            : $query->where('owner', $owner);
     } //scopeOwner
+
+    public function scopePhone($query, string|array $phone)
+    {
+        return is_array($phone)
+            ? $query->whereIn('phone', $phone)
+            : $query->where('phone', $phone);
+    } //scopePhone
 
     public function scropeEntries($query, int $entries)
     {
@@ -120,20 +129,75 @@ class Leads extends Model
            : $query->where('entries', $entries);
     } //scropeEntries
 
-    public function scopeHost($query, string $host)
+    public function scopeEmail($query, string|array $email)
     {
-        return $query->where('host', $host);
+        return is_array($email)
+            ? $query->whereIn('owner', $email)
+            : $query->where('owner', $email);
+    } //scopeEmail
+    
+    public function scopeCity($query, string|array $city)
+    {
+        return is_array($city)
+        ? $query->whereIn('city', $city)
+        : $query->where('city', $city);
+    } //scopeCity
+    
+    public function scopeReferrer($query, string|array $referrer)
+    {
+        return is_array($referrer)
+        ? $query->whereIn('referrer', $referrer)
+        : $query->where('referrer', $referrer);
+    } //scopeReferrer
+    
+    public function scopeSource($query, string|array $source)
+    {
+        return is_array($source)
+        ? $query->whereIn('source', $source)
+        : $query->where('source', $source);
+    } //scopeSource
+    
+    public function scopeUtmMedium($query, string|array $utm_medium)
+    {
+        return is_array($utm_medium)
+        ? $query->whereIn('utm->utm_medium', $utm_medium)
+        : $query->where('utm->utm_medium', $utm_medium);
+    } //scopeSource
+    
+    public function scopeUtmSource($query, string|array $utm_source)
+    {
+        return is_array($utm_source)
+        ? $query->whereIn('utm->utm_source', $utm_source)
+        : $query->where('utm->utm_source', $utm_source);
+    } //scopeSource
+    
+    public function scopeUtmCampaign($query, string|array $utm_campaign)
+    {
+        return is_array($utm_campaign)
+        ? $query->whereIn('utm->utm_campaign', $utm_campaign)
+        : $query->where('utm->utm_campaign', $utm_campaign);
+    } //scopeUtmCampaign
+    
+    public function scopeUtmContent($query, string|array $utm_content)
+    {
+        return is_array($utm_content)
+        ? $query->whereIn('utm->utm_content', $utm_content)
+        : $query->where('utm->utm_content', $utm_content);
+    } //scopeUtmContent    
+
+    public function scopeHost($query, string|array $host)
+    {
+        return is_array($host)
+            ? $query->whereIn('host', $host)
+            : $query->where('host', $host);
     } //scopeHost
 
-    public function scopeCity($query, string $city)
+    public function scopeQueryString($query, string|array $query_string)
     {
-        return $query->where('city', $city);
-    } //scopeCity
-
-    public function scopeSource($query, string $source)
-    {
-        return $query->where('source', $source);
-    } //scopeSource
+        return is_array($query_string)
+            ? $query->whereIn('host', $query_string)
+            : $query->where('host', $query_string);
+    } //scopeQueryString
 
     /**
      *      Рабочие методы

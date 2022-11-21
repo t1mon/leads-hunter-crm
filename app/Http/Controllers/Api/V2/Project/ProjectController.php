@@ -37,6 +37,7 @@ class ProjectController extends Controller
      */
     public function journal(int $project, JournalRequest $request)
     {
+        // return $request->all();
         $this->bus->addHandler(JournalCommand::class, JournalHandler::class);
         return $this->bus->dispatch(
             command: JournalCommand::class,
