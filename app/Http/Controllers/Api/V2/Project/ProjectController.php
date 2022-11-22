@@ -7,7 +7,7 @@ use App\Commands\V2\Project\Journal\JournalHandler;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\V2\Project\Project\Journal as JournalRequest;
-
+use App\Models\Project\Project;
 use App\Services\Api\V2\Project\Service as ProjectService;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
 
@@ -37,6 +37,7 @@ class ProjectController extends Controller
      */
     public function journal(int $project, JournalRequest $request)
     {
+        // return $request->all();
         $this->bus->addHandler(JournalCommand::class, JournalHandler::class);
         return $this->bus->dispatch(
             command: JournalCommand::class,

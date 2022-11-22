@@ -2,9 +2,13 @@
 
 namespace App\Repositories\Project\UserPermissions;
 
+use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
-
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class ReadRepository{
     //
@@ -25,20 +29,22 @@ class ReadRepository{
         return $this->_findByData(field: 'id', value: $id, fail: $fail, with: $with);
     } //findById
 
-    public function find(int $userPermissions, bool $fail = false, string|array $with = null): ?UserPermissions //Общая функция поиска для удобства
+    public function findByUserInProject(User|int $user, Project|int $project, bool $fail = false): ?UserPermissions
     {
-        //Поиск по id
-        $result = $this->findById(id: $userPermissions, with: $with);
+        $query = $this->query()->from($project)->for($user);
+        return $fail ? $query->firstOrFail() : $query->first();
+    } //findByUserInProject
 
-        //Поиск по другим результатам
-        // ...
-        //
-
-        if(is_null($result) && $fail === true )
-            throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
-
-        return $result;
-    } //find
+    public function findByCurrentUserInProject(string $method = 'api', Project|int $project, bool $fail = false): ?UserPermissions
+    {
+        $method = Str::lower($method);
+        if($method === 'api')
+            return $this->findByUserInProject(user: Auth::guard('api')->id(), project: $project, fail: $fail);
+        elseif($method === 'client')
+            return $this->findByUserInProject(user: Auth::id(), project: $project, fail: $fail);
+        else
+            throw new InvalidArgumentException(message: 'Указан неизвестный метод ' . $method);
+    } //findByCurrentUserInProject
 
     public function findProjectIdsByUser(int $userId): array
     {
