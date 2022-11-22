@@ -67,31 +67,60 @@ class JournalHandler
         }
 
         //Фильтрация по числу вхождений
-        if(!is_null($command->owner))
-            $leads->owner($command->owner);
-
-        //Фильтрация по числу вхождений
         if(!is_null($command->entries))
             $leads->entries($command->entries);
 
-        //Фильтрация по хосту
-        if(!is_null($command->host))
-            $leads->host($command->host);
+        //Фильтрация по владельцу
+        if(!is_null($command->owner))
+            $leads->owner($command->owner);
+
+        //Фильтрация по телефону
+        if(!is_null($command->phone))
+            $leads->phone($command->phone);
+
+        //Фильтрация по email
+        if(!is_null($command->email))
+            $leads->email($command->email);
+            
+        //Фильтрация по сумме
+        if(!is_null($command->cost_from))
+            $leads->where('cost', '>=', $command->cost_from);
+        
+        if(!is_null($command->cost_to))
+            $leads->where('cost', '<=', $command->cost_to);
 
         //Фильтрация по городу
         if(!is_null($command->city))
             $leads->city($command->city);
 
+        //Фильтрация по рефереру
+        if(!is_null($command->referrer))
+            $leads->referrer($command->referrer);
+        
         //Фильтрация по источнику
         if(!is_null($command->source))
             $leads->source($command->source);
+            
+        //Фильтрация по UTM-меткам
+        if(!is_null($command->utm_medium))
+            $leads->utmMedium($command->utm_medium);
 
-        //Фильтрация по сумме
-        if(!is_null($command->cost_from))
-            $leads->where('cost', '>=', $command->cost_from);
+        if(!is_null($command->utm_source))
+            $leads->utmSource($command->utm_source);
 
-        if(!is_null($command->cost_to))
-            $leads->where('cost', '<=', $command->cost_to);
+        if(!is_null($command->utm_campaign))
+            $leads->utmCampaign($command->utm_campaign);
+
+        if(!is_null($command->utm_content))
+            $leads->utmContent($command->utm_content);
+        
+        //Фильтрация по хосту
+        if(!is_null($command->host))
+            $leads->host($command->host);
+
+        //Фильтрация по query string
+        if(!is_null($command->url_query_string))
+            $leads->queryString($command->url_query_string);
 
         return $leads->paginate(50);
     } //_loadLeads
