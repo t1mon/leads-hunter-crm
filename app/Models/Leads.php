@@ -122,7 +122,7 @@ class Leads extends Model
             : $query->where('phone', $phone);
     } //scopePhone
 
-    public function scropeEntries($query, int $entries)
+    public function scopeEntries($query, int $entries)
     {
         return $entries > 2
            ? $query->where('entries', '>', 2)
