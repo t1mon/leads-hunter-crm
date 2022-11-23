@@ -39,7 +39,6 @@ class ProjectController extends Controller
      */
     public function journal(int $project, JournalRequest $request)
     {
-        // return $request->all();
         $this->bus->addHandler(JournalCommand::class, JournalHandler::class);
         return $this->bus->dispatch(
             command: JournalCommand::class,
@@ -51,8 +50,6 @@ class ProjectController extends Controller
 
     public function getFilterVariants(int $project) //Получить варианты для фильтрации лидов в проекте
     {
-        // return response($project);
-
         $this->bus->addHandler(GetVariantsCommand::class, GetVariantsHandler::class);
         return $this->bus->dispatch(
             command: GetVariantsCommand::class,
