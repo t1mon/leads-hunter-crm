@@ -14,6 +14,8 @@ use Illuminate\Http\Response;
 
 class JournalHandler
 {
+    private const PER_PAGE = 50;
+
     private User $user;
 
     /**
@@ -122,6 +124,6 @@ class JournalHandler
         if(!is_null($command->url_query_string))
             $leads->queryString($command->url_query_string);
 
-        return $leads->paginate(50);
+        return $leads->paginate(self::PER_PAGE);
     } //_loadLeads
 }
