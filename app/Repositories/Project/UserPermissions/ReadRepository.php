@@ -35,7 +35,7 @@ class ReadRepository{
         return $fail ? $query->firstOrFail() : $query->first();
     } //findByUserInProject
 
-    public function findByCurrentUserInProject(string $method = 'api', Project|int $project, bool $fail = false): ?UserPermissions
+    public function findByCurrentUserInProject(Project|int $project, string $method = 'api', bool $fail = false): ?UserPermissions
     {
         $method = Str::lower($method);
         if($method === 'api')

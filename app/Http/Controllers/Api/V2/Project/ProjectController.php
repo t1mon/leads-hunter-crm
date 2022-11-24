@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V2\Project;
 
+use App\Commands\V2\Project\Journal\GetVariantsCommand;
+use App\Commands\V2\Project\Journal\GetVariantsHandler;
 use App\Commands\V2\Project\Journal\JournalCommand;
 use App\Commands\V2\Project\Journal\JournalHandler;
 use App\Http\Controllers\Controller;
@@ -37,7 +39,6 @@ class ProjectController extends Controller
      */
     public function journal(int $project, JournalRequest $request)
     {
-        // return $request->all();
         $this->bus->addHandler(JournalCommand::class, JournalHandler::class);
         return $this->bus->dispatch(
             command: JournalCommand::class,
@@ -46,6 +47,17 @@ class ProjectController extends Controller
                 'request' => $request]
         );
     } //journal
+
+    public function getFilterVariants(int $project) //Получить варианты для фильтрации лидов в проекте
+    {
+        $this->bus->addHandler(GetVariantsCommand::class, GetVariantsHandler::class);
+        return $this->bus->dispatch(
+            command: GetVariantsCommand::class,
+            input: [
+                'project' => $project
+            ]
+        );
+    } //getFilterVariants
 
     /**
      * Store a newly created resource in storage.
