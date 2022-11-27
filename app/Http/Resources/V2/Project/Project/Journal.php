@@ -45,15 +45,8 @@ class Journal extends JsonResource
     private function collectFields(): array
     {
         //TODO Брать базовые поля из репозитория UserPermissions
-        return array_merge([
-            'id',
-            'name',
-            'patronymic',
-            'surname',
-            'phone',
-            // 'class',
-            // 'comment_crm',
-        ],
+        return array_merge(
+            UserPermissions::ALLOWED_BASIC_FIELDS,
             $this->permissions->view_fields
         );
     }

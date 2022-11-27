@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -42,6 +43,10 @@ class Handler extends ExceptionHandler
         if ($request->is('api/*') || $request->is('api')) {
 
             $request->headers->set('Accept', 'application/json');
+
+            if ($exception instanceof ValidationException) {
+                return response()->json(['error' => $exception->errors()]);
+            }
 
             if ($exception instanceof \Exception) {
                 // return response()->json(['response' => "Project id:{$request->project} Not Found'"], 404);

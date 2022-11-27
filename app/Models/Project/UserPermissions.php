@@ -30,6 +30,7 @@ class UserPermissions extends Model
         'patronymic',
         'surname',
         'phone',
+        'created_at',
     ];
 
     /**

@@ -49,6 +49,7 @@ class Journal extends JsonResource
                 'id' => $this->comment_crm?->id,
                 'text' => $this->comment_crm?->comment_body,
             ]),
+            'created_at' => $this->created_at->format('d.m.Y H:i:s')
         ];
     } //fullData
 
