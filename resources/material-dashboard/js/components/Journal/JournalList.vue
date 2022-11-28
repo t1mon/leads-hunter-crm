@@ -101,12 +101,12 @@
                                 <td>
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <p class="text-sm font-weight-normal mb-0">{{ lead.number }}</p>
+                                            <p class="text-sm font-weight-normal mb-0">{{ lead.id }}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at_format }}</p>
+                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at }}</p>
                                 </td>
                                 <td>
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
@@ -129,7 +129,7 @@
                                     </div>
                                 </td>
                                 <td class="align-middle text-center text-sm">
-                                    <p class="mb-0 font-weight-normal text-sm">{{ lead.phone }}</p>
+                                    <a :href="'tel: ' + lead.phone" class="mb-0 font-weight-normal text-sm">{{ phoneFormat(lead.phone) }}</a>
                                 </td>
                                 <td>
                                     <div class="text-center">
@@ -143,8 +143,8 @@
                                 </td>
 
                                 <td class="align-middle text-center text-sm">
-                                    <a v-if="lead.comment_crm[1]" :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/' + lead.comment_crm[0]" v-tLength="25">{{ lead.comment_crm[1] }}</a>
-                                    <a v-if="!lead.comment_crm[1]" :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
+                                    <a v-if="lead.comment_crm" :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/' + lead.comment_crm.id" v-tLength="25">{{ lead.comment_crm.text }}</a>
+                                    <a v-else :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
                                 </td>
 
                                 <td v-tLength="25" class="text-sm text-center font-weight-normal mb-0">
@@ -185,7 +185,6 @@
             </div>
         </div>
         <spinner v-if="stateIsLoadingJ"></spinner>
-<!--        <p>{{stateProjectJour.classes}}</p>-->
     </div>
 </template>
 
@@ -207,6 +206,9 @@ export default {
       }
     },
     methods: {
+        phoneFormat(phone) {
+            return phone.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
+        },
         test() {
           this.testtest = !this.testtest
             console.log(this.testtest)

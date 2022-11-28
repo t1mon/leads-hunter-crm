@@ -1,4 +1,11 @@
+import journalAll from "./journalAll";
+import journalFilters from "./journalFilters";
+
 export default {
+  modules: {
+    journalAll,
+    journalFilters
+  },
   state () {
     return {
       leads: null,
@@ -40,6 +47,12 @@ export default {
   mutations: {
     switchSpinner (state) {
       state.isLoadingJ = !state.isLoadingJ
+    },
+    SET_LEADS(state, data) {
+      state.leads = data
+    },
+    SET_PROJECT_JOUR(state, data) {
+      state.projectJour = data
     }
   },
   actions: {
@@ -140,11 +153,13 @@ export default {
             item.number = index + 1 + numberNum + numberArrow
           })
 
-          state.leads = dataLeads
+          commit('SET_LEADS', dataLeads)
+          // state.leads = dataLeads
           state.leadsOrigin = dataLeads
-          state.projectJour = data.data
+          commit('SET_PROJECT_JOUR', data.data)
+          // state.projectJour = data.data
           state.dataReady = true
-          console.log(data, 1)
+          console.log(data)
         })
         .catch(error => {
           console.log(error)

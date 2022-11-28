@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import JournalPanel from './JournalPanel'
+import JournalPanel from './JournalPanel/JournalPanel'
 import JournalList from './JournalList'
 import JournalPaginate from './JournalPaginate'
 
@@ -17,20 +17,16 @@ export default {
         JournalPaginate
     },
     name: "Journal",
-    computed: {
-        stateLeads () {
-            return this.$store.getters.stateLeads
-        },
-    },
     methods: {
-        async getLeads (_projectId, _dateFrom, _dateTo, _rowsNum) {
-            await this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo, rowsNum: _rowsNum })
+        async getLeads (_projectId, _dateFrom, _dateTo) {
+            await this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo })
         }
     },
     async created () {
         const dateFrom = localStorage.getItem('dateFrom')
         const dateTo = localStorage.getItem('dateTo')
-        await this.getLeads(this.projectid, dateFrom, dateTo)
+        // await this.getLeads(this.projectid, dateFrom, dateTo)
+        await this.$store.dispatch('journalAll/getJournalAll', { id: this.projectid })
     }
 }
 </script>

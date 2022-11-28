@@ -1,25 +1,14 @@
 <template>
 
-    <div class="row filter-by-date">
+    <div v-if="stateProjectJour" class="row filter-by-date">
         <form @submit.prevent="getFilteredLeads(this.projectid, dateFrom, dateTo)" action="#" accept-charset="UTF-8" class="journal__date__form d-flex justify-content-between">
-            <div class="journal__date__box">
-                <div class="d-flex journal__date__dates">
-                    <div class="input-group input-group-static px-2">
-                        <label>Дата от</label>
-                        <input v-model="dateFrom" type="date" class="form-control" name="date_from">
-                    </div>
-                    <div class="input-group input-group-static px-2">
-                        <label> до</label>
-                        <input v-model="dateTo" type="date" class="form-control" name="date_to">
-                    </div>
-                </div>
-                <div class="journal__date__buttons">
-                    <button type="submit" class="mb-0  btn btn-primary journal__date__button journal__date__button--first"> Применить </button>
-                    <button @click.prevent="getAllLeads" class="btn mb-0 btn-primary journal__date__button"> Показать все </button>
-                </div>
+            <div class="journal__date__box align-items-start align-items-lg-end flex-column flex-lg-row">
+                <h5 class="m-0 me-3">{{ stateProjectJour.name }}</h5>
+
+                <journal-panel-filter :projectid="projectid"></journal-panel-filter>
             </div>
             <div class="d-flex justify-content-end align-items-end">
-                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0" > Скачать записи </button>
+                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
             </div>
         </form>
     </div>
@@ -27,13 +16,21 @@
 </template>
 
 <script>
+import JournalPanelFilter from "./JournalPanelFilter";
+
 export default {
-    name: "FilterByDate",
+    name: "JournalPanel",
+    components: {
+        JournalPanelFilter
+    },
     props: ['projectid'],
     data () {
         return {
-            dateFrom: '',
-            dateTo: ''
+        }
+    },
+    computed: {
+        stateProjectJour () {
+            return this.$store.getters.stateProjectJour
         }
     },
     watch: {
@@ -60,13 +57,6 @@ export default {
             localStorage.setItem('dateFrom', _dateFrom)
             localStorage.setItem('dateTo', _dateTo)
         },
-        getAllLeads () {
-            localStorage.removeItem('dateFrom')
-            localStorage.removeItem('dateTo')
-            this.dateFrom = ''
-            this.dateTo = ''
-            this.$store.dispatch('getLeads', { projectId: this.projectid })
-        },
         exportJournal () {
             const query = {
                 date_from: this.dateFrom,
@@ -78,6 +68,23 @@ export default {
     },
     created () {
         this.getDateFromLS()
+
+        const date = new Date()
+        const currentYear = date.getFullYear()
+        const firstDayCurrYear = new Date(currentYear, 0, 1)
+        const dateFrom = firstDayCurrYear.toLocaleString('ru', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })
+        console.log(dateFrom)
+        const dateTo = date.toLocaleString('ru', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })
+        this.dateFrom = dateFrom
+        this.dateTo = dateTo
     }
 }
 </script>
@@ -109,9 +116,6 @@ export default {
 }
 
 @media screen and (max-width: 991px) {
-    .journal__date__box {
-        flex-direction: column;
-    }
     .journal__date__dates {
         margin-right: 0;
         margin-bottom: 5px;
@@ -134,6 +138,4 @@ export default {
         margin: 0;
     }
 }
-
-
 </style>
