@@ -1,5 +1,5 @@
 <template>
-    <div class="journal">
+    <div v-if="stateLeads" class="journal">
         <div class="row journal__box">
             <div class="col-12 journal__wrap">
                 <div class="card journal__card">
@@ -154,7 +154,7 @@
                                     {{ lead.city }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.cost }}
+                                    {{ sumFormat(lead.cost) }}
                                 </td>
                                 <td @click="test()" class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.host }}
@@ -207,7 +207,13 @@ export default {
     },
     methods: {
         phoneFormat(phone) {
+            if (!phone) return
             return phone.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
+        },
+        sumFormat(sum) {
+            if (!sum) return
+            const sumStr = sum.toString()
+            return sumStr.replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')
         },
         test() {
           this.testtest = !this.testtest

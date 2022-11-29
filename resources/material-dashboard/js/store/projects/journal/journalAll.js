@@ -6,22 +6,25 @@ export default {
     }
   },
   actions: {
-    async getJournalAll({ state, commit, rootState }, data) {
+    async getJournalAll({ state, commit, rootState, rootGetters }, data) {
       commit('switchSpinner', null, { root: true })
+      const url = `/api/v2/project/${data.id}/journal`
+      const filterParams = rootGetters['filterParams/stateParams']
+      const params = {}
 
+      if (filterParams.date_from) {
+        params.date_from = filterParams.date_from
+        params.date_to = filterParams.date_to
+      }
+      if (data.page) params.page = data.page
       await axios
-        .get('/api/v2/project/' + data.id + '/journal', {
-          params: {
-            date_from: data.dateFrom,
-            date_to: data.dateTo
-          }
+        .get(url, {
+          params: params
         })
         .then(data => {
           commit('switchSpinner', null, { root: true })
           commit('SET_LEADS', data.data.data.leads.data, { root: true })
           commit('SET_PROJECT_JOUR', data.data.data, { root: true })
-          // rootState.leads = data.data.data.leads.data
-          console.log(rootState.leads)
           console.log(data)
         })
         .catch(error => {

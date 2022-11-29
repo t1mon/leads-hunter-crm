@@ -1,7 +1,7 @@
 <template>
 
     <div v-if="stateProjectJour" class="row filter-by-date">
-        <form @submit.prevent="getFilteredLeads(this.projectid, dateFrom, dateTo)" action="#" accept-charset="UTF-8" class="journal__date__form d-flex justify-content-between">
+        <div class="journal__date__form d-flex justify-content-between">
             <div class="journal__date__box align-items-start align-items-lg-end flex-column flex-lg-row">
                 <h5 class="m-0 me-3">{{ stateProjectJour.name }}</h5>
 
@@ -10,7 +10,7 @@
             <div class="d-flex justify-content-end align-items-end">
                 <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
             </div>
-        </form>
+        </div>
     </div>
 
 </template>
@@ -33,25 +33,7 @@ export default {
             return this.$store.getters.stateProjectJour
         }
     },
-    watch: {
-        dateFrom (e) {
-            this.$store.dispatch('setDateFromTo', { dateFrom: e })
-        },
-        dateTo (e) {
-            this.$store.dispatch('setDateFromTo', { dateTo: e })
-        }
-    },
     methods: {
-        getDateFromLS () {
-            const dateFrom = localStorage.getItem('dateFrom')
-            const dateTo = localStorage.getItem('dateTo')
-            if (dateFrom) {
-                this.dateFrom = dateFrom
-            }
-            if (dateTo) {
-                this.dateTo = dateTo
-            }
-        },
         getFilteredLeads (_projectId, _dateFrom, _dateTo) {
             this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo })
             localStorage.setItem('dateFrom', _dateFrom)
@@ -65,26 +47,6 @@ export default {
             const url = window.location.href + `/download?` + $.param(query)
             window.location = url
         }
-    },
-    created () {
-        this.getDateFromLS()
-
-        const date = new Date()
-        const currentYear = date.getFullYear()
-        const firstDayCurrYear = new Date(currentYear, 0, 1)
-        const dateFrom = firstDayCurrYear.toLocaleString('ru', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        })
-        console.log(dateFrom)
-        const dateTo = date.toLocaleString('ru', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        })
-        this.dateFrom = dateFrom
-        this.dateTo = dateTo
     }
 }
 </script>

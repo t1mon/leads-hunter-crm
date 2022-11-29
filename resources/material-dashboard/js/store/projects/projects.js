@@ -1,4 +1,4 @@
-import journal from './journal'
+import journal from './journal/journal'
 
 export default {
   modules: {

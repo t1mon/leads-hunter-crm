@@ -1,10 +1,12 @@
 import journalAll from "./journalAll";
 import journalFilters from "./journalFilters";
+import filterParams from "./filterParams";
 
 export default {
   modules: {
     journalAll,
-    journalFilters
+    journalFilters,
+    filterParams
   },
   state () {
     return {
