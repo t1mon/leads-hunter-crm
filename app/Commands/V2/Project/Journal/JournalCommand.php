@@ -7,6 +7,8 @@ use App\Http\Requests\Api\V2\Project\Project\Journal as JournalRequest;
 class JournalCommand
 {
     public $project_id;
+    public $class;
+    public $name;
     public $date_from;
     public $date_to;
     public $entries;
@@ -25,6 +27,9 @@ class JournalCommand
     public $host;
     public $url_query_string;
 
+    public $sort_by;
+    public $sort_order;
+
     public $user;
 
     /**
@@ -36,6 +41,8 @@ class JournalCommand
     )
     {
         $this->project_id = $project_id;
+        $this->name = $request->name;
+        $this->class = $request->class;
         $this->date_from = $request->date_from;
         $this->date_to = $request->date_to;
         $this->entries = $request->entry_filter;
@@ -53,6 +60,8 @@ class JournalCommand
         $this->utm_content = $request->utm_content;
         $this->host = $request->host;
         $this->url_query_string = $request->url_query_string;
+        $this->sort_by = $request->sort_by;
+        $this->sort_order = $request->sort_order;
 
         $this->user = $request->user();
     }

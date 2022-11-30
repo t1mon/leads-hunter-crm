@@ -33,6 +33,7 @@ class Leads extends Model
         'name',
         'surname',
         'patronymic',
+        'full_name',
         'phone',
         'entries',
         'email',
@@ -108,6 +109,18 @@ class Leads extends Model
         return $query->where('project_id', $project instanceof Project ? $project->id : $project);
     } //scopeFrom
 
+    public function scopeOfClass($query, int|array $class)
+    {
+        return is_array($class)
+            ? $query->whereIn('class_id', $class)
+            : $query->where('class_id', $class);
+    } //scopeOfClass
+    
+    public function scopeName($query, string $name)
+    {
+        return $query->where('full_name', $name);
+    } //scopeName
+
     public function scopeOwner($query, string|array $owner)
     {
         return is_array($owner)
@@ -115,7 +128,7 @@ class Leads extends Model
             : $query->where('owner', $owner);
     } //scopeOwner
 
-    public function scopePhone($query, string|array $phone)
+    public function scopePhone($query, string $phone)
     {
         return is_array($phone)
             ? $query->whereIn('phone', $phone)

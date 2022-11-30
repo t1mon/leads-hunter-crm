@@ -5,6 +5,7 @@ namespace App\Commands\V2\Project\Journal;
 use App\Models\Project\UserPermissions;
 use App\Repositories\Lead\ReadRepository as LeadRepository;
 use App\Repositories\Project\UserPermissions\ReadRepository as UserPermissionsRepository;
+use App\Repositories\Project\Host\ReadRepository as HostRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -38,6 +39,7 @@ class GetVariantsHandler
     public function __construct(
         private LeadRepository $leadRepository,
         private UserPermissionsRepository $permissionsRepository,
+        private HostRepository $hostRepository,
     )
     {
     } //Конструктор
@@ -46,6 +48,32 @@ class GetVariantsHandler
      * @param GetVariantsCommand $command
      */
     public function handle(GetVariantsCommand $command)
+    {
+        //Загрузка хостов
+        if($command->column === 'host')
+            return $this->hostRepository->query()->from($command->project)->select('host')->pluck('host');
+
+        $query = $this->leadRepository->query()->from($command->project);
+
+        //Загрузка utm-меток
+        if(in_array(needle: $command->column, haystack: self::UTM_FIELDS))
+            return $query
+                ->whereNotNull('utm')
+                ->select('utm')
+                ->get()
+                ->pluck("utm.{$command->column}")
+                ->whereNotNull()
+                ->unique()
+                ->sort()
+                ->values();
+        
+        return $query->whereNotNull($command->column)
+            ->orderBy($command->column)
+            ->distinct()
+            ->pluck($command->column);
+    }
+
+    public function _handle(GetVariantsCommand $command) //Старая версия метода handle
     {
         if(auth('api')->user()->isAdmin())
             return $this->getAllVariants($command->project);

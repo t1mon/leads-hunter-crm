@@ -9,6 +9,7 @@ use App\Commands\V2\Project\Journal\JournalHandler;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\V2\Project\Project\Journal as JournalRequest;
+use App\Http\Requests\Api\V2\Project\Project\JournalFilterVariants;
 use App\Models\Project\Project;
 use App\Services\Api\V2\Project\Service as ProjectService;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
@@ -48,13 +49,14 @@ class ProjectController extends Controller
         );
     } //journal
 
-    public function getFilterVariants(int $project) //Получить варианты для фильтрации лидов в проекте
+    public function getFilterVariants(int $project, JournalFilterVariants $request) //Получить варианты для фильтрации лидов в проекте
     {
         $this->bus->addHandler(GetVariantsCommand::class, GetVariantsHandler::class);
         return $this->bus->dispatch(
             command: GetVariantsCommand::class,
             input: [
-                'project' => $project
+                'project' => $project,
+                'request' => $request,
             ]
         );
     } //getFilterVariants

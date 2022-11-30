@@ -12,11 +12,16 @@ class Host extends Model
 
     const HOST_NOT_FOUND = 'host_not_found';
 
-    //Свойства
     protected $fillable = ['host', 'project_id', 'user_id'];
 
 
-    //Методы
+    //Фильтры
+    public function scopeFrom($query, Project|int $project)
+    {
+        return $query->where('project_id', $project instanceof Project ? $project->id : $project);
+    } //scopeFrom
+
+    //Отношения
     public function project() //Возвращает проект, к которому относится хост
     {
         return $this->belongsTo(Project::class);
