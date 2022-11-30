@@ -68,6 +68,14 @@ class JournalHandler
             $leads->where('created_at', '<=' ,$end_date);;
         }
 
+        //Фильтрация по классу
+        if(!is_null($command->class))
+            $leads->ofClass($command->class);
+
+        //Фильтрация по имени
+        if(!is_null($command->name))
+            $leads->name($command->name);
+
         //Фильтрация по числу вхождений
         if(!is_null($command->entries))
             $leads->entries($command->entries);
@@ -123,6 +131,10 @@ class JournalHandler
         //Фильтрация по query string
         if(!is_null($command->url_query_string))
             $leads->queryString($command->url_query_string);
+
+        //Сортировка
+        if(!is_null($command->sort_by))
+            $leads->orderBy($command->sort_by, $command->sort_order);
 
         return $leads->paginate(self::PER_PAGE);
     } //_loadLeads
