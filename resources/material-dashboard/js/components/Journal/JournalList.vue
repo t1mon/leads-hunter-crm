@@ -7,20 +7,8 @@
                         <table class="table align-items-center mb-0">
                             <thead class="journal__thead">
                             <tr>
-                                <th
-                                    @click="dropdownFilter({
-                                        event: $event,
-                                        coords: { left: '0' }
-                                    })"
-                                    class="cursor-pointer text-uppercase text-xxs font-weight-bolder"
-                                >
+                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <span>#</span>
-                                    <div class="journal__sort">
-                                        <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('number', 'sortNumber', $event)">По убыванию</span>
-                                        </div>
-                                        <div class="journal__sort__before"></div>
-                                    </div>
                                 </th>
 
                                 <th @click="dropdownFilter({
@@ -30,34 +18,25 @@
                                     class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder"
                                 >
                                     <span>Дата</span>
-                                    <div class="journal__sort">
-                                        <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('created_at_format', 'sortDate', $event)">По возрастанию</span>
-                                        </div>
-                                        <div class="journal__sort__before"></div>
-                                    </div>
+                                    <filter-app :incrDecr="{show: true}"></filter-app>
                                 </th>
-                                <th @click="dropdownFilter( {event: $event} )" class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th @click="dropdownFilter( {event: $event} )"
+                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <span>Клиент</span>
-                                    <div class="journal__sort">
-                                        <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('name', 'sortName', $event)">По возрастанию</span>
-                                        </div>
-                                        <div class="journal__sort__before"></div>
-                                    </div>
+                                    <filter-app :incrDecr="{show: true, reverse: true}"></filter-app>
                                 </th>
-                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">Класс</th>
+                                <th
+                                    @click="dropdownFilter( {event: $event} )"
+                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <span>Класс</span>
+                                    <filter-app></filter-app>
+                                </th>
                                 <th
                                     @click="dropdownFilter( {event: $event} )"
                                     class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder"
                                 >
                                     <span>Телефон</span>
-                                    <div class="journal__sort">
-                                        <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('phone', 'sortPhone', $event)">По возрастанию</span>
-                                        </div>
-                                        <div class="journal__sort__before"></div>
-                                    </div>
+                                    <filter-app></filter-app>
                                 </th>
                                 <th
                                     @click="dropdownFilter( {event: $event} )"
@@ -77,7 +56,7 @@
                                                 <span class="material-icons journal__sort__ok">done</span>
                                                 <span class="journal__sort__text">Вторичное</span>
                                             </label>
-                                            <button @click="sortJournalEntries" class="journal__sort__button btn btn-primary">Отфильтровать</button>
+                                            <button @click="sortJournalEntries" class="btn btn-primary m-0 w-100 py-1 px-3">Отфильтровать</button>
                                         </div>
                                         <div class="journal__sort__before"></div>
                                     </div>
@@ -190,16 +169,17 @@
 
 <script>
 import Spinner from '../Others/Spinner'
+import FilterApp from './filters/Filters'
 
 export default {
     name: "Journal",
     components: {
-        Spinner
+        Spinner,
+        FilterApp
     },
     props: ['projectid'],
     data () {
       return {
-          testtest: false,
           counterDocListener: 0,
           first: false,
           second: false
@@ -214,10 +194,6 @@ export default {
             if (!sum) return
             const sumStr = sum.toString()
             return sumStr.replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')
-        },
-        test() {
-          this.testtest = !this.testtest
-            console.log(this.testtest)
         },
         sortJournalEntries () {
             const _dateFrom = this.$store.getters.stateDateFrom
@@ -402,10 +378,6 @@ th {
 .journal__sort__label:hover {
     background-color: #d0d0d0;
 }
-.journal__sort__button {
-    width: 100%;
-    margin-bottom: 0;
-}
 .journal__sort__input {
     display: none;
 }
@@ -447,13 +419,6 @@ th {
     padding: 0 !important;
     overflow: auto !important;
     height: 100% !important;
-}
-
-.journal__filter__text {
-    display: block;
-    width: 100%;
-    padding: 4px;
-    transition: 0.3s;
 }
 .journal__filter__text:hover {
     background-color: #d0d0d0;
