@@ -45,6 +45,37 @@ class Repository{
     {
         $lead->update(['full_name' => $lead->getClientName()]);
     } //makeFullNameForLead
+
+    public function splitUTMForProject(Project|int $project) //Взять значения из json-поля utm и записать их в отдельные поля
+    {
+        $this->query()
+            ->from($project)
+            ->whereNotNull('utm')
+            ->where('utm', '!=', '[]')
+            ->chunkById(500, function($leads){
+                $leads->each(function($lead){
+                    $lead->update([
+                        'utm_medium' => $lead->utm['utm_medium'] ?? null,
+                        'utm_source' => $lead->utm['utm_source'] ?? null,
+                        'utm_campaign' => $lead->utm['utm_campaign'] ?? null,
+                        'utm_content' => $lead->utm['utm_content'] ?? null,
+                        'utm_term' => $lead->utm['utm_term'] ?? null,
+                    ]);
+                });
+            });
+    } //splitUTMForProject
+
+    public static function splitUTMForLead(Leads $lead) //Заполнить отдельные поля UTM у лида. Используется для старых API, где ещё не используется метод create из данного репозитория
+    {
+        if(!is_null($lead->utm))
+            $lead->update([
+                'utm_medium' => $lead->utm['utm_medium'] ?? null,
+                'utm_source' => $lead->utm['utm_source'] ?? null,
+                'utm_campaign' => $lead->utm['utm_campaign'] ?? null,
+                'utm_content' => $lead->utm['utm_content'] ?? null,
+                'utm_term' => $lead->utm['utm_term'] ?? null,
+            ]);
+    } //splitUTMForLead
 };
 
 ?>

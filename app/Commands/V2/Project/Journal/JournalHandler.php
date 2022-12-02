@@ -123,6 +123,9 @@ class JournalHandler
 
         if(!is_null($command->utm_content))
             $leads->utmContent($command->utm_content);
+            
+        if(!is_null($command->utm_term))
+            $leads->utmContent($command->utm_term);
         
         //Фильтрация по хосту
         if(!is_null($command->host))

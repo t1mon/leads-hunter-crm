@@ -72,6 +72,9 @@ class Journal extends FormRequest
             'utm_content' => 'nullable|array',
             'utm_content.*' => 'string|max:512',
 
+            'utm_term' => 'nullable|array',
+            'utm_term.*' => 'string|max:512',
+
             'host' => 'nullable|array',
             'host.*' => 'string|max:512',
 

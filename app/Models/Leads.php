@@ -44,6 +44,11 @@ class Leads extends Model
         'referrer',
         'source',
         'utm',
+        'utm_medium',
+        'utm_source',
+        'utm_campaign',
+        'utm_content',
+        'utm_term',
         'host',
         'url_query_string'
     ];
@@ -61,29 +66,49 @@ class Leads extends Model
     }
 
     public function getUtmMediumAttribute(){
-        return is_null($this->utm)
-                ? ''
-                : (array_key_exists('utm_medium', $this->utm) ? $this->utm['utm_medium'] : '');
+        return 
+            $this->utm_medium
+            ??
+            is_null($this->utm)
+                ? null
+                : (array_key_exists('utm_medium', $this->utm) ? $this->utm['utm_medium'] : null);
     }
 
     public function getUtmSourceAttribute(){
-        return is_null($this->utm)
-                ? ''
-                : (array_key_exists('utm_source', $this->utm) ? $this->utm['utm_source'] : '');
+        return 
+            $this->utm_source
+            ??
+            is_null($this->utm)
+                ? null
+                : (array_key_exists('utm_source', $this->utm) ? $this->utm['utm_source'] : null);
     }
 
     public function getUtmCampaignAttribute(){
-        return is_null($this->utm)
-                ? ''
-                : (array_key_exists('utm_campaign', $this->utm) ? $this->utm['utm_campaign'] : '');
+        return 
+            $this->utm_campaign
+            ??
+            is_null($this->utm)
+                ? null
+                : (array_key_exists('utm_campaign', $this->utm) ? $this->utm['utm_campaign'] : null);
     }
 
     public function getUtmContentAttribute(){
-        return is_null($this->utm)
-                ? ''
-                : (array_key_exists('utm_content', $this->utm) ? $this->utm['utm_content'] : '');
+        return
+            $this->utm_content
+            ??
+            is_null($this->utm)
+                ? null
+                : (array_key_exists('utm_content', $this->utm) ? $this->utm['utm_content'] : null);
     }
 
+    public function getUtmTermAttribute(){
+        return
+            $this->utm_term
+            ??
+            is_null($this->utm)
+                ? null
+                : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
+    }
 
     /**
      *      Отношения
@@ -173,30 +198,41 @@ class Leads extends Model
     public function scopeUtmMedium($query, string|array $utm_medium)
     {
         return is_array($utm_medium)
-        ? $query->whereIn('utm->utm_medium', $utm_medium)
-        : $query->where('utm->utm_medium', $utm_medium);
+        ? $query->whereIn('utm_medium', $utm_medium)
+        : $query->where('utm_medium', $utm_medium);
+
+        //Старая версия поиска по json-поле utm (оставлено для информации)
+        // ? $query->whereIn('utm->utm_medium', $utm_medium)
+        // : $query->where('utm->utm_medium', $utm_medium);
     } //scopeSource
     
     public function scopeUtmSource($query, string|array $utm_source)
     {
         return is_array($utm_source)
-        ? $query->whereIn('utm->utm_source', $utm_source)
-        : $query->where('utm->utm_source', $utm_source);
+        ? $query->whereIn('utm_source', $utm_source)
+        : $query->where('utm_source', $utm_source);
     } //scopeSource
     
     public function scopeUtmCampaign($query, string|array $utm_campaign)
     {
         return is_array($utm_campaign)
-        ? $query->whereIn('utm->utm_campaign', $utm_campaign)
-        : $query->where('utm->utm_campaign', $utm_campaign);
+        ? $query->whereIn('utm_campaign', $utm_campaign)
+        : $query->where('utm_campaign', $utm_campaign);
     } //scopeUtmCampaign
     
     public function scopeUtmContent($query, string|array $utm_content)
     {
         return is_array($utm_content)
-        ? $query->whereIn('utm->utm_content', $utm_content)
-        : $query->where('utm->utm_content', $utm_content);
+        ? $query->whereIn('utm_content', $utm_content)
+        : $query->where('utm_content', $utm_content);
     } //scopeUtmContent    
+    
+    public function scopeUtmTerm($query, string|array $utm_term)
+    {
+        return is_array($utm_term)
+        ? $query->whereIn('utm_term', $utm_term)
+        : $query->where('utm_term', $utm_term);
+    } //scopeUtmTerm    
 
     public function scopeHost($query, string|array $host)
     {
@@ -208,8 +244,8 @@ class Leads extends Model
     public function scopeQueryString($query, string|array $query_string)
     {
         return is_array($query_string)
-            ? $query->whereIn('host', $query_string)
-            : $query->where('host', $query_string);
+            ? $query->whereIn('query_string', $query_string)
+            : $query->where('query_string', $query_string);
     } //scopeQueryString
 
     /**

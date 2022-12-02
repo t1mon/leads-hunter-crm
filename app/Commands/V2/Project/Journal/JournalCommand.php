@@ -24,6 +24,7 @@ class JournalCommand
     public $utm_source;
     public $utm_campaign;
     public $utm_content;
+    public $utm_term;
     public $host;
     public $url_query_string;
 
@@ -58,6 +59,7 @@ class JournalCommand
         $this->utm_source = $request->utm_source;
         $this->utm_campaign = $request->utm_campaign;
         $this->utm_content = $request->utm_content;
+        $this->utm_term = $request->utm_term;
         $this->host = $request->host;
         $this->url_query_string = $request->url_query_string;
         $this->sort_by = $request->sort_by;
