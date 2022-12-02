@@ -12,6 +12,7 @@ class JournalFilterVariants extends FormRequest
         'utm_source',
         'utm_campaign',
         'utm_content',
+        'utm_term',
         'city',
         'host',
     ];

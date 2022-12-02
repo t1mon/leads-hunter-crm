@@ -48,6 +48,7 @@ class Leads extends Model
         'utm_source',
         'utm_campaign',
         'utm_content',
+        'utm_term',
         'host',
         'url_query_string'
     ];
@@ -100,6 +101,14 @@ class Leads extends Model
                 : (array_key_exists('utm_content', $this->utm) ? $this->utm['utm_content'] : null);
     }
 
+    public function getUtmTermAttribute(){
+        return
+            $this->utm_term
+            ??
+            is_null($this->utm)
+                ? null
+                : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
+    }
 
     /**
      *      Отношения
@@ -217,6 +226,13 @@ class Leads extends Model
         ? $query->whereIn('utm_content', $utm_content)
         : $query->where('utm_content', $utm_content);
     } //scopeUtmContent    
+    
+    public function scopeUtmTerm($query, string|array $utm_term)
+    {
+        return is_array($utm_term)
+        ? $query->whereIn('utm_term', $utm_term)
+        : $query->where('utm_term', $utm_term);
+    } //scopeUtmTerm    
 
     public function scopeHost($query, string|array $host)
     {
@@ -228,8 +244,8 @@ class Leads extends Model
     public function scopeQueryString($query, string|array $query_string)
     {
         return is_array($query_string)
-            ? $query->whereIn('host', $query_string)
-            : $query->where('host', $query_string);
+            ? $query->whereIn('query_string', $query_string)
+            : $query->where('query_string', $query_string);
     } //scopeQueryString
 
     /**
