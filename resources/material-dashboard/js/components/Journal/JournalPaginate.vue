@@ -24,17 +24,19 @@
 <script>
 export default {
   name: 'Paginate',
-  props: ['projectid'],
   computed: {
     stateProjectJour () {
       return this.$store.getters.stateProjectJour
+    },
+    stateProjectId() {
+      return this.$store.getters['journalAll/stateProjectId']
     }
   },
   methods: {
     async getLeads (url) {
         if (!url) return
         const page = url.split('page=')[1].match(/\d+/)[0]
-        await this.$store.dispatch('journalAll/getJournalAll', { id: this.projectid, page: page })
+        await this.$store.dispatch('journalAll/getJournalAll', { id: this.stateProjectId, page: page })
     }
   }
 }

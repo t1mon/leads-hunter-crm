@@ -22,17 +22,9 @@ export default {
       // TODO Найти более элегантный метод
       dataReady: false,
       // Даты из JournalPanel.vue
-      dateFrom: '',
-      dateTo: ''
     }
   },
   getters: {
-    stateDateFrom: state => {
-      return state.dateFrom
-    },
-    stateDateTo: state => {
-      return state.dateTo
-    },
     stateIsLoadingJ: state => {
       return state.isLoadingJ
     },

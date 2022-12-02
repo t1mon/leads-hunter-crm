@@ -1,13 +1,15 @@
 <template>
 
     <div v-if="stateProjectJour" class="row filter-by-date">
-        <div class="journal__date__form d-flex justify-content-between">
-            <div class="journal__date__box align-items-start align-items-lg-end flex-column flex-lg-row">
+        <div class="d-flex justify-content-between flex-column flex-sm-row align-items-sm-end">
+            <div class="journal__date__box align-items-start align-items-lg-end flex-column flex-lg-row mb-2 mb-sm-0">
                 <h5 class="m-0 me-3">{{ stateProjectJour.name }}</h5>
 
                 <journal-panel-filter :projectid="projectid"></journal-panel-filter>
             </div>
-            <div class="d-flex justify-content-end align-items-end">
+
+            <div class="d-flex justify-content-between justify-content-sm-end">
+                <clear-filters></clear-filters>
                 <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
             </div>
         </div>
@@ -17,11 +19,13 @@
 
 <script>
 import JournalPanelFilter from "./JournalPanelFilter";
+import ClearFilters from "./ClearFilters";
 
 export default {
     name: "JournalPanel",
     components: {
-        JournalPanelFilter
+        JournalPanelFilter,
+        ClearFilters
     },
     props: ['projectid'],
     data () {
@@ -90,9 +94,6 @@ export default {
     }
 }
 @media screen and (max-width: 767px) {
-    .journal__date__form {
-        flex-direction: column-reverse;
-    }
     .input-group {
         max-width: 50%;
     }

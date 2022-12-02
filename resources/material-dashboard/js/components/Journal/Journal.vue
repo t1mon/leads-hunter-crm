@@ -1,7 +1,7 @@
 <template>
-    <journal-panel :projectid="projectid"></journal-panel>
-    <journal-list :projectid="projectid"></journal-list>
-    <journal-paginate :projectid="projectid"></journal-paginate>
+    <journal-panel></journal-panel>
+    <journal-list></journal-list>
+    <journal-paginate></journal-paginate>
 </template>
 
 <script>
@@ -18,7 +18,13 @@ export default {
     },
     name: "Journal",
     async created () {
-        await this.$store.dispatch('journalAll/getJournalAll', { id: this.projectid })
+        const projectIdLS = localStorage.getItem('projectId')
+        if (!projectIdLS || projectIdLS != this.projectid) {
+            this.$store.commit('filterParams/CLEAR_PARAMS')
+            localStorage.setItem('projectId', this.projectid)
+        }
+        this.$store.commit('journalAll/SET_PROJECT_ID', this.projectid)
+        await this.$store.dispatch('journalAll/getJournalAll')
     }
 }
 </script>

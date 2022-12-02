@@ -11,32 +11,38 @@
                                     <span>#</span>
                                 </th>
 
-                                <th @click="dropdownFilter({
-                                        event: $event,
-                                        coords: { left: '0' }
-                                    })"
-                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder"
-                                >
-                                    <span>Дата</span>
-                                    <filter-app :incrDecr="{show: true}"></filter-app>
+                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <p class="dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">Дата</p>
+                                    <filter-app
+                                        :ascDesc="{sort_by: 'created_at', sort_order: 'desc'}"
+                                        class="dropdown-menu"
+                                        aria-labelledby="filterDate"
+                                    ></filter-app>
                                 </th>
-                                <th @click="dropdownFilter( {event: $event} )"
-                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
-                                    <span>Клиент</span>
-                                    <filter-app :incrDecr="{show: true, reverse: true}"></filter-app>
+                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <p class="dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterName" data-bs-toggle="dropdown" aria-expanded="false">Клиент</p>
+                                    <filter-app
+                                                :ascDesc="{sort_by: 'name', sort_order: 'asc'}"
+                                                :name="true"
+                                                class="dropdown-menu"
+                                                aria-labelledby="filterName"
+                                    ></filter-app>
                                 </th>
-                                <th
-                                    @click="dropdownFilter( {event: $event} )"
-                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
-                                    <span>Класс</span>
-                                    <filter-app></filter-app>
+                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <p class="dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterClass" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Класс</p>
+                                    <filter-app
+                                        :filterClass="true"
+                                        class="dropdown-menu"
+                                        aria-labelledby="filterClass"
+                                        id="filterClass1"
+                                    ></filter-app>
                                 </th>
-                                <th
-                                    @click="dropdownFilter( {event: $event} )"
-                                    class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder"
-                                >
-                                    <span>Телефон</span>
-                                    <filter-app></filter-app>
+                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <p class="dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterPhone" data-bs-toggle="dropdown" aria-expanded="false">Телефон</p>
+                                    <filter-app
+                                        class="dropdown-menu"
+                                        aria-labelledby="filterPhone"
+                                    ></filter-app>
                                 </th>
                                 <th
                                     @click="dropdownFilter( {event: $event} )"
@@ -177,7 +183,6 @@ export default {
         Spinner,
         FilterApp
     },
-    props: ['projectid'],
     data () {
       return {
           counterDocListener: 0,
@@ -208,51 +213,6 @@ export default {
         },
         sortJournal (_param, _sortParam, _event) {
             this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
-        },
-        dropdownFilter ({
-            event,
-            coords: {
-                left: _left = '',
-                right: _right = '',
-                top: _top = '',
-                bottom: _bottom = ''
-            } = {}
-        }) {
-            event.stopPropagation()
-            event.stopImmediatePropagation()
-            document.querySelectorAll('.select--active').forEach(item => {
-                item.classList.remove('select--active')
-                item.lastElementChild.style.maxHeight = '0px'
-            })
-            const deleteDiv = () => {
-                document.querySelectorAll('.dropdown--active').forEach(item => {
-                    item.classList.remove('dropdown--active')
-                })
-                this.counterDocListener = 0
-                document.removeEventListener('click', deleteDiv)
-            }
-            const target = event.currentTarget
-            const div = target.lastElementChild
-            const divBefore = div.lastElementChild
-            div.style.left = _left + 'px'
-            div.style.right = _right + 'px'
-            div.style.top = _top + 'px'
-            div.style.bottom = _bottom + 'px'
-            divBefore.style.left = _left ? +_left + 35 + 'px' : ''
-            if (div.classList.contains('dropdown--active')) {
-                document.querySelectorAll('.dropdown--active').forEach(item => {
-                    item.classList.remove('dropdown--active')
-                })
-            } else {
-                document.querySelectorAll('.dropdown--active').forEach(item => {
-                    item.classList.remove('dropdown--active')
-                })
-                div.classList.add('dropdown--active')
-                if (this.counterDocListener === 0) {
-                    this.counterDocListener++
-                    document.addEventListener('click', deleteDiv)
-                }
-            }
         },
         async getLeadClass (projectId, leadId, classId) {
             const store = this.$store
@@ -299,6 +259,9 @@ export default {
         }
     },
     computed: {
+        stateProjectId() {
+            return this.$store.getters['journalAll/stateProjectId']
+        },
         stateIsLoadingJ () {
             return this.$store.getters.stateIsLoadingJ
         },
@@ -313,6 +276,12 @@ export default {
 </script>
 
 <style scoped>
+.dropdown-toggle::after {
+    display: none;
+}
+.dropdown-menu::before {
+    color: #e91e63;
+}
 th {
     position: relative;
 }
