@@ -6,7 +6,7 @@
 
 <script>
 import JournalPanel from './JournalPanel/JournalPanel'
-import JournalList from './JournalList'
+import JournalList from './JournalList/JournalList'
 import JournalPaginate from './JournalPaginate'
 
 export default {

@@ -7,16 +7,45 @@ export default {
         date_to: '',
         sort_by: '',
         sort_order: '',
-        name: ''
+        name: '',
+        classes: [],
+        phone: '',
+        entries: ''
       }
     }
   },
   getters: {
     stateParams(state) {
       return state.params
+    },
+    stateParamsEntries(state) {
+      return state.params.entries
+    },
+    stateParamsClasses(state) {
+      return state.params.classes
+    },
+    stateParamsName(state) {
+      return state.params.name
+    },
+    stateParamsPhone(state) {
+      return state.params.phone
     }
   },
   mutations: {
+    SET_ENTRIES(state, entries) {
+      state.params.entries = entries
+      localStorage.setItem('entries', entries)
+    },
+    SET_PHONE(state, phone) {
+      state.params.phone = phone
+      localStorage.setItem('phone', phone)
+    },
+    SET_CLASSES(state, arr) {
+      state.params.classes = arr.map(id => {
+        return id
+      })
+      localStorage.setItem('classes', JSON.stringify(arr))
+    },
     SET_NAME(state, name) {
       state.params.name = name
       localStorage.setItem('name', name)
@@ -43,13 +72,19 @@ export default {
         date_to: '',
         sort_by: '',
         sort_order: '',
-        name: ''
+        name: '',
+        classes: [],
+        phone: '',
+        entries: ''
       }
       localStorage.removeItem('date_from')
       localStorage.removeItem('date_to')
       localStorage.removeItem('sort_by')
       localStorage.removeItem('sort_order')
       localStorage.removeItem('name')
+      localStorage.removeItem('classes')
+      localStorage.removeItem('phone')
+      localStorage.removeItem('entries')
     }
   }
 }

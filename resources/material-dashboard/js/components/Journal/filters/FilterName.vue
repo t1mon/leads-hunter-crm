@@ -13,9 +13,19 @@
 <script>
 export default {
     name: "FilterName",
+    watch: {
+        stateParamsName(name) {
+            if (!name) this.name = ''
+        }
+    },
     data() {
         return {
             name: ''
+        }
+    },
+    computed: {
+        stateParamsName() {
+            return this.$store.getters['filterParams/stateParamsName']
         }
     },
     methods: {
@@ -30,6 +40,11 @@ export default {
             this.name = nameLS
             this.$store.commit('filterParams/SET_NAME', this.name)
         }
+    },
+    mounted() {
+        $('#filterName').on('hidden.bs.dropdown', () => {
+            this.name = this.stateParamsName
+        })
     }
 }
 </script>

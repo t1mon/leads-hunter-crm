@@ -32,7 +32,11 @@ export default {
       const sort_byLS = localStorage.getItem('sort_by')
       const sort_orderLS = localStorage.getItem('sort_order')
       const nameLS = localStorage.getItem('name')
+      const classesLS = localStorage.getItem('classes')
+      const phoneLS = localStorage.getItem('phone')
+      const entriesLS = localStorage.getItem('entries')
 
+      if(classesLS && JSON.parse(classesLS).length > 0) params.class = JSON.parse(classesLS)
       if (date_fromLS && date_toLS) {
         params.date_from = date_fromLS
         params.date_to = date_toLS
@@ -42,7 +46,11 @@ export default {
         params.sort_order = sort_orderLS
       }
       if (nameLS) params.name = nameLS
+      if (phoneLS) params.phone = phoneLS
+      if (entriesLS) params.entries = entriesLS
 
+      //Записываем занные с хранилища vuex
+      if(filterParams.classes.length > 0) params.class = filterParams.classes
       if (filterParams.date_from) {
         params.date_from = filterParams.date_from
         params.date_to = filterParams.date_to
@@ -52,6 +60,8 @@ export default {
         params.sort_order = filterParams.sort_order
       }
       if (filterParams.name) params.name = filterParams.name
+      if (filterParams.phone) params.phone = filterParams.phone
+      if (filterParams.entries) params.entries = filterParams.entries
       if (data && data.page) params.page = data.page
       await axios
         .get(url, {

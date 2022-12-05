@@ -34,38 +34,25 @@
                                         :filterClass="true"
                                         class="dropdown-menu"
                                         aria-labelledby="filterClass"
-                                        id="filterClass1"
                                     ></filter-app>
                                 </th>
                                 <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterPhone" data-bs-toggle="dropdown" aria-expanded="false">Телефон</p>
                                     <filter-app
+                                        :ascDesc="{sort_by: 'phone', sort_order: 'asc'}"
+                                        :filterPhone="true"
                                         class="dropdown-menu"
                                         aria-labelledby="filterPhone"
                                     ></filter-app>
                                 </th>
-                                <th
-                                    @click="dropdownFilter( {event: $event} )"
-                                    class="cursor-pointer text-uppercase text-xxs font-weight-bolder"
-                                >
-                                    <span>№</span>
-                                    <div class="journal__sort">
-                                        <div class="journal__sort__content">
-                                            <span class="journal__filter__text" @click="sortJournal('entries', 'sortEntries', $event)">По возрастанию</span>
-                                            <label class="journal__sort__label">
-                                                <input v-model="first" type="checkbox" class="journal__sort__input">
-                                                <span class="material-icons journal__sort__ok">done</span>
-                                                <span class="journal__sort__text">Первичное</span>
-                                            </label>
-                                            <label class="journal__sort__label">
-                                                <input v-model="second" type="checkbox" class="journal__sort__input">
-                                                <span class="material-icons journal__sort__ok">done</span>
-                                                <span class="journal__sort__text">Вторичное</span>
-                                            </label>
-                                            <button @click="sortJournalEntries" class="btn btn-primary m-0 w-100 py-1 px-3">Отфильтровать</button>
-                                        </div>
-                                        <div class="journal__sort__before"></div>
-                                    </div>
+                                <th class="dropdown cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                    <p class="dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterEntries" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">№</p>
+                                    <filter-app
+                                        :ascDesc="{sort_by: 'entries', sort_order: 'asc'}"
+                                        :filterEntries="true"
+                                        class="dropdown-menu"
+                                        aria-labelledby="filterEntries"
+                                    ></filter-app>
                                 </th>
                                 <th class="cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">Комментарий</th>
 
@@ -96,23 +83,7 @@
                                 <td>
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
                                 </td>
-                                <td class="text-white text-center">
-                                    <div v-select class="select">
-                                        <span
-                                            :style="'background: ' + '#' + leadColor(lead.class) + '; ' + (lead.class ? 'color: #ffffff' : '')"
-                                            class="select__title">{{ className(lead.class, 'Не задан') }}</span>
-                                        <span class="material-icons select__arrow">expand_more</span>
-                                        <div class="select__content">
-                                            <div @click="colorDefault($event), getLeadClass(stateProjectJour.id, lead.id, 0)" class="select__option">Не задан</div>
-                                            <div v-for="projectClass in stateProjectJour.classes" @click="color($event, projectClass.color), getLeadClass(stateProjectJour.id, lead.id, projectClass.id)" class="select__option">
-                                                <div class="journal__row">
-                                                    <span class="journal__class-name">{{ projectClass.name }}</span>
-                                                    <span :style="'background:' + ' ' + '#' + projectClass.color" class="journal__class-color"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                <journal-classes :lead="lead"></journal-classes>
                                 <td class="align-middle text-center text-sm">
                                     <a :href="'tel: ' + lead.phone" class="mb-0 font-weight-normal text-sm">{{ phoneFormat(lead.phone) }}</a>
                                 </td>
@@ -174,14 +145,16 @@
 </template>
 
 <script>
-import Spinner from '../Others/Spinner'
-import FilterApp from './filters/Filters'
+import Spinner from '../../Others/Spinner'
+import FilterApp from '../filters/Filters'
+import JournalClasses from "./JournalClasses";
 
 export default {
     name: "Journal",
     components: {
         Spinner,
-        FilterApp
+        FilterApp,
+        JournalClasses
     },
     data () {
       return {
@@ -213,46 +186,6 @@ export default {
         },
         sortJournal (_param, _sortParam, _event) {
             this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
-        },
-        async getLeadClass (projectId, leadId, classId) {
-            const store = this.$store
-            store.commit('switchSpinner')
-            await axios.post(`/api/v1/project/${projectId}/journal/${leadId}/class/assign`, {
-                class_id: classId
-            })
-            .then(function (response) {
-                console.log(response)
-                store.commit('switchSpinner')
-            })
-            .catch(function (error) {
-                store.commit('switchSpinner')
-                console.log(error)
-            })
-        },
-        className (leadClass, defaultName) {
-            let name
-            if (leadClass) {
-                name = leadClass.name
-            } else {
-                name = defaultName
-            }
-            return name
-        },
-        leadColor (leadClass) {
-            let color
-            if (leadClass) {
-                color = leadClass.color
-            } else {
-                color = ''
-            }
-          return color
-        },
-        colorDefault (event) {
-            event.target.closest('td').firstChild.firstChild.style = ''
-        },
-        color (event, color) {
-            event.target.closest('td').firstChild.firstChild.style.background = '#' + color
-            event.target.closest('td').firstChild.firstChild.style.color = '#ffffff'
         },
         getLeads (_projectId, _dateFrom, _dateTo, _rowsNum) {
             this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo, rowsNum: _rowsNum })
@@ -368,20 +301,6 @@ th {
 }
 .journal__sort__input:checked + .journal__sort__ok {
     display: block;
-}
-
-.journal__row {
-    display: flex;
-    justify-content: space-between;
-}
-.journal__class-name {
-    width: calc(100% - 20px);
-    white-space: normal;
-}
-.journal__class-color {
-    width: 15px;
-    height: 15px;
-    border-radius: 2px;
 }
 .table-responsive {
     padding-top: 50px;

@@ -154,9 +154,6 @@ export default function directives (app) {
       })
       el.addEventListener('click', (e) => {
         e.stopPropagation()
-        document.querySelectorAll('.dropdown--active').forEach(item => {
-          item.classList.remove('dropdown--active')
-        })
         if (el.classList.contains('select--active')) {
           closeSelects()
         } else {

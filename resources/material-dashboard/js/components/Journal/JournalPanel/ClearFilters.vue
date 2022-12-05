@@ -15,7 +15,7 @@ export default {
     computed: {
         appliedFilters() {
             const params = this.$store.getters['filterParams/stateParams']
-            return params.date_from || params.sort_by || params.name
+            return params.date_from || params.sort_by || params.name || params.classes.length > 0 || params.phone || params.entries
         }
     },
     methods: {

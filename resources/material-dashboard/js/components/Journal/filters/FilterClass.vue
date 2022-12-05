@@ -2,6 +2,7 @@
     <div class="px-2">
         <div class="form-check m-0 p-0 d-flex align-items-center mb-2">
             <input
+                @change="setAllClasses($event)"
                 v-model="allClasses"
                 id="allClasses"
                 class="form-check-input m-0 me-1"
@@ -33,12 +34,12 @@
         <button
             @click.prevent="setClasses()"
             class="btn btn-primary mb-0 py-1 px-3 w-100"
-            data-bs-toggle="dropdown"
         >Отфильтровать</button>
     </div>
 </template>
 
 <script>
+
 export default {
     name: "FilterClass",
     data() {
@@ -48,25 +49,59 @@ export default {
       }
     },
     watch: {
-        allClasses(val) {
-            if (val) {
+        classes(arr) {
+            if (arr.length === 0) this.allClasses = false
+            if (arr.length === this.stateProjectJour.classes.length) {
+                this.allClasses = true
+            } else {
+                this.allClasses = false
+            }
+        },
+        stateParamsClasses(arr) {
+            if (arr.length === 0) this.classes = []
+        }
+    },
+    computed: {
+        stateProjectJour () {
+            return this.$store.getters.stateProjectJour
+        },
+        stateParamsClasses() {
+            return this.$store.getters['filterParams/stateParamsClasses']
+        }
+    },
+    methods: {
+        setAllClasses() {
+            if (this.allClasses) {
                 this.classes = this.stateProjectJour.classes.map(projectClass => {
                     return projectClass.id
                 })
             } else {
                 this.classes = []
             }
+        },
+        async setClasses() {
+            this.$store.commit('filterParams/SET_CLASSES', this.classes)
+            await this.$store.dispatch('journalAll/getJournalAll')
+            $('#filterClass').dropdown('hide')
         }
     },
-    computed: {
-        stateProjectJour () {
-            return this.$store.getters.stateProjectJour
+    mounted() {
+        const classesLS = localStorage.getItem('classes')
+        if (classesLS) {
+            this.classes = JSON.parse(classesLS)
+            if (this.classes.length === this.stateProjectJour.classes.length) {
+                this.allClasses = true
+            } else {
+                this.allClasses = false
+            }
+            this.$store.commit('filterParams/SET_CLASSES', this.classes)
         }
-    },
-    methods: {
-        setClasses() {
-            var dropdown = new bootstrap.Dropdown('#filterClass', 'hide')
-        }
+
+        $('#filterClass').on('hidden.bs.dropdown', () => {
+            this.classes = this.stateParamsClasses.map(projectClass => {
+                return projectClass
+            })
+        })
     }
 }
 </script>
