@@ -54,7 +54,7 @@ class ArchiveProjects extends Command
         if($this->option('project') === 'all')
             $this->checkAllProjects();
             if($this->archived > 0)
-                $this->warn("В архив перемещено {$this->archived} проектов.");
+                $this->warn("В архив перемещено {$this->archived} проектов");
         else{
             $project = $this->projectReadRepository->findById($this->option('project'), fail: true);
             $this->info("Проект #{$project->id} {$project->name}...");
