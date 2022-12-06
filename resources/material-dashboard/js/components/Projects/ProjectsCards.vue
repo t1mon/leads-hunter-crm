@@ -21,9 +21,9 @@
                             </span>
                                 </div>
                                 <div class="align-items-center d-flex justify-content-center px-2">
-                                    <div class="form-check form-switch ps-0">
-                                        <input @change="switchProject(project.id)" class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" :checked="project.status">
-                                    </div>
+<!--                                    <div class="form-check form-switch ps-0">-->
+<!--                                        <input @change="switchProject(project.id)" class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" :checked="project.status">-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="ms-auto">
                                     <button @click="dropdown($event)" class="projects__dropdown btn btn-link text-secondary ps-0 pe-2">
@@ -143,9 +143,9 @@
                             </span>
                                 </div>
                                 <div class="align-items-center d-flex justify-content-center px-2">
-                                    <div class="form-check form-switch ps-0">
-                                        <input @change="switchProject(project.id)" class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" :checked="project.status">
-                                    </div>
+<!--                                    <div class="form-check form-switch ps-0">-->
+<!--                                        <input @change="switchProject(project.id)" class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" :checked="project.status">-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="ms-auto">
                                     <button @click="dropdown($event)" class="projects__dropdown btn btn-link text-secondary ps-0 pe-2">
@@ -257,8 +257,10 @@ export default {
             event.stopImmediatePropagation()
             return this.$store.dispatch('deleteProject', id)
         },
-        switchProject (id) {
-            return this.$store.dispatch('switchProject', id)
+        async switchProject (id) {
+            await this.$store.dispatch('switchProject', id)
+            await this.$store.dispatch('getProjects')
+            await this.$store.dispatch('getLeadsCount')
         }
     },
   computed: {
