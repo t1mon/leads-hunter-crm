@@ -48,11 +48,17 @@ class SplitUTM extends Command
         {
             $this->projectRepository->query()
                 ->chunkById(100, function($projects){
-                    foreach($projects as $project){
+                    $projects->each(function($project){
                         $this->info("Проект #{$project->id}: {$project->name}...");
                         $this->leadsRepository->splitUTMForProject($project);
                         $this->info("Проект #{$project->id}: {$project->name} обработан");
-                    }
+                    });
+
+                    // foreach($projects as $project){
+                    //     $this->info("Проект #{$project->id}: {$project->name}...");
+                    //     $this->leadsRepository->splitUTMForProject($project);
+                    //     $this->info("Проект #{$project->id}: {$project->name} обработан");
+                    // }
                 });
         }
         else{
