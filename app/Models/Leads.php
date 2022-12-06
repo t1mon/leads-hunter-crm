@@ -156,9 +156,10 @@ class Leads extends Model
 
     public function scopePhone($query, string $phone)
     {
-        return is_array($phone)
-            ? $query->whereIn('phone', $phone)
-            : $query->where('phone', $phone);
+        return $query->where('phone', 'like', "%$phone%");
+        // return is_array($phone)
+        //     ? $query->whereIn('phone', $phone)
+        //     : $query->where('phone', $phone);
     } //scopePhone
 
     public function scopeEntries($query, int $entries)
