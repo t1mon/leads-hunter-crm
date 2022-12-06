@@ -58,7 +58,7 @@
 
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">E-MAIl</th>
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Город</th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Сумма сделки</th>
+                                <th class="text-center cursor-pointer text-uppercase text-xxs font-weight-bolder">Сумма сделки</th>
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Посадочная</th>
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">Реферрер</th>
                                 <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">[UTM_TERM]</th>

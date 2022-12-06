@@ -52,9 +52,9 @@ export default {
     }
   },
   actions: {
-    getProjects ({ state }) {
+    async getProjects ({ state }) {
       state.isLoading = true
-      axios
+      await axios
         .get(state.endpoint)
         .then(({ data }) => {
           state.isLoading = false
@@ -67,15 +67,12 @@ export default {
           state.isLoading = false
         })
     },
-    getLeadsCount ({ state }) {
-      axios
+    async getLeadsCount ({ state }) {
+      await axios
         .post(state.endpoint + '/leads-count')
         .then(({ data }) => {
           console.log('Вывод данных: ' + data)
           state.projectsLeadsCountLoad = true
-          // state.projectsLeadsCount = data.data.map( item => {
-          //   return item
-          // })
           state.projectsLeadsCount = Object.assign({}, ...data.data.map(i => ({ [i.id]: { totalLeads: i.totalLeads, leadsToday: i.leadsToday } })))
           console.log(state.projectsLeadsCount)
         })
@@ -148,17 +145,17 @@ export default {
           console.error(error)
         })
     },
-    switchProject ({ state, dispatch }, id) {
+    async switchProject ({ state, dispatch }, id) {
       let projectStatus
-      axios
+      await axios
         .get(state.endpoint + '/' + id + '/' + 'toggle')
         .then(({ data }) => {
-          state.filteredProjects.forEach((project, index) => {
-            if (project.id === id) {
-              project.status = !project.status
-              projectStatus = project.status
-            }
-          })
+          // state.filteredProjects.forEach((project, index) => {
+          //   if (project.id === id) {
+          //     project.status = !project.status
+          //     projectStatus = project.status
+          //   }
+          // })
           dispatch('getToast', {
             msg: `Проект ${projectStatus ? 'включен' : 'выключен'}!`,
             settingsObj: {

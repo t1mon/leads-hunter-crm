@@ -47,7 +47,7 @@ export default {
       }
       if (nameLS) params.name = nameLS
       if (phoneLS) params.phone = phoneLS
-      if (entriesLS) params.entries = entriesLS
+      if (entriesLS) params.entry_filter = entriesLS
 
       //Записываем занные с хранилища vuex
       if(filterParams.classes.length > 0) params.class = filterParams.classes
@@ -61,7 +61,7 @@ export default {
       }
       if (filterParams.name) params.name = filterParams.name
       if (filterParams.phone) params.phone = filterParams.phone
-      if (filterParams.entries) params.entries = filterParams.entries
+      if (filterParams.entries) params.entry_filter = filterParams.entries
       if (data && data.page) params.page = data.page
       await axios
         .get(url, {

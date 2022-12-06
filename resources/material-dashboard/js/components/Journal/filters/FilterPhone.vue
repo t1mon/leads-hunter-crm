@@ -2,7 +2,7 @@
     <div class="px-2 d-flex flex-column">
         <input
             v-model="phone"
-            v-maska data-maska="+7 (###) ###-####"
+            @input="phoneNum"
             placeholder="Введите телефон"
             type="text"
             class="border border-danger rounded-2 bg-transparent text-secondary px-1 mb-2"
@@ -12,11 +12,9 @@
 </template>
 
 <script>
-import { vMaska } from "maska"
 
 export default {
     name: "FilterPhone",
-    directives: { maska: vMaska },
     watch: {
         stateParamsPhone(phone) {
             if (!phone) this.phone = ''
@@ -33,6 +31,9 @@ export default {
         }
     },
     methods: {
+        phoneNum() {
+          this.phone = this.phone.replace(/\D/g, '')
+        },
         async setPhone() {
             const phone = this.phone.replace(/\D/g, '')
             this.$store.commit('filterParams/SET_PHONE', phone)

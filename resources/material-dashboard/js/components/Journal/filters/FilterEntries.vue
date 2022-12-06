@@ -3,6 +3,19 @@
         <div class="form-check m-0 p-0 d-flex align-items-center mb-2">
             <input
                 v-model="entries"
+                value=""
+                name="entries"
+                class="form-check-input m-0 me-1"
+                type="radio"
+                id="entriesAll"
+            >
+            <label class="form-check-label m-0 text-xxs lh-sm d-flex align-items-center" for="entriesAll">
+                ВСЕ
+            </label>
+        </div>
+        <div class="form-check m-0 p-0 d-flex align-items-center mb-2">
+            <input
+                v-model="entries"
                 value="1"
                 name="entries"
                 class="form-check-input m-0 me-1"
@@ -54,7 +67,7 @@ export default {
     },
     methods: {
         async setEntries() {
-            this.$store.commit('filterParams/SET_ENTRIES', +this.entries)
+            this.$store.commit('filterParams/SET_ENTRIES', this.entries)
             await this.$store.dispatch('journalAll/getJournalAll')
             $('#filterEntries').dropdown('hide')
         }
