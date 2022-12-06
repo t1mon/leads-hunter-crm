@@ -82,6 +82,11 @@ class ReadRepository{
             ->paginate($perPage);
     } //findByIdsWithLeadsCount_q
 
+    public function getTotalLeads(Project|int $project): ?int
+    {
+        $entry = DB::table('leads_count')->where('project_id', $project instanceof Project ? $project->id : $project)->first();
+        return is_null($entry) ? null : $entry->total_leads;
+    }
     //
     //  Скрытые методы
     //

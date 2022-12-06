@@ -6,14 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Role;
+use App\Models\User;
 
 class UserPermissions extends Model
 {
     use HasFactory;
 
-    //#############
-    //Свойства
-    //#############
     public $timestamps = false;
     protected $fillable = [
         'user_id',
@@ -26,9 +24,31 @@ class UserPermissions extends Model
         'view_fields' => 'array'
     ];
 
-    //#############
-    //Методы
-    //#############
+    public const ALLOWED_BASIC_FIELDS = [ //Базовые поля лида, которые доступны любому пользователю
+        'id',
+        'name',
+        'patronymic',
+        'surname',
+        'phone',
+        'created_at',
+    ];
+
+    /**
+     *      Фильтры
+     */
+    public function scopeFrom($query, Project|int $project) //Поиск по проекту
+    {
+        return $query->where('project_id', $project instanceof Project ? $project->id : $project);
+    } //scopeFrom
+
+    public function scopeFor($query, User|int $user) //Поиск по пользователю
+    {
+        return $query->where('user_id', $user instanceof User ? $user->id : $user);
+    } //scopeFor
+
+    /**
+     *      Отношения
+     */
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
@@ -43,4 +63,25 @@ class UserPermissions extends Model
     {
         return $this->belongsTo(\App\Models\Project::class);
     } //project
+
+    /**
+     *      Служебные методы
+     */    
+    public function isManager(): bool
+    {
+        return $this->role === Role::ROLE_MANAGER;
+    } //isManager
+    
+    public function isWatcher(): bool
+    {
+        return $this->role === Role::ROLE_WATCHER;
+    } //isWatcher
+
+    public function fieldAllowed(string $field): bool //Проверяет, доступно ли поле пользователю
+    {
+        if(in_array(needle: $field, haystack: self::ALLOWED_BASIC_FIELDS) )
+            return true;
+        
+        return in_array(needle: $field, haystack: $this->view_fields);
+    }
 }
