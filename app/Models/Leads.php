@@ -143,7 +143,8 @@ class Leads extends Model
     
     public function scopeName($query, string $name)
     {
-        return $query->where('full_name', $name);
+        // return $query->where('full_name', $name);
+        return $query->where('full_name', 'like', "%$name%");
     } //scopeName
 
     public function scopeOwner($query, string|array $owner)
