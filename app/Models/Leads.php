@@ -162,9 +162,13 @@ class Leads extends Model
 
     public function scopeEntries($query, int $entries)
     {
-        return $entries > 2
-           ? $query->where('entries', '>', 2)
-           : $query->where('entries', $entries);
+        return $entries > 1
+            ? $query->where('entries', '>=', 2)
+            : $query->where('entries', $entries);
+
+        // return $entries > 2
+        //    ? $query->where('entries', '>', 2)
+        //    : $query->where('entries', $entries);
     } //scropeEntries
 
     public function scopeEmail($query, string|array $email)

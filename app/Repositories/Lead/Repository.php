@@ -4,6 +4,7 @@ namespace App\Repositories\Lead;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
+use Illuminate\Support\Str;
 
 class Repository{
     public function query()
@@ -11,12 +12,49 @@ class Repository{
         return Leads::query();
     } //query
 
-    public function create()
+    public function create(
+        Project|int $project,
+        string $name,
+        int $phone,
+        string $host,
+        ?string $surname,
+        ?string $patronymic,
+        ?string $cost,
+        ?string $comment,
+        ?string $city,
+        ?string $ip,
+        ?string $email,
+        ?string $utm_medium,
+        ?string $utm_campaign,
+        ?string $utm_source,
+        ?string $utm_content,
+        ?string $referrer,
+        ?string $url_query_string,
+    )
     {
+        //Подготовка параметров
+        $project = $project instanceof Project ? $project->id : $project;
+        
+        if(filter_var($host, FILTER_VALIDATE_URL))
+            $host = Str::lower( parse_url($host) );
 
+        if($phone[0] === 8)
+            $phone = preg_replace('/^./','7', $phone);
+        
+        //TODO Спросить
+        $cost = preg_replace("/[^0-9]/", '', trim($cost));
+
+        //Создание лида
+        $this->query()->create([
+            'project_id' => $project,
+            'name' => $name,
+            'surname' => $surname,
+            'patronymic' => $patronymic,
+            //...
+        ]);
     } //create
 
-    public function update()
+    public function update(Leads $lead, array $params)
     {
 
     } //update

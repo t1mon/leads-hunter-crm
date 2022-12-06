@@ -44,6 +44,7 @@ class Journal extends JsonResource
             'utm_source' => $this->utm_source,
             'utm_campaign' => $this->utm_campaign,
             'utm_content' => $this->utm_content,
+            'utm_term' => $this->utm_content,
             'class_id' => $this->class_id,
             'comment_crm' => $this->whenLoaded('comment_crm', [
                 'id' => $this->comment_crm?->id,
