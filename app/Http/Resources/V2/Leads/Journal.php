@@ -14,9 +14,23 @@ class Journal extends JsonResource
         if(is_null($this->visible))
             return $this->fullData();
 
-        $fields = $this->visible;
-        $result = [];
-        foreach($fields as $field)
+        $result = [
+            'id' => $this->id,
+            'name' => $this->getClientName(),
+            'phone' => $this->phone,
+            'created_at' => $this->created_at->format('d.m.Y H:i:s'),
+            'comment_crm' => $this->when(in_array('comment_crm', $this->visible), [
+                'id' => $this->comment_crm?->id,
+                'text' => $this->comment_crm?->comment_body,
+            ]),
+        ];
+
+        //Удаление элемента comment_crm из массива
+        $this->visible = array_flip($this->visible);
+        unset($this->visible['comment_crm']);
+        $this->visible = array_flip($this->visible);
+
+        foreach($this->visible as $field)
             $result[$field] = $this->$field;
 
         return $result;
