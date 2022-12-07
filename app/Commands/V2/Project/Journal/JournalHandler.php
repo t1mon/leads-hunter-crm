@@ -139,6 +139,8 @@ class JournalHandler
         if(!is_null($command->sort_by))
             $leads->orderBy($command->sort_by, $command->sort_order);
 
-        return $leads->paginate(self::PER_PAGE);
+        return $leads->paginate(self::PER_PAGE)->each(function($lead) use ($project){
+            $lead->created_at = Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($project->timezone);
+        });
     } //_loadLeads
 }
