@@ -139,7 +139,7 @@ class JournalHandler
         if(!is_null($command->sort_by))
             $leads->orderBy($command->sort_by, $command->sort_order);
         else
-            $leads->latest(); //по умолчанию сортировать по id в порядке убывания
+            $leads->latest(); //по умолчанию сортировать по дате в порядке убывания
 
         $leads = $leads->paginate(self::PER_PAGE);
 
