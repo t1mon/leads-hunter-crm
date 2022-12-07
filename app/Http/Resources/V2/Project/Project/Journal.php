@@ -30,7 +30,8 @@ class Journal extends JsonResource
 
         $leadResource = $this->user->isAdmin()
         ? LeadResource::collection($this->leads)
-        : LeadResource::collection($this->leads)->only($this->collectFields());
+        : LeadResource::collection($this->leads)->only($this->permissions->view_fields);
+        // : LeadResource::collection($this->leads)->only($this->collectFields());
 
         return [
             'id' => $this->id,
