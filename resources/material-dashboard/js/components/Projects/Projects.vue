@@ -1,7 +1,7 @@
 <template>
     <div>
         <spinner v-if="stateIsLoading"></spinner>
-        <div v-show="stateProjectsLoad && stateProjects.length > 0" class="projects">
+        <div v-show="stateProjects && stateProjects.length > 0" class="projects">
             <div class="projects__row">
                 <projects-search></projects-search>
 
@@ -11,7 +11,7 @@
             <projects-list ref="hide" class="projects__content--show" v-if="!checkCards"></projects-list>
             <projects-cards ref="hide" class="projects__content--show" v-if="checkCards"></projects-cards>
         </div>
-        <div v-if="stateProjectsLoad && stateProjects.length === 0">
+        <div v-if="stateProjects && stateProjects.length === 0">
             <h2 class="projects__title projects__title--empty">Нет ни одного проекта!</h2>
             <div class="col-md-12 my-auto text-center">
                 <a href="/project/create" class="btn bg-gradient-primary mb-0 mt-0 mt-lg-0">
@@ -39,28 +39,27 @@ export default {
     Spinner
   },
   computed: {
-    getProjects () {
-      return this.$store.dispatch('getProjects')
-    },
-      getLeadsCount () {
-          return this.$store.dispatch('getLeadsCount')
-      },
     stateIsLoading () {
       return this.$store.getters.stateIsLoading
     },
     checkCards () {
       return this.$store.getters.stateCards
     },
-    stateProjectsLoad () {
-      return this.$store.getters.stateProjectsLoad
-    },
     stateProjects () {
       return this.$store.getters.stateProjects
     }
   },
+    methods: {
+        async getProjects () {
+            await this.$store.dispatch('getProjects')
+        },
+        async getLeadsCount () {
+            await this.$store.dispatch('getLeadsCount')
+        }
+    },
   async created () {
-    await this.getProjects
-    await this.getLeadsCount
+    await this.getProjects()
+    await this.getLeadsCount()
   }
 }
 </script>

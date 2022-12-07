@@ -213,9 +213,9 @@
 {{--        </div>--}}
 {{--    </div>--}}
 {{--</div>--}}
-    <filter-by-date :projectid="{{ $projectId }}"></filter-by-date>
+{{--    <filter-by-date :projectid="{{ $projectId }}"></filter-by-date>--}}
     <journal :projectid="{{ $projectId }}"></journal>
-    <paginate :projectid="{{ $projectId }}"></paginate>
+{{--    <paginate :projectid="{{ $projectId }}"></paginate>--}}
 {{--<div class="content-left">--}}
 {{--    {{ trans_choice('projects.journal.count', $leads->total()) }}--}}
 {{--</div>--}}

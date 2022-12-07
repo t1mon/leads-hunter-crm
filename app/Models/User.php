@@ -103,7 +103,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     //Проверяет, является ли пользователь менеджером определённого проекта
-    public function isManagerFor(Project $project): bool
+    public function isManagerFor(Project|int $project): bool
     {
         $permissions = $this->getPermissionsForProject($project);
         if( is_null($permissions) )
@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
     } //isManagerFor
 
     //Проверяет, является ли пользователь наблюдателем определённого проекта
-    public function isWatcher(Project $project): bool
+    public function isWatcher(Project|int $project): bool
     {
         $permissions = $this->getPermissionsForProject($project);
         if( is_null($permissions) )
@@ -173,9 +173,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserPermissions::class);
     } //permissions
 
-    public function getPermissionsForProject(Project $project) //Получить разрешения пользователя по конкретному проекту
+    public function getPermissionsForProject(Project|int $project) //Получить разрешения пользователя по конкретному проекту
     {
-        return UserPermissions::where(['project_id' => $project->id, 'user_id' => $this->id])->first();
+        return UserPermissions::where([
+            'project_id' => $project instanceof Project ? $project->id : $project,
+            'user_id' => $this->id
+        ])->first();
     } //getPermissionsForProject
 
     

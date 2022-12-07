@@ -1,4 +1,13 @@
+import journalAll from "./journalAll";
+import journalFilters from "./journalFilters";
+import filterParams from "./filterParams";
+
 export default {
+  modules: {
+    journalAll,
+    journalFilters,
+    filterParams
+  },
   state () {
     return {
       leads: null,
@@ -12,18 +21,10 @@ export default {
       sortEntries: true,
       // TODO Найти более элегантный метод
       dataReady: false,
-      // Даты из FilterByDate.vue
-      dateFrom: '',
-      dateTo: ''
+      // Даты из JournalPanel.vue
     }
   },
   getters: {
-    stateDateFrom: state => {
-      return state.dateFrom
-    },
-    stateDateTo: state => {
-      return state.dateTo
-    },
     stateIsLoadingJ: state => {
       return state.isLoadingJ
     },
@@ -40,6 +41,12 @@ export default {
   mutations: {
     switchSpinner (state) {
       state.isLoadingJ = !state.isLoadingJ
+    },
+    SET_LEADS(state, data) {
+      state.leads = data
+    },
+    SET_PROJECT_JOUR(state, data) {
+      state.projectJour = data
     }
   },
   actions: {
@@ -75,7 +82,7 @@ export default {
       }
       state[_sortParam] = !state[_sortParam]
     },
-    getLeads (
+    async getLeads (
       { state, commit, getters, rootState },
       {
         projectId: _projectId,
@@ -99,7 +106,7 @@ export default {
       const prevNext = _prevNext || ''
       // номер лида, если перешёл на другую страницу по стрелке
       const numberArrow = _prevNext ? (+_prevNext.slice(-1) - 1) * rowsNum : 0
-      axios
+      await axios
         .get(rootState.projects.endpoint + '/' + _projectId + '/journal' + page + prevNext,
           {
             params: {
@@ -140,9 +147,11 @@ export default {
             item.number = index + 1 + numberNum + numberArrow
           })
 
-          state.leads = dataLeads
+          commit('SET_LEADS', dataLeads)
+          // state.leads = dataLeads
           state.leadsOrigin = dataLeads
-          state.projectJour = data.data
+          commit('SET_PROJECT_JOUR', data.data)
+          // state.projectJour = data.data
           state.dataReady = true
           console.log(data)
         })
