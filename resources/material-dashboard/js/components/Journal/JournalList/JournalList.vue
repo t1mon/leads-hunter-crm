@@ -119,16 +119,16 @@
                                     <!--                                    {{ lead.referrer }}-->
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm?.utm_term }}
+                                    {{ lead.utm_term }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm?.utm_medium }}
+                                    {{ lead.utm_medium }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm?.utm_source }}
+                                    {{ lead.utm_source }}
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm?.utm_campaign }}
+                                    {{ lead.utm_campaign }}
                                 </td>
                                 <td v-tLength="25" class="text-sm font-weight-normal mb-0">
                                     {{ lead.source }}
