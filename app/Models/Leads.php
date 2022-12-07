@@ -63,7 +63,7 @@ class Leads extends Model
     public function getClientName(): string
     {
         return (is_null($this->surname) ? '' : $this->surname) . $this->name . (is_null($this->patronymic) ? '' : $this->patronymic);
-    }
+    } //getClientName
 
     public function getUtmMediumAttribute(){
         return 
@@ -72,7 +72,7 @@ class Leads extends Model
             is_null($this->utm)
                 ? null
                 : (array_key_exists('utm_medium', $this->utm) ? $this->utm['utm_medium'] : null);
-    }
+    } //getUtmMediumAttribute
 
     public function getUtmSourceAttribute(){
         return 
@@ -81,7 +81,7 @@ class Leads extends Model
             is_null($this->utm)
                 ? null
                 : (array_key_exists('utm_source', $this->utm) ? $this->utm['utm_source'] : null);
-    }
+    } //getUtmSourceAttribute
 
     public function getUtmCampaignAttribute(){
         return 
@@ -90,7 +90,7 @@ class Leads extends Model
             is_null($this->utm)
                 ? null
                 : (array_key_exists('utm_campaign', $this->utm) ? $this->utm['utm_campaign'] : null);
-    }
+    } //getUtmCampaignAttribute
 
     public function getUtmContentAttribute(){
         return
@@ -99,7 +99,7 @@ class Leads extends Model
             is_null($this->utm)
                 ? null
                 : (array_key_exists('utm_content', $this->utm) ? $this->utm['utm_content'] : null);
-    }
+    } //getUtmContentAttribute
 
     public function getUtmTermAttribute(){
         return
@@ -108,7 +108,7 @@ class Leads extends Model
             is_null($this->utm)
                 ? null
                 : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
-    }
+    } //getUtmTermAttribute
 
     /**
      *      Отношения
