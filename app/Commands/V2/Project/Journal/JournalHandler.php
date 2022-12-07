@@ -138,9 +138,15 @@ class JournalHandler
         //Сортировка
         if(!is_null($command->sort_by))
             $leads->orderBy($command->sort_by, $command->sort_order);
+        else
+            $leads->latest(); //по умолчанию сортировать по дате в порядке убывания
 
-        return $leads->paginate(self::PER_PAGE)->each(function($lead) use ($project){
+        $leads = $leads->paginate(self::PER_PAGE);
+
+        $leads->each(function($lead) use ($project){
             $lead->created_at = Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($project->timezone);
         });
+
+        return $leads;
     } //_loadLeads
 }
