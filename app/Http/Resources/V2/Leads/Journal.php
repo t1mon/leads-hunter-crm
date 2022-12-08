@@ -19,10 +19,13 @@ class Journal extends JsonResource
             'name' => $this->getClientName(),
             'phone' => $this->phone,
             'created_at' => $this->created_at->format('d.m.Y H:i:s'),
-            'comment_crm' => $this->when(in_array('comment_crm', $this->visible), [
-                'id' => $this->comment_crm?->id,
-                'text' => $this->comment_crm?->comment_body,
-            ]),
+            'comment_crm' => $this->when(in_array(needle: 'comment_crm', haystack: $this->visible), 
+                is_null($this->comment_crm) ? null
+                :
+                [
+                    'id' => $this->comment_crm?->id,
+                    'text' => $this->comment_crm?->comment_body,
+                ]),
         ];
 
         //Удаление элемента comment_crm из массива
