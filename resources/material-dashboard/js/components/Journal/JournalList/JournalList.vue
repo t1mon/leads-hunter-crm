@@ -69,11 +69,14 @@
                             </tr>
                             </thead>
                             <tbody class="journal__tbody">
-                            <tr v-for="(lead) in stateLeads">
+                            <tr v-for="(lead, index) in stateLeads">
                                 <td>
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <p class="text-sm font-weight-normal mb-0">{{ lead.id }}</p>
+                                            <p class="text-sm font-weight-normal mb-0 text-center">
+                                                {{index + 1}}
+                                            <hr class="m-0">
+                                            id: {{ lead.id }}</p>
                                         </div>
                                     </div>
                                 </td>
