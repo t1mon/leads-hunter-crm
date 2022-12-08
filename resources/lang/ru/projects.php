@@ -183,6 +183,8 @@ return [
 
             'common' => [
                 'fields' => [
+                    'class_id' => 'Класс',
+                    'comment_crm' => 'Комментарий CRM',
                     'date' => 'Дата',
                     'client' => 'Клиент',
                     'class' => 'Класс',

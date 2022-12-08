@@ -1,6 +1,6 @@
 {{--Объявление полей журнала (чтобы быстро добавлять/удалять в дальнейшем--}}
 @php
-    $journal_fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+    $journal_fields = ['class_id', 'comment_crm', 'email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
 @endphp
 
 {{--Форма для добавления нового пользователя--}}

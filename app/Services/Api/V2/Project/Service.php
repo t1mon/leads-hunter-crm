@@ -17,13 +17,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class Service{
-    private int $userId;
+    private null|int $userId;
 
     public function __construct(
         private ProjectReadRepository $projectReadRepository
     )
     {
-        $this->userId = Auth::guard('api')->id();
+        $this->userId = Auth::guard('api')->id() ?? null;
     } //Конструктор
 
     //
