@@ -290,15 +290,17 @@ class Leads extends Model
         $project = Project::find($params['project_id']);
 
         //Проверка существования лида
-        $lead = \App\Models\Leads::where([ 'project_id' => $project->id, 'phone' => $params['phone'] ])->orderBy('updated_at', 'desc')->first();
+        $lead = \App\Models\Leads::where([ 'project_id' => $project->id, 'phone' => $params['phone'] ])->latest()->first();
 
         if(is_null($lead)){ //Если лида не существует, создать новый
             return $this->createLead(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
         }
 
-        if($project->settings['leadValidDays'] > 0 && Carbon::parse($lead->updated_at)->addDays($project->settings['leadValidDays'])->lessThanOrEqualTo(Carbon::now()))
+        if($project->settings['leadValidDays'] > 0)
         {
-            return $this->createLead(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
+            $leadDate = Carbon::parse($lead->created_at)->addDays($project->settings['leadValidDays']);
+            if(Carbon::now()->greaterThanOrEqualTo($leadDate))
+                return $this->createLead(array_merge($params, ['entries' => 1, 'status' => self::LEAD_NEW]));
         }
 
         return $this->createLead(array_merge($params, ['entries' => $lead->entries + 1, 'status' => self::LEAD_EXISTS]));
