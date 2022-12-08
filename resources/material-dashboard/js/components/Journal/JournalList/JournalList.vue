@@ -80,7 +80,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <p class="text-center text-sm font-weight-normal mb-0">{{ lead.created_at }}</p>
+                                    <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
                                 <td>
                                     <h6 class="text-center mb-0 font-weight-normal text-sm">{{  lead.name }}</h6>
@@ -166,6 +166,11 @@ export default {
       }
     },
     methods: {
+        dateFormat(date) {
+            const arrStr = date.split(' ')
+            const dateFormat = arrStr[0] + '<br>' + arrStr[1]
+            return dateFormat
+        },
         phoneFormat(phone) {
             if (!phone) return
             return phone.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')

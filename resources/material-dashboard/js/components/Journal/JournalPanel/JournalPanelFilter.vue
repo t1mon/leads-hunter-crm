@@ -226,6 +226,29 @@ export default {
             ]
         }
     },
+    watch: {
+        stateParamsDateFrom(dateFrom) {
+            if (!dateFrom) {
+                this.dateFrom = ''
+                this.dateTo = ''
+                this.period = 'За всё время'
+                this.filterColumns.forEach(col => {
+                    col.forEach(item => {
+                        item.active = false
+                    })
+                })
+                this.filterColumns[0][0].active = true
+            }
+        }
+    },
+    computed: {
+        stateParamsDateFrom() {
+            return this.$store.getters['filterParams/stateParamsDateFrom']
+        },
+        stateParamsDateTo() {
+            return this.$store.getters['filterParams/stateParamsDateTo']
+        }
+    },
     methods: {
         addZero(num) {
             const _num = num < 10 ? `0${num}` : num

@@ -15,6 +15,12 @@ export default {
     }
   },
   getters: {
+    stateParamsDateFrom(state) {
+      return state.params.date_from
+    },
+    stateParamsDateTo(state) {
+      return state.params.date_to
+    },
     stateParams(state) {
       return state.params
     },
