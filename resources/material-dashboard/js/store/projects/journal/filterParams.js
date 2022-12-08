@@ -50,13 +50,11 @@ export default {
       state.params.name = name
       localStorage.setItem('name', name)
     },
-    SET_DATE_FROM(state, date) {
-      state.params.date_from = date
-      localStorage.setItem('date_from', date)
+    SET_DATE_FROM(state, dateFrom) {
+      state.params.date_from = dateFrom
     },
-    SET_DATE_TO(state, date) {
-      state.params.date_to = date
-      localStorage.setItem('date_to', date)
+    SET_DATE_TO(state, dateTo) {
+      state.params.date_to = dateTo
     },
     SET_SORT_BY(state, val) {
       state.params.sort_by = val
@@ -79,6 +77,8 @@ export default {
       }
       localStorage.removeItem('date_from')
       localStorage.removeItem('date_to')
+      localStorage.removeItem('columnIndex')
+      localStorage.removeItem('itemIndex')
       localStorage.removeItem('sort_by')
       localStorage.removeItem('sort_order')
       localStorage.removeItem('name')

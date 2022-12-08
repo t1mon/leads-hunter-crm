@@ -251,15 +251,39 @@ export default {
                 const item = this.filterColumns[columnIndex][itemIndex]
                 item.active = true
                 await item.getPeriod()
+                localStorage.removeItem('date_from')
+                localStorage.removeItem('date_to')
+                localStorage.setItem('columnIndex', columnIndex)
+                localStorage.setItem('itemIndex', itemIndex)
             } else {
                 if(!this.dateFrom) {
                     return
                 }
                 this.period = `${this.dateFormat(new Date(this.dateFrom))} - ${this.dateFormat(new Date(this.dateTo))}`
+                localStorage.removeItem('columnIndex')
+                localStorage.removeItem('itemIndex')
+                localStorage.setItem('date_from', this.dateFrom)
+                localStorage.setItem('date_to', this.dateTo)
             }
             this.$store.commit('filterParams/SET_DATE_FROM', this.dateFrom)
             this.$store.commit('filterParams/SET_DATE_TO', this.dateTo)
-            await this.$store.dispatch('journalAll/getJournalAll', { id: this.projectid })
+
+            await this.$store.dispatch('journalAll/getJournalAll')
+        }
+    },
+    async created() {
+        const columnIndexLS = localStorage.getItem('columnIndex')
+        const itemIndexLS = localStorage.getItem('itemIndex')
+        const date_fromLS = localStorage.getItem('date_from')
+        const date_toLS = localStorage.getItem('date_to')
+        if (columnIndexLS && itemIndexLS) {
+            console.log(columnIndexLS, itemIndexLS)
+            await this.getPeriod(+columnIndexLS, +itemIndexLS)
+        }
+        if (date_fromLS && date_toLS) {
+            this.dateFrom = date_fromLS
+            this.dateTo = date_toLS
+            await this.getPeriod()
         }
     }
 }

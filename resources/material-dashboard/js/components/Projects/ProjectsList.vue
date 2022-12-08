@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="table-responsive" style="height: 100vh">
+        <div class="table-responsive">
             <table class="table align-items-center mb-0">
                 <thead class="position-sticky top-0 left-0 bg-white" style="z-index: 2">
                     <tr>
@@ -87,7 +87,7 @@
                 </label>
             </div>
         </div>
-        <div v-if="showInactive" class="table-responsive" style="height: 100vh">
+        <div v-if="showInactive" class="table-responsive">
             <table class="table align-items-center mb-0">
                 <thead class="position-sticky top-0 left-0 bg-white border-bottom border-dark" style="z-index: 2">
                     <tr>

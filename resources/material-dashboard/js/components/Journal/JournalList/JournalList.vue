@@ -74,9 +74,8 @@
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
                                             <p class="text-sm font-weight-normal mb-0 text-center">
-                                                {{index + 1}}
-                                            <hr class="m-0">
-                                            id: {{ lead.id }}</p>
+                                                {{(index + 1) + (stateProjectJour.leads.meta.per_page * (stateProjectJour.leads.meta.current_page - 1))}}
+                                            </p>
                                         </div>
                                     </div>
                                 </td>
@@ -115,7 +114,7 @@
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ sumFormat(lead.cost) }}
                                 </td>
-                                <td @click="test()" class="text-sm text-center font-weight-normal mb-0">
+                                <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.host }}
                                 </td>
                                 <td v-tLengthDyn="{text: lead.referrer, length: 25 }" class="text-sm font-weight-normal mb-0">
@@ -175,23 +174,6 @@ export default {
             if (!sum) return
             const sumStr = sum.toString()
             return sumStr.replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ')
-        },
-        sortJournalEntries () {
-            const _dateFrom = this.$store.getters.stateDateFrom
-            const _dateTo = this.$store.getters.stateDateTo
-            let _entriesOperator = null
-            if (this.first && !this.second) {
-                _entriesOperator = '='
-            } else if (!this.first && this.second) {
-                _entriesOperator = '>'
-            }
-            this.$store.dispatch('getLeads', { projectId: this.projectid, entriesOperator: _entriesOperator, dateFrom: _dateFrom, dateTo: _dateTo })
-        },
-        sortJournal (_param, _sortParam, _event) {
-            this.$store.dispatch('sortJournal', { param: _param, sortParam: _sortParam, event: _event })
-        },
-        getLeads (_projectId, _dateFrom, _dateTo, _rowsNum) {
-            this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo, rowsNum: _rowsNum })
         }
     },
     computed: {
