@@ -1,9 +1,9 @@
 <template>
     <div v-if="stateFilteredProjects">
-        <div style="height: 100vh; overflow: auto">
-            <div class="row m-0 pt-3">
+        <div style="overflow: auto">
+            <div class="row m-0 pt-3 align-items-stretch">
                 <div v-for="project in projectsActive" class="projects__card__wrap col-md-8 col-lg-6 col-xxl-5 mb-4">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body p-3">
                             <div class="d-flex mt-n2">
                                 <div v-avatar="{ background: project.color, name: project.name }" class="projects__card__avatar avatar avatar-xl bg-gradient-dark border-radius-xl p-2 mt-n4"></div>
@@ -122,10 +122,10 @@
                 </label>
             </div>
         </div>
-        <div v-if="showInactive" style="height: 100vh; overflow: auto; opacity: 0.5">
-            <div class="row m-0 pt-4">
+        <div v-if="showInactive" style="opacity: 0.5">
+            <div class="row m-0 pt-4 align-items-stretch">
                 <div v-for="project in projectsInactive" class="projects__card__wrap col-md-8 col-lg-6 col-xxl-5 mb-4">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body p-3">
                             <div class="d-flex mt-n2">
                                 <div v-avatar="{ background: project.color, name: project.name }" class="projects__card__avatar avatar avatar-xl bg-gradient-dark border-radius-xl p-2 mt-n4"></div>

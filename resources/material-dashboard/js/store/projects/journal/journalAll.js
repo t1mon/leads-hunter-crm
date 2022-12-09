@@ -27,8 +27,8 @@ export default {
       const params = {}
 
       //Данные с localStorage
-      const date_fromLS = localStorage.getItem('date_from')
-      const date_toLS = localStorage.getItem('date_to')
+      // const date_fromLS = localStorage.getItem('date_from')
+      // const date_toLS = localStorage.getItem('date_to')
       const sort_byLS = localStorage.getItem('sort_by')
       const sort_orderLS = localStorage.getItem('sort_order')
       const nameLS = localStorage.getItem('name')
@@ -37,10 +37,10 @@ export default {
       const entriesLS = localStorage.getItem('entries')
 
       if(classesLS && JSON.parse(classesLS).length > 0) params.class = JSON.parse(classesLS)
-      if (date_fromLS && date_toLS) {
-        params.date_from = date_fromLS
-        params.date_to = date_toLS
-      }
+      // if (date_fromLS && date_toLS) {
+      //   params.date_from = date_fromLS
+      //   params.date_to = date_toLS
+      // }
       if (sort_byLS && sort_orderLS) {
         params.sort_by = sort_byLS
         params.sort_order = sort_orderLS

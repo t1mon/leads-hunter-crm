@@ -45,10 +45,11 @@ export default {
         },
         exportJournal () {
             const query = {
-                date_from: this.dateFrom,
-                date_to: this.dateTo
+                date_from: this.$store.getters['filterParams/stateParams'].date_from,
+                date_to: this.$store.getters['filterParams/stateParams'].date_to
             }
             const url = window.location.href + `/download?` + $.param(query)
+            console.log(url)
             window.location = url
         }
     }
