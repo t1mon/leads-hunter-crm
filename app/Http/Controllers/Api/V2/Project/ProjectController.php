@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V2\Project;
 
+use App\Commands\V2\Project\Journal\ExportCommand;
+use App\Commands\V2\Project\Journal\ExportHandler;
 use App\Commands\V2\Project\Journal\GetVariantsCommand;
 use App\Commands\V2\Project\Journal\GetVariantsHandler;
 use App\Commands\V2\Project\Journal\JournalCommand;
@@ -60,6 +62,19 @@ class ProjectController extends Controller
             ]
         );
     } //getFilterVariants
+
+    public function export(int $project, JournalRequest $request) //Выгрузка лидов в файл
+    {
+        $this->bus->addHandler(ExportCommand::class, ExportHandler::class);
+        
+        return $this->bus->dispatch(
+            command: ExportCommand::class,
+            input: [
+                'project' => $project,
+                'request' => $request,
+            ]
+        );
+    } //export
 
     /**
      * Store a newly created resource in storage.
