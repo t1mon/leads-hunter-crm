@@ -43,7 +43,7 @@ class ExportHandler
         $leads = $this->loadLeads(project: $project, command: $command);
 
         //Экспорт
-        $exported = (new LeadExport)->make(project: $project, leadsQuery: $leads, permissions: $permissions);
+        $exported = (new LeadExport)->make(project: $project, leadsQuery: $leads, user: $command->user, permissions: $permissions);
 
         //Выгрузка
         //...
