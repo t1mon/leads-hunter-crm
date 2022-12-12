@@ -46,12 +46,7 @@ class ExportHandler
         $exported = (new LeadExport)->make(project: $project, leadsQuery: $leads, user: $command->user, permissions: $permissions);
 
         //Выгрузка
-        //...
-
-        return response()->json([
-            'message' => 'Команда отработала нормально',
-            // 'data' => $exported,
-        ]);
+        return $exported->download(fileName: $this->makeFileName($project), writerType: self::FILE_FORMAT);
     } //handle
 
     private function loadLeads(Project $project, ExportCommand $command): Builder
@@ -81,14 +76,15 @@ class ExportHandler
             url_query_string: $command->request->url_query_string,
             sort_by: $command->request->sort_by,
             sort_order: $command->request->sort_order,
-        );
+        )
+        ->with('class');
 
         return $query;
     } //loadLeads
 
     private function makeFileName(Project $project): string //Составление названия файла
     {
-        $datetime = Carbon::now()->setTimezone($project->timezone)->format('d.m.Y h:i');
+        $datetime = Carbon::now(config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y H:i');
         return "{$datetime} {$project->name}." . self::FILE_FORMAT;
     } //makeFileName
 }
