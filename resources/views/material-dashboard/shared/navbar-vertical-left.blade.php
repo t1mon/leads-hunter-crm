@@ -63,16 +63,17 @@
                             <span class="nav-link-text ms-2 ps-1">Проекты</span>
                         </a>
                         <div class="collapse pt-2" id="dashboardsExamples">
-                            <ul class="nav ">
-                                @foreach(auth()->user()->getAllprojects() as $_project)
-                                    <li class="nav-item {{ $project->id === $_project->id ? 'active' : '' }}">
-                                        <a style="white-space: normal" class="align-items-start nav-link text-white m-0 rounded-0 p-2 mw-100 {{ $project->id === $_project->id ? 'active' : '' }}" href="{{ route('project.journal', $_project) }}">
-                                            <span class="sidenav-mini-icon font-weight-bolder me-1">{{ $_project->id }})</span>
-                                            <span class="">{{ $_project->name }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            <navbar-projects :projects="{{auth()->user()->getAllprojects()}}"></navbar-projects>
+{{--                            <ul class="nav ">--}}
+{{--                                @foreach(auth()->user()->getAllprojects() as $_project)--}}
+{{--                                    <li class="nav-item {{ $project->id === $_project->id ? 'active' : '' }}">--}}
+{{--                                        <a style="white-space: normal" class="align-items-start nav-link text-white m-0 rounded-0 p-2 mw-100 {{ $project->id === $_project->id ? 'active' : '' }}" href="{{ route('project.journal', $_project) }}">--}}
+{{--                                            <span class="sidenav-mini-icon font-weight-bolder me-1">{{ $_project->id }})</span>--}}
+{{--                                            <span class="">{{ $_project->name }}</span>--}}
+{{--                                        </a>--}}
+{{--                                    </li>--}}
+{{--                                @endforeach--}}
+{{--                            </ul>--}}
                         </div>
                     </li>
                 @endif
