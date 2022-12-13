@@ -6,6 +6,7 @@ use App\Events\Leads\LeadCreated;
 use App\Events\Leads\LeadDeleted;
 use App\Listeners\Leads\SplitUTM;
 use App\Listeners\Leads\MakeFullName;
+use App\Listeners\Leads\FindRegion;
 use App\Listeners\Leads\SendEmailData;
 use App\Listeners\Leads\SendTelegramData;
 use App\Listeners\Leads\SendWebhookData;
@@ -33,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
         LeadCreated::class => [
             SplitUTM::class,
             MakeFullName::class,
+            FindRegion::class,
             SendEmailData::class,
             SendTelegramData::class,
             SendSMSData::class,

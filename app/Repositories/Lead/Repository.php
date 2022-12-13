@@ -2,11 +2,18 @@
 
 namespace App\Repositories\Lead;
 
+use App\Journal\Facade\Journal;
 use App\Models\Leads;
 use App\Models\Project\Project;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class Repository{
+    protected const REGION_SERVICE_URL = 'http://htmlweb.ru/geo/api.php'; //Адрес службы определения региона
+    protected const REGION_SERVICE_API_KEY = 'e6a69c81b471789f28756464e3363e48'; //API-ключ службы определения региона
+
     public function query()
     {
         return Leads::query();
@@ -63,6 +70,53 @@ class Repository{
     {
         $lead->delete();
     } //remove
+    
+    public function findRegion(Leads $lead, bool $online = true): void //Определить регион у лида
+    {
+        if($online){
+            try{
+                //Запрос на сервис
+                $response = Http::timeout(5)
+                ->retry(times: 3, sleep: 500)
+                // ->get(url: self::REGION_SERVICE_URL, query: [
+                //     'json',
+                //     'telcod' => $lead->phone,
+                //     'charset' => 'utf-8',
+                //     'api_key' => self::REGION_SERVICE_API_KEY,
+                //     // 'fields' => ['region', 'city'],
+                // ]);
+                ->get(
+                    self::REGION_SERVICE_URL."?json&telcod={$lead->phone}&charset=utf-8&api_key=".self::REGION_SERVICE_API_KEY
+                );
+
+                $response->throw();
+
+                
+
+                //Обработка ответа
+                $data = $response->json(key: 'region');
+                // $data = json_decode($response->body(), true);
+                // throw new \Exception(message: $response->body());
+
+                if(empty($data))
+                    Journal::leadError(lead: $lead, text: 'Сервис не смог определить регион');
+                else{
+                    $lead->update(['region' => $data['name']]);
+                    // $lead->update(['region' => $data['region']['name'] ]);
+                    Journal::lead(lead: $lead, text: 'Регион лида определён: ' . $lead->region);
+                }
+            }
+            catch(ConnectionException $e){
+                Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: время ожидания ответа с сервера истекло');
+            }
+            catch(RequestException $e){
+                Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: ' . $e->getMessage());
+            }
+        }
+        else{
+            throw new \Exception(message: 'Пока что оффлайн-опредление региона не реализовано');
+        }
+    } //findRegion
 
     public function makeFullNamesForProject(Project|int $project, bool $nullOnly = true) //Заполнить поле full_name в лидах по проекту
     {

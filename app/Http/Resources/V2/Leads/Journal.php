@@ -52,6 +52,7 @@ class Journal extends JsonResource
             'cost' => $this->cost,
             'comment' => $this->comment,
             'city' => $this->city,
+            'region' => $this->region,
             'ip' => $this->ip,
             'referrer' => $this->referrer,
             'source' => $this->source,
