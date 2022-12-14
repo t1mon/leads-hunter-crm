@@ -100,16 +100,29 @@
                                     </div>
                                 </td>
 
-                                <td class="align-middle text-center text-sm">
-                                    <a v-if="lead.comment_crm" :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/' + lead.comment_crm.id" v-tLength="25">{{ lead.comment_crm.text }}</a>
+                                <td
+                                    class="align-middle text-center text-sm overflow-hidden"
+                                    style="width: 200px; min-width: 200px; max-width: 200px; text-overflow: ellipsis"
+                                >
+                                    <a
+                                        v-if="lead.comment_crm"
+                                        :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/' + lead.comment_crm.id"
+                                        :title="lead.comment_crm.text"
+                                    >{{ lead.comment_crm.text }}</a>
                                     <a v-else :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
                                 </td>
 
-                                <td v-tLength="25" class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.email }}
+                                <td
+                                    class="text-sm text-center font-weight-normal mb-0 overflow-hidden"
+                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
+                                >
+                                    <span :title="lead.email">{{ lead.email }}</span>
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.city }}
+                                <td
+                                    class="text-sm text-center font-weight-normal mb-0 overflow-hidden"
+                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
+                                >
+                                    <span :title="lead.city">{{ lead.city }}</span>
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ sumFormat(lead.cost) }}
@@ -117,8 +130,11 @@
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.host }}
                                 </td>
-                                <td v-tLengthDyn="{text: lead.referrer, length: 25 }" class="text-sm font-weight-normal mb-0">
-                                    <!--                                    {{ lead.referrer }}-->
+                                <td
+                                    class="text-sm font-weight-normal mb-0 overflow-hidden"
+                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
+                                >
+                                    <span :title="lead.referrer">{{ lead.referrer }}</span>
                                 </td>
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm_term }}
@@ -129,11 +145,17 @@
                                 <td class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm_source }}
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
-                                    {{ lead.utm_campaign }}
+                                <td
+                                    class="text-sm text-center font-weight-normal mb-0 overflow-hidden"
+                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
+                                >
+                                    <span :title="lead.utm_campaign">{{ lead.utm_campaign }}</span>
                                 </td>
-                                <td v-tLength="25" class="text-sm font-weight-normal mb-0">
-                                    {{ lead.source }}
+                                <td
+                                    class="text-sm font-weight-normal mb-0 overflow-hidden"
+                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
+                                >
+                                    <span :title="lead.source">{{ lead.source }}</span>
                                 </td>
                             </tr>
                             </tbody>
