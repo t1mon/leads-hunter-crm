@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Leads;
 
+use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
 use App\Mail\Leads\SendLeadData;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,7 +32,7 @@ class SendEmailData
      * @param LeadCreated $event
      * @return void
      */
-    public function handle(LeadCreated $event)
+    public function handle(LeadCreated|LeadAdded $event)
     {
         //Рассылка по e-mail
         if($event->lead->project->settings['email']['enabled']){

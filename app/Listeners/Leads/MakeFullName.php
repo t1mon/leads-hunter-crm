@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Leads;
 
+use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -26,7 +27,7 @@ class MakeFullName
      * @param  \App\Events\Leads\LeadCreated  $event
      * @return void
      */
-    public function handle(LeadCreated $event)
+    public function handle(LeadCreated|LeadAdded $event)
     {
         LeadRepository::makeFullNameForLead($event->lead);
     }
