@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Leads;
 
+use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
 use App\Events\Leads\LeadDeleted;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +22,7 @@ class CountLeadsInProject implements ShouldQueue
         //
     }
 
-    public function handle(LeadCreated|LeadDeleted $event)
+    public function handle(LeadCreated|LeadAdded|LeadDeleted $event)
     {
         ProjectRepository::countTotalLeads(project_id: $event->lead->project_id);
         ProjectRepository::countLeadsToday(project_id: $event->lead->project_id);
