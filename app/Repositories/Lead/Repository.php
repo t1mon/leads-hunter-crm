@@ -107,7 +107,7 @@ class Repository{
                 }
             }
             catch(ConnectionException $e){
-                Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: время ожидания ответа с сервера истекло');
+                Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: время ожидания ответа с сервера истекло. Исключение: ' . $e->getMessage());
             }
             catch(RequestException $e){
                 Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: ' . $e->getMessage());
