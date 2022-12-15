@@ -118,6 +118,22 @@ class Repository{
         }
     } //findRegion
 
+    public function getRegionFromPreviousLead(Leads $lead, bool $retry = false): void //Получить регион из предыдущего лида
+    {
+        //Поиск предыдущего лида
+        $previous = $this->query()->orderByDesc('id')->where('phone', $lead->phone)->whereNotNull('region')->first();
+        
+        //Опция retry означает, что нужно попробовать найти регион, если в предыдущем лиде его нет
+        if(is_null($previous) && $retry){
+            Journal::leadWarning(lead: $lead, text: 'Регион в прошлом лиде не обнаружен. Будет сделана попытка найти регион через запрос.');
+            $this->findRegion(lead: $lead);
+        }
+        else{
+            $lead->update(['region' => $previous->region]);
+            Journal::lead(lead: $lead, text: "Регион \"{$lead->region}\" взят из предыдущего лида.");
+        }
+    } //getRegionFromPreviousLead
+
     public function makeFullNamesForProject(Project|int $project, bool $nullOnly = true) //Заполнить поле full_name в лидах по проекту
     {
         $leads = $this->query()

@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 
 use App\Repositories\Lead\Repository as LeadRepository;
 
-class FindRegion
+class GetRegionFromPreviousLead
 {
     /**
      * Create the event listener.
@@ -27,11 +27,11 @@ class FindRegion
     /**
      * Handle the event.
      *
-     * @param  \App\Events\Leads\LeadCreated  $event
+     * @param  \App\Events\Leads\LeadExists  $event
      * @return void
      */
-    public function handle(LeadCreated|LeadAdded|LeadExists $event)
+    public function handle(LeadExists|LeadCreated|LeadAdded $event)
     {
-        $this->repository->findRegion(lead: $event->lead);
+        $this->repository->getRegionFromPreviousLead(lead: $event->lead);
     }
 }
