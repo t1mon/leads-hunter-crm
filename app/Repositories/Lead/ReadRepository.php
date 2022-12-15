@@ -115,6 +115,17 @@ class ReadRepository{
     {
         return Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($project->timezone);
     } //updateDataToTimezone
+
+    public function findById(int $id, bool $fail = false, array|string $with = null): ?Leads
+    {
+        $query = $this->query()
+            ->where('id', $id)
+            ->when(!is_null($with), function($query){
+                return $query->with($with);
+            });
+
+        return $fail ? $query->firstOrFail() : $query->first();
+    } //findById
 };
 
 ?>
