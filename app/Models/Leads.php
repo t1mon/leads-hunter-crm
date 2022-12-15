@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\Leads\LeadAdded;
 use Illuminate\Support\Carbon;
 
 use App\Models\Project\Project;
@@ -9,6 +10,7 @@ use App\Models\Project\Lead\Comment;
 use App\Models\Project\LeadClass;
 
 use App\Events\Leads\LeadCreated;
+use App\Events\Leads\LeadExists;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -310,8 +312,12 @@ class Leads extends Model
     public function createLead(array $params): Leads
     {
         $lead = Leads::create($params);
+        event(new LeadAdded($lead));
+
         if($lead->entries === 1) //Если лид новый, сделать рассылку
             event(new LeadCreated($lead));
+        else
+            event(new LeadExists($lead));
 
         return $lead;
     } //createLead

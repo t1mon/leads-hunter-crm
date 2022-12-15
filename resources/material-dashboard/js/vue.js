@@ -5,6 +5,7 @@ import SettingsBasic from './components/Settings/SettingsBasic/SettingsBasic'
 import Projects from './components/Projects/Projects'
 import Journal from './components/Journal/Journal'
 import HeaderSearch from './components/Header/Search'
+import NavbarProjects from './components/Navbar/NavbarProjects'
 import directives from './directives'
 
 const app = createApp({
@@ -13,7 +14,8 @@ const app = createApp({
     SettingsBasic,
     Projects,
     Journal,
-    HeaderSearch
+    HeaderSearch,
+    NavbarProjects
   },
   mounted () {
     $('[data-confirm]').on('click', () => {
