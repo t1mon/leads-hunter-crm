@@ -67,6 +67,11 @@ class UserPermissions extends Model
     /**
      *      Служебные методы
      */    
+    public function isOwner(?Project $project = null): bool
+    {
+        return $this->project->user_id === $this->user_id;
+    } //isOwner
+
     public function isManager(): bool
     {
         return $this->role === Role::ROLE_MANAGER;

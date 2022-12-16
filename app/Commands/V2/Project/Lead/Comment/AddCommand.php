@@ -7,9 +7,9 @@ use App\Models\User;
 
 class AddCommand
 {
-    public User $user;
-    public int $lead_id;
-    public string $comment_body;
+    public readonly User $user;
+    public readonly int $lead_id;
+    public readonly string $comment_body;
 
     public function __construct(AddRequest $request)
     {

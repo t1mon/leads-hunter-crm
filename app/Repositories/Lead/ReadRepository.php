@@ -120,7 +120,7 @@ class ReadRepository{
     {
         $query = $this->query()
             ->where('id', $id)
-            ->when(!is_null($with), function($query){
+            ->when(!is_null($with), function($query) use ($with){
                 return $query->with($with);
             });
 

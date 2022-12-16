@@ -2,15 +2,15 @@
 
 namespace App\Http\Requests\Api\V2\Project\Lead\Comment;
 
-use App\Models\Project\Lead\Comment;
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Repositories\Lead\ReadRepository as LeadReadRepository;
+use App\Models\Project\Lead\Comment;
+use App\Repositories\Project\Lead\Comment\ReadRepository as CommentReadRepository;
 
-class AddRequest extends FormRequest
+class DeleteRequest extends FormRequest
 {
     public function __construct(
-        private LeadReadRepository $leadRepository,
+        private CommentReadRepository $commentRepository,
     )
     {
         
@@ -23,9 +23,9 @@ class AddRequest extends FormRequest
      */
     public function authorize()
     {
-        $lead = $this->leadRepository->findById(id: $this->lead_id, fail: true, with: 'project');
+        $comment = $this->commentRepository->findById(id: $this->comment_id, fail: true);
 
-        return $this->user()->can('create', [Comment::class, $lead->project]);
+        return $this->user()->can('delete', [Comment::class, $comment]);
     }
 
     /**
@@ -36,8 +36,7 @@ class AddRequest extends FormRequest
     public function rules()
     {
         return [
-            'lead_id' => 'required|exists:leads,id',
-            'comment_body' => 'required|string|max:512',
+            'comment_id' => 'required|exists:leads_comments,id',
         ];
     }
 }
