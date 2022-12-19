@@ -140,15 +140,18 @@
                                 </td>
 
                                 <td
-                                    class="align-middle text-center text-sm overflow-hidden"
+                                    @click="comments(lead.comment_crm, lead.id)"
+                                    class="align-middle text-center text-sm overflow-hidden cursor-pointer"
                                     style="width: 200px; min-width: 200px; max-width: 200px; text-overflow: ellipsis"
+                                    data-bs-toggle="modal" data-bs-target="#journalComments"
                                 >
-                                    <a
+                                    <span
                                         v-if="lead.comment_crm"
-                                        :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/' + lead.comment_crm.id"
                                         :title="lead.comment_crm.text"
-                                    >{{ lead.comment_crm.text }}</a>
-                                    <a v-else :href="'/project/project/' + stateProjectJour.id + '/' + lead.id + '/comment/create'"><span class="material-icons">add</span></a>
+                                    >{{ lead.comment_crm.text }}</span>
+                                    <span v-else>
+                                        <span class="material-icons">add</span>
+                                    </span>
                                 </td>
 
                                 <td
@@ -203,7 +206,8 @@
                 </div>
             </div>
         </div>
-        <spinner v-if="stateIsLoadingJ"></spinner>
+
+        <journal-comments></journal-comments>
     </div>
 </template>
 
@@ -211,13 +215,15 @@
 import Spinner from '../../Others/Spinner'
 import FilterApp from '../filters/Filters'
 import JournalClasses from "./JournalClasses";
+import JournalComments from "./JournalComments";
 
 export default {
     name: "Journal",
     components: {
         Spinner,
         FilterApp,
-        JournalClasses
+        JournalClasses,
+        JournalComments
     },
     data () {
       return {
@@ -227,6 +233,14 @@ export default {
       }
     },
     methods: {
+        comments(comment_crm, leadId) {
+            if (comment_crm) {
+                this.$store.dispatch('journalComments/commentShow', comment_crm.id)
+            } else {
+                this.$store.commit('journalComments/CLEAR_COMMENT')
+            }
+            this.$store.commit('journalComments/SET_LEAD_ID', leadId)
+        },
         dateFormat(date) {
             const arrStr = date.split(' ')
             const dateFormat = arrStr[0] + '<br>' + arrStr[1]
@@ -245,9 +259,6 @@ export default {
     computed: {
         stateProjectId() {
             return this.$store.getters['journalAll/stateProjectId']
-        },
-        stateIsLoadingJ () {
-            return this.$store.getters.stateIsLoadingJ
         },
         stateLeads () {
             return this.$store.getters.stateLeads

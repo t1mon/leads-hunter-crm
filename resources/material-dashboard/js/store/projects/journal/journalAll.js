@@ -18,7 +18,7 @@ export default {
   },
   actions: {
     async getJournalAll({ state, getters, commit, rootState, rootGetters }, data) {
-      commit('switchSpinner', null, { root: true })
+      commit('loader/LOADER_TRUE', null, { root: true })
       const url = `/api/v2/project/${getters.stateProjectId}/journal`
 
       //Данные с хранилища vuex
@@ -68,13 +68,13 @@ export default {
           params: params
         })
         .then(data => {
-          commit('switchSpinner', null, { root: true })
+          commit('loader/LOADER_FALSE', null, { root: true })
           commit('SET_LEADS', data.data.data.leads.data, { root: true })
           commit('SET_PROJECT_JOUR', data.data.data, { root: true })
           console.log(data)
         })
         .catch(error => {
-          commit('switchSpinner', null, { root: true })
+          commit('loader/LOADER_FALSE', null, { root: true })
           console.log(error)
         })
     }
