@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
+use App\Events\Leads\LeadExists;
 use App\Events\Leads\LeadDeleted;
 use App\Listeners\Leads\SplitUTM;
 use App\Listeners\Leads\MakeFullName;
@@ -30,15 +32,25 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        LeadCreated::class => [
+        LeadAdded::class => [
             SplitUTM::class,
             MakeFullName::class,
             SendEmailData::class,
+            CountLeadsInProject::class
+        ],
+
+        LeadCreated::class => [
             SendTelegramData::class,
             SendSMSData::class,
             SendWebhookData::class,
             SendMangoData::class,
-            CountLeadsInProject::class
+            //Определение региона
+            //...
+        ],
+
+        LeadExists::class => [
+            //Определение региона из предыдущего лида
+            //...
         ],
 
         LeadDeleted::class => [
