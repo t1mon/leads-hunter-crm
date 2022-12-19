@@ -13,7 +13,8 @@ class ClearNextcallRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //TODO Проверка политик
+        return true;
     }
 
     /**
@@ -24,7 +25,7 @@ class ClearNextcallRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'lead_id' => 'required|exists:leads,id',
         ];
     }
 }

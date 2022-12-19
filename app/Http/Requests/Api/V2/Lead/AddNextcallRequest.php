@@ -4,12 +4,12 @@ namespace App\Http\Requests\Api\V2\Lead;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Repositories\Project\UserPermissions\ReadRepository as PermissionsRepository;
+use App\Repositories\Lead\ReadRepository as LeadReadRepository;
 
 class AddNextcallRequest extends FormRequest
 {
     public function __construct(
-        private PermissionsRepository $permissionsRepository
+        private LeadReadRepository $leadReadRepository
     )
     {} //Конструктор
 
@@ -20,9 +20,8 @@ class AddNextcallRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        
-        // return false;
+        //TODO Проверка политик
+        return true;
     }
 
     /**
@@ -33,7 +32,8 @@ class AddNextcallRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'lead_id' => 'required|exists:leads,id',
+            'datetime' => 'required|dateformat:d.m.Y H:i:s',
         ];
     }
 }
