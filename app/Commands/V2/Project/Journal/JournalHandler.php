@@ -7,7 +7,6 @@ use App\Repositories\Project\ReadRepository as ProjectReadRepository;
 use App\Repositories\Lead\ReadRepository as LeadReadRepository;
 use App\Repositories\Project\UserPermissions\ReadRepository as UserPermissionsRepository;
 use App\Http\Resources\V2\Project\Project\Journal as ProjectResource;
-use App\Http\Resources\V2\Leads\Journal as LeadResource;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -53,93 +52,31 @@ class JournalHandler
 
     private function _loadLeads(Project $project, JournalCommand $command)
     {
-        $leads = $this->leadReadRepository->query()
-            ->with(['comment_crm', 'class:id'])
-            ->from($command->project_id);
-
-        //Фильтрация по дате
-        if(!is_null($command->date_from)){
-            $date = Carbon::parse($command->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '>=' ,$date);
-        }
-
-        if(!is_null($command->date_to)){
-            $end_date = Carbon::parse($command->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '<=' ,$end_date);;
-        }
-
-        //Фильтрация по классу
-        if(!is_null($command->class))
-            $leads->ofClass($command->class);
-
-        //Фильтрация по имени
-        if(!is_null($command->name))
-            $leads->name($command->name);
-
-        //Фильтрация по числу вхождений
-        if(!is_null($command->entries))
-            $leads->entries($command->entries);
-
-        //Фильтрация по владельцу
-        if(!is_null($command->owner))
-            $leads->owner($command->owner);
-
-        //Фильтрация по телефону
-        if(!is_null($command->phone))
-            $leads->phone($command->phone);
-
-        //Фильтрация по email
-        if(!is_null($command->email))
-            $leads->email($command->email);
-            
-        //Фильтрация по сумме
-        if(!is_null($command->cost_from))
-            $leads->where('cost', '>=', $command->cost_from);
-        
-        if(!is_null($command->cost_to))
-            $leads->where('cost', '<=', $command->cost_to);
-
-        //Фильтрация по городу
-        if(!is_null($command->city))
-            $leads->city($command->city);
-
-        //Фильтрация по рефереру
-        if(!is_null($command->referrer))
-            $leads->referrer($command->referrer);
-        
-        //Фильтрация по источнику
-        if(!is_null($command->source))
-            $leads->source($command->source);
-            
-        //Фильтрация по UTM-меткам
-        if(!is_null($command->utm_medium))
-            $leads->utmMedium($command->utm_medium);
-
-        if(!is_null($command->utm_source))
-            $leads->utmSource($command->utm_source);
-
-        if(!is_null($command->utm_campaign))
-            $leads->utmCampaign($command->utm_campaign);
-
-        if(!is_null($command->utm_content))
-            $leads->utmContent($command->utm_content);
-            
-        if(!is_null($command->utm_term))
-            $leads->utmContent($command->utm_term);
-        
-        //Фильтрация по хосту
-        if(!is_null($command->host))
-            $leads->host($command->host);
-
-        //Фильтрация по query string
-        if(!is_null($command->url_query_string))
-            $leads->queryString($command->url_query_string);
-
-        //Сортировка
-        if(!is_null($command->sort_by))
-            $leads->orderBy($command->sort_by, $command->sort_order);
-        else
-            $leads->latest(); //по умолчанию сортировать по дате в порядке убывания
+        $leads = $this->leadReadRepository->findFromProject(
+            project: $project,
+            date_from: $command->date_from,
+            date_to: $command->date_to,
+            class: $command->class,
+            name: $command->name,
+            entries: $command->entries,
+            owner: $command->owner,
+            phone: $command->phone,
+            email: $command->email,
+            cost_from: $command->cost_from,
+            cost_to: $command->cost_to,
+            city: $command->city,
+            referrer: $command->referrer,
+            source: $command->source,
+            utm_medium: $command->utm_medium,
+            utm_source: $command->utm_source,
+            utm_campaign: $command->utm_campaign,
+            utm_content: $command->utm_content,
+            utm_term: $command->utm_term,
+            host: $command->host,
+            url_query_string: $command->url_query_string,
+            sort_by: $command->sort_by,
+            sort_order: $command->sort_order,
+        );
 
         $leads = $leads->paginate(self::PER_PAGE);
 
