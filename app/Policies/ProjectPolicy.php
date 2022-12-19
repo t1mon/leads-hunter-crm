@@ -54,6 +54,13 @@ class ProjectPolicy
             return Response::deny();
     }
 
+    public function export(User $user, Project $project) //Определяет, может ли пользователь выгружать лиды из проекта
+    {
+        return $user->isAdmin() || $user->isInProject($project)
+         ? Response::allow()
+         : Response::deny();
+    }
+
     /**
      * Determine whether the user can create models.
      *
