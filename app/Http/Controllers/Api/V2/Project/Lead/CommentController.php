@@ -45,6 +45,8 @@ class CommentController extends Controller
             command: ShowCommand::class,
             input: ['request' => $request]
         );
+
+        //Комментарий
     } //show
 
     public function delete(DeleteRequest $request)
