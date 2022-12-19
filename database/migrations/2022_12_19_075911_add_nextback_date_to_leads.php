@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCallbackDateToLeads extends Migration
+class AddNextbackDateToLeads extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddCallbackDateToLeads extends Migration
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->datetime('callback_date')->after('utm_term')->nullable();
+            $table->datetime('nextcall_date')->after('utm_term')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddCallbackDateToLeads extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->dropColumn('callback_date');
+            $table->dropColumn('nextcall_date');
         });
     }
 }
