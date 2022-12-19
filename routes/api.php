@@ -101,6 +101,17 @@ Route::prefix('v2')->name('v2.')->group(function(){
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
+            Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
+        });
+
+        //Комментарии
+        Route::prefix('comment')->name('comment.')->group(function(){
+            Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
+            Route::get('show', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'show'])->name('show');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
+
+
+            // Route::apiResource('comment', 'Api\V2\Project\Lead\CommentController')->only(['store', 'show', 'delete']);
         });
     });
 });
