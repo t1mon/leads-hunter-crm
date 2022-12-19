@@ -52,11 +52,13 @@ class Leads extends Model
         'utm_content',
         'utm_term',
         'host',
-        'url_query_string'
+        'url_query_string',
+        'callback_date',
     ];
 
     protected $casts = [
-        'utm' => 'array'
+        'utm' => 'array',
+        'callback_date' => 'datetime:d.m.Y H:i:s',
     ];
 
     /**
