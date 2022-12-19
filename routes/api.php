@@ -110,6 +110,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
             Route::get('show', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'show'])->name('show');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
+            
         });
     });
 });
