@@ -4,10 +4,14 @@ export default {
     return {
       comment: '',
       loader: false,
-      leadId: ''
+      leadId: '',
+      commentId: ''
     }
   },
   getters: {
+    stateCommentId(state) {
+      return state.commentId
+    },
     stateLeadId(state) {
       return state.leadId
     },
@@ -19,6 +23,9 @@ export default {
     }
   },
   mutations: {
+    SET_COMMENT_ID(state, id) {
+      state.commentId = id
+    },
     SET_LEAD_ID(state, id) {
       state.leadId = id
     },

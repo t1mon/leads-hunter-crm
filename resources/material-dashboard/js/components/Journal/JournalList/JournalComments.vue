@@ -22,7 +22,7 @@
                 </div>
                 <div class="modal-footer">
                     <button
-                        @click="addComment"
+                        @click="addDeleteComment"
                         :disabled="stateLoader"
                         type="button"
                         class="btn bg-gradient-primary m-0">Сохранить</button>
@@ -54,31 +54,58 @@ export default {
         },
         stateLeadId() {
             return this.$store.getters['journalComments/stateLeadId']
+        },
+        stateCommentId() {
+            return this.$store.getters['journalComments/stateCommentId']
         }
     },
     methods: {
-        async addComment() {
+        async addDeleteComment() {
             this.$store.commit('loader/LOADER_TRUE')
-            await axios.post('/api/v2/comment/add', {
-                lead_id: this.stateLeadId,
-                comment_body: this.comment
-            }).then(response => {
-                this.$refs.closeComments.click()
-                this.$store.commit('loader/LOADER_FALSE')
-                this.$store.dispatch('getToast', {
-                    msg: 'Кмментарий добавлен!',
-                    settingsObj: {
-                        type: 'success',
-                        position: 'bottom-right',
-                        timeout: 2000,
-                        showIcon: true
+            if (!this.comment) {
+                await axios.delete('/api/v2/comment/delete', {
+                    data: {
+                        comment_id: this.stateCommentId
                     }
+                }).then(response => {
+                    this.$refs.closeComments.click()
+                    this.$store.commit('loader/LOADER_FALSE')
+                    this.$store.dispatch('getToast', {
+                        msg: 'Кмментарий добавлен!',
+                        settingsObj: {
+                            type: 'success',
+                            position: 'bottom-right',
+                            timeout: 2000,
+                            showIcon: true
+                        }
+                    })
+                    console.log(response)
+                }).catch(error => {
+                    this.$store.commit('loader/LOADER_FALSE')
+                    console.log(error)
                 })
-                console.log(response)
-            }).catch(error => {
-                this.$store.commit('loader/LOADER_FALSE')
-                console.log(error)
-            })
+            } else {
+                await axios.post('/api/v2/comment/add', {
+                    lead_id: this.stateLeadId,
+                    comment_body: this.comment
+                }).then(response => {
+                    this.$refs.closeComments.click()
+                    this.$store.commit('loader/LOADER_FALSE')
+                    this.$store.dispatch('getToast', {
+                        msg: 'Кмментарий добавлен!',
+                        settingsObj: {
+                            type: 'success',
+                            position: 'bottom-right',
+                            timeout: 2000,
+                            showIcon: true
+                        }
+                    })
+                    console.log(response)
+                }).catch(error => {
+                    this.$store.commit('loader/LOADER_FALSE')
+                    console.log(error)
+                })
+            }
             await this.$store.dispatch('journalAll/getJournalAll')
         }
     }

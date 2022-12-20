@@ -236,6 +236,7 @@ export default {
         comments(comment_crm, leadId) {
             if (comment_crm) {
                 this.$store.dispatch('journalComments/commentShow', comment_crm.id)
+                this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
             } else {
                 this.$store.commit('journalComments/CLEAR_COMMENT')
             }
