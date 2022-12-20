@@ -43,9 +43,9 @@ export default {
     }
   },
   actions: {
-    commentShow({ state, commit }, id) {
+    async commentShow({ state, commit }, id) {
       commit('LOADER_TRUE')
-      axios.get('/api/v2/comment/show', {
+      await axios.get('/api/v2/comment/show', {
         params: {
           comment_id: id
         }

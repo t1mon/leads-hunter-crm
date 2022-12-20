@@ -233,12 +233,11 @@ export default {
       }
     },
     methods: {
-        comments(comment_crm, leadId) {
+        async comments(comment_crm, leadId) {
+            this.$store.commit('journalComments/CLEAR_COMMENT')
             if (comment_crm) {
-                this.$store.dispatch('journalComments/commentShow', comment_crm.id)
+                await this.$store.dispatch('journalComments/commentShow', comment_crm.id)
                 this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
-            } else {
-                this.$store.commit('journalComments/CLEAR_COMMENT')
             }
             this.$store.commit('journalComments/SET_LEAD_ID', leadId)
         },
