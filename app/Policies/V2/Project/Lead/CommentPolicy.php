@@ -46,6 +46,7 @@ class CommentPolicy
 
         //Если пользователь добавлен в проект, проверить его полномочия
         $permissions = $user->getPermissionsForProject($comment->project);
+
         if(is_null($permissions))
             return Response::deny(message: 'Вы не имеете доступа к этому проекту');
         else{
