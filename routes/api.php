@@ -97,6 +97,14 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 Route::prefix('v2')->name('v2.')->group(function(){
     Route::middleware(['auth:api', 'verified'])->group(function (){
         Route::get('dashboard', [ \App\Http\Controllers\Api\V2\Project\ProjectController::class, 'index'])->name('dashboard');
+
+        //Лиды TODO Подогнать под группы роутов из прошлых веток
+        Route::prefix('lead')->name('lead.')->group(function(){
+            Route::prefix('manual_region')->name('manual_region.')->group(function(){
+                Route::post('add', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'store'])->name('add');
+                Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'destroy'])->name('clear');
+            });
+        });
         
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
