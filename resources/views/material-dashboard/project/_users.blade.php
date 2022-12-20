@@ -1,6 +1,6 @@
 {{--Объявление полей журнала (чтобы быстро добавлять/удалять в дальнейшем--}}
 @php
-    $journal_fields = ['class_id', 'comment_crm', 'email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+    $journal_fields = ['class_id', 'comment_crm', 'nextcall_date', 'email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
 @endphp
 
 {{--Форма для добавления нового пользователя--}}
@@ -25,7 +25,7 @@
                 <p class="card-text ms-3">
                     <label>
                         <input type="checkbox" name="view_fields[]" value="{{ $field }}" checked >
-                        @lang('projects.notifications.webhooks.common.fields.' . $field)
+                        @lang('leads.fields.' . $field)
                     </label>
                 </p>
             @endforeach
@@ -82,7 +82,7 @@
 
                                 @foreach($journal_fields as $field)
                                 <label>
-                                    @lang('projects.notifications.webhooks.common.fields.' . $field)
+                                    @lang('leads.fields.' . $field)
                                     {!! Form::checkbox(
                                         'view_fields[]', $field,
                                         in_array($field, $permission->view_fields) ? true : false,

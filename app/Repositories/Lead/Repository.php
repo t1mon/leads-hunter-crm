@@ -4,6 +4,7 @@ namespace App\Repositories\Lead;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class Repository{
@@ -114,6 +115,16 @@ class Repository{
                 'utm_term' => $lead->utm['utm_term'] ?? null,
             ]);
     } //splitUTMForLead
+
+    public function addNextCallDate(Leads $lead, string $datetime): void //Добавить дату следующего звонка
+    {
+        $lead->update(['nextcall_date' => Carbon::parse(time: $datetime, tz: $lead->project->timezone)->setTimezone(config('app.timezone'))]);
+    } //addNextCallDate
+
+    public function clearNextCallDate(Leads $lead): void //Удалить дату следующего звонка
+    {
+        $lead->update(['nextcall_date' => null]);
+    } //clearNextCallDate
 };
 
 ?>

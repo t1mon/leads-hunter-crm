@@ -36,6 +36,7 @@ return [
         'class_id' =>  '№ класса',
         'class' =>  'Класс',
         'comment_crm' =>  'Комментарий на CRM',
+        'nextcall_date' => 'Дата следующего звонка',
         'created_at' => 'Дата',
     ]
 ];

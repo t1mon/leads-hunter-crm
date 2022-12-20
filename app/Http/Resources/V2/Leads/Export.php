@@ -37,10 +37,14 @@ class Export extends JsonResource
         if(in_array(needle: 'class_id', haystack: $this->visible))
             $result['class'] = $this->class?->name ?? null;
 
+        if(in_array(needle: 'nextcall_date', haystack: $this->visible))
+            $result['nextcall_date'] = $this->applyTimezone($this->nextcall_date);
+
         //Удаление элемента comment_crm из массива
         $this->visible = array_flip($this->visible);
         unset($this->visible['comment_crm']);
         unset($this->visible['class_id']);
+        unset($this->visible['nextcall_date']);
         $this->visible = array_flip($this->visible);
 
         foreach($this->visible as $field)
@@ -74,7 +78,8 @@ class Export extends JsonResource
             'utm_term' => $this->utm_content,
             'class' => $this->whenLoaded('class', $this->class?->name),
             'comment_crm' => $this->whenLoaded('comment_crm', $this->comment_crm?->comment_body),
-            'created_at' => $this->applyTimezone()
+            'nextcall_date' => $this->applyTimezone($this->nextcall_date),
+            'created_at' => $this->applyTimezone($this->created_at),
         ];
     } //fullData
 
@@ -90,8 +95,11 @@ class Export extends JsonResource
         return $this;
     }
 
-    private function applyTimezone()
+    private function applyTimezone($timestamp)
     {
-        return Carbon::parse($this->created_at, config('app.timezone'))->setTimezone($this->project_info->timezone)->format('d.m.Y H:i:s');
+        // return Carbon::parse($this->created_at, config('app.timezone'))->setTimezone($this->project_info->timezone)->format('d.m.Y H:i:s');
+        return is_null($timestamp)
+            ? null
+            : Carbon::parse($timestamp, config('app.timezone'))->setTimezone($this->project_info->timezone)->format('d.m.Y H:i:s');
     }
 }
