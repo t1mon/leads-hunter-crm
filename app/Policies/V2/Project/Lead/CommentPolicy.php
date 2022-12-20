@@ -74,7 +74,10 @@ class CommentPolicy
         if(is_null($permissions))
             return Response::deny(message: 'Вы не имеете доступа к этому проекту');
         else
-            return ($permissions->isOwner() || $permissions->isManager() )
+            if ($permissions->isOwner() || $permissions->isManager()) //Пользователь является владельцем или менеджером проекта
+                return   Response::allow();
+            else
+                return $permissions->fieldAllowed('comment_crm') //Пользователь является наблюдателем
                 ?   Response::allow()
                 :   Response::deny(message: 'У вас нет полномочий добавлять комментарии');
     }
@@ -107,7 +110,10 @@ class CommentPolicy
         if(is_null($permissions))
             return Response::deny(message: 'Вы не имеете доступа к этому проекту');
         else
-            return ($permissions->isOwner() || $permissions->isManager() )
+            if ($permissions->isOwner() || $permissions->isManager()) //Пользователь является владельцем или менеджером проекта
+                return   Response::allow();
+            else
+                return $permissions->fieldAllowed('comment_crm') //Пользователь является наблюдателем
                 ?   Response::allow()
                 :   Response::deny(message: 'У вас нет полномочий удалять комментарии');
     }
