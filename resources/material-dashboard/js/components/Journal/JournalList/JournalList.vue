@@ -21,6 +21,10 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
+                                <th class="cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10">Дата следующего <br> звонка</p>
+                                    <div class="journal__col-resize"></div>
+                                </th>
                                 <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterName" data-bs-toggle="dropdown" aria-expanded="false">Клиент</p>
                                     <filter-app
@@ -117,6 +121,9 @@
                                             </p>
                                         </div>
                                     </div>
+                                </td>
+                                <td>
+                                    <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
                                 <td>
                                     <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
