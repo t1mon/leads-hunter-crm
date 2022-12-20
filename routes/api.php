@@ -98,19 +98,18 @@ Route::prefix('v2')->name('v2.')->group(function(){
     Route::middleware(['auth:api', 'verified'])->group(function (){
         Route::get('dashboard', [ \App\Http\Controllers\Api\V2\Project\ProjectController::class, 'index'])->name('dashboard');
 
-        //Лиды TODO Подогнать под группы роутов из прошлых веток
-        Route::prefix('lead')->name('lead.')->group(function(){
-            Route::prefix('manual_region')->name('manual_region.')->group(function(){
-                Route::post('add', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'store'])->name('add');
-                Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'destroy'])->name('clear');
-            });
-        });
-        
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
+        });
+
+        //Комментарии
+        Route::prefix('comment')->name('comment.')->group(function(){
+            Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
+            Route::get('show', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'show'])->name('show');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
         });
     });
 });
