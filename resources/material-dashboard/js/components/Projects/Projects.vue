@@ -1,6 +1,5 @@
 <template>
     <div>
-        <spinner v-if="stateIsLoading"></spinner>
         <div v-show="stateProjects && stateProjects.length > 0" class="projects">
             <div class="projects__row">
                 <projects-search></projects-search>
@@ -39,9 +38,6 @@ export default {
     Spinner
   },
   computed: {
-    stateIsLoading () {
-      return this.$store.getters.stateIsLoading
-    },
     checkCards () {
       return this.$store.getters.stateCards
     },

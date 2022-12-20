@@ -35,18 +35,21 @@
 </head>
 <body  class="g-sidenav-show g-sidenav-pinned bg-gray-200">
 <div id="app">
-@include('material-dashboard.shared.navbar-vertical-left')
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    @include('material-dashboard.shared.navbar-main-horizontal')
-    <div class="container-fluid px-3">
 
+    @include('material-dashboard.shared.navbar-vertical-left')
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+        @include('material-dashboard.shared.navbar-main-horizontal')
+
+        <div class="container-fluid px-3">
             @yield('content')
-
-    </div>
-</main>
+        </div>
+    </main>
 
     <settings-bar></settings-bar>
 
+    <loader-app></loader-app>
 
 </div>
 

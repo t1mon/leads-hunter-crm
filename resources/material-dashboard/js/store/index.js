@@ -4,12 +4,14 @@ import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 import projects from './projects/projects'
 import headerSearch from './header/search'
+import loader from './loader'
 
 // Create a new store instance.
 const store = createStore({
   modules: {
     projects,
-    headerSearch
+    headerSearch,
+    loader
   },
   actions: {
     getToast (context, { msg, settingsObj }) {

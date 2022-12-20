@@ -61,12 +61,17 @@ class UserPermissions extends Model
 
     public function project()
     {
-        return $this->belongsTo(\App\Models\Project::class);
+        return $this->belongsTo(related: \App\Models\Project\Project::class, foreignKey: 'project_id');
     } //project
 
     /**
      *      Служебные методы
      */    
+    public function isOwner(): bool
+    {
+        return $this->project->user_id === $this->user_id;
+    } //isOwner
+
     public function isManager(): bool
     {
         return $this->role === Role::ROLE_MANAGER;

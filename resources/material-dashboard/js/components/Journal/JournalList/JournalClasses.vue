@@ -45,16 +45,16 @@ export default {
         },
         async getLeadClass (projectId, leadId, classId) {
             const store = this.$store
-            store.commit('switchSpinner')
+            store.commit('loader/LOADER_TRUE')
             await axios.post(`/api/v1/project/${projectId}/journal/${leadId}/class/assign`, {
                 class_id: classId
             })
                 .then(function (response) {
                     console.log(response)
-                    store.commit('switchSpinner')
+                    store.commit('loader/LOADER_FALSE')
                 })
                 .catch(function (error) {
-                    store.commit('switchSpinner')
+                    store.commit('loader/LOADER_FALSE')
                     console.log(error)
                 })
             await this.$store.dispatch('journalAll/getJournalAll')
