@@ -71,7 +71,7 @@ export default {
                     this.$refs.closeComments.click()
                     this.$store.commit('loader/LOADER_FALSE')
                     this.$store.dispatch('getToast', {
-                        msg: 'Кмментарий добавлен!',
+                        msg: 'Комментарий удалён!',
                         settingsObj: {
                             type: 'success',
                             position: 'bottom-right',
@@ -92,7 +92,7 @@ export default {
                     this.$refs.closeComments.click()
                     this.$store.commit('loader/LOADER_FALSE')
                     this.$store.dispatch('getToast', {
-                        msg: 'Кмментарий добавлен!',
+                        msg: 'Комментарий обновлён!',
                         settingsObj: {
                             type: 'success',
                             position: 'bottom-right',
@@ -113,5 +113,7 @@ export default {
 </script>
 
 <style scoped>
-
+textarea {
+    resize: none;
+}
 </style>
