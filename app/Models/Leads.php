@@ -42,6 +42,7 @@ class Leads extends Model
         'cost',
         'comment',
         'city',
+        'manual_region',
         'ip',
         'referrer',
         'source',

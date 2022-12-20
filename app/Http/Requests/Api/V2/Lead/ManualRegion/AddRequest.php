@@ -25,7 +25,8 @@ class AddRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'lead_id' => 'required|exists:leads,id',
+            'region' => 'string|required|max:256',
         ];
     }
 }

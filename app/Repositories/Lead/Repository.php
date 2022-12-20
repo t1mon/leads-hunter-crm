@@ -114,6 +114,16 @@ class Repository{
                 'utm_term' => $lead->utm['utm_term'] ?? null,
             ]);
     } //splitUTMForLead
+
+    public function addManualRegion(Leads $lead, string $region): void
+    {
+        $lead->update(['manual_region' => $region]);
+    } //addManualRegion
+
+    public function clearManualRegion(Leads $lead): void
+    {
+        $lead->update(['manual_region' => null]);
+    } //clearManualRegion
 };
 
 ?>

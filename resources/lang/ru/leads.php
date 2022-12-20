@@ -23,6 +23,7 @@ return [
         'comment' =>  'Комментарий',
         'city' =>  'Город',
         'region' =>  'Регион',
+        'manual_region' =>  'Регион (вручную)',
         'ip' =>  'IP',
         'referrer' =>  'Реферрер',
         'source' =>  'Источник',
