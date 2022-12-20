@@ -125,8 +125,8 @@
                                 <td>
                                     <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
-                                <td>
-                                    <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
+                                <td class="p-2">
+                                    <call-back-date></call-back-date>
                                 </td>
                                 <td style="text-overflow: ellipsis; width: 100px; max-width: 100px">
                                     <h6 class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">{{  lead.name }}</h6>
@@ -223,6 +223,7 @@ import Spinner from '../../Others/Spinner'
 import FilterApp from '../filters/Filters'
 import JournalClasses from "./JournalClasses";
 import JournalComments from "./JournalComments";
+import CallBackDate from "./CallBackDate";
 
 export default {
     name: "Journal",
@@ -230,7 +231,8 @@ export default {
         Spinner,
         FilterApp,
         JournalClasses,
-        JournalComments
+        JournalComments,
+        CallBackDate
     },
     data () {
       return {
