@@ -26,7 +26,7 @@
                     <span class="mb-2 d-block">Удалить дату?</span>
                     <div class="d-flex justify-content-between px-3">
                         <button class="btn m-0 btn-success py-1 px-2 rounded-2 text-xxs">Нет</button>
-                        <button class="btn m-0 btn-danger py-1 px-2 rounded-2 text-xxs">Да</button>
+                        <button @click="deleteDate" class="btn m-0 btn-danger py-1 px-2 rounded-2 text-xxs">Да</button>
                     </div>
                 </div>
             </div>
@@ -53,19 +53,36 @@ export default {
         }
     },
     methods: {
-        dateFormat(date) {
-            return date.toLocaleString('ru', {
-                day: 'numeric',
-                month: 'numeric',
-                year: 'numeric'
+        async deleteDate() {
+            this.$store.commit('loader/LOADER_TRUE')
+            await axios.delete('/api/v2/lead/nextcall/clear', {
+                data: {
+                    lead_id: this.leadId
+                }
+            }).then(response => {
+                this.$store.commit('loader/LOADER_FALSE')
+                this.$store.dispatch('getToast', {
+                    msg: 'Дата удалена!',
+                    settingsObj: {
+                        type: 'success',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+                this.serverDate = ''
+                this.date = ''
+                console.log(response)
+            }).catch(error => {
+                this.$store.commit('loader/LOADER_FALSE')
+                console.log(error)
             })
         },
         async setDate() {
             this.$store.commit('loader/LOADER_TRUE')
-            console.log(this.dateFormat(this.date))
             await axios.post('/api/v2/lead/nextcall/add', {
                 lead_id: this.leadId,
-                datetime: this.date
+                datetime: this.date.replace(/T/, ' ')
             }).then(response => {
                 this.$store.commit('loader/LOADER_FALSE')
                 this.$store.dispatch('getToast', {
@@ -89,7 +106,10 @@ export default {
         }
     },
     created() {
-        this.serverDate = this.callBack
+        if(this.callBack) {
+            const date = new Date(this.callBack)
+            this.serverDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.getUTCHours()}:${date.getUTCMinutes()}`
+        }
         this.date = this.serverDate
     }
 }
