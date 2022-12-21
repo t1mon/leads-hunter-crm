@@ -35,7 +35,6 @@ class AddNextcallRequest extends FormRequest
     {
         return [
             'lead_id' => 'required|exists:leads,id',
-            // 'datetime' => 'required|dateformat:d.m.Y H:i:s',
             'datetime' => 'required|dateformat:Y-m-d H:i',
         ];
     }
