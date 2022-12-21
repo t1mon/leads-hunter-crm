@@ -126,7 +126,7 @@
                                     <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
                                 <td class="p-2">
-                                    <call-back-date></call-back-date>
+                                    <call-back-date :callBack="lead.nextcall_date" :leadId="lead.id"></call-back-date>
                                 </td>
                                 <td style="text-overflow: ellipsis; width: 100px; max-width: 100px">
                                     <h6 class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">{{  lead.name }}</h6>
