@@ -97,7 +97,6 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 Route::prefix('v2')->name('v2.')->group(function(){
     Route::middleware(['auth:api', 'verified'])->group(function (){
         Route::get('dashboard', [ \App\Http\Controllers\Api\V2\Project\ProjectController::class, 'index'])->name('dashboard');
-<<<<<<< HEAD
         
         //Лиды
         Route::prefix('lead')->name('lead.')->group(function(){
@@ -107,8 +106,6 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\LeadController::class, 'clearNextcall'])->name('clear');
             });
         });
-=======
->>>>>>> d9b685341e61b189ecd57754926102c1a4347633
 
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V2\Lead;
 
+use App\Models\Leads;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Repositories\Lead\ReadRepository as LeadReadRepository;
@@ -20,8 +21,9 @@ class AddNextcallRequest extends FormRequest
      */
     public function authorize()
     {
-        //TODO Проверка политик
-        return true;
+        $lead = $this->leadReadRepository->findById(id: $this->lead_id, fail: true, with: 'project');
+        
+        return $this->user()->can('setNextcall', [Leads::class, $lead]);
     }
 
     /**
@@ -33,7 +35,8 @@ class AddNextcallRequest extends FormRequest
     {
         return [
             'lead_id' => 'required|exists:leads,id',
-            'datetime' => 'required|dateformat:d.m.Y H:i:s',
+            // 'datetime' => 'required|dateformat:d.m.Y H:i:s',
+            'datetime' => 'required|dateformat:Y-m-d H:i',
         ];
     }
 }
