@@ -53,6 +53,10 @@ export default {
         }
     },
     methods: {
+        addZero(num) {
+            const _num = num < 10 ? `0${num}` : num
+            return _num
+        },
         async deleteDate() {
             this.$store.commit('loader/LOADER_TRUE')
             await axios.delete('/api/v2/lead/nextcall/clear', {
@@ -108,9 +112,10 @@ export default {
     created() {
         if(this.callBack) {
             const date = new Date(this.callBack)
-            this.serverDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.getUTCHours()}:${date.getUTCMinutes()}`
+            this.serverDate = `${date.getFullYear()}-${this.addZero(date.getMonth() + 1)}-${this.addZero(date.getDate())}T${this.addZero(date.getUTCHours())}:${this.addZero(date.getUTCMinutes())}`
         }
         this.date = this.serverDate
+        console.log(this.date)
     }
 }
 </script>
