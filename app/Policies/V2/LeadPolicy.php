@@ -121,7 +121,6 @@ class LeadPolicy
      */
     public function setNextcall(User $user, Leads $lead)
     {
-        throw new \Exception(message: 'test');
         if($user->isAdmin())
             return Response::allow();
 

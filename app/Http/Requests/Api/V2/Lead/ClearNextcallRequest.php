@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V2\Lead;
 
+use App\Models\Leads;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Repositories\Lead\ReadRepository as LeadReadRepository;
@@ -20,11 +21,11 @@ class ClearNextcallRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
 
-        // $lead = $this->leadReadRepository->findById(id: $this->lead_id, fail: true, with: 'project');
+        $lead = $this->leadReadRepository->findById(id: $this->lead_id, fail: true, with: 'project');
         
-        // return $this->user()->can('setNextcall', [Leads::class, $lead]);
+        return $this->user()->can('setNextcall', [Leads::class, $lead]);
+
     }
 
     /**
