@@ -97,6 +97,15 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 Route::prefix('v2')->name('v2.')->group(function(){
     Route::middleware(['auth:api', 'verified'])->group(function (){
         Route::get('dashboard', [ \App\Http\Controllers\Api\V2\Project\ProjectController::class, 'index'])->name('dashboard');
+        
+        //Лиды
+        Route::prefix('lead')->name('lead.')->group(function(){
+            //Дата следующего звонка
+            Route::prefix('nextcall')->name('nextcall.')->group(function(){
+                Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
+                Route::delete('clear', [\App\Http\Controllers\Api\V2\LeadController::class, 'clearNextcall'])->name('clear');
+            });
+        });
 
         //Лиды TODO Подогнать под группы роутов из прошлых веток
         Route::prefix('lead')->name('lead.')->group(function(){

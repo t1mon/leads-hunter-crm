@@ -4,6 +4,7 @@ namespace App\Repositories\Lead;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class Repository{
@@ -124,6 +125,16 @@ class Repository{
     {
         $lead->update(['manual_region' => null]);
     } //clearManualRegion
+
+    public function addNextCallDate(Leads $lead, string $datetime): void //Добавить дату следующего звонка
+    {
+        $lead->update(['nextcall_date' => Carbon::parse(time: $datetime, tz: $lead->project->timezone)->setTimezone(config('app.timezone'))]);
+    } //addNextCallDate
+
+    public function clearNextCallDate(Leads $lead): void //Удалить дату следующего звонка
+    {
+        $lead->update(['nextcall_date' => null]);
+    } //clearNextCallDate
 };
 
 ?>
