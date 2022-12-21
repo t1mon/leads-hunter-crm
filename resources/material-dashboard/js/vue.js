@@ -6,6 +6,7 @@ import Projects from './components/Projects/Projects'
 import Journal from './components/Journal/Journal'
 import HeaderSearch from './components/Header/Search'
 import NavbarProjects from './components/Navbar/NavbarProjects'
+import LoaderApp from './components/Others/Spinner'
 import directives from './directives'
 
 const app = createApp({
@@ -15,7 +16,8 @@ const app = createApp({
     Projects,
     Journal,
     HeaderSearch,
-    NavbarProjects
+    NavbarProjects,
+    LoaderApp
   },
   mounted () {
     $('[data-confirm]').on('click', () => {

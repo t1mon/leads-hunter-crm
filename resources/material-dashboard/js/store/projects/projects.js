@@ -8,7 +8,6 @@ export default {
     return {
       cards: false,
       endpoint: '/api/v1/project',
-      isLoading: false,
       projects: null,
       searchProjects: '',
       filteredProjects: null,
@@ -23,9 +22,6 @@ export default {
     },
     stateCards: state => {
       return state.cards
-    },
-    stateIsLoading: state => {
-      return state.isLoading
     },
     stateSearchProjects: state => {
       return state.searchProjects
@@ -52,19 +48,19 @@ export default {
     }
   },
   actions: {
-    async getProjects ({ state }) {
-      state.isLoading = true
+    async getProjects ({ state, commit }) {
+      commit('loader/LOADER_TRUE', null, { root: true })
       await axios
         .get(state.endpoint)
         .then(({ data }) => {
-          state.isLoading = false
+          commit('loader/LOADER_FALSE', null, { root: true })
           state.projectsLoad = true
           state.projects = data.data
           state.filteredProjects = data.data
           console.log(data.data)
         })
         .catch(() => {
-          state.isLoading = false
+          commit('loader/LOADER_FALSE', null, { root: true })
         })
     },
     async getLeadsCount ({ state }) {
