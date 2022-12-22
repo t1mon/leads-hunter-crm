@@ -66,6 +66,7 @@ class Export extends JsonResource
             'cost' => $this->cost,
             'comment' => $this->comment,
             'city' => $this->city,
+            'manual_region' => $this->manual_region,
             'ip' => $this->ip,
             'referrer' => $this->referrer,
             'source' => $this->source,

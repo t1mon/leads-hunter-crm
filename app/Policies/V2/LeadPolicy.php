@@ -128,4 +128,21 @@ class LeadPolicy
             ? Response::allow()
             : Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
     } //setNextcall
+
+    /**
+     * Определить, может ли пользователь устанавливать регион лида вручную
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Leads  $leads
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function setManualRegion(User $user, Leads $lead)
+    {
+        if($user->isAdmin())
+            return Response::allow();
+
+        return $user->isInProject($lead->project)
+            ? Response::allow()
+            : Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+    } //setManualRegion
 }

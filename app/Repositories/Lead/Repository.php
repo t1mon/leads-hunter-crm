@@ -116,6 +116,16 @@ class Repository{
             ]);
     } //splitUTMForLead
 
+    public function addManualRegion(Leads $lead, string $region): void
+    {
+        $lead->update(['manual_region' => $region]);
+    } //addManualRegion
+
+    public function clearManualRegion(Leads $lead): void
+    {
+        $lead->update(['manual_region' => null]);
+    } //clearManualRegion
+
     public function addNextCallDate(Leads $lead, string $datetime): void //Добавить дату следующего звонка
     {
         $lead->update(['nextcall_date' => Carbon::parse(time: $datetime, tz: $lead->project->timezone)->setTimezone(config('app.timezone'))]);
