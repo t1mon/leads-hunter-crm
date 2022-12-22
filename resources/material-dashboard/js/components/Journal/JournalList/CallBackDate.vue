@@ -22,7 +22,7 @@
 
             <div v-if="serverDate" class="dropdown lh-1">
                 <button class="btn m-0 btn-danger py-0 px-2 rounded-2 text-xxs" id="deleteCallBackDate" data-bs-toggle="dropdown">&times;</button>
-                <div class="dropdown-menu text-center p-2" aria-labelledby="deleteCallBackDate">
+                <div class="dropdown-menu text-center p-2 border border-1 rounded-2 border-primary" aria-labelledby="deleteCallBackDate">
                     <span class="mb-2 d-block">Удалить дату?</span>
                     <div class="d-flex justify-content-between px-3">
                         <button class="btn m-0 btn-success py-1 px-2 rounded-2 text-xxs">Нет</button>
@@ -115,11 +115,12 @@ export default {
             this.serverDate = `${date.getFullYear()}-${this.addZero(date.getMonth() + 1)}-${this.addZero(date.getDate())}T${this.addZero(date.getUTCHours())}:${this.addZero(date.getUTCMinutes())}`
         }
         this.date = this.serverDate
-        console.log(this.date)
     }
 }
 </script>
 
 <style scoped>
-
+.dropdown-menu::before {
+    color: #e91e63;
+}
 </style>
