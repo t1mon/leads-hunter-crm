@@ -12,7 +12,7 @@
                     <div class="input-group input-group-outline my-3">
                         <input
                             v-model="region"
-                            placeholder="Регион"
+                            placeholder="Введите регион"
                             type="text"
                             class="form-control"
                         >
