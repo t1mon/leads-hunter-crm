@@ -149,7 +149,7 @@
                                       </span>
                                     </div>
                                 </td>
-                                <journal-region></journal-region>
+                                <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
                                     @click="comments(lead.comment_crm, lead.id)"
                                     class="align-middle text-center text-sm overflow-hidden cursor-pointer"
@@ -218,6 +218,7 @@
             </div>
         </div>
 
+        <journal-region-modal ref="journalRegionModal"></journal-region-modal>
         <journal-comments></journal-comments>
     </div>
 </template>
@@ -228,7 +229,8 @@ import FilterApp from '../filters/Filters'
 import JournalClasses from "./JournalClasses";
 import JournalComments from "./JournalComments";
 import CallBackDate from "./CallBackDate";
-import JournalRegion from "./JournalRegion";
+import JournalRegionModal from "./JournalRegionModal";
+import JournalRegionTd from "./JournalRegionTd";
 
 export default {
     name: "Journal",
@@ -238,13 +240,16 @@ export default {
         JournalClasses,
         JournalComments,
         CallBackDate,
-        JournalRegion
+        JournalRegionModal,
+        JournalRegionTd
     },
     data () {
       return {
           counterDocListener: 0,
           first: false,
-          second: false
+          second: false,
+          region: '',
+          leadIdRegion: ''
       }
     },
     methods: {
