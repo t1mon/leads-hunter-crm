@@ -133,8 +133,16 @@
                                     <call-back-date :callBack="lead.nextcall_date" :leadId="lead.id"></call-back-date>
                                 </td>
                                 <td style="text-overflow: ellipsis; width: 100px; max-width: 100px">
-                                    <h6 class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">{{  lead.name }}</h6>
+                                    <h6 :title="lead.name" class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">
+                                        {{  lead.name }}
+                                    </h6>
                                 </td>
+<!--                                <td-->
+<!--                                    class="text-sm font-weight-normal mb-0 overflow-hidden"-->
+<!--                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"-->
+<!--                                >-->
+<!--                                    <span :title="lead.referrer">{{ lead.referrer }}</span>-->
+<!--                                </td>-->
                                 <journal-classes :lead="lead"></journal-classes>
                                 <td class="align-middle text-center text-sm">
                                     <a :href="'tel: ' + lead.phone" class="mb-0 font-weight-normal text-sm">{{ phoneFormat(lead.phone) }}</a>
@@ -219,7 +227,7 @@
         </div>
 
         <journal-region-modal ref="journalRegionModal"></journal-region-modal>
-        <journal-comments></journal-comments>
+        <journal-comments ref="journalCommentsModal"></journal-comments>
     </div>
 </template>
 
@@ -254,7 +262,7 @@ export default {
     },
     methods: {
         async comments(comment_crm, leadId) {
-            this.$store.commit('journalComments/CLEAR_COMMENT')
+            this.$refs.journalCommentsModal.comment = ''
             if (comment_crm) {
                 await this.$store.dispatch('journalComments/commentShow', comment_crm.id)
                 this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
