@@ -23,6 +23,7 @@ return [
         'comment' =>  'Комментарий',
         'city' =>  'Город',
         'region' =>  'Регион',
+        'manual_region' =>  'Регион (вручную)',
         'ip' =>  'IP',
         'referrer' =>  'Реферрер',
         'source' =>  'Источник',
@@ -36,6 +37,7 @@ return [
         'class_id' =>  '№ класса',
         'class' =>  'Класс',
         'comment_crm' =>  'Комментарий на CRM',
+        'nextcall_date' => 'Дата следующего звонка',
         'created_at' => 'Дата',
     ]
 ];

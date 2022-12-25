@@ -2,13 +2,15 @@ import journalAll from "./journalAll";
 import journalFilters from "./journalFilters";
 import filterParams from "./filterParams";
 import journalComments from "./journalComments";
+import journalRegion from "./journalRegion";
 
 export default {
   modules: {
     journalAll,
     journalFilters,
     filterParams,
-    journalComments
+    journalComments,
+    journalRegion
   },
   state () {
     return {

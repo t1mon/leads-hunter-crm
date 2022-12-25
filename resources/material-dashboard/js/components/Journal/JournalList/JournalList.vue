@@ -7,12 +7,12 @@
                         <table class="journal__table table align-items-center mb-0">
                             <thead class="journal__thead">
                             <tr>
-                                <th class="journal__th__header cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 text-center journal__th__header cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <span>#</span>
                                     <div class="journal__col-resize"></div>
                                 </th>
 
-                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">Дата</p>
                                     <filter-app
                                         :ascDesc="{sort_by: 'created_at', sort_order: 'desc'}"
@@ -21,7 +21,11 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                    <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10">Дата следующего <br> звонка</p>
+                                    <div class="journal__col-resize"></div>
+                                </th>
+                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterName" data-bs-toggle="dropdown" aria-expanded="false">Клиент</p>
                                     <filter-app
                                                 :ascDesc="{sort_by: 'name', sort_order: 'asc'}"
@@ -31,7 +35,7 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterClass" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Класс</p>
                                     <filter-app
                                         :filterClass="true"
@@ -40,7 +44,7 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterPhone" data-bs-toggle="dropdown" aria-expanded="false">Телефон</p>
                                     <filter-app
                                         :ascDesc="{sort_by: 'phone', sort_order: 'asc'}"
@@ -50,8 +54,8 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="dropdown cursor-pointer text-uppercase text-xxs font-weight-bolder">
-                                    <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterEntries" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">№</p>
+                                <th class="p-2 lh-1 dropdown cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                    <p class="text-center journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterEntries" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">№</p>
                                     <filter-app
                                         :ascDesc="{sort_by: 'entries', sort_order: 'asc'}"
                                         :filterEntries="true"
@@ -60,48 +64,52 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                    <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Регион</p>
+                                    <div class="journal__col-resize"></div>
+                                </th>
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Комментарий</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
 
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">E-MAIl</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Город</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="text-center cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 text-center cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Сумма сделки</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Посадочная</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Реферрер</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_TERM]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_MEDIUM]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_SOURCE]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_CAMPAIGN]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">ИСТОЧНИК</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
@@ -121,9 +129,20 @@
                                 <td>
                                     <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
-                                <td style="text-overflow: ellipsis; width: 100px; max-width: 100px">
-                                    <h6 class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">{{  lead.name }}</h6>
+                                <td class="p-2">
+                                    <call-back-date :callBack="lead.nextcall_date" :leadId="lead.id"></call-back-date>
                                 </td>
+                                <td style="text-overflow: ellipsis; width: 100px; max-width: 100px">
+                                    <h6 :title="lead.name" class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">
+                                        {{  lead.name }}
+                                    </h6>
+                                </td>
+<!--                                <td-->
+<!--                                    class="text-sm font-weight-normal mb-0 overflow-hidden"-->
+<!--                                    style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"-->
+<!--                                >-->
+<!--                                    <span :title="lead.referrer">{{ lead.referrer }}</span>-->
+<!--                                </td>-->
                                 <journal-classes :lead="lead"></journal-classes>
                                 <td class="align-middle text-center text-sm">
                                     <a :href="'tel: ' + lead.phone" class="mb-0 font-weight-normal text-sm">{{ phoneFormat(lead.phone) }}</a>
@@ -138,7 +157,7 @@
                                       </span>
                                     </div>
                                 </td>
-
+                                <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
                                     @click="comments(lead.comment_crm, lead.id)"
                                     class="align-middle text-center text-sm overflow-hidden cursor-pointer"
@@ -207,7 +226,8 @@
             </div>
         </div>
 
-        <journal-comments></journal-comments>
+        <journal-region-modal ref="journalRegionModal"></journal-region-modal>
+        <journal-comments ref="journalCommentsModal"></journal-comments>
     </div>
 </template>
 
@@ -216,6 +236,9 @@ import Spinner from '../../Others/Spinner'
 import FilterApp from '../filters/Filters'
 import JournalClasses from "./JournalClasses";
 import JournalComments from "./JournalComments";
+import CallBackDate from "./CallBackDate";
+import JournalRegionModal from "./JournalRegionModal";
+import JournalRegionTd from "./JournalRegionTd";
 
 export default {
     name: "Journal",
@@ -223,18 +246,23 @@ export default {
         Spinner,
         FilterApp,
         JournalClasses,
-        JournalComments
+        JournalComments,
+        CallBackDate,
+        JournalRegionModal,
+        JournalRegionTd
     },
     data () {
       return {
           counterDocListener: 0,
           first: false,
-          second: false
+          second: false,
+          region: '',
+          leadIdRegion: ''
       }
     },
     methods: {
         async comments(comment_crm, leadId) {
-            this.$store.commit('journalComments/CLEAR_COMMENT')
+            this.$refs.journalCommentsModal.comment = ''
             if (comment_crm) {
                 await this.$store.dispatch('journalComments/commentShow', comment_crm.id)
                 this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
