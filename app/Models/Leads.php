@@ -32,6 +32,7 @@ class Leads extends Model
     protected $fillable = [
         'project_id',
         'owner',
+        'company',
         'name',
         'surname',
         'patronymic',
@@ -114,6 +115,11 @@ class Leads extends Model
                 ? null
                 : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
     } //getUtmTermAttribute
+
+    public function getFieldsAttribute() //Получить список полей лида
+    {
+        return $this->fillable;
+    } //getFieldsAttribute
 
     /**
      *      Отношения
