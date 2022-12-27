@@ -28,6 +28,11 @@ mix.js('resources/js/admin.js', 'public/js')
 
 mix.copy('node_modules/trumbowyg/dist/ui/icons.svg', 'public/js/ui/icons.svg')
 
+//tailwindCss
+
+mix.postCss('resources/tailwind/css/app.css', 'public/css/tailwind.css')
+
+
 if (mix.inProduction()) {
   mix.version().sourceMaps()
 }
