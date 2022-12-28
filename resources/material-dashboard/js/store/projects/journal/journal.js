@@ -3,6 +3,7 @@ import journalFilters from "./journalFilters";
 import filterParams from "./filterParams";
 import journalComments from "./journalComments";
 import journalRegion from "./journalRegion";
+import journalCompany from "./journalCompany";
 
 export default {
   modules: {
@@ -10,7 +11,8 @@ export default {
     journalFilters,
     filterParams,
     journalComments,
-    journalRegion
+    journalRegion,
+    journalCompany
   },
   state () {
     return {

@@ -59,6 +59,7 @@ class Export extends JsonResource
         return [
             // 'id' => $this->id,
             'owner' => $this->owner,
+            'company' => $this->company,
             'name' => $this->getClientName(),
             'phone' => $this->phone,
             'entries' => $this->entries,

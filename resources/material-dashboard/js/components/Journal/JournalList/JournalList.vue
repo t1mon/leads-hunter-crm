@@ -65,6 +65,10 @@
                                     <div class="journal__col-resize"></div>
                                 </th>
                                 <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                    <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Компания</p>
+                                    <div class="journal__col-resize"></div>
+                                </th>
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Регион</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
@@ -157,6 +161,7 @@
                                       </span>
                                     </div>
                                 </td>
+                                <journal-company-td :companyBack="lead.company" :leadId="lead.id"></journal-company-td>
                                 <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
                                     @click="comments(lead.comment_crm, lead.id)"
@@ -228,28 +233,31 @@
 
         <journal-region-modal ref="journalRegionModal"></journal-region-modal>
         <journal-comments ref="journalCommentsModal"></journal-comments>
+        <journal-company-modal ref="journalCompanyModal"></journal-company-modal>
     </div>
 </template>
 
 <script>
-import Spinner from '../../Others/Spinner'
 import FilterApp from '../filters/Filters'
 import JournalClasses from "./JournalClasses";
 import JournalComments from "./JournalComments";
 import CallBackDate from "./CallBackDate";
 import JournalRegionModal from "./JournalRegionModal";
-import JournalRegionTd from "./JournalRegionTd";
+import JournalRegionTd from "./JournalRegionTd"
+import JournalCompanyTd from "./JournalCompany.vue";
+import JournalCompanyModal from "./JournalCompanyModal.vue";
 
 export default {
     name: "Journal",
     components: {
-        Spinner,
         FilterApp,
         JournalClasses,
         JournalComments,
         CallBackDate,
         JournalRegionModal,
-        JournalRegionTd
+        JournalRegionTd,
+        JournalCompanyTd,
+        JournalCompanyModal
     },
     data () {
       return {
