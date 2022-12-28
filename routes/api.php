@@ -114,6 +114,11 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'destroy'])->name('clear');
             });
         });
+
+        Route::prefix('lead_temp')->name('lead.')->group(function(){
+            Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
+        });
         
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){

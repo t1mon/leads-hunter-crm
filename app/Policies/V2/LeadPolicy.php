@@ -3,6 +3,7 @@
 namespace App\Policies\V2;
 
 use App\Models\Leads;
+use App\Models\Project\Project;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
@@ -39,11 +40,21 @@ class LeadPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Project\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, Project $project)
     {
-        //
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+        else
+            return ($permissions->isOwner() || $permissions->isManager())
+                ? Response::allow()
+                : Response::deny(message: 'У вас нет полномчий на добавление лидов', code: HttpResponse::HTTP_FORBIDDEN);
     }
 
     /**
