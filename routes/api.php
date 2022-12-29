@@ -105,13 +105,17 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\LeadController::class, 'clearNextcall'])->name('clear');
             });
-        });
 
-        //Лиды TODO Подогнать под группы роутов из прошлых веток
-        Route::prefix('lead')->name('lead.')->group(function(){
+            //Регион, выставляемый вручную
             Route::prefix('manual_region')->name('manual_region.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'store'])->name('add');
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'destroy'])->name('clear');
+            });
+
+            //Компания
+            Route::prefix('company')->name('company.')->group(function(){
+                Route::post('add', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'store'])->name('add');
+                Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'destroy'])->name('clear');
             });
         });
 

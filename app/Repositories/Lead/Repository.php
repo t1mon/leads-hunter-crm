@@ -83,9 +83,10 @@ class Repository{
         return $lead;
     } //create
 
-    public function update(Leads $lead, array $params)
+    public function update(Leads $lead, array $params): Leads
     {
-
+        $lead->update($params);
+        return $lead;
     } //update
 
     public function remove(Leads $lead)

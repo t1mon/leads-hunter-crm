@@ -123,6 +123,24 @@ class LeadPolicy
         //
     }
 
+
+    /**
+     * Общая политика на добавление пользователем дополнительной информации к лиду
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Leads  $leads
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function setAdditionalInfo(User $user, Leads $lead)
+    {
+        if($user->isAdmin())
+            return Response::allow();
+
+        return $user->isInProject($lead->project)
+            ? Response::allow()
+            : Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+    } //setAdditionalInfo
+
     /**
      * Определить, может ли пользователь устанавливать дату следующего звонка
      *
@@ -156,4 +174,17 @@ class LeadPolicy
             ? Response::allow()
             : Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
     } //setManualRegion
+
+    /**
+     * Определить, может ли пользователь указывать компанию для лида
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Leads  $leads
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function setCompany(User $user, Leads $lead)
+    {
+        //Используется общая функция, однако при необходимости здесь может быть указана индивидуальная политика
+        return $this->setAdditionalInfo(user: $user, lead: $lead);
+    } //setCompany
 }
