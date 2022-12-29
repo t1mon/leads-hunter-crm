@@ -39,7 +39,7 @@ class LeadController extends Controller
 
     public function destroy(Delete $request)
     {
-        $this->bus->addHandler(command: DeleteCommand::class, handler: DeleteHandler);
+        $this->bus->addHandler(command: DeleteCommand::class, handler: DeleteHandler::class);
         return $this->bus->dispatch(
             command: DeleteCommand::class,
             input: ['request' => $request]

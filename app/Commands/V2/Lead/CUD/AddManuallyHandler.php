@@ -23,7 +23,7 @@ class AddManuallyHandler
      */
     public function handle(AddManuallyCommand $command)
     {
-        $project = $this->projectReadRepository->findByApiToken(api_token: $command->request->api_token, fail: true);
+        $project = $this->projectReadRepository->findById(id: $command->request->project_id, fail: true);
 
         $this->leadRepository->create(
             project: $project,
@@ -39,7 +39,7 @@ class AddManuallyHandler
             city: $command->request->city,
             region: null, //TODO решить вопрос автоматического выставления региона
             manual_region: $command->request->manual_region,
-            company: null, //TODO Добавить инструкцию после мержа (также добавить в валидацию)
+            company: $command->request->company,
             ip: $command->request->ip,
             referrer: $command->request->referrer,
             source: $command->request->source,

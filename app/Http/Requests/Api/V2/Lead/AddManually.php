@@ -21,7 +21,7 @@ class AddManually extends FormRequest
      */
     public function authorize()
     {
-        $project = $this->projectReadRepository->findByApiToken($this->api_token, fail: true);
+        $project = $this->projectReadRepository->findById($this->project_id, fail: true);
 
         return $this->user()->can('create', [Leads::class, $project]);
     }
@@ -34,7 +34,7 @@ class AddManually extends FormRequest
     public function rules()
     {
         return [
-            'api_token' => 'required|exists:projects,api_token',
+            'project_id' => 'required|exists:projects,id',
             'owner' => 'nullable|string',
             'name' => 'required|string',
             'surname' => 'nullable|string',
@@ -45,7 +45,8 @@ class AddManually extends FormRequest
             'comment' => 'nullable|string',
             'city' => 'nullable|string',
             'manual_region' => 'nullable|string',
-            'ip',
+            'company' => 'nullable|string',
+            'ip' => 'nullable|ip',
             'referrer' => 'nullable|string',
             'source' => 'nullable|string',
             'utm_medium' => 'nullable|string',
