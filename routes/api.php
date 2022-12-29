@@ -100,6 +100,10 @@ Route::prefix('v2')->name('v2.')->group(function(){
 
         //Лиды
         Route::prefix('lead')->name('lead.')->group(function(){
+            //Управление лидами вручную
+            Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
+
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
@@ -117,11 +121,6 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'store'])->name('add');
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'destroy'])->name('clear');
             });
-        });
-
-        Route::prefix('lead_temp')->name('lead.')->group(function(){
-            Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
-            Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
         });
         
         //Проекты
