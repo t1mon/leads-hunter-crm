@@ -8,9 +8,12 @@
                 <journal-panel-filter :projectid="projectid"></journal-panel-filter>
             </div>
 
-            <div class="d-flex justify-content-between justify-content-sm-end">
+            <div class="d-flex flex-row-reverse flex-sm-row justify-content-between justify-content-sm-end align-items-end">
                 <clear-filters></clear-filters>
-                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
+                <div class="d-flex flex-column flex-md-row">
+                    <button class="btn btn-info m-0 mb-1 mb-md-0 me-md-2 py-1 px-3">Добавить лид</button>
+                    <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
+                </div>
             </div>
         </div>
     </div>

@@ -271,6 +271,7 @@ export default {
     methods: {
         async comments(comment_crm, leadId) {
             this.$refs.journalCommentsModal.comment = ''
+            this.$store.commit('journalComments/CLEAR_COMMENT')
             if (comment_crm) {
                 await this.$store.dispatch('journalComments/commentShow', comment_crm.id)
                 this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
