@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 use App\Journal\Facade\Journal;
+use Illuminate\Support\Arr;
 
 class Project extends Model
 {
@@ -46,6 +47,7 @@ class Project extends Model
             "description": false,
             "color": "5F9EA0",
             "leadValidDays": 0,
+            "find_region": false,
             "email":
             {
                 "template": "text",
@@ -330,7 +332,6 @@ class Project extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
     public function classes(){ //Получить классы, назначенные проекту
         return $this->hasMany(LeadClass::class);
     } //classes
@@ -338,5 +339,18 @@ class Project extends Model
     public function vk_forms(){ //Получить формы, привязанные к проекту
         return $this->hasMany(VKForm::class);
     } //vk_forms
+
+    public function getFindRegionAttribute(): bool //Получить значение настройки find_region (поиск региона при добавлении лида)
+    {
+        return $this->settings['find_region'] ?? false;
+    } //getFindRegionAttribute
+
+    public function setFindRegionAttribute(bool $value)
+    {
+        $new_settings = $this->settings;
+        $new_settings['find_region'] = $value;
+        $this->settings = $new_settings;
+        $this->save();
+    } //setFindRegionAttribute
 }
 

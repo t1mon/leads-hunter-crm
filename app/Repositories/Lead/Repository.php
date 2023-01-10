@@ -78,13 +78,6 @@ class Repository{
                 //Запрос на сервис
                 $response = Http::timeout(5)
                 ->retry(times: 3, sleep: 500)
-                // ->get(url: self::REGION_SERVICE_URL, query: [
-                //     'json',
-                //     'telcod' => $lead->phone,
-                //     'charset' => 'utf-8',
-                //     'api_key' => self::REGION_SERVICE_API_KEY,
-                //     // 'fields' => ['region', 'city'],
-                // ]);
                 ->get(
                     self::REGION_SERVICE_URL."?json&telcod={$lead->phone}&charset=utf-8&api_key=".self::REGION_SERVICE_API_KEY
                 );

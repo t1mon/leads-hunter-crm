@@ -34,7 +34,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        LeadAdded::class => [
+        LeadAdded::class => [ //Общее событие (используется для вызова общих обработчиков для LeadCreated и LeadExists)
             SplitUTM::class,
             MakeFullName::class,
             SendEmailData::class,
