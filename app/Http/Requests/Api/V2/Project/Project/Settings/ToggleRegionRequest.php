@@ -16,14 +16,15 @@ class ToggleRegionRequest extends FormRequest
 
     public function authorize()
     {
-        $project = $this->projectReadRepository->findById(id: $this->project_id, fail: true);
+        // $project = $this->projectReadRepository->findById(id: $this->project_id, fail: true);
+        $project = $this->projectReadRepository->findById(id: $this->project, fail: true);
         return $this->user()->can('update', [Project::class, $project]);
     }
 
     public function rules()
     {
         return [
-            'project_id' => 'required|exists:projects,id',
+            // 'project_id' => 'required|exists:projects,id',
             'value' => 'required|boolean',
         ];
     }

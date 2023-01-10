@@ -22,8 +22,12 @@ class ToggleRegionHandler
      */
     public function handle(ToggleRegionCommand $command)
     {
-        $project = $this->projectReadRepository->findById($command->request->project_id);
+        // $project = $this->projectReadRepository->findById($command->request->project_id);
+        $project = $this->projectReadRepository->findById($command->request->project);
         $project->find_region = $command->request->value;
-        return response(content: 'Определение региона включено', status: Response::HTTP_OK);
+        return response(
+            content: $project->find_region ? 'Определение региона включено' : 'Определение региона выключено',
+            status: Response::HTTP_OK
+        );
     }
 }

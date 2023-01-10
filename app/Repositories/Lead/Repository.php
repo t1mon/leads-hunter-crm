@@ -119,9 +119,11 @@ class Repository{
         $previous = $this->query()->orderByDesc('id')->where('phone', $lead->phone)->whereNotNull('region')->first();
         
         //Опция retry означает, что нужно попробовать найти регион, если в предыдущем лиде его нет
-        if(is_null($previous) && $retry){
-            Journal::leadWarning(lead: $lead, text: 'Регион в прошлом лиде не обнаружен. Будет сделана попытка найти регион через запрос.');
-            $this->findRegion(lead: $lead);
+        if(is_null($previous)){
+            if($lead->project->find_region){
+                Journal::leadWarning(lead: $lead, text: 'Регион в прошлом лиде не обнаружен. Будет сделана попытка найти регион через запрос.');
+                $this->findRegion(lead: $lead);
+            }
         }
         else{
             $lead->update(['region' => $previous->region]);

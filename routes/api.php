@@ -124,6 +124,11 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
+
+            //Настройки проекта
+            Route::prefix('{project}/settings')->name('settings.')->group(function(){
+                Route::post('toggle_find_region', [App\Http\Controllers\Api\V2\Project\ProjectSettingsController::class, 'toggleFindRegion'])->name('togge_find_region');
+            });
         });
 
         //Комментарии

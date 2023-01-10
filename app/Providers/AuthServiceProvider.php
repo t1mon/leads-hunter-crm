@@ -7,8 +7,8 @@ use App\Models\Project\Project;
 use App\Models\Project\Lead\Comment;
 use App\Models\User;
 use App\Models\Project\UserPermissions;
-// use App\Policies\ProjectPolicy; //Старая версия политики
-use App\Policies\V2\Project\ProjectPolicy; //Новая версия политики
+use App\Policies\ProjectPolicy; //Старая версия политики
+// use App\Policies\V2\Project\ProjectPolicy; //Новая версия политики
 use App\Policies\UserPermissionsPolicy;
 use App\Policies\V2\LeadPolicy;
 use App\Policies\V2\Project\Lead\CommentPolicy;
