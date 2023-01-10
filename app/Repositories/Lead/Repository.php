@@ -5,6 +5,7 @@ namespace App\Repositories\Lead;
 use App\Journal\Facade\Journal;
 use App\Models\Leads;
 use App\Models\Project\Project;
+use Carbon\Carbon;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -61,9 +62,10 @@ class Repository{
         ]);
     } //create
 
-    public function update(Leads $lead, array $params)
+    public function update(Leads $lead, array $params): Leads
     {
-
+        $lead->update($params);
+        return $lead;
     } //update
 
     public function remove(Leads $lead)
@@ -177,6 +179,26 @@ class Repository{
                 'utm_term' => $lead->utm['utm_term'] ?? null,
             ]);
     } //splitUTMForLead
+
+    public function addManualRegion(Leads $lead, string $region): void
+    {
+        $lead->update(['manual_region' => $region]);
+    } //addManualRegion
+
+    public function clearManualRegion(Leads $lead): void
+    {
+        $lead->update(['manual_region' => null]);
+    } //clearManualRegion
+
+    public function addNextCallDate(Leads $lead, string $datetime): void //Добавить дату следующего звонка
+    {
+        $lead->update(['nextcall_date' => Carbon::parse(time: $datetime, tz: $lead->project->timezone)->setTimezone(config('app.timezone'))]);
+    } //addNextCallDate
+
+    public function clearNextCallDate(Leads $lead): void //Удалить дату следующего звонка
+    {
+        $lead->update(['nextcall_date' => null]);
+    } //clearNextCallDate
 };
 
 ?>

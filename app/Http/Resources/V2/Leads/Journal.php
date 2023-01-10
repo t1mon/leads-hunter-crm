@@ -45,6 +45,7 @@ class Journal extends JsonResource
         return [
             'id' => $this->id,
             'owner' => $this->owner,
+            'company' => $this->company,
             'name' => $this->getClientName(),
             'phone' => $this->phone,
             'entries' => $this->entries,
@@ -52,7 +53,11 @@ class Journal extends JsonResource
             'cost' => $this->cost,
             'comment' => $this->comment,
             'city' => $this->city,
+<<<<<<< HEAD
             'region' => $this->region,
+=======
+            'manual_region' => $this->manual_region,
+>>>>>>> d09378a3e5ffeb236920f9ef1dde6a0c31e0c0e4
             'ip' => $this->ip,
             'referrer' => $this->referrer,
             'source' => $this->source,
@@ -68,6 +73,7 @@ class Journal extends JsonResource
                 'id' => $this->comment_crm?->id,
                 'text' => $this->comment_crm?->comment_body,
             ]),
+            'nextcall_date' => $this->nextcall_date ?? null,
             'created_at' => $this->created_at->format('d.m.Y H:i:s')
         ];
     } //fullData

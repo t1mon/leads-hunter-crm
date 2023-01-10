@@ -32,6 +32,7 @@ class Leads extends Model
     protected $fillable = [
         'project_id',
         'owner',
+        'company',
         'name',
         'surname',
         'patronymic',
@@ -42,7 +43,11 @@ class Leads extends Model
         'cost',
         'comment',
         'city',
+<<<<<<< HEAD
         'region',
+=======
+        'manual_region',
+>>>>>>> d09378a3e5ffeb236920f9ef1dde6a0c31e0c0e4
         'ip',
         'referrer',
         'source',
@@ -53,11 +58,13 @@ class Leads extends Model
         'utm_content',
         'utm_term',
         'host',
-        'url_query_string'
+        'url_query_string',
+        'nextcall_date',
     ];
 
     protected $casts = [
-        'utm' => 'array'
+        'utm' => 'array',
+        'nextcall_date' => 'datetime:d.m.Y H:i:s',
     ];
 
     /**
@@ -112,6 +119,11 @@ class Leads extends Model
                 ? null
                 : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
     } //getUtmTermAttribute
+
+    public function getFieldsAttribute() //Получить список полей лида
+    {
+        return $this->fillable;
+    } //getFieldsAttribute
 
     /**
      *      Отношения

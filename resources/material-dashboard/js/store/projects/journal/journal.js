@@ -1,33 +1,29 @@
 import journalAll from "./journalAll";
 import journalFilters from "./journalFilters";
 import filterParams from "./filterParams";
+import journalComments from "./journalComments";
+import journalRegion from "./journalRegion";
+import journalCompany from "./journalCompany";
 
 export default {
   modules: {
     journalAll,
     journalFilters,
-    filterParams
+    filterParams,
+    journalComments,
+    journalRegion,
+    journalCompany
   },
   state () {
     return {
       leads: null,
       leadsOrigin: null,
-      isLoadingJ: false,
-      projectJour: null,
-      sortNumber: false,
-      sortDate: true,
-      sortName: true,
-      sortPhone: true,
-      sortEntries: true,
       // TODO Найти более элегантный метод
       dataReady: false,
       // Даты из JournalPanel.vue
     }
   },
   getters: {
-    stateIsLoadingJ: state => {
-      return state.isLoadingJ
-    },
     stateLeads: state => {
       return state.leads
     },
@@ -39,9 +35,6 @@ export default {
     }
   },
   mutations: {
-    switchSpinner (state) {
-      state.isLoadingJ = !state.isLoadingJ
-    },
     SET_LEADS(state, data) {
       state.leads = data
     },
@@ -50,69 +43,5 @@ export default {
     }
   },
   actions: {
-    setDateFromTo ({ state }, { dateFrom: _dateFrom, dateTo: _dateTo }) {
-      if (_dateFrom) state.dateFrom = _dateFrom
-      if (_dateTo) state.dateTo = _dateTo
-    },
-    async getLeads (
-      { state, commit, getters, rootState },
-      {
-        projectId: _projectId,
-        dateFrom: _dateFrom,
-        dateTo: _dateTo,
-        paginateNum: _paginateNum,
-        paginatePath: _paginatePath,
-        prevNext: _prevNext,
-        entriesOperator: _entriesOperator
-      }
-    ) {
-      commit('switchSpinner')
-      // считаем сколько лидов поместится
-      // const rowsNum = Math.floor((document.documentElement.clientHeight - 205) / 49)
-      const rowsNum = 100
-        // путь для пагинаций
-      const page = _paginatePath ? _paginatePath + '&page=' + _paginateNum : ''
-        // номер лида, если перешёл на другую страницу по номеру
-      const numberNum = _paginateNum ? (_paginateNum - 1) * rowsNum : 0
-      // предыдущая или следующая страница
-      const prevNext = _prevNext || ''
-      // номер лида, если перешёл на другую страницу по стрелке
-      const numberArrow = _prevNext ? (+_prevNext.slice(-1) - 1) * rowsNum : 0
-      await axios
-        .get(rootState.projects.endpoint + '/' + _projectId + '/journal' + page + prevNext,
-          {
-            params: {
-              date_from: _dateFrom,
-              date_to: _dateTo,
-              rows_num: rowsNum,
-              entry_filter: _entriesOperator
-            }
-          })
-        .then(({ data }) => {
-          commit('switchSpinner')
-          const dataLeads = data.data.leads.data
-
-          // Приводим даты и телефоны в читабельный формат
-          dataLeads.forEach((item, index) => {
-            // Приводим телефоны в читабельный формат
-            item.phone = item.phone.toString().replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+7 ($2) $3-$4')
-
-            // Присваиваем новое поле number
-            item.number = index + 1 + numberNum + numberArrow
-          })
-
-          commit('SET_LEADS', dataLeads)
-          // state.leads = dataLeads
-          state.leadsOrigin = dataLeads
-          commit('SET_PROJECT_JOUR', data.data)
-          // state.projectJour = data.data
-          state.dataReady = true
-          console.log(data)
-        })
-        .catch(error => {
-          console.log(error)
-          commit('switchSpinner')
-        })
-    }
   }
 }

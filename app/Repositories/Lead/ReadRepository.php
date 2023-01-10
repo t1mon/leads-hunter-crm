@@ -4,12 +4,8 @@ namespace App\Repositories\Lead;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-
-use App\Http\Requests\Api\V2\Project\Project\Journal as JournalRequest;
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class ReadRepository{
     
@@ -18,93 +14,117 @@ class ReadRepository{
         return Leads::query();
     } //query
 
-    public function findFromProject(Project|int $project, JournalRequest $request): QueryBuilder
+    public function findFromProject(
+        Project|int $project,
+        $date_from = null,
+        $date_to = null,
+        $class = null,
+        $name = null,
+        $entries = null,
+        $owner = null,
+        $phone = null,
+        $email = null,
+        $cost_from = null,
+        $cost_to = null,
+        $city = null,
+        $referrer = null,
+        $source = null,
+        $utm_medium = null,
+        $utm_source = null,
+        $utm_campaign = null,
+        $utm_content = null,
+        $utm_term = null,
+        $host = null,
+        $url_query_string = null,
+        $sort_by = null,
+        $sort_order = 'asc',
+    ): Builder
     {
         $leads = $this->query()
             ->with(['comment_crm', 'class:id'])
             ->from($project);
 
         //Фильтрация по дате
-        if(!is_null($request->date_from)){
-            $date = Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+        if(!is_null($date_from)){
+            $date = Carbon::parse($date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
             $leads->where('created_at', '>=' ,$date);
         }
 
-        if(!is_null($request->date_to)){
-            $end_date = Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+        if(!is_null($date_to)){
+            $end_date = Carbon::parse($date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
             $leads->where('created_at', '<=' ,$end_date);;
         }
 
         //Фильтрация по классу
-        if(!is_null($request->class))
-            $leads->ofClass($request->class);
+        if(!is_null($class))
+            $leads->ofClass($class);
 
         //Фильтрация по имени
-        if(!is_null($request->name))
-            $leads->name($request->name);
+        if(!is_null($name))
+            $leads->name($name);
 
         //Фильтрация по числу вхождений
-        if(!is_null($request->entries))
-            $leads->entries($request->entries);
+        if(!is_null($entries))
+            $leads->entries($entries);
 
         //Фильтрация по владельцу
-        if(!is_null($request->owner))
-            $leads->owner($request->owner);
+        if(!is_null($owner))
+            $leads->owner($owner);
 
         //Фильтрация по телефону
-        if(!is_null($request->phone))
-            $leads->phone($request->phone);
+        if(!is_null($phone))
+            $leads->phone($phone);
 
         //Фильтрация по email
-        if(!is_null($request->email))
-            $leads->email($request->email);
+        if(!is_null($email))
+            $leads->email($email);
             
         //Фильтрация по сумме
-        if(!is_null($request->cost_from))
-            $leads->where('cost', '>=', $request->cost_from);
+        if(!is_null($cost_from))
+            $leads->where('cost', '>=', $cost_from);
         
-        if(!is_null($request->cost_to))
-            $leads->where('cost', '<=', $request->cost_to);
+        if(!is_null($cost_to))
+            $leads->where('cost', '<=', $cost_to);
 
         //Фильтрация по городу
-        if(!is_null($request->city))
-            $leads->city($request->city);
+        if(!is_null($city))
+            $leads->city($city);
 
         //Фильтрация по рефереру
-        if(!is_null($request->referrer))
-            $leads->referrer($request->referrer);
+        if(!is_null($referrer))
+            $leads->referrer($referrer);
         
         //Фильтрация по источнику
-        if(!is_null($request->source))
-            $leads->source($request->source);
+        if(!is_null($source))
+            $leads->source($source);
             
         //Фильтрация по UTM-меткам
-        if(!is_null($request->utm_medium))
-            $leads->utmMedium($request->utm_medium);
+        if(!is_null($utm_medium))
+            $leads->utmMedium($utm_medium);
 
-        if(!is_null($request->utm_source))
-            $leads->utmSource($request->utm_source);
+        if(!is_null($utm_source))
+            $leads->utmSource($utm_source);
 
-        if(!is_null($request->utm_campaign))
-            $leads->utmCampaign($request->utm_campaign);
+        if(!is_null($utm_campaign))
+            $leads->utmCampaign($utm_campaign);
 
-        if(!is_null($request->utm_content))
-            $leads->utmContent($request->utm_content);
+        if(!is_null($utm_content))
+            $leads->utmContent($utm_content);
             
-        if(!is_null($request->utm_term))
-            $leads->utmContent($request->utm_term);
+        if(!is_null($utm_term))
+            $leads->utmContent($utm_term);
         
         //Фильтрация по хосту
-        if(!is_null($request->host))
-            $leads->host($request->host);
+        if(!is_null($host))
+            $leads->host($host);
 
         //Фильтрация по query string
-        if(!is_null($request->url_query_string))
-            $leads->queryString($request->url_query_string);
+        if(!is_null($url_query_string))
+            $leads->queryString($url_query_string);
 
         //Сортировка
-        if(!is_null($request->sort_by))
-            $leads->orderBy($request->sort_by, $request->sort_order);
+        if(!is_null($sort_by))
+            $leads->orderBy($sort_by, $sort_order);
         else
             $leads->latest(); //по умолчанию сортировать по дате в порядке убывания
 
@@ -115,6 +135,17 @@ class ReadRepository{
     {
         return Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($project->timezone);
     } //updateDataToTimezone
+
+    public function findById(int $id, bool $fail = false, array|string $with = null): ?Leads
+    {
+        $query = $this->query()
+            ->where('id', $id)
+            ->when(!is_null($with), function($query) use ($with){
+                return $query->with($with);
+            });
+
+        return $fail ? $query->firstOrFail() : $query->first();
+    } //findById
 };
 
 ?>
