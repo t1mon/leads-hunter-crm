@@ -19,7 +19,7 @@ class ProjectSettingsController extends Controller
 
     public function toggleFindRegion(ToggleRegionRequest $request) //Настройка "Определять регион при добавлении"
     {
-        $this->bus->addHandler(command: ToggleRegionCommand::calss, handler: ToggleRegionHandler::class);
+        $this->bus->addHandler(command: ToggleRegionCommand::class, handler: ToggleRegionHandler::class);
         return $this->bus->dispatch(
             command: ToggleRegionCommand::class,
             input: ['request' => $request]
