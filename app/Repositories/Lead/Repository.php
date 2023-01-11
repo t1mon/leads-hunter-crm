@@ -16,7 +16,7 @@ class Repository{
         Project $project,
         string $name,
         int $phone,
-        string $host,
+        ?string $host,
         ?string $surname,
         ?string $patronymic,
         ?string $owner,
