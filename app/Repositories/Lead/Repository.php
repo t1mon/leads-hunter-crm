@@ -70,13 +70,13 @@ class Repository{
         //Заполнение остальных полей
         $lead->update([
             'full_name' => $lead->getClientName(),
-            'utm' => json_encode([
+            'utm' => [
                 'utm_medium' => $utm_medium,
                 'utm_source' => $utm_source,
                 'utm_campaign' => $utm_campaign,
                 'utm_content' => $utm_content,
                 'utm_term' => $utm_term,
-            ])
+            ],
         ]);
 
         return $lead;
