@@ -5,7 +5,6 @@ namespace App\Repositories\Lead;
 use App\Models\Leads;
 use App\Models\Project\Project;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class Repository{
     public function query()
@@ -25,7 +24,7 @@ class Repository{
         ?string $email,
         ?string $comment,
         ?string $city,
-        ?string $region,
+        // ?string $region,
         ?string $manual_region,
         ?string $company,
         ?string $ip,
@@ -54,7 +53,7 @@ class Repository{
             'city' => $city,
             // 'region' => $region,
             'manual_region' => $manual_region,
-            // 'company' => $company,
+            'company' => $company,
             'ip' => $ip,
             'referrer' => $referrer,
             'source' => $source,
