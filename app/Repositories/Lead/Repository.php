@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 class Repository{
     protected const REGION_SERVICE_URL = 'http://htmlweb.ru/geo/api.php'; //Адрес службы определения региона
     protected const REGION_SERVICE_API_KEY = 'e6a69c81b471789f28756464e3363e48'; //API-ключ службы определения региона
+    /**
+     * URL для проверки баланса: https://htmlweb.ru/api.php?json&obj=money&m=get_limit&api_key=e6a69c81b471789f28756464e3363e48
+     */
 
     public function query()
     {
