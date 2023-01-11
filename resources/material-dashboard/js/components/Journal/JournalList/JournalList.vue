@@ -117,6 +117,11 @@
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">ИСТОЧНИК</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
+
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                    <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Действия</p>
+                                    <div class="journal__col-resize"></div>
+                                </th>
                             </tr>
                             </thead>
                             <tbody class="journal__tbody">
@@ -223,6 +228,26 @@
                                 >
                                     <span :title="lead.source">{{ lead.source }}</span>
                                 </td>
+                                <td
+                                    class="text-sm font-weight-normal mb-0"
+                                >
+                                    <div class="d-flex justify-content-center">
+                                        <div class="dropdown lh-1">
+                                            <i
+                                                id="deleteLead" data-bs-toggle="dropdown"
+                                                class="material-icons-round text-lg text-danger cursor-pointer">
+                                                <span class="material-symbols-outlined">delete_forever</span>
+                                            </i>
+                                            <div class="dropdown-menu text-center p-2 border border-1 rounded-2 border-primary" aria-labelledby="deleteLead">
+                                                <span class="mb-2 d-block">Удалить лид?</span>
+                                                <div class="d-flex justify-content-between px-3">
+                                                    <button class="btn m-0 btn-success py-1 px-2 rounded-2 text-xxs">Нет</button>
+                                                    <button @click="deleteLead(lead.id)" class="btn m-0 btn-danger py-1 px-2 rounded-2 text-xxs">Да</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -269,6 +294,40 @@ export default {
       }
     },
     methods: {
+        async deleteLead(leadId) {
+            this.$store.commit('loader/LOADER_TRUE')
+            await axios.delete('/api/v2/lead/delete', {
+                data: {
+                    lead_id: leadId
+                }
+            }).then(response => {
+                this.$store.commit('loader/LOADER_FALSE')
+                this.$store.dispatch('getToast', {
+                    msg: 'Лид удалён!',
+                    settingsObj: {
+                        type: 'success',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+                console.log(response)
+            }).catch(error => {
+                this.$store.commit('loader/LOADER_FALSE')
+                this.$store.dispatch('getToast', {
+                    msg: 'Что-то пошло не так!',
+                    settingsObj: {
+                        type: 'danger',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+                console.log(error)
+            })
+
+            await this.$store.dispatch('journalAll/getJournalAll')
+        },
         async comments(comment_crm, leadId) {
             this.$refs.journalCommentsModal.comment = ''
             this.$store.commit('journalComments/CLEAR_COMMENT')
@@ -421,6 +480,10 @@ th, td {
 }
 .journal__filter__text:hover {
     background-color: #d0d0d0;
+}
+.dropdown .dropdown-menu:before {
+    left: auto;
+    right: 28px;
 }
 @media screen and (max-width: 991px) {
     .journal {

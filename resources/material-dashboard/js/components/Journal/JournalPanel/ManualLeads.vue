@@ -13,7 +13,7 @@
             <form @submit.prevent="addLead" action="#" class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-normal" id="journalCommentsLabel">Добавление лида</h5>
-                    <button ref="closeComments" type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <button ref="closeManualLeads" type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -127,11 +127,14 @@
 
                         <div class="journal__manual-leads__modal__box p-1 pb-2 m-1 bg-light rounded-2">
 
-                            <div class="input-group input-group-dynamic mb-1">
-                                <span class="input-group-text text-danger" id="manualLeadsHost">*</span>
+                            <div
+                                :class="{'is-invalid' : v$.host.$invalid && v$.$dirty}"
+                                class="input-group input-group-dynamic mb-1">
                                 <input
                                     v-model="host"
-                                    type="text" class="form-control" placeholder="Посадочная" aria-describedby="manualLeadsHost">
+                                    type="text" class="form-control" placeholder="Посадочная">
+
+                                <div class="invalid-feedback" v-if="v$.host.url.$invalid && v$.$dirty">Неверный формат</div>
                             </div>
 
                             <div class="input-group input-group-dynamic mb-1">
@@ -216,7 +219,7 @@
 <script>
 import { vMaska } from "maska"
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength } from '@vuelidate/validators'
+import { required, email, minLength, url } from '@vuelidate/validators'
 import { isIP } from 'is-ip'
 
 export default {
@@ -282,7 +285,6 @@ export default {
             this.comment = ''
         },
         async addLead() {
-
             const result = await this.v$.$validate()
             if (!result) {
                 return
@@ -295,12 +297,12 @@ export default {
                 name: this.name,
                 surname: this.surname,
                 patronymic: this.patronymic,
-                phone: this.phone,
+                phone: this.phone.replace(/\D/g, ''),
                 email: this.email,
                 owner: this.owner,
                 cost: this.cost,
                 city: this.city,
-                region: this.region,
+                manual_region: this.region,
                 company: this.company,
                 ip: this.ip,
                 referrer: this.referrer,
@@ -312,27 +314,53 @@ export default {
                 utm_campaign: this.utmCampaign,
                 utm_content: this.utmContent,
                 url_query_string: this.urlQueryString,
-                nextcall_date: this.nextCallDate,
+                nextcall_date: this.nextCallDate.replace(/T/, ' '),
                 comment: this.comment
             }).then(response => {
                 this.v$.$reset()
                 this.clearData()
                 this.$store.commit('loader/LOADER_FALSE')
+                this.$refs.closeManualLeads.click()
+                this.$store.dispatch('getToast', {
+                    msg: 'Лид добавлен!',
+                    settingsObj: {
+                        type: 'success',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
                 console.log(response)
             }).catch(error => {
+                this.$store.dispatch('getToast', {
+                    msg: 'Что-то пошло не так!',
+                    settingsObj: {
+                        type: 'danger',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
                 this.$store.commit('loader/LOADER_FALSE')
                 console.log(error)
             })
+
+            await this.$store.dispatch('journalAll/getJournalAll')
         }
     },
     validations () {
         return {
             name: { required },
             phone: { required, minLength: minLength(17) },
-            host: { required },
             email: { email },
+            host: { url },
             ip: {
-                isIP: isIP
+                isIP: (val) => {
+                    if (val) {
+                        return isIP(val)
+                    }
+                    return true
+                }
             }
         }
     }
