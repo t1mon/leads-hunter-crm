@@ -42,7 +42,6 @@
 <script>
 export default {
     name: "JournalPanelFilter",
-    props: ['projectid'],
     data() {
         return {
             dateFrom: '',

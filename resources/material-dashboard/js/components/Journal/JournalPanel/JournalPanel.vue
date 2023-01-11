@@ -5,13 +5,13 @@
             <div class="journal__date__box align-items-start align-items-lg-end flex-column flex-lg-row mb-2 mb-sm-0">
                 <h5 class="m-0 me-3">{{ stateProjectJour.name }}</h5>
 
-                <journal-panel-filter :projectid="projectid"></journal-panel-filter>
+                <journal-panel-filter></journal-panel-filter>
             </div>
 
             <div class="d-flex flex-row-reverse flex-sm-row justify-content-between justify-content-sm-end align-items-end">
                 <clear-filters></clear-filters>
                 <div class="d-flex flex-column flex-md-row">
-                    <button class="btn btn-info m-0 mb-1 mb-md-0 me-md-2 py-1 px-3">Добавить лид</button>
+                    <manual-leads></manual-leads>
                     <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
                 </div>
             </div>
@@ -23,12 +23,14 @@
 <script>
 import JournalPanelFilter from "./JournalPanelFilter";
 import ClearFilters from "./ClearFilters";
+import ManualLeads from "./ManualLeads";
 
 export default {
     name: "JournalPanel",
     components: {
         JournalPanelFilter,
-        ClearFilters
+        ClearFilters,
+        ManualLeads
     },
     props: ['projectid'],
     data () {
