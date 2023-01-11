@@ -64,7 +64,7 @@ class Repository{
             'utm_term' => $utm_term,
             'host' => $host,
             'url_query_string' => $url_query_string,
-            'nextcall_date' => Carbon::parse(time: $nextcall_date, tz: $project->timezone)->setTimezone(config('app.timezone')),
+            'nextcall_date' => is_null($nextcall_date) ? null : Carbon::parse(time: $nextcall_date, tz: $project->timezone)->setTimezone(config('app.timezone')),
         ]);
 
         //Заполнение остальных полей
