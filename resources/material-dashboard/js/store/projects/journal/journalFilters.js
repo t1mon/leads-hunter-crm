@@ -11,7 +11,6 @@ export default {
       await axios.get('/api/v2/project/' + obj.id + '/journal/variants')
         .then(data => {
           commit('loader/LOADER_FALSE', null, { root: true })
-          console.log(data)
         })
         .catch(error => {
           console.log(error)

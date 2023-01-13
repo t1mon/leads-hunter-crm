@@ -30,9 +30,7 @@ export default {
           }
         })
         .then((data) => {
-          console.log(data)
           state.searchData = data.data.data || null
-          console.log(state.searchData)
         })
         .catch(error => {
           console.log(error)

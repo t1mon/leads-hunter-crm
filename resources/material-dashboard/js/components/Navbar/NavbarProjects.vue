@@ -5,7 +5,7 @@
             :class="{ 'active' : stateProjectId === project.id }"
             class="nav-item">
             <a
-                :href="'https://api.home/project/' + project.id + '/journal'"
+                :href="'/project/' + project.id + '/journal'"
                 :class="{ 'active' : stateProjectId === project.id }"
                 style="white-space: normal"
                 class="align-items-start nav-link text-white m-0 rounded-0 p-2 mw-100"
@@ -28,7 +28,7 @@
                 :class="{ 'active' : stateProjectId === project.id }"
                 class="nav-item">
                 <a
-                    :href="'https://api.home/project/' + project.id + '/journal'"
+                    :href="'/project/' + project.id + '/journal'"
                     :class="{ 'active' : stateProjectId === project.id }"
                     style="white-space: normal"
                     class="align-items-start nav-link text-white m-0 rounded-0 p-2 mw-100"
@@ -70,9 +70,6 @@ export default {
             })
             return projects
         }
-    },
-    created() {
-        console.log(this.projects)
     }
 }
 </script>

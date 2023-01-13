@@ -52,7 +52,6 @@ export default {
       }).then(response => {
         commit('LOADER_FALSE')
         commit('SET_COMMENT', response.data.data.comment_body)
-        console.log(response.data.data)
       }).catch(error => {
         commit('LOADER_FALSE')
         console.log(error)
