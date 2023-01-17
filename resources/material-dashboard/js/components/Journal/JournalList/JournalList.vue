@@ -311,7 +311,6 @@ export default {
                         showIcon: true
                     }
                 })
-                console.log(response)
             }).catch(error => {
                 this.$store.commit('loader/LOADER_FALSE')
                 this.$store.dispatch('getToast', {

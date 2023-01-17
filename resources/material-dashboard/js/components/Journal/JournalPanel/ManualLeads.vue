@@ -73,7 +73,7 @@
                             <div class="input-group input-group-dynamic">
                                 <input
                                     v-model="owner"
-                                    type="text" class="form-control" placeholder="Владелей лида">
+                                    type="text" class="form-control" placeholder="Владелец лида">
                             </div>
                         </div>
 
@@ -330,7 +330,6 @@ export default {
                         showIcon: true
                     }
                 })
-                console.log(response)
             }).catch(error => {
                 this.$store.dispatch('getToast', {
                     msg: 'Что-то пошло не так!',
