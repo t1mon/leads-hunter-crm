@@ -241,8 +241,8 @@
                                             <div class="dropdown-menu text-center p-2 border border-1 rounded-2 border-primary" aria-labelledby="deleteLead">
                                                 <span class="mb-2 d-block">Удалить лид?</span>
                                                 <div class="d-flex justify-content-between px-3">
-                                                    <button class="btn m-0 btn-success py-1 px-2 rounded-2 text-xxs">Нет</button>
-                                                    <button @click="deleteLead(lead.id)" class="btn m-0 btn-danger py-1 px-2 rounded-2 text-xxs">Да</button>
+                                                    <button @click="deleteLead(lead.id)" class="btn m-0 btn-success py-1 px-2 rounded-2 text-xxs">Да</button>
+                                                    <button class="btn m-0 btn-danger py-1 px-2 rounded-2 text-xxs">Нет</button>
                                                 </div>
                                             </div>
                                         </div>
