@@ -38,7 +38,6 @@ export default {
         new URL(window.location).searchParams.entries()
       )
       if (windowData.filter) {
-        console.log(windowData.filter)
         this.filter = windowData.filter
       }
     }
