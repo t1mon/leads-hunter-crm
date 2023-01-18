@@ -3,6 +3,7 @@
 namespace App\Policies\V2;
 
 use App\Models\Leads;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
@@ -176,4 +177,56 @@ class LeadPolicy
         //Используется общая функция, однако при необходимости здесь может быть указана индивидуальная политика
         return $this->setAdditionalInfo(user: $user, lead: $lead);
     } //setCompany
+    
+    public function acceptLead(User $user, Leads $lead, User $acceptor) //Определить, может ли пользователь указывать пользователя, принявшего лид
+    {        
+        //Проверка роли пользователя
+        $permissions = $user->getPermissionsForProject($lead->project);
+        if(!$user->isAdmin() && is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+
+        if($user->isAdmin() || $permissions->isOwner() || $permissions->isManager()){ //Может назначить всех, кто есть в проекте (кроме наблюдателей)
+            return $acceptor->isAdmin() || ($acceptor->isInProject($lead->project) && !$acceptor->isWatcher($lead->project) ) //Наблюдатель не может принимать лиди
+                ? Response::allow()
+                : Response::deny('Этот пользователь не добавлен в проект');
+        }
+        elseif($user->isJuniorManager()) //Может назначить только себя
+        {
+            return $user->id === $acceptor->id
+                ? Response::allow()
+                : Response::deny('Этот пользователь не может назначать лид другим пользователям в этом проекте');
+        }
+        else
+            return Response::deny(message: 'У вас нет полномочий на это действие', code: HttpResponse::HTTP_FORBIDDEN);
+        
+    } //acceptLead
+    
+    public function dismissAcceptor(User $user, Leads $lead) //Определить, может ли пользователь убрать пользователя, принявшего лид
+    {
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($lead->project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+        else
+            return ($permissions->isOwner() || $permissions->isManager())
+                ? Response::allow()
+                : Response::deny(message: 'У вас нет полномчий на это действие', code: HttpResponse::HTTP_FORBIDDEN);
+    } //dismissAcceptor
+
+    public function getUsersForProject(User $user, Leads $lead) //Определить, может ли пользователь получить список пользователей, назначенных на проект
+    {
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($lead->project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+        else
+            return ($permissions->isOwner() || $permissions->isManager() || $permissions->isJuniorManager())
+                ? Response::allow()
+                : Response::deny(message: 'Вы не можете просматривать эти данные', code: HttpResponse::HTTP_FORBIDDEN);
+        
+    } //getUsersForProject
 }

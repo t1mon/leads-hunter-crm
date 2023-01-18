@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddManagerIdToLeads extends Migration
+class AddAcceptedByToLeads extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,7 @@ class AddManagerIdToLeads extends Migration
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-            // $table->dropColumn('accepted_by');
-            $table->unsignedInteger('accepted_by')->after('owner');
-            $table->foreign('accepted_by')->references('id')->on('users')->onDelete('cascade');
+            $table->string('accepted_by')->after('owner')->nullable();
         });
     }
 
@@ -28,8 +26,7 @@ class AddManagerIdToLeads extends Migration
     public function down()
     {
         Schema::table('leads', function (Blueprint $table) {
-            // $table->dropForeign(['accepted_by']);
-            // $table->dropColumn('accepted_by');
+            $table->dropColumn('accepted_by');
         });
     }
 }

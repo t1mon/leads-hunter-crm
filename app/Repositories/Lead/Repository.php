@@ -139,15 +139,15 @@ class Repository{
         $lead->update(['nextcall_date' => null]);
     } //clearNextCallDate
 
-    public function assignManager(Leads $lead, User $user): void //Назначить пользователя менеджером лида
+    public function assignAcceptor(Leads $lead, User $user): void //Назначить пользователя менеджером лида
     {
-        $lead->update(['accepted_by' => $user->id]);
-    } //assignManager
+        $lead->update(['accepted_by' => $user->name]);
+    } //assignAcceptor
 
-    public function dismissManager(Leads $lead): void //Снять менеджера с лида
+    public function dismissAcceptor(Leads $lead): void //Снять менеджера с лида
     {
         $lead->update(['accepted_by' => null]);
-    } //dismissManager
+    } //dismissAcceptor
 };
 
 ?>

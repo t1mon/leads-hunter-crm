@@ -5,6 +5,7 @@ namespace App\Repositories\Project\UserPermissions;
 use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -46,10 +47,20 @@ class ReadRepository{
             throw new InvalidArgumentException(message: 'Указан неизвестный метод ' . $method);
     } //findByCurrentUserInProject
 
-    public function findProjectIdsByUser(int $userId): array
+    public function findProjectIdsByUser(int $userId): array //Найти проекты, на которые назначен пользователь
     {
         return UserPermissions::where('user_id', $userId)->select('project_id')->pluck('project_id')->all();
     } //findProjectsByUser
+
+    public function findByProject(Project|int $project, string|array $with = null): Collection
+    {
+        return $this->query()
+            ->where('project_id', $project instanceof Project ? $project->id : $project)
+            ->when(!is_null($with), function($query) use ($with){
+                return $query->with($with);
+            })
+            ->get();
+    }
 
     //
     //  Скрытые методы

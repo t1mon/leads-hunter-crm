@@ -112,6 +112,16 @@ class User extends Authenticatable implements MustVerifyEmail
             return $permissions->role === Role::ROLE_MANAGER;
     } //isManagerFor
 
+    //Проверяет, является ли пользователь младшим менеджером определённого проекта
+    public function isJuniorManagerFor(Project|int $project): bool
+    {
+        $permissions = $this->getPermissionsForProject($project);
+        if( is_null($permissions) )
+            return false;
+        else
+            return $permissions->role === Role::ROLE_JUNIOR_MANAGER;
+    } //isJuniorManagerFor
+
     //Проверяет, является ли пользователь наблюдателем определённого проекта
     public function isWatcher(Project|int $project): bool
     {

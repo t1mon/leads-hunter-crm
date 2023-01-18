@@ -14,6 +14,7 @@ return [
     'fields' => [ //Названия полей
         'id' =>  '№',
         'owner' =>  'Владелец',
+        'accepted_by' => 'Принял',
         'company' =>  'Компания',
         'accepted_by' => 'Принял',
         'name' =>  'Имя',
