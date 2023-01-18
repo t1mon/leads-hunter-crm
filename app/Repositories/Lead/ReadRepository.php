@@ -18,6 +18,8 @@ class ReadRepository{
         Project|int $project,
         $date_from = null,
         $date_to = null,
+        $nextcall_from = null,
+        $nextcall_to = null,
         $class = null,
         $name = null,
         $entries = null,
@@ -27,6 +29,9 @@ class ReadRepository{
         $cost_from = null,
         $cost_to = null,
         $city = null,
+        $company = null,
+        $region = null,
+        $manual_region = null,
         $referrer = null,
         $source = null,
         $utm_medium = null,
@@ -47,12 +52,23 @@ class ReadRepository{
         //Фильтрация по дате
         if(!is_null($date_from)){
             $date = Carbon::parse($date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '>=' ,$date);
+            $leads->where('created_at', '>=', $date);
         }
 
         if(!is_null($date_to)){
             $end_date = Carbon::parse($date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
-            $leads->where('created_at', '<=' ,$end_date);;
+            $leads->where('created_at', '<=', $end_date);;
+        }
+
+        //Фильтрация по дате следующего звонка
+        if(!is_null($nextcall_from)){
+            $date = Carbon::parse($nextcall_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone'));
+            $leads->where('nextcall_date', '>=', $date);
+        }
+
+        if(!is_null($nextcall_to)){
+            $end_date = Carbon::parse($nextcall_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone'));
+            $leads->where('nextcall_date', '<=', $end_date);;
         }
 
         //Фильтрация по классу
@@ -89,6 +105,18 @@ class ReadRepository{
         //Фильтрация по городу
         if(!is_null($city))
             $leads->city($city);
+
+        //Фильтрация по компании
+        if(!is_null($company))
+            $leads->company($company);
+
+        //Фильтрация по региону
+        if(!is_null($region))
+            $leads->region($region);
+
+        //Фильтрация по региону
+        if(!is_null($manual_region))
+            $leads->manualRegion($manual_region);
 
         //Фильтрация по рефереру
         if(!is_null($referrer))

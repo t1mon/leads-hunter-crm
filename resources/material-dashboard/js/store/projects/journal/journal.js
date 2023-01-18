@@ -36,9 +36,11 @@ export default {
   },
   mutations: {
     SET_LEADS(state, data) {
+      state.leads = ''
       state.leads = data
     },
     SET_PROJECT_JOUR(state, data) {
+      state.projectJour = ''
       state.projectJour = data
     }
   },

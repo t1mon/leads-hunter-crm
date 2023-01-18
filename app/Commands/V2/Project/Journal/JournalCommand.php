@@ -11,6 +11,8 @@ class JournalCommand
     public $name;
     public $date_from;
     public $date_to;
+    public $nextcall_from;
+    public $nextcall_to;
     public $entries;
     public $owner;
     public $phone;
@@ -19,6 +21,9 @@ class JournalCommand
     public $cost_to;
     public $referrer;
     public $city;
+    public $company;
+    public $region;
+    public $manual_region;
     public $source;
     public $utm_medium;
     public $utm_source;
@@ -46,6 +51,8 @@ class JournalCommand
         $this->class = $request->class;
         $this->date_from = $request->date_from;
         $this->date_to = $request->date_to;
+        $this->nextcall_from = $request->nextcall_from;
+        $this->nextcall_to = $request->nextcall_to;
         $this->entries = $request->entry_filter;
         $this->owner = $request->owner;
         $this->phone = $request->phone;
@@ -54,6 +61,9 @@ class JournalCommand
         $this->cost_to = $request->cost_to;
         $this->referrer = $request->referrer;
         $this->city = $request->city;
+        $this->company = $request->company;
+        $this->region = $request->region;
+        $this->manual_region = $request->manual_region;
         $this->source = $request->source;
         $this->utm_medium = $request->utm_medium;
         $this->utm_source = $request->utm_source;
