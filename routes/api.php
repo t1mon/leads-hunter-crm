@@ -100,6 +100,13 @@ Route::prefix('v2')->name('v2.')->group(function(){
 
         //Лиды
         Route::prefix('lead')->name('lead.')->group(function(){
+            //Принять лид
+            Route::prefix('accept')->name('accept')->group(function(){
+                Route::post('assign', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'assign'])->name('assign');
+                Route::delete('dismiss', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'dismiss'])->name('dismiss');
+                Route::get('users', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'getUsersForProject'])->name('users');
+            });
+
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
