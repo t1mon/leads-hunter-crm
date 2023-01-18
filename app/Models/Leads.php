@@ -24,6 +24,8 @@ class Leads extends Model
 
     const SOURCE_DIRECT_ENTRY = 'DIRECT_ENTRY';
 
+    public const OWNER_ADDED_MANUALLY = 'Вручную';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +34,7 @@ class Leads extends Model
     protected $fillable = [
         'project_id',
         'owner',
+        'accepted_by',
         'company',
         'name',
         'surname',

@@ -4,6 +4,7 @@ namespace App\Repositories\Lead;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -51,6 +52,7 @@ class Repository{
             'name' => $name,
             'surname' => $surname,
             'patronymic' => $patronymic,
+            'owner' => Leads::OWNER_ADDED_MANUALLY,
             //...
         ]);
     } //create
@@ -136,6 +138,16 @@ class Repository{
     {
         $lead->update(['nextcall_date' => null]);
     } //clearNextCallDate
+
+    public function assignManager(Leads $lead, User $user): void //Назначить пользователя менеджером лида
+    {
+        $lead->update(['accepted_by' => $user->id]);
+    } //assignManager
+
+    public function dismissManager(Leads $lead): void //Снять менеджера с лида
+    {
+        $lead->update(['accepted_by' => null]);
+    } //dismissManager
 };
 
 ?>

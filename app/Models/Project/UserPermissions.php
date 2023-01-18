@@ -66,7 +66,7 @@ class UserPermissions extends Model
 
     /**
      *      Служебные методы
-     */    
+     */
     public function isOwner(): bool
     {
         return $this->project->user_id === $this->user_id;
@@ -76,6 +76,11 @@ class UserPermissions extends Model
     {
         return $this->role === Role::ROLE_MANAGER;
     } //isManager
+
+    public function isJuniorManager(): bool
+    {
+        return $this->role === Role::ROLE_JUNIOR_MANAGER;
+    }
     
     public function isWatcher(): bool
     {
