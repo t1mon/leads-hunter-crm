@@ -2,6 +2,10 @@
 
 return [
   'none' => 'None',
-  'admin' => "Administrator",
+  'admin' => "Администратор",
   'editor' => "Editor",
+
+  'manager' => 'Менеджер',
+  'junior_manager' => 'Младший менеджер',
+  'watcher' => 'Наблюдатель',
 ];

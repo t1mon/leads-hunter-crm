@@ -124,6 +124,12 @@ class Leads extends Model
         return $this->fillable;
     } //getFieldsAttribute
 
+    public static function getFields() //Получить список полей лида (статический метод)
+    {
+        $lead = new self;
+        return $lead->fields();
+    } //getFields
+
     /**
      *      Отношения
      */

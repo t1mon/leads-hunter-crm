@@ -6,6 +6,8 @@ use App\Models\Project\Project;
 use App\Models\Project\UserPermissions;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Http\Response as HttpResponse;
 
 class UserPermissionsPolicy
 {
@@ -15,11 +17,22 @@ class UserPermissionsPolicy
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Project\Project  $project
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user, Project $project)
     {
-        //
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_UNAUTHORIZED);
+
+        if($permissions->isOwner() || $permissions->isManager())
+            return Response::allow();
+        else
+            return Response::deny(message: 'У вас нет полномочий на это действие', code: HttpResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -34,40 +47,52 @@ class UserPermissionsPolicy
         //
     }
 
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project $project
-     * @return mixed
-     */
     public function create(User $user, Project $project)
     {
-        return $project->isOwner() or $user->isManagerFor($project);
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_UNAUTHORIZED);
+
+        if($permissions->isOwner() || $permissions->isManager())
+            return Response::allow();
+        else
+            return Response::deny(message: 'У вас нет полномочий на это действие', code: HttpResponse::HTTP_UNAUTHORIZED);
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project $project
-     * @return mixed
-     */
     public function update(User $user, Project $project)
     {
-        return $project->isOwner() or $user->isManagerFor($project);
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_UNAUTHORIZED);
+
+        if($permissions->isOwner() || $permissions->isManager())
+            return Response::allow();
+        else
+            return Response::deny(message: 'У вас нет полномочий на это действие', code: HttpResponse::HTTP_UNAUTHORIZED);
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Project\UserPermissions  $tUserPermissions
-     * @return mixed
-     */
-    public function delete(User $user, Project $project)
+    public function delete(User $user, UserPermissions $target)
     {
-        return $project->isOwner() or $user->isManagerFor($project);
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($target->project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_UNAUTHORIZED);
+
+        if($target->isOwner()) //Владельца удалять нельзя
+            return Response::deny(message: 'Невозможно удалить владельца проекта', code: HttpResponse::HTTP_UNAUTHORIZED);
+
+        if($permissions->isOwner() || $permissions->isManager())
+            return Response::allow();
+        else
+            return Response::deny(message: 'У вас нет полномочий на это действие', code: HttpResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
