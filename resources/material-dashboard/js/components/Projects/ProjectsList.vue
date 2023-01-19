@@ -6,7 +6,7 @@
                     <tr>
     <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">@lang('projects.attributes.name')</th>-->
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder">Имя</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">status</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2">Статус</th>
     <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">@lang('projects.attributes.leads_all')</th>-->
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center ps-2">Лидов всего</th>
     <!--                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">@lang('projects.attributes.leads_today')</th>-->

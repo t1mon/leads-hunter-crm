@@ -83,7 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::resource('mango', MangoController::class)->except(['index', 'create']);
             });
         });
-        
+
 
     });
 

@@ -112,13 +112,15 @@ class ProjectController extends Controller
         if (Gate::denies('settings', [Project::class, $project]))
             return redirect()->route('project.index');
 
+        $projectId = $project->id;
+
         //Загрузка хостов
         $hosts = $project->hosts;
 
         //Загрузка пользователей, назначенных на проект
         $permissions = $project->user_permissions;
 
-        return view('material-dashboard.project.settings_basic', compact('tab', 'project', 'hosts', 'permissions'));
+        return view('material-dashboard.project.settings_basic', compact('tab', 'project', 'hosts', 'permissions', 'projectId'));
     } //settings_basic
 
     public function settings_sync(Project $project, string $tab = null) //Страница настроек синхронизации

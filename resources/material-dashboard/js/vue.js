@@ -4,6 +4,7 @@ import store from './store'
 //components
 import SettingsBar from './components/Settings/SettingsBar'
 import SettingsBasic from './components/Settings/SettingsBasic/SettingsBasic'
+import SettingsBasicPermissions from './components/Settings/SettingsBasic/Permissions/SettingsBasicPermissions'
 import Projects from './components/Projects/Projects'
 import Journal from './components/Journal/Journal'
 import HeaderSearch from './components/Header/Search'
@@ -15,6 +16,7 @@ const app = createApp({
   components: {
     SettingsBar,
     SettingsBasic,
+    SettingsBasicPermissions,
     Projects,
     Journal,
     HeaderSearch,

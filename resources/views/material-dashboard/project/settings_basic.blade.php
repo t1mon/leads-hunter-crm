@@ -27,6 +27,13 @@
                 </a>
             </li>
 
+            {{--            Настройки разрешений пользователей новые--}}
+            <li class="nav-item">
+                <a  class="nav-link" data-bs-toggle="tab" href="#permissions">
+                    Настройки доступа (новые)
+                </a>
+            </li>
+
         </ul>
     </div>
 
@@ -45,6 +52,11 @@
 {{--        Классы проекта--}}
         <div class="tab-pane fade" id="classes" role="tabpanel">
             @include('material-dashboard.project._classes')
+        </div>
+
+        {{--        Настройки разрешений пользователей (новые)--}}
+        <div class="tab-pane fade" id="permissions" role="tabpanel">
+            <settings-basic-permissions :projectid="{{ $projectId }}"></settings-basic-permissions>
         </div>
 
     </div>
