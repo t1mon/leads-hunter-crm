@@ -20,6 +20,7 @@ class IndexForProject extends JsonResource
             'name' => $this->user->name,
             'email' => $this->user->email,
             'role' => __('roles.'.$this->role),
+            'view_fields' => $this->view_fields,
         ];
     }
 }
