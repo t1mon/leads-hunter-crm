@@ -28,21 +28,31 @@ class AssignHandler
     public function handle(AssignCommand $command)
     {
         //Загрузка данных
-        $user = $this->userReadRepository->findById(id: $command->request->user_id, fail: true);
         $project = $this->projectReadRepository->findById(id: $command->request->project_id, fail: true);
-        
-        //Если пользователь уже назначен на проект, вернуть ответ
-        if($user->isInProject($project))
-            return response(content: 'Пользователь уже назначен на этот проект', status: Response::HTTP_BAD_REQUEST);
+        // $user = $this->userReadRepository->findById(id: $command->request->user_id, fail: true);
 
-        //Назначение
-        $this->permissionsRepository->create(
-            user: $user,
-            project: $project,
-            role: $command->request->role,
-            fields: $command->request->filled('fields') ? $command->request->fields : [],
-        );
+        foreach($command->request->users as $item){
+            $user = $this->userReadRepository->findById(id: $item['user_id'], fail: true);
 
-        return response(content: 'Пользователь назначен на проект', status: Response::HTTP_CREATED);
+            //Если пользователь уже назначен на проект, не назначать его
+            if(!$user->isInProject($project)){
+                //Назначение
+                // $this->permissionsRepository->create(
+                //     user: $user,
+                //     project: $project,
+                //     role: $command->request->role,
+                //     fields: $command->request->filled('fields') ? $command->request->fields : [],
+                // );
+                $this->permissionsRepository->create(
+                    user: $user,
+                    project: $project,
+                    role: $item['role'],
+                    fields: $item['fields'] ?? [],
+                );
+            }
+        }
+
+        // return response(content: 'Пользователь назначен на проект', status: Response::HTTP_CREATED);
+        return response(content: 'Пользователи назначены на проект', status: Response::HTTP_CREATED);
     }
 }

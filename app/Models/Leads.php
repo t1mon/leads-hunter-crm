@@ -26,6 +26,37 @@ class Leads extends Model
 
     public const OWNER_ADDED_MANUALLY = 'Вручную';
 
+    public const FIELDS = [
+        'project_id',
+        'owner',
+        'accepted_by',
+        'company',
+        'name',
+        'surname',
+        'patronymic',
+        'full_name',
+        'phone',
+        'entries',
+        'email',
+        'cost',
+        'comment',
+        'comment_crm',
+        'city',
+        'manual_region',
+        'ip',
+        'referrer',
+        'source',
+        'utm',
+        'utm_medium',
+        'utm_source',
+        'utm_campaign',
+        'utm_content',
+        'utm_term',
+        'host',
+        'url_query_string',
+        'nextcall_date',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -121,13 +152,12 @@ class Leads extends Model
 
     public function getFieldsAttribute() //Получить список полей лида
     {
-        return $this->fillable;
+        return self::getFields();
     } //getFieldsAttribute
 
     public static function getFields() //Получить список полей лида (статический метод)
     {
-        $lead = new self;
-        return $lead->fields;
+        return self::FIELDS;
     } //getFields
 
     /**
@@ -140,7 +170,7 @@ class Leads extends Model
 
     public function comment_crm(){ //Получить комментарий к лиду из CRM
         return $this->hasOne(Comment::class, 'lead_id');
-    } //getCommentCRMAttribute
+    } //comment_crm
 
     public function class(){ //Получить класс лида
         return $this->belongsTo(LeadClass::class, 'class_id');

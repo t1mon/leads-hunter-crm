@@ -45,4 +45,9 @@ class LeadController extends Controller
             input: ['request' => $request]
         );
     } //destroy
+
+    public function getFieldsList() //Получить список полей в лиде
+    {
+        
+    }
 }
