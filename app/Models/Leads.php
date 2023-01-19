@@ -207,6 +207,27 @@ class Leads extends Model
         : $query->where('city', $city);
     } //scopeCity
     
+    public function scopeCompany($query, string|array $company)
+    {
+        return is_array($company)
+        ? $query->whereIn('company', $company)
+        : $query->where('company', $company);
+    } //scopeCompany
+    
+    public function scopeRegion($query, string|array $region)
+    {
+        return is_array($region)
+        ? $query->whereIn('region', $region)
+        : $query->where('region', $region);
+    } //scopeRegion
+    
+    public function scopeManualRegion($query, string|array $manual_region)
+    {
+        return is_array($manual_region)
+        ? $query->whereIn('manual_region', $manual_region)
+        : $query->where('manual_region', $manual_region);
+    } //scopeRegion
+    
     public function scopeReferrer($query, string|array $referrer)
     {
         return is_array($referrer)

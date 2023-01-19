@@ -106,6 +106,9 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::delete('dismiss', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'dismiss'])->name('dismiss');
                 Route::get('users', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'getUsersForProject'])->name('users');
             });
+            //Управление лидами вручную
+            Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
 
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){
@@ -139,6 +142,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
+
         });
 
         //Комментарии

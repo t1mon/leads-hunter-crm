@@ -76,7 +76,6 @@ export default {
                 })
                 this.serverDate = ''
                 this.date = ''
-                console.log(response)
             }).catch(error => {
                 this.$store.commit('loader/LOADER_FALSE')
                 console.log(error)
@@ -99,7 +98,6 @@ export default {
                     }
                 })
                 this.serverDate = this.date
-                console.log(response)
             }).catch(error => {
                 this.$store.commit('loader/LOADER_FALSE')
                 console.log(error)

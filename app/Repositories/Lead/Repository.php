@@ -6,7 +6,6 @@ use App\Models\Leads;
 use App\Models\Project\Project;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class Repository{
     public function query()
@@ -15,46 +14,75 @@ class Repository{
     } //query
 
     public function create(
-        Project|int $project,
+        Project $project,
         string $name,
         int $phone,
-        string $host,
+        ?string $host,
         ?string $surname,
         ?string $patronymic,
+        ?string $owner,
         ?string $cost,
+        ?string $email,
         ?string $comment,
         ?string $city,
+        // ?string $region,
+        ?string $manual_region,
+        ?string $company,
         ?string $ip,
-        ?string $email,
+        ?string $referrer,
+        ?string $source,
         ?string $utm_medium,
         ?string $utm_campaign,
         ?string $utm_source,
+        ?string $utm_term,
         ?string $utm_content,
-        ?string $referrer,
         ?string $url_query_string,
-    )
+        ?string $nextcall_date,
+    ): Leads
     {
-        //Подготовка параметров
-        $project = $project instanceof Project ? $project->id : $project;
-        
-        if(filter_var($host, FILTER_VALIDATE_URL))
-            $host = Str::lower( parse_url($host) );
-
-        if($phone[0] === 8)
-            $phone = preg_replace('/^./','7', $phone);
-        
-        //TODO Спросить
-        $cost = preg_replace("/[^0-9]/", '', trim($cost));
-
         //Создание лида
-        $this->query()->create([
-            'project_id' => $project,
+        $lead = $this->query()->create([
+            'project_id' => $project->id,
+            'owner' => $owner,
             'name' => $name,
             'surname' => $surname,
             'patronymic' => $patronymic,
             'owner' => Leads::OWNER_ADDED_MANUALLY,
             //...
+            'phone' => $phone,
+            'email' => $email,
+            'cost' => $cost,
+            'comment' => $comment,
+            'city' => $city,
+            // 'region' => $region,
+            'manual_region' => $manual_region,
+            'company' => $company,
+            'ip' => $ip,
+            'referrer' => $referrer,
+            'source' => $source,
+            'utm_medium' => $utm_medium,
+            'utm_source' => $utm_source,
+            'utm_campaign' => $utm_campaign,
+            'utm_content' => $utm_content,
+            'utm_term' => $utm_term,
+            'host' => $host,
+            'url_query_string' => $url_query_string,
+            'nextcall_date' => is_null($nextcall_date) ? null : Carbon::parse(time: $nextcall_date, tz: $project->timezone)->setTimezone(config('app.timezone')),
         ]);
+
+        //Заполнение остальных полей
+        $lead->update([
+            'full_name' => $lead->getClientName(),
+            'utm' => [
+                'utm_medium' => $utm_medium,
+                'utm_source' => $utm_source,
+                'utm_campaign' => $utm_campaign,
+                'utm_content' => $utm_content,
+                'utm_term' => $utm_term,
+            ],
+        ]);
+
+        return $lead;
     } //create
 
     public function update(Leads $lead, array $params): Leads
