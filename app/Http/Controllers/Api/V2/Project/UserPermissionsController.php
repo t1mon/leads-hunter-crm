@@ -37,7 +37,7 @@ class UserPermissionsController extends Controller
         );
     } //execute
 
-    private function index(IndexRequest $request) //Показать пользователей, назначенных на проект
+    public function index(IndexRequest $request) //Показать пользователей, назначенных на проект
     {
         return $this->execute(command: IndexCommand::class, handler: IndexHandler::class, request: $request);
     } //index

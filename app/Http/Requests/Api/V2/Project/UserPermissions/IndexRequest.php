@@ -35,7 +35,9 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|exists:project,id',
+            'project_id' => 'required|exists:projects,id',
         ];
     }
+
+    
 }

@@ -16,8 +16,10 @@ class IndexForProject extends JsonResource
     {
         // return parent::toArray($request);
         return [
+            'id' => $this->id,
             'name' => $this->user->name,
-            'role' => __($this->role),
+            'email' => $this->user->email,
+            'role' => __('roles.'.$this->role),
         ];
     }
 }

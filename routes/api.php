@@ -128,10 +128,6 @@ Route::prefix('v2')->name('v2.')->group(function(){
         
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
-            Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
-            Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
-            Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
-
             //Полномочия пользователя
             Route::prefix('permissions')->name('permissions.')->group(function(){
                 Route::get('index', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'index'])->name('index');
@@ -139,6 +135,10 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::put('change', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'changeRole'])->name('change');
                 Route::delete('dismiss', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'dismiss'])->name('dismiss');
             });
+
+            Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
+            Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
+            Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
         });
 
         //Комментарии

@@ -22,7 +22,7 @@ class AssignRequest extends FormRequest
     public function authorize()
     {
         //Загрузка данных
-        $project = $this->projectReadRepository->findById(id: 'project_id', fail: true);
+        $project = $this->projectReadRepository->findById(id: $this->project_id, fail: true);
 
         //Авторизация
         return $this->user()->can('create', [UserPermissions::class, $project]);
@@ -39,7 +39,7 @@ class AssignRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'project_id' => 'required|exists:projects,id',
             'role' => ['required', Rule::in([Role::ROLE_MANAGER, Role::ROLE_JUNIOR_MANAGER, Role::ROLE_WATCHER])],
-            'fields' => 'required|array',
+            'fields' => 'array',
             'fields.*' => [Rule::in(Leads::getFields())],
         ];
     }

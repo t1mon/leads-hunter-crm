@@ -127,7 +127,7 @@ class Leads extends Model
     public static function getFields() //Получить список полей лида (статический метод)
     {
         $lead = new self;
-        return $lead->fields();
+        return $lead->fields;
     } //getFields
 
     /**

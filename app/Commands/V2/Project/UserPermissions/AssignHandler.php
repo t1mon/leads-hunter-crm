@@ -40,7 +40,7 @@ class AssignHandler
             user: $user,
             project: $project,
             role: $command->request->role,
-            fields: $command->request->fields,
+            fields: $command->request->filled('fields') ? $command->request->fields : [],
         );
 
         return response(content: 'Пользователь назначен на проект', status: Response::HTTP_CREATED);
