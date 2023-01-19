@@ -121,4 +121,32 @@ class ProjectPolicy
     {
         //
     }
+
+    public function getUsersForProject(User $user, Project $project) //Определить, может ли пользователь получить список пользователей, назначенных на проект
+    {
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту');
+        else
+            return ($permissions->isOwner() || $permissions->isManager())
+                ? Response::allow()
+                : Response::deny(message: 'Вы не можете просматривать эти данные');
+    } //getUsersForProject
+
+    public function findFreeUsersForProject(User $user, Project $project) //Может ли пользователь получить список пользователей, ещё не назначенных на проект
+    {
+        if($user->isAdmin())
+            return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту');
+        else
+            return ($permissions->isOwner() || $permissions->isManager())
+                ? Response::allow()
+                : Response::deny(message: 'Вы не можете просматривать эти данные');
+    } //findFreeUsersForProject
 }

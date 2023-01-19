@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
@@ -33,5 +34,17 @@ class UserPolicy
     public function api_token(User $current_user, User $user): bool
     {
         return $current_user->id === $user->id;
+    }
+
+    public function viewAny(User $user)
+    {
+        throw new \Exception(__METHOD__);
+
+        if($user->isAdmin())
+            return Response::allow();
+
+        //Предусмотреть логику
+        //...
+        return Response::allow(); //Заглушка
     }
 }

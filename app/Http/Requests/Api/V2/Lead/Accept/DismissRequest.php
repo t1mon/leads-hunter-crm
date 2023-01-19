@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\V2\Lead\Accept;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Leads;
 use App\Repositories\Lead\ReadRepository as LeadReadRepository;
 
 class DismissRequest extends FormRequest

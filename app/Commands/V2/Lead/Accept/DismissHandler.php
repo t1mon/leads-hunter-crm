@@ -23,7 +23,7 @@ class DismissHandler
      */
     public function handle(DismissCommand $command)
     {
-        $lead = $this->leadReadRepository->findById(id: $command->request->lead_it, fail: true);
+        $lead = $this->leadReadRepository->findById(id: $command->request->lead_id, fail: true);
         $this->leadRepository->dismissAcceptor(lead: $lead);
 
         return response(content: 'Пользователь убран с лида', status: Response::HTTP_NO_CONTENT);

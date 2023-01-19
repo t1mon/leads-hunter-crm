@@ -2,8 +2,9 @@
 
 namespace App\Repositories\User;
 
+use App\Models\Project\Project;
 use App\Models\User;
-
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ReadRepository{
@@ -19,6 +20,12 @@ class ReadRepository{
     {
         return User::paginate($perPage);
     } //findAll
+
+    public function findFreeUsersForProject(Project $project): Collection //Найти пользователей, которые ещё не назначены на проект
+    {
+        $ids = $project->user_permissions()->pluck('user_id');
+        return $this->query()->whereNotIn('id', $ids)->get();
+    } //findFreeForProject
 
     public function findById(int $id, bool $fail = false, string|array $with = null): ?User
     {

@@ -100,26 +100,27 @@ Route::prefix('v2')->name('v2.')->group(function(){
 
         //Лиды
         Route::prefix('lead')->name('lead.')->group(function(){
-            //Принять лид
-            Route::prefix('accept')->name('accept')->group(function(){
-                Route::post('assign', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'assign'])->name('assign');
-                Route::delete('dismiss', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'dismiss'])->name('dismiss');
-                Route::get('users', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'getUsersForProject'])->name('users');
-            });
             //Управление лидами вручную
             Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
-
+            
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\LeadController::class, 'clearNextcall'])->name('clear');
-            });
-
+            });            
+            
             //Регион, выставляемый вручную
             Route::prefix('manual_region')->name('manual_region.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'store'])->name('add');
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'destroy'])->name('clear');
+            });
+            
+            //Принять лид
+            Route::prefix('accept')->name('accept.')->group(function(){
+                Route::post('assign', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'assign'])->name('assign');
+                Route::delete('dismiss', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'dismiss'])->name('dismiss');
+                Route::get('users', [\App\Http\Controllers\Api\V2\Lead\AcceptLeadController::class, 'getUsersForProject'])->name('users');
             });
 
             //Компания
@@ -133,6 +134,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
         Route::prefix('project')->name('project.')->group(function(){
             //Полномочия пользователя
             Route::prefix('permissions')->name('permissions.')->group(function(){
+                Route::get('free_users', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'findFreeUsers'])->name('free_users');
                 Route::get('index', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'index'])->name('index');
                 Route::post('assign', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'assign'])->name('assign');
                 Route::put('change', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'changeRole'])->name('change');

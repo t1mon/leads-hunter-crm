@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V2\Lead\Accept;
 
+use App\Models\Leads;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Repositories\Lead\ReadRepository as LeadReadRepository;
 use App\Repositories\User\ReadRepository as UserReadRepository;
