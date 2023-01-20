@@ -62,12 +62,12 @@ class UserPermissionsPolicy
             return Response::deny(message: 'У вас нет полномочий на это действие');
     }
 
-    public function update(User $user, Project $project)
+    public function update(User $user, UserPermissions $target)
     {
         if($user->isAdmin())
             return Response::allow();
 
-        $permissions = $user->getPermissionsForProject($project);
+        $permissions = $user->getPermissionsForProject($target->project);
         if(is_null($permissions))
             return Response::deny(message: 'У вас нет доступа к этому проекту');
 

@@ -54,11 +54,8 @@ class Repository{
 
     public function changeRole(UserPermissions $userPermissions, string $role, array $fields = null): UserPermissions
     {
-        //Если поля оставлены прежними, а пользователь "понижается" с управляющей роли на наблюдателя, его видимые поля должны быть соответственно ограничены
-        if( is_null($fields) && (!$userPermissions->isWatcher() && $role === Role::ROLE_WATCHER) )
-            $fields = [];
+        return $this->update(userPermissions: $userPermissions, role: $role, fields: $fields ?? $userPermissions->view_fields);
 
-        return $this->update(userPermissions: $userPermissions, role: $role, fields: $fields);
     } //changeRole
 
     public function remove(UserPermissions $userPermissions): void

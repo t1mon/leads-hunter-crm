@@ -136,7 +136,7 @@ class ProjectPolicy
                 : Response::deny(message: 'Вы не можете просматривать эти данные');
     } //getUsersForProject
 
-    public function findFreeUsersForProject(User $user, Project $project) //Может ли пользователь получить список пользователей, ещё не назначенных на проект
+    public function getLeadFields(User $user, Project $project) //Может ли пользователь получить список полей, использующихся в лиде
     {
         if($user->isAdmin())
             return Response::allow();
@@ -148,5 +148,5 @@ class ProjectPolicy
             return ($permissions->isOwner() || $permissions->isManager())
                 ? Response::allow()
                 : Response::deny(message: 'Вы не можете просматривать эти данные');
-    } //findFreeUsersForProject
+    } //getLeadFields
 }

@@ -27,14 +27,14 @@ class Leads extends Model
     public const OWNER_ADDED_MANUALLY = 'Вручную';
 
     public const FIELDS = [
-        'project_id',
+        // 'project_id',
         'owner',
         'accepted_by',
         'company',
         'name',
-        'surname',
-        'patronymic',
-        'full_name',
+        // 'surname',
+        // 'patronymic',
+        // 'full_name',
         'phone',
         'entries',
         'email',
@@ -46,7 +46,7 @@ class Leads extends Model
         'ip',
         'referrer',
         'source',
-        'utm',
+        // 'utm',
         'utm_medium',
         'utm_source',
         'utm_campaign',

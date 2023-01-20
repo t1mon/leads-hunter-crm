@@ -1,29 +1,25 @@
 <?php
 
-namespace App\Http\Requests\Api\V2\Project\UserPermissions;
+namespace App\Http\Requests\Api\V2\Lead;
 
 use App\Models\Project\Project;
 use Illuminate\Foundation\Http\FormRequest;
+
 use App\Repositories\Project\ReadRepository as ProjectReadRepository;
 
-class FindFreeUsersRequest extends FormRequest
+class GetFieldsRequest extends FormRequest
 {
     public function __construct(
         private ProjectReadRepository $projectReadRepository,
     )
     {
         //
-    } //Конструктор
+    }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
-        $project = $this->projectReadRepository->findById(id: $this->project_id, fail:true);
-        return $this->user()->can('findFreeUsersForProject', [Project::class, $project]);
+        $project = $this->projectReadRepository->findById(id: $this->project_id, fail: true);
+        return $this->user()->can('getLeadFields', [Project::class, $project]);
     }
 
     /**
@@ -34,7 +30,7 @@ class FindFreeUsersRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|exists:projects,id',
+            'project_id' => 'required|exists:projects,id'
         ];
     }
 }

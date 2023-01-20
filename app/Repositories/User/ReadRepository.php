@@ -21,21 +21,42 @@ class ReadRepository{
         return User::paginate($perPage);
     } //findAll
 
-    public function findFreeUsersForProject(Project $project): Collection //Найти пользователей, которые ещё не назначены на проект
-    {
-        $ids = $project->user_permissions()->pluck('user_id');
-        return $this->query()->whereNotIn('id', $ids)->get();
-    } //findFreeForProject
-
     public function findById(int $id, bool $fail = false, string|array $with = null): ?User
     {
         return $this->_findByData(field: 'id', value: $id, fail: $fail, with: $with);
     } //findById
 
-    public function find(int $user, bool $fail = false, string|array $with = null): ?User //Общая функция поиска для удобства
+    public function findByEmail(string $email, bool $fail = false, string|array $with = null): ?User
     {
+        return $this->_findByData(field: 'email', value: $email, fail: $fail, with: $with);
+    } //findById
+
+    public function findByName(string $name, bool $fail = false, string|array $with = null): ?User
+    {
+        return $this->_findByData(field: 'name', value: $name, fail: $fail, with: $with);
+    } //findById
+
+    public function find(mixed $user, bool $fail = false, string|array $with = null): ?User //Общая функция поиска для удобства
+    {
+        $result = null;
+
         //Поиск по id
-        $result = $this->findById(id: $user, with: $with);
+        if(is_numeric($user)){
+            $result = $this->findById(id: $user, with: $with);
+            if(!is_null($result))
+                return $result;
+        }
+        elseif(is_string($user)){
+            //Поиск по email
+            $result = $this->findByEmail(email: $user, with: $with);
+            if(!is_null($result))
+                return $result;
+
+            //Поиск по имени
+            $result = $this->findByName(name: $user, with: $with);
+            if(!is_null($result))
+                return $result;
+        }
 
         //Поиск по другим результатам
         // ...
