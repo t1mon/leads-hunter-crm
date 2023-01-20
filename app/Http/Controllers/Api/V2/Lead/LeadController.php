@@ -6,9 +6,12 @@ use App\Commands\V2\Lead\CUD\AddManuallyCommand;
 use App\Commands\V2\Lead\CUD\AddManuallyHandler;
 use App\Commands\V2\Lead\CUD\DeleteCommand;
 use App\Commands\V2\Lead\CUD\DeleteHandler;
+use App\Commands\V2\Lead\GetFieldsCommand;
+use App\Commands\V2\Lead\GetFieldsHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V2\Lead\AddManually;
 use App\Http\Requests\Api\V2\Lead\Delete;
+use App\Http\Requests\Api\V2\Lead\GetFieldsRequest;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
 
 class LeadController extends Controller
@@ -46,8 +49,12 @@ class LeadController extends Controller
         );
     } //destroy
 
-    public function getFieldsList() //Получить список полей в лиде
+    public function getFieldsList(GetFieldsRequest $request) //Получить список полей в лиде
     {
-        
-    }
+        $this->bus->addHandler(command: GetFieldsCommand::class, handler: GetFieldsHandler::class);
+        return $this->bus->dispatch(
+            command: GetFieldsCommand::class,
+            input: ['request' => $request]
+        );
+    } //getFieldsList
 }

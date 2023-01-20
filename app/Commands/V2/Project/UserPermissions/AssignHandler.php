@@ -32,7 +32,7 @@ class AssignHandler
         // $user = $this->userReadRepository->findById(id: $command->request->user_id, fail: true);
 
         foreach($command->request->users as $item){
-            $user = $this->userReadRepository->findById(id: $item['user_id'], fail: true);
+            $user = $this->userReadRepository->find(user: $item['email'], fail: true);
 
             //Если пользователь уже назначен на проект, не назначать его
             if(!$user->isInProject($project)){

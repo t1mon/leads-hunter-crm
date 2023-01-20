@@ -39,7 +39,7 @@ class AssignRequest extends FormRequest
             'project_id' => 'required|exists:projects,id',
             
             'users' => 'required|array',
-            'users.*.user_id' => 'required|exists:users,id',
+            'users.*.email' => 'required|exists:users,email',
             'users.*.role' => ['required', Rule::in([Role::ROLE_MANAGER, Role::ROLE_JUNIOR_MANAGER, Role::ROLE_WATCHER])],
             'users.*.fields' => 'array',
             'users.*.fields.*' => [Rule::in(Leads::getFields())],

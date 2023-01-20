@@ -8,17 +8,12 @@ use App\Commands\V2\Project\UserPermissions\ChangeRoleCommand;
 use App\Commands\V2\Project\UserPermissions\ChangeRoleHandler;
 use App\Commands\V2\Project\UserPermissions\DismissCommand;
 use App\Commands\V2\Project\UserPermissions\DismissHandler;
-use App\Commands\V2\Project\UserPermissions\FindFreeUsersCommand;
-use App\Commands\V2\Project\UserPermissions\FindFreeUsersHandler;
 use App\Commands\V2\Project\UserPermissions\IndexCommand;
 use App\Commands\V2\Project\UserPermissions\IndexHandler;
-use App\Commands\V2\User\IndexCommand as UserIndexCommand;
-use App\Commands\V2\User\IndexHandler as UserIndexHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V2\Project\UserPermissions\AssignRequest;
 use App\Http\Requests\Api\V2\Project\UserPermissions\ChangeRoleRequest;
 use App\Http\Requests\Api\V2\Project\UserPermissions\DismissRequest;
-use App\Http\Requests\Api\V2\Project\UserPermissions\FindFreeUsersRequest;
 use App\Http\Requests\Api\V2\Project\UserPermissions\IndexRequest;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
 
@@ -46,11 +41,6 @@ class UserPermissionsController extends Controller
     {
         return $this->execute(command: IndexCommand::class, handler: IndexHandler::class, request: $request);
     } //index
-
-    public function findFreeUsers(FindFreeUsersRequest $request)
-    {
-        return $this->execute(command: FindFreeUsersCommand::class, handler: FindFreeUsersHandler::class, request: $request);
-    }
 
     public function assign(AssignRequest $request) //Назначить на проект
     {

@@ -100,6 +100,8 @@ Route::prefix('v2')->name('v2.')->group(function(){
 
         //Лиды
         Route::prefix('lead')->name('lead.')->group(function(){
+            Route::get('get_fields', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'getFieldsList'])->name('get_fields');
+
             //Управление лидами вручную
             Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
@@ -134,7 +136,6 @@ Route::prefix('v2')->name('v2.')->group(function(){
         Route::prefix('project')->name('project.')->group(function(){
             //Полномочия пользователя
             Route::prefix('permissions')->name('permissions.')->group(function(){
-                Route::get('free_users', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'findFreeUsers'])->name('free_users');
                 Route::get('index', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'index'])->name('index');
                 Route::post('assign', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'assign'])->name('assign');
                 Route::put('change', [\App\Http\Controllers\Api\V2\Project\UserPermissionsController::class, 'changeRole'])->name('change');
