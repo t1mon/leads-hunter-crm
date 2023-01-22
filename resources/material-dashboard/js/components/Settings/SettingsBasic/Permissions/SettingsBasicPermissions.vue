@@ -1,77 +1,287 @@
 <template>
 <div class="container bg-white py-4 mt-4 rounded-3">
     <div class="d-flex">
-        <div class="w-50">
-            <h3 class="fs-5 mb-4">Добавить нового пользователя</h3>
+        <div class="w-50 p-2">
+            <h3 class="fs-5 mb-4">Назначенные пользователи:</h3>
+
+            <div v-if="assignedUsersLoad" class="spinner-border text-default m-auto" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p
+                v-if="!assignedUsersLoad && (!assignedUsers || assignedUsers.length === 0)"
+               class="mb-1 text-sm fw-bolder"
+            >Нет назначенных пользователей.</p>
+            <div
+                v-if="!assignedUsersLoad && assignedUsers && assignedUsers.length > 0"
+            >
+                <form
+                    v-for="(user, index) in assignedUsers"
+                    :key="index"
+                    action="#"
+                    class="border border-1 border-success rounded-2 p-2 mb-3">
+
+                    <div class="d-flex justify-content-between">
+                        <p class="m-0 text-md text-dark fw-bolder">{{ user.name }}</p>
+                        <i class="material-icons-round text-danger cursor-pointer">
+                            <span class="material-symbols-outlined">cancel</span>
+                        </i>
+                    </div>
+                    <hr class="my-2">
+                    <p class="mb-1 text-sm fw-bolder">E-mail пользователя</p>
+                    <div
+                        :class="{'is-invalid' : !assignedUsers[index].email }"
+                        class="input-group mb-3">
+                        <input
+                            @input="assignedUsers[index].change = true"
+                            v-model="assignedUsers[index].email"
+                            type="text" class="form-control border border-1 px-2" placeholder="E-mail">
+                        <div class="invalid-feedback" v-if="!assignedUsers[index].email">Обязательное поле.</div>
+                        <div class="invalid-feedback" v-if="v$.email.email.$invalid && v$.$dirty">Неверный формат</div>
+                    </div>
+
+                    <p class="mb-1 text-sm fw-bolder">Роль пользователя</p>
+                    <div
+                        :class="{'is-invalid' : v$.role.$invalid && v$.$dirty}"
+                        class="input-group mb-3">
+                        <select
+                            @change="assignedUsers[index].change = true"
+                            v-model="assignedUsers[index].role"
+                            class="form-select border border-1 px-2">
+                            <option value="manager">Менеджер</option>
+                            <option value="junior_manager">Младший менеджер</option>
+                            <option value="watcher">Наблюдатель</option>
+                        </select>
+                        <div class="invalid-feedback" v-if="v$.role.required.$invalid && v$.$dirty">Обязательное поле.</div>
+                    </div>
+                    <button
+                        v-if="assignedUsers[index].change"
+                        class="btn btn-success m-0 d-block ms-auto" type="submit">Сохранить</button>
+                </form>
+
+            </div>
+        </div>
+
+        <form @submit="assignUser" action="#" class="w-50 p-2">
+            <h3 class="fs-5 mb-4">Добавить нового пользователя:</h3>
 
             <p class="mb-1 text-sm fw-bolder">Введите e-mail пользователя</p>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control border border-1 px-2" placeholder="E-mail">
+            <div
+                :class="{'is-invalid' : v$.email.$invalid && v$.$dirty}"
+                class="input-group mb-3">
+                <input
+                    v-model="email"
+                    type="text" class="form-control border border-1 px-2" placeholder="E-mail">
+                <div class="invalid-feedback" v-if="v$.email.required.$invalid && v$.$dirty">Обязательное поле.</div>
+                <div class="invalid-feedback" v-if="v$.email.email.$invalid && v$.$dirty">Неверный формат</div>
             </div>
 
             <p class="mb-1 text-sm fw-bolder">Назначте роль пользователя</p>
-            <div class="input-group mb-3">
-                <input disabled type="text" class="form-control border border-1 px-2 bg-white">
-                <button class="btn btn-success m-0 px-3 text-xxs" type="button">Выбрать роль</button>
+            <div
+                :class="{'is-invalid' : v$.role.$invalid && v$.$dirty}"
+                class="input-group mb-3">
+                <select
+                    v-model="role"
+                    class="form-select border border-1 px-2">
+                    <option value="" disabled>Роль не выбрана</option>
+                    <option value="manager">Менеджер</option>
+                    <option value="junior_manager">Младший менеджер</option>
+                    <option value="watcher">Наблюдатель</option>
+                </select>
+                <div class="invalid-feedback" v-if="v$.role.required.$invalid && v$.$dirty">Обязательное поле.</div>
             </div>
 
             <p class="mb-1 text-sm fw-bolder">Настройте доступ к полям журнала</p>
-            <div class="border border-1 rounded-2 p-2">
-                <div class="d-flex flex-wrap mb-2">
+            <div class="border border-1 rounded-2 p-2 mb-3">
+                <div v-if="fieldsLoad" class="spinner-border text-default m-auto" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div
+                    v-else
+                    class="d-flex flex-wrap mb-2">
+                    <span v-if="checkedFields.length === 0" class="text-sm text-warning">Здесь будут показаны выбранные поля журнала.</span>
                     <div
-                        v-for="(field, index) in fields"
-                        class="text-xxl p-1 px-3 bg-info text-white rounded-pill d-flex align-items-center m-1">
-                        <span class="me-1">{{ field }}</span>
-                        <i class="material-icons-round text-sm cursor-pointer"><span class="material-symbols-outlined">cancel</span></i>
+                        v-for="(field, index) in checkedFields"
+                        :key="index"
+                        class="text-xxs p-1 px-2 bg-info text-white rounded-pill d-flex align-items-center m-1">
+                        <span class="me-1">{{ field.front }}</span>
+                        <i
+                            @click="deleteField(index)"
+                            class="material-icons-round text-sm cursor-pointer"><span class="material-symbols-outlined">cancel</span></i>
                     </div>
                 </div>
                 <hr>
-                <button class="btn btn-success m-0 px-3 text-xxs" type="button">Настроить</button>
+                <button class="btn btn-secondary m-0 px-3 text-xxl" type="button" data-bs-toggle="modal" data-bs-target="#permissionsFields">Добавить поля</button>
             </div>
-        </div>
+            <button class="btn btn-success m-0 d-block ms-auto" type="submit">Добавить пользователя</button>
+        </form>
     </div>
+</div>
+
+<div class="modal fade py-2" id="permissionsFields" tabindex="-1" role="dialog" aria-labelledby="permissionsFieldsLabel" aria-hidden="true">
+        <div class="modal-dialog h-100 my-0" role="document">
+            <form action="#" class="modal-content mh-100">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal" id="permissionsFieldsLabel">Отметьте поля</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="fieldsLoad" class="spinner-border text-default m-auto" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div v-else class="modal-body overflow-auto">
+                    <div
+                        v-for="(field, index) in fields"
+                        :key="index"
+                        class="form-check">
+                        <input
+                            v-model="checkedFields"
+                            :value="field"
+                            :id="field.back"
+                            class="form-check-input" type="checkbox">
+                        <label class="custom-control-label" :for="field.back">{{field.front}}</label>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button
+                        @click="selectAllFields"
+                        :disabled="fieldsLoad"
+                        type="submit"
+                        class="btn btn-info m-0">Выбрать все</button>
+                    <button
+                        @click="clearAllFields"
+                        :disabled="fieldsLoad"
+                        type="submit"
+                        class="btn btn-warning m-0">Очистить</button>
+                </div>
+            </form>
+        </div>
 </div>
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, minLength, url } from '@vuelidate/validators'
+import {isIP} from "is-ip";
+
 export default {
     name: "SettingsBasicPermissions",
+    setup () {
+        return { v$: useVuelidate() }
+    },
     props: ['projectid'],
     data() {
       return {
+          email: '',
+          role: '',
           fields: null,
-          assignedUsers: null
+          checkedFields: [],
+          assignedUsers: null,
+          fieldsLoad: false,
+          assignedUsersLoad: false
       }
     },
-    computed: {
-        stateProjectId() {
-            return this.$store.getters['journalAll/stateProjectId']
+    methods: {
+        async assignUser() {
+            const result = await this.v$.$validate()
+            if (!result) {
+                return
+            }
+
+            this.$store.commit('loader/LOADER_TRUE')
+
+            const fields = this.checkedFields.map(el => {
+                return el.back
+            })
+            await axios.post('/api/v2/project/permissions/assign', {
+                project_id: this.projectid,
+                email: this.email,
+                role: this.role,
+                fields: fields
+            }).then(response => {
+                this.v$.$reset()
+                this.clearData()
+                this.$store.commit('loader/LOADER_FALSE')
+                this.$refs.closeManualLeads.click()
+                this.$store.dispatch('getToast', {
+                    msg: 'Лид добавлен!',
+                    settingsObj: {
+                        type: 'success',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+            }).catch(error => {
+                this.$store.dispatch('getToast', {
+                    msg: 'Что-то пошло не так!',
+                    settingsObj: {
+                        type: 'danger',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+                this.$store.commit('loader/LOADER_FALSE')
+                console.log(error)
+            })
+        },
+        deleteField(index) {
+            this.checkedFields.splice(index, 1)
+        },
+        selectAllFields() {
+            this.checkedFields = this.fields.map(el => {
+                return el
+            })
+        },
+        clearAllFields() {
+            this.checkedFields = []
         }
     },
-    async created() {
-        await axios.get(`/api/v2/project/permissions/index`, {
+    validations () {
+        return {
+            email: { required, email },
+            role: { required }
+        }
+    },
+    created() {
+        this.fieldsLoad = true
+        this.assignedUsersLoad = true
+        axios.get(`/api/v2/project/permissions/index`, {
             params: {
                 project_id: this.projectid
             }
         })
             .then(response => {
-                this.assignedUsers = response.data
+                this.assignedUsers = response.data.data
+                this.assignedUsersLoad = false
                 console.log(response)
             })
             .catch(error => {
+                this.assignedUsersLoad = false
                 console.log(error)
             })
 
-        await axios.get('/api/v2/lead/get_fields', {
+        axios.get('/api/v2/lead/get_fields', {
             params: {
                 project_id: this.projectid
             }
         })
             .then(response => {
-                this.fields = response.data
+                const arr = []
+                for (const key in response.data) {
+                    const obj = {
+                        front: response.data[key],
+                        back: key
+                    }
+                    arr.push(obj)
+                }
+                this.fields = arr
+                this.fieldsLoad = false
                 console.log(response)
             })
             .catch(error => {
+                this.fieldsLoad = true
                 console.log(error)
             })
     }
@@ -79,4 +289,21 @@ export default {
 </script>
 
 <style scoped>
+select {
+    background-position: right 8px center;
+}
+.is-invalid {
+    outline: 1px solid tomato;
+    border-radius: 4px;
+}
+.invalid-feedback {
+    display: block;
+    position:absolute;
+    top: -2px;
+    left: 2px;
+    width: 100%;
+    color: #dc3545;
+    font-size: 10px;
+    margin: 0 !important;
+}
 </style>

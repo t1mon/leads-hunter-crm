@@ -8,11 +8,11 @@
         <i class="material-icons-round text-sm"><span class="material-symbols-outlined">add_circle</span></i>
     </button>
 
-    <div class="modal fade" id="journalManualLeads" tabindex="-1" role="dialog" aria-labelledby="journalCommentsLabel" aria-hidden="true">
+    <div class="modal fade" id="journalManualLeads" tabindex="-1" role="dialog" aria-labelledby="journalManualLeadsLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form @submit.prevent="addLead" action="#" class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-weight-normal" id="journalCommentsLabel">Добавление лида</h5>
+                    <h5 class="modal-title font-weight-normal" id="journalManualLeadsLabel">Добавление лида</h5>
                     <button ref="closeManualLeads" type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
