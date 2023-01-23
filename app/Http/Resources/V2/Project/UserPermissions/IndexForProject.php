@@ -15,12 +15,19 @@ class IndexForProject extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
+
+        //Формирования списка полей с переводом
+        $viewFieldsTranslatred = [];
+        foreach($this->view_fields as $field)
+            $viewFieldsTranslatred[$field] = __('leads.fields.'.$field);
+
+        //Возврат данных
         return [
             'id' => $this->id,
             'name' => $this->user->name,
             'email' => $this->user->email,
-            'role' => __('roles.'.$this->role),
-            'view_fields' => $this->view_fields,
+            'role' => $this->role,
+            'view_fields' => $viewFieldsTranslatred,
         ];
     }
 }
