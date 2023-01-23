@@ -27,6 +27,7 @@ class IndexForProject extends JsonResource
             'name' => $this->user->name,
             'email' => $this->user->email,
             'role' => $this->role,
+            'owner' => $this->when(condition: $this->isOwner(), value: true),
             'view_fields' => $viewFieldsTranslatred,
         ];
     }

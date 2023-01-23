@@ -64,6 +64,9 @@ class UserPermissionsPolicy
 
     public function update(User $user, UserPermissions $target)
     {
+        if($target->isOwner()) //Владельца изменять нельзя
+            return Response::deny(message: 'У владельца проекта не могут изменяться полномочия');
+
         if($user->isAdmin())
             return Response::allow();
 
@@ -79,15 +82,15 @@ class UserPermissionsPolicy
 
     public function delete(User $user, UserPermissions $target)
     {
+        if($target->isOwner()) //Владельца удалять нельзя
+            return Response::deny(message: 'Невозможно удалить владельца проекта');
+
         if($user->isAdmin())
             return Response::allow();
 
         $permissions = $user->getPermissionsForProject($target->project);
         if(is_null($permissions))
             return Response::deny(message: 'У вас нет доступа к этому проекту');
-
-        if($target->isOwner()) //Владельца удалять нельзя
-            return Response::deny(message: 'Невозможно удалить владельца проекта');
 
         if($permissions->isOwner() || $permissions->isManager())
             return Response::allow();
