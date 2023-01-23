@@ -1,7 +1,8 @@
 <template>
-<div class="container bg-white py-4 mt-4 rounded-3">
-    <div class="d-flex">
-        <div class="w-50 p-2">
+<div class="container p-2 p-sm-4 mt-4 rounded-3">
+    <p class="fw-bold fs-4 mb-2 text-uppercase text-center text-danger">Владелец проекта: {{ owner.name }}</p>
+    <div class="d-flex flex-column-reverse flex-lg-row">
+        <div class="w-100 w-lg-50 p-2">
             <h3 class="fs-5 mb-4">Назначенные пользователи:</h3>
 
             <div v-if="assignedUsersLoad" class="spinner-border text-default m-auto" role="status">
@@ -40,18 +41,18 @@
                             </div>
                         </div>
                     </div>
-                    <hr class="my-2">
+                    <hr class="my-2 text-info fw-bold">
 
                     <p class="mb-1 text-sm fw-bolder">E-mail пользователя</p>
                     <div
-                        :class="{'is-invalid' : !assignedUsers[userIndex].email }"
+                        :class="{'is-invalid' : !assignedUsers[userIndex].email || !isEmail(userIndex) }"
                         class="input-group mb-3">
                         <input
                             @input="assignedUsers[userIndex].change = true"
                             v-model="assignedUsers[userIndex].email"
                             type="text" class="form-control border border-1 px-2" placeholder="E-mail">
                         <div class="invalid-feedback" v-if="!assignedUsers[userIndex].email">Обязательное поле.</div>
-                        <div class="invalid-feedback" v-else-if="v$.email.email.$invalid && v$.$dirty">Неверный формат</div>
+                        <div class="invalid-feedback" v-else-if="!isEmail(userIndex)">Неверный формат</div>
                     </div>
 
                     <p class="mb-1 text-sm fw-bolder">Роль пользователя</p>
@@ -144,7 +145,7 @@
             </div>
         </div>
 
-        <form @submit="assignUser" action="#" class="w-50 p-2">
+        <form @submit.prevent="assignUser" action="#" class="w-100 w-lg-50 p-2">
             <h3 class="fs-5 mb-4">Добавить нового пользователя:</h3>
 
             <p class="mb-1 text-sm fw-bolder">Введите e-mail пользователя</p>
@@ -246,6 +247,8 @@
 import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 
+const isemail = require('isemail')
+
 export default {
     name: "SettingsBasicPermissions",
     setup () {
@@ -254,6 +257,7 @@ export default {
     props: ['projectid'],
     data() {
       return {
+          owner: '',
           email: '',
           role: '',
           fields: null,
@@ -265,7 +269,14 @@ export default {
       }
     },
     methods: {
+        isEmail(index) {
+            return isemail.validate(this.assignedUsers[index].email)
+        },
         async changeRole(index) {
+            if( !this.assignedUsers[index].email || !this.isEmail(index) || !this.assignedUsers[index].role ) {
+                return
+            }
+
             this.$store.commit('loader/LOADER_TRUE')
             await axios.put(`/api/v2/project/permissions/change`, {
                 permissions_id: this.assignedUsers[index].id,
@@ -291,7 +302,12 @@ export default {
                 }
             })
                 .then(response => {
-                    this.assignedUsers = response.data.data
+                    this.owner = response.data.data.find(el => {
+                        return el.owner
+                    })
+                    this.assignedUsers = response.data.data.filter(el => {
+                        return !el.owner
+                    })
 
                     this.assignedUsers.forEach(el => {
                         const arr = []
@@ -466,6 +482,7 @@ export default {
 </script>
 
 <style scoped>
+
 .dropdown-menu::before {
     color: #e91e63;
 }
