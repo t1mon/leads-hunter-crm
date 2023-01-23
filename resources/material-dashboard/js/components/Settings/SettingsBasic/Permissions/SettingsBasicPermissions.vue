@@ -22,9 +22,22 @@
 
                     <div class="d-flex justify-content-between">
                         <p class="m-0 text-md text-dark fw-bolder">{{ user.name }}</p>
-                        <i class="material-icons-round text-danger cursor-pointer">
-                            <span class="material-symbols-outlined">cancel</span>
-                        </i>
+
+                        <div class="dropdown">
+                            <i :id="'deleteUserFromProject' + index" class="material-icons-round text-danger cursor-pointer dropdown-toggle" data-bs-toggle="dropdown">
+                                <span class="material-symbols-outlined">cancel</span>
+                            </i>
+                            <div :aria-labelledby="'deleteUserFromProject' + index" class="dropdown-menu text-center p-2 border border-1 rounded-2 border-primary">
+                                <span class="mb-2 d-block lh-sm fw-bolder">Снять пользователя с проекта?</span>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between px-3">
+                                    <button
+                                        @click="dismissUser(user.id)"
+                                        class="btn m-0 btn-success py-1 px-2 rounded-2 text-xxs">Да</button>
+                                    <button class="btn m-0 btn-danger py-1 px-2 rounded-2 text-xxs">Нет</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <hr class="my-2">
                     <p class="mb-1 text-sm fw-bolder">E-mail пользователя</p>
@@ -161,8 +174,7 @@
 
 <script>
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, url } from '@vuelidate/validators'
-import {isIP} from "is-ip";
+import { required, email } from '@vuelidate/validators'
 
 export default {
     name: "SettingsBasicPermissions",
@@ -182,6 +194,40 @@ export default {
       }
     },
     methods: {
+        clearData() {
+
+        },
+        async dismissUser(id) {
+            this.$store.commit('loader/LOADER_TRUE')
+            await axios.delete('/api/v2/project/permissions/dismiss', {
+                data: {
+                    permissions_id: id
+                }
+            }).then(response => {
+                this.$store.dispatch('getToast', {
+                    msg: 'Пользователь снят с проекта!',
+                    settingsObj: {
+                        type: 'success',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+                this.$store.commit('loader/LOADER_FALSE')
+            }).catch(error => {
+                this.$store.commit('loader/LOADER_FALSE')
+                this.$store.dispatch('getToast', {
+                    msg: 'Что-то пошло не так!',
+                    settingsObj: {
+                        type: 'danger',
+                        position: 'bottom-right',
+                        timeout: 2000,
+                        showIcon: true
+                    }
+                })
+                console.log(error)
+            })
+        },
         async assignUser() {
             const result = await this.v$.$validate()
             if (!result) {
@@ -195,14 +241,15 @@ export default {
             })
             await axios.post('/api/v2/project/permissions/assign', {
                 project_id: this.projectid,
-                email: this.email,
-                role: this.role,
-                fields: fields
+                users: [{
+                    email: this.email,
+                    role: this.role,
+                    fields: fields
+                }],
             }).then(response => {
                 this.v$.$reset()
-                this.clearData()
+
                 this.$store.commit('loader/LOADER_FALSE')
-                this.$refs.closeManualLeads.click()
                 this.$store.dispatch('getToast', {
                     msg: 'Лид добавлен!',
                     settingsObj: {
@@ -289,6 +336,12 @@ export default {
 </script>
 
 <style scoped>
+.dropdown-menu::before {
+    color: #e91e63;
+}
+.dropdown-toggle::after {
+    display: none;
+}
 select {
     background-position: right 8px center;
 }
