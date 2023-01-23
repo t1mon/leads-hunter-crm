@@ -412,11 +412,13 @@ export default {
         },
         clearAllFieldsUser(index) {
             this.assignedUsers[index].view_fields = []
+            this.assignedUsers[index].change = true
         },
         selectAllFieldsUser(index) {
             this.assignedUsers[index].view_fields = this.fields.map(el => {
                 return el
             })
+            this.assignedUsers[index].change = true
         },
         selectAllFields() {
             this.checkedFields = this.fields.map(el => {
