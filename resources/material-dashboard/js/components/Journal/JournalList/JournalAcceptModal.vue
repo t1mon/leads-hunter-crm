@@ -97,7 +97,6 @@ export default {
                         }
                     })
                 }
-                console.log(response)
                 this.$store.commit('loader/LOADER_FALSE')
             }).catch(error => {
                 console.log(error)
@@ -105,13 +104,15 @@ export default {
                 this.$store.dispatch('getToast', {
                     msg: 'Что-то пошло не так',
                     settingsObj: {
-                        type: 'danger',
+                        type: 'warning',
                         position: 'bottom-right',
                         timeout: 2000,
                         showIcon: true
                     }
                 })
             })
+
+            await this.$store.dispatch('journalAll/getJournalAll')
         }
     },
     validations () {

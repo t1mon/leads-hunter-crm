@@ -68,7 +68,6 @@ export default {
           params: params
         })
         .then(data => {
-          console.log(data)
           commit('loader/LOADER_FALSE', null, { root: true })
           commit('SET_LEADS', data.data.data.leads.data, { root: true })
           commit('SET_PROJECT_JOUR', data.data.data, { root: true })

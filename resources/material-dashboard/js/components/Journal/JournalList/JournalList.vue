@@ -170,7 +170,7 @@
                                       </span>
                                     </div>
                                 </td>
-                                <journal-accept-td @openModal="openAcceptModal(lead.id, lead.accepted_by)" :accepted="lead.accepted_by"></journal-accept-td>
+                                <journal-accept-td @openModal="openAcceptModal(lead.id, lead.accepted_by)" :accepted="lead.accepted_by" :id="lead.id"></journal-accept-td>
                                 <journal-company-td :companyBack="lead.company" :leadId="lead.id"></journal-company-td>
                                 <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
@@ -394,7 +394,6 @@ export default {
         })
             .then(response => {
                 this.assignedUsers = response.data.data
-                console.log(response)
             })
             .catch(error => {
                 console.log(error)
