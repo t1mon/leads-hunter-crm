@@ -283,7 +283,6 @@ export default {
                 role: this.assignedUsers[index].role,
                 fields: this.assignedUsers[index].view_fields.map( el => { return el.back })
             }).then(response => {
-                console.log(response)
                 this.$store.commit('loader/LOADER_FALSE')
             }).catch(error => {
                 console.log(error)
@@ -322,7 +321,6 @@ export default {
                     })
 
                     this.assignedUsersLoad = false
-                    console.log(response)
                 })
                 .catch(error => {
                     this.assignedUsersLoad = false
@@ -471,7 +469,6 @@ export default {
                 }
                 this.fields = arr
                 this.fieldsLoad = false
-                console.log(response)
             })
             .catch(error => {
                 this.fieldsLoad = true

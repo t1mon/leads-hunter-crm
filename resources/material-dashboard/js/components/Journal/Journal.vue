@@ -1,6 +1,6 @@
 <template>
     <journal-panel></journal-panel>
-    <journal-list></journal-list>
+    <journal-list :projectId="projectid"></journal-list>
     <journal-paginate></journal-paginate>
 </template>
 

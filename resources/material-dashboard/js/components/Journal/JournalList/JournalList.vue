@@ -65,6 +65,10 @@
                                     <div class="journal__col-resize"></div>
                                 </th>
                                 <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                    <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Взяли в работу</p>
+                                    <div class="journal__col-resize"></div>
+                                </th>
+                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Компания</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
@@ -166,6 +170,7 @@
                                       </span>
                                     </div>
                                 </td>
+                                <journal-accept-td @openModal="openAcceptModal(lead.id, lead.accepted_by)" :accepted="lead.accepted_by"></journal-accept-td>
                                 <journal-company-td :companyBack="lead.company" :leadId="lead.id"></journal-company-td>
                                 <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
@@ -260,6 +265,7 @@
         <journal-region-modal ref="journalRegionModal"></journal-region-modal>
         <journal-comments ref="journalCommentsModal"></journal-comments>
         <journal-company-modal ref="journalCompanyModal"></journal-company-modal>
+        <journal-accept-modal :lead="acceptLead" :assignedUsers="assignedUsers"></journal-accept-modal>
     </div>
 </template>
 
@@ -272,6 +278,8 @@ import JournalRegionModal from "./JournalRegionModal";
 import JournalRegionTd from "./JournalRegionTd"
 import JournalCompanyTd from "./JournalCompany.vue";
 import JournalCompanyModal from "./JournalCompanyModal.vue";
+import JournalAcceptTd from "./JournalAcceptTd.vue";
+import JournalAcceptModal from "./JournalAcceptModal.vue";
 
 export default {
     name: "Journal",
@@ -283,10 +291,19 @@ export default {
         JournalRegionModal,
         JournalRegionTd,
         JournalCompanyTd,
-        JournalCompanyModal
+        JournalCompanyModal,
+        JournalAcceptTd,
+        JournalAcceptModal
+    },
+    props: {
+        projectId: {
+            required: true
+        }
     },
     data () {
       return {
+          acceptLead: null,
+          assignedUsers: null,
           counterDocListener: 0,
           first: false,
           second: false,
@@ -295,6 +312,12 @@ export default {
       }
     },
     methods: {
+        openAcceptModal(id, accepted_by) {
+            this.acceptLead = {
+                id: id,
+                accepted_by: accepted_by
+            }
+        },
         async deleteLead(leadId) {
             this.$store.commit('loader/LOADER_TRUE')
             await axios.delete('/api/v2/lead/delete', {
@@ -362,6 +385,20 @@ export default {
         stateProjectJour () {
             return this.$store.getters.stateProjectJour
         }
+    },
+    async created() {
+        await axios.get('/api/v2/lead/accept/users', {
+            params: {
+                project_id: this.projectId
+            }
+        })
+            .then(response => {
+                this.assignedUsers = response.data.data
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 }
 </script>
