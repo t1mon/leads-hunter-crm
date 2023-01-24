@@ -3,6 +3,7 @@
 namespace App\Commands\V2\Lead\Accept;
 
 use App\Http\Resources\V2\Leads\AcceptUserList;
+use App\Models\Role;
 use App\Repositories\Project\ReadRepository as ProjectReadRepository;
 use App\Repositories\Project\UserPermissions\ReadRepository as PermissionsReadRepository;
 
@@ -32,7 +33,10 @@ class GetUsersForProjectHandler
             return new AcceptUserList($permissions);
         }
         
-        $permissions = $project->user_permissions()->with('user')->get();
+        $permissions = $project->user_permissions()
+            ->where('role', '!=', Role::ROLE_WATCHER)
+            ->with('user')
+            ->get();
 
         return AcceptUserList::collection($permissions);
     }
