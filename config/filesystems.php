@@ -69,6 +69,16 @@ return [
             'root'   => public_path().'/media',
         ],
 
+        'stubs' => [
+            'driver' => 'local',
+            'root' => base_path('stubs'),
+        ],
+
+        'repositories' => [
+            'driver' => 'local',
+            'root' => app_path('Repositories'),
+        ]
+
     ],
 
     /*

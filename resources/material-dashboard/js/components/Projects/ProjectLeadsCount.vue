@@ -27,14 +27,6 @@ export default {
             requred: true
         },
     },
-
-    // watch: {
-    //     ProjectsLeadsCount: function (val) {
-    //         this.ProjectsLeadsCount = val
-    //         console.log(this.ProjectsLeadsCount)
-    //     }
-    // },
-
     computed: {
         LeadsCount () {
             return this.count

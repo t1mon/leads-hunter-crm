@@ -1,12 +1,14 @@
 import { createApp } from 'vue'
 import store from './store'
+
+//components
 import SettingsBar from './components/Settings/SettingsBar'
 import SettingsBasic from './components/Settings/SettingsBasic/SettingsBasic'
 import Projects from './components/Projects/Projects'
 import Journal from './components/Journal/Journal'
-import FilterByDate from './components/Journal/FilterByDate'
-import Paginate from './components/Journal/Paginate'
 import HeaderSearch from './components/Header/Search'
+import NavbarProjects from './components/Navbar/NavbarProjects'
+import LoaderApp from './components/Others/Spinner'
 import directives from './directives'
 
 const app = createApp({
@@ -15,9 +17,9 @@ const app = createApp({
     SettingsBasic,
     Projects,
     Journal,
-    FilterByDate,
-    Paginate,
-    HeaderSearch
+    HeaderSearch,
+    NavbarProjects,
+    LoaderApp
   },
   mounted () {
     $('[data-confirm]').on('click', () => {
@@ -27,4 +29,5 @@ const app = createApp({
 })
 directives(app)
 app.use(store)
+
 app.mount('#app')

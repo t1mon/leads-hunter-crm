@@ -80,7 +80,7 @@ class LeadExport implements FromCollection
             $row = [];
 
             //Базовые поля
-            $row[] = Carbon::parse($lead->updated_at)->setTimezone($this->project->timezone)->format('d.m.Y H:i:s');
+            $row[] = Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($this->project->timezone)->format('d.m.Y H:i:s');
             $row[] = $this->project->name;
             $row[] = $lead->class->name ?? null;
             $row[] = $lead->getClientName();
@@ -95,10 +95,14 @@ class LeadExport implements FromCollection
                 $row[] = $lead->city;
                 $row[] = $lead->host;
                 $row[] = $lead->source;
-                $row[] = $lead->utm['utm_term'] ?? '';
-                $row[] = $lead->utm['utm_source'] ?? '';
-                $row[] = $lead->utm['utm_campaign'] ?? '';
-                $row[] = $lead->utm['utm_medium'] ?? '';
+                $row[] = $lead->utm_term;
+                $row[] = $lead->utm_source;
+                $row[] = $lead->utm_campaign;
+                $row[] = $lead->utm_medium;
+                // $row[] = $lead->utm['utm_term'] ?? '';
+                // $row[] = $lead->utm['utm_source'] ?? '';
+                // $row[] = $lead->utm['utm_campaign'] ?? '';
+                // $row[] = $lead->utm['utm_medium'] ?? '';
                 $row[] = $lead->referrer;
             }
             else{

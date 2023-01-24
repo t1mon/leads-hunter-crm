@@ -82,10 +82,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
     Route::post('vk/project/{project}/webhook', 'Project\VKFormController@webHook')->name('vk.webhook'); //Добавление лида через VK API
 
     //Route::post('/authenticate', 'Auth\AuthenticateController@authenticate')->name('authenticate');
-
-    // Comments
-    //Route::apiResource('posts.comments', 'PostCommentController')->only('index');
-    //Route::apiResource('users.comments', 'UserCommentController')->only('index');
+//Проекты
     //Route::apiResource('comments', 'CommentController')->only(['index', 'show']);
 
     // Posts
@@ -95,6 +92,52 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
 
     // Media
     //Route::apiResource('media', 'MediaController')->only('index');
+});
+
+Route::prefix('v2')->name('v2.')->group(function(){
+    Route::middleware(['auth:api', 'verified'])->group(function (){
+        Route::get('dashboard', [ \App\Http\Controllers\Api\V2\Project\ProjectController::class, 'index'])->name('dashboard');
+
+        //Лиды
+        Route::prefix('lead')->name('lead.')->group(function(){
+            //Управление лидами вручную
+            Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
+
+            //Дата следующего звонка
+            Route::prefix('nextcall')->name('nextcall.')->group(function(){
+                Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
+                Route::delete('clear', [\App\Http\Controllers\Api\V2\LeadController::class, 'clearNextcall'])->name('clear');
+            });
+
+            //Регион, выставляемый вручную
+            Route::prefix('manual_region')->name('manual_region.')->group(function(){
+                Route::post('add', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'store'])->name('add');
+                Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\ManualRegionController::class, 'destroy'])->name('clear');
+            });
+
+            //Компания
+            Route::prefix('company')->name('company.')->group(function(){
+                Route::post('add', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'store'])->name('add');
+                Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'destroy'])->name('clear');
+            });
+        });
+        
+        //Проекты
+        Route::prefix('project')->name('project.')->group(function(){
+            Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
+            Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
+            Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
+
+        });
+
+        //Комментарии
+        Route::prefix('comment')->name('comment.')->group(function(){
+            Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
+            Route::get('show', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'show'])->name('show');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
+        });
+    });
 });
 
 

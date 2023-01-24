@@ -1,4 +1,4 @@
-import journal from './journal'
+import journal from './journal/journal'
 
 export default {
   modules: {
@@ -8,7 +8,6 @@ export default {
     return {
       cards: false,
       endpoint: '/api/v1/project',
-      isLoading: false,
       projects: null,
       searchProjects: '',
       filteredProjects: null,
@@ -23,9 +22,6 @@ export default {
     },
     stateCards: state => {
       return state.cards
-    },
-    stateIsLoading: state => {
-      return state.isLoading
     },
     stateSearchProjects: state => {
       return state.searchProjects
@@ -52,31 +48,26 @@ export default {
     }
   },
   actions: {
-    getProjects ({ state }) {
-      state.isLoading = true
-      axios
+    async getProjects ({ state, commit }) {
+      commit('loader/LOADER_TRUE', null, { root: true })
+      await axios
         .get(state.endpoint)
         .then(({ data }) => {
-          state.isLoading = false
+          commit('loader/LOADER_FALSE', null, { root: true })
           state.projectsLoad = true
           state.projects = data.data
           state.filteredProjects = data.data
-          console.log(data.data)
         })
         .catch(() => {
-          state.isLoading = false
+          commit('loader/LOADER_FALSE', null, { root: true })
         })
     },
-    getLeadsCount ({ state }) {
-      axios
+    async getLeadsCount ({ state }) {
+      await axios
         .post(state.endpoint + '/leads-count')
         .then(({ data }) => {
           state.projectsLeadsCountLoad = true
-          // state.projectsLeadsCount = data.data.map( item => {
-          //   return item
-          // })
           state.projectsLeadsCount = Object.assign({}, ...data.data.map(i => ({ [i.id]: { totalLeads: i.totalLeads, leadsToday: i.leadsToday } })))
-          console.log(state.projectsLeadsCount)
         })
         .catch(() => {
           state.projectsLeadsCountLoad = false
@@ -104,7 +95,6 @@ export default {
         dropMenu.firstChild.children[i].addEventListener('click', (e) => {
           e.stopPropagation()
           if (e.currentTarget.firstElementChild && e.currentTarget.firstElementChild.classList.contains('projects__dropdown__menu')) {
-            console.log(1)
             return
           } else {
             dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
@@ -122,7 +112,6 @@ export default {
       axios
         .delete(state.endpoint + '/' + id )
         .then(({data}) => {
-          console.log(data)
           if (data.data.response === 200 ) {
             const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
             state.filteredProjects.forEach((project, index) => {
@@ -147,17 +136,17 @@ export default {
           console.error(error)
         })
     },
-    switchProject ({ state, dispatch }, id) {
+    async switchProject ({ state, dispatch }, id) {
       let projectStatus
-      axios
+      await axios
         .get(state.endpoint + '/' + id + '/' + 'toggle')
         .then(({ data }) => {
-          state.filteredProjects.forEach((project, index) => {
-            if (project.id === id) {
-              project.status = !project.status
-              projectStatus = project.status
-            }
-          })
+          // state.filteredProjects.forEach((project, index) => {
+          //   if (project.id === id) {
+          //     project.status = !project.status
+          //     projectStatus = project.status
+          //   }
+          // })
           dispatch('getToast', {
             msg: `Проект ${projectStatus ? 'включен' : 'выключен'}!`,
             settingsObj: {

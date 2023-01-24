@@ -74,6 +74,14 @@ class ProjectController extends Controller
                     'role' => Role::ROLE_MANAGER,
                     'view_fields' => ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'],
                 ]);
+
+                //Добавить количество лидов в проекте
+                DB::table('leads_count')->insert([
+                    'project_id' => $project->id,
+                    'total_leads' => 0,
+                    'leads_today' => 0,
+                ]);
+
                 Notification::create([ 'project_id' => $project->id ]);
                 Journal::project($project, Auth::user()->name . ' создал проект.');
             }, 3);  // Повторить три раза, прежде чем признать неудачу

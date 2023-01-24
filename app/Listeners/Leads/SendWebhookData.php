@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
 use App\Journal\Facade\Journal;
+use App\Services\Project\Integrations\MangoService;
 
 class SendWebhookData implements ShouldQueue
 {
