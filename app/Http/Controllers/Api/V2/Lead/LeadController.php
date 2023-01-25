@@ -27,6 +27,12 @@ class LeadController extends Controller
         );
     } //store
 
+    public function storeApi(\App\Http\Requests\Api\LeadsRequest $request) //Добавить лид через API
+    {
+        
+        return response(content: 'Лид добавлен в очередь на обработку', status: 200);
+    } //storeApi
+
     public function show()
     {
         //
