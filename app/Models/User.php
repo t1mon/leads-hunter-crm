@@ -102,6 +102,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole(Role::ROLE_ADMIN);
     }
 
+    public function isOwnerOf(Project $project): bool
+    {
+        return $this->id === $project->user_id;
+    } //isOwnerOf
+
     //Проверяет, является ли пользователь менеджером определённого проекта
     public function isManagerFor(Project|int $project): bool
     {
