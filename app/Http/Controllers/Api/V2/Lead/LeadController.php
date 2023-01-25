@@ -11,6 +11,8 @@ use App\Http\Requests\Api\V2\Lead\AddManually;
 use App\Http\Requests\Api\V2\Lead\Delete;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
 
+use App\Jobs\Api\V2\Lead\Add as LeadAddJob;
+
 class LeadController extends Controller
 {
     public function __construct(
@@ -29,7 +31,7 @@ class LeadController extends Controller
 
     public function storeApi(\App\Http\Requests\Api\LeadsRequest $request) //Добавить лид через API
     {
-        
+        LeadAddJob::dispatch($request);
         return response(content: 'Лид добавлен в очередь на обработку', status: 200);
     } //storeApi
 

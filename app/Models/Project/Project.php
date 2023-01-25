@@ -105,6 +105,11 @@ class Project extends Model
         return $this->hasMany(Email::class);
     }
 
+    public function getEnabledAttribute(): bool //Проверить, включен ли проект
+    {
+        return $this->settings['enabled'];
+    } //getEnabledAttribute
+
     public function getTelegramChannelIdAttribute() //Получить идентификатор канала, на который назначен проект
     {
         return TelegramID::where(['project_id' => $this->id, 'type' => TelegramID::TYPE_CHANNEL])->first();

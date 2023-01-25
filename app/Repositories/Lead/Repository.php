@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Lead;
 
+use App\Http\Requests\Api\LeadsRequest;
 use App\Models\Leads;
 use App\Models\Project\Project;
 use Carbon\Carbon;
@@ -47,6 +48,7 @@ class Repository{
             'surname' => $surname,
             'patronymic' => $patronymic,
             'phone' => $phone,
+            'entries' => $this->calculateEntries(project: $project, phone: $phone),
             'email' => $email,
             'cost' => $cost,
             'comment' => $comment,
@@ -81,6 +83,64 @@ class Repository{
 
         return $lead;
     } //create
+
+    public function calculateEntries(Project|int $project, string $phone): int //Посчитать количество вхождений для лида
+    {
+        $lead = $this->query()->from($project)->phone($phone)->latest()->with('project')->first();
+        if(is_null($lead))
+            return 1;
+        
+        if($project->settings['leadValidDays'] > 0)
+        {
+            $leadDate = Carbon::parse($lead->created_at)->addDays($project->settings['leadValidDays']);
+            if(Carbon::now()->greaterThanOrEqualTo($leadDate))
+                return 1;
+        }
+        else
+            return $lead->entries + 1;
+    } //calculateEntries
+
+    public function detectSource(LeadsRequest $request): string //Определить источника
+    {
+        //Если реферер не обнаружен, вернуть соответствующую запись
+        if($request->exists('referrer') && ( parse_url($request->referrer,  PHP_URL_HOST) !== parse_url($request->host,  PHP_URL_HOST) ) ){
+            return parse_url($request->referrer,  PHP_URL_HOST);
+        }
+
+        if(!$request->exists('url_query_string'))
+            return Leads::SOURCE_DIRECT_ENTRY;
+
+        $utm = [];
+        parse_str(parse_url($request->url_query_string, PHP_URL_QUERY), $utm);
+
+        if( array_key_exists('utm_source', $utm) )
+            return $utm['utm_source'];
+        else
+            return Leads::SOURCE_DIRECT_ENTRY;
+    } //detectSource
+
+    public function getUTM(LeadsRequest $request): array //Получить UTM-метки в виде массива
+    {
+        $src = $request->exists('url_query_string')
+                ? $request->url_query_string
+                : ( $request->exists('referrer') ? $request->referrer : null);
+
+        if(is_null($src))
+            return [];
+
+        $vars = [];
+        parse_str(parse_url($request->url_query_string, PHP_URL_QUERY), $vars);
+
+        $utm = [];
+
+        foreach(['utm_source', 'utm_campaign', 'utm_medium', 'utm_term', 'utm_content'] as $utm_mark){
+            if( array_key_exists($utm_mark, $vars) )
+                $utm[$utm_mark] = $vars[$utm_mark];
+        }
+
+        return $utm;
+
+    } //getUTM
 
     public function update(Leads $lead, array $params): Leads
     {

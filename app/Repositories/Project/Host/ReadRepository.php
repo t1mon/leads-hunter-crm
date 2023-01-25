@@ -41,6 +41,16 @@ class ReadRepository{
         return $result;
     } //find
 
+    public function isInProject(Project|int $project, string $host): bool //Проверяет, присутствует ли хост в проекте
+    {
+        return $this->query()
+            ->where([
+                'host' => $host,
+                'project_id' => $project instanceof Project ? $project->id : $project
+            ])
+            ->exists();
+    } //isInProject
+
     public function findByProject(Project|int $project): Collection
     {
         return $this->query()->from($project)->get();

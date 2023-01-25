@@ -24,6 +24,8 @@ class Leads extends Model
 
     const SOURCE_DIRECT_ENTRY = 'DIRECT_ENTRY';
 
+    const OWNER_API = 'API';
+
     /**
      * The attributes that are mass assignable.
      *

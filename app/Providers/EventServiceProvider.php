@@ -35,11 +35,11 @@ class EventServiceProvider extends ServiceProvider
         LeadAdded::class => [
             SplitUTM::class,
             MakeFullName::class,
-            SendEmailData::class,
             CountLeadsInProject::class
         ],
 
         LeadCreated::class => [
+            SendEmailData::class,
             SendTelegramData::class,
             SendSMSData::class,
             SendWebhookData::class,
