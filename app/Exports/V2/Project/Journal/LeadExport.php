@@ -45,7 +45,7 @@ class LeadExport implements FromCollection
         if(is_null($lead))
             throw new \Exception('Лидов с такими параметрами не найдено!');
 
-        $resource = $this->user->isAdmin() || $this->permissions->isManager()
+        $resource = $this->user->isAdmin() || $this->permissions->isOwner() || $this->permissions->isManager()
             ? new LeadResource($lead, $this->project)
             : (new LeadResource($lead, $this->project))->only($this->permissions->view_fields);
 

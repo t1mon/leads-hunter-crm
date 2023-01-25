@@ -28,7 +28,7 @@ class Journal extends JsonResource
     {
         // return parent::toArray($request);
 
-        $leadResource = $this->user->isAdmin()
+        $leadResource = ($this->user->isAdmin() || $this->permissions->isOwner() || $this->permissions->isManager())
         ? LeadResource::collection($this->leads)
         : LeadResource::collection($this->leads)->only($this->permissions->view_fields);
         // : LeadResource::collection($this->leads)->only($this->collectFields());
