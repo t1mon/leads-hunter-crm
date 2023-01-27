@@ -196,12 +196,18 @@ class LeadPolicy
         if(!$user->isAdmin() && is_null($permissions))
             return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
 
-        if($user->isAdmin() || $permissions->isOwner() || $permissions->isManager()){ //Может назначить всех, кто есть в проекте (кроме наблюдателей)
+        //Проверка идёт вниз по иерархии
+        if($user->isAdmin() || $permissions->isOwner()){ //Владелец/админ может назначить всех, кто есть в проекте (кроме наблюдателей)
             return $acceptor->isAdmin() || ($acceptor->isInProject($lead->project) && !$acceptor->isWatcher($lead->project) ) //Наблюдатель не может принимать лиди
                 ? Response::allow()
                 : Response::deny('Этот пользователь не добавлен в проект');
         }
-        elseif($user->isJuniorManagerFor($lead->project)) //Может назначить только себя
+        elseif($permissions->isManager()){ //Менеджер может назначать только младших менеджеров
+            return $acceptor->isJuniorManagerFor($lead->project)
+                ? Response::allow()
+                : Response::deny();
+        }
+        elseif($user->isJuniorManagerFor($lead->project)) //Младший менеджер может назначить только себя
         {
             //Если на этот лид назначен другой пользователь, запретить
             if(!is_null($lead->accepted_by))
@@ -215,8 +221,6 @@ class LeadPolicy
             return Response::deny(message: 'У вас нет полномочий на это действие', code: HttpResponse::HTTP_FORBIDDEN);
         
     } //acceptLead
-
-
     
     public function dismissAcceptor(User $user, Leads $lead) //Определить, может ли пользователь убрать пользователя, принявшего лид
     {
