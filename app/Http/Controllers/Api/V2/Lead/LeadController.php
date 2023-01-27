@@ -31,7 +31,8 @@ class LeadController extends Controller
 
     public function storeApi(\App\Http\Requests\Api\LeadsRequest $request) //Добавить лид через API
     {
-        LeadAddJob::dispatch($request);
+        LeadAddJob::dispatch($request->all());
+        // LeadAddJob::dispatch();
         return response(content: 'Лид добавлен в очередь на обработку', status: 200);
     } //storeApi
 

@@ -18,6 +18,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Repositories\Project\ReadRepository as ProjectReadRepository;
 use App\Repositories\Project\Host\ReadRepository as HostReadRepository;
 use App\Repositories\Lead\Repository as LeadRepository;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class Add implements ShouldQueue
@@ -30,7 +31,8 @@ class Add implements ShouldQueue
      * @return void
      */
     public function __construct(
-        private LeadsRequest $request,
+        // private LeadsRequest $request,
+        private array $data,
     )
     {
         //
@@ -48,20 +50,19 @@ class Add implements ShouldQueue
     )
     {
         //Загрузка проекта
-        $project = $projectReadRepository->findByApiToken(api_token: $this->request->api_token, fail: true);
+        $project = $projectReadRepository->findByApiToken(api_token: $this->data['api_token'], fail: true);
         if(!$project->enabled){
             Journal::projectWarning($project, 'Попытка добавить лид в выключенный проект');
             return;
         }
 
         //Предварительная обработка данных
-        $phone = $this->request->phone;
-        if ($phone[0] == 8) {
+        $phone = $this->data['phone'];
+        if ($phone[0] == 8) 
             $phone = preg_replace('/^./','7', $phone);
-            $this->request->merge(['phone' => $phone]);
-        }
 
-        $host = $this->request->host;
+
+        $host = $this->data['host'];
         if(filter_var($host, FILTER_VALIDATE_URL)){
             $parsed = parse_url($host);
             $host = Str::lower($parsed['host']);
@@ -71,33 +72,34 @@ class Add implements ShouldQueue
             return;
         }
 
-        $utm = $leadRepository->getUTM($this->request);
+        // $utm = $leadRepository->getUTM($this->request); //TODO Скорректировать функцию для определения UTM
+        $utm = [];
 
         //Создание лида
         $newLead = $leadRepository->create(
-            project: $project->id,
-            name: $this->request->name,
+            project: $project,
+            name: $this->data['name'],
             phone: $phone,
             host: $host,
-            surname: $this->request->surname,
-            patronymic: $this->request->patronymic,
-            owner: $this->request->user()?->name ?? Leads::OWNER_API,
-            cost: preg_replace("/[^0-9]/", '', trim($this->request->cost)),
-            email: $this->request->email,
-            comment: $this->request->comment,
-            city: $this->request->city,
+            surname: Arr::get(array: $this->data, key: 'surname'),
+            patronymic: Arr::get(array: $this->data, key: 'patronymic'),
+            owner: Leads::OWNER_API,
+            cost: preg_replace("/[^0-9]/", '', trim(Arr::get(array: $this->data, key: 'cost'))),
+            email: Arr::get(array: $this->data, key: 'email'),
+            comment: Arr::get(array: $this->data, key: 'comment'),
+            city: Arr::get(array: $this->data, key: 'city'),
             // region: null, //TODO решить вопрос автоматического выставления региона
-            manual_region: $this->request->manual_region,
-            company: $this->request->company,
-            ip: $this->request->ip,
-            referrer: $this->request->referrer,
-            source: $leadRepository->detectSource($this->request),
-            utm_medium: $utm['utm_medium'] ?? $this->request->utm_medium,
-            utm_campaign: $utm['utm_campaign'] ?? $this->request->utm_campaign,
-            utm_source: $utm['utm_source'] ?? $this->request->utm_source,
-            utm_term: $utm['utm_term'] ?? $this->request->utm_term,
-            utm_content: $utm['utm_content'] ?? $this->request->utm_content,
-            url_query_string: $this->request->url_query_string,
+            manual_region: Arr::get(array: $this->data, key: 'manual_region'),
+            company: Arr::get(array: $this->data, key: 'company'),
+            ip: Arr::get(array: $this->data, key: 'ip'),
+            referrer: Arr::get(array: $this->data, key: 'referrer'),
+            source: null /*$leadRepository->detectSource($this->request)*/, //TODO Скорректировать функцию для определения источников
+            utm_medium: Arr::get(array: $utm, key: 'utm_medium') ?? Arr::get(array: $this->data, key: 'utm_medium'),
+            utm_campaign: Arr::get(array: $utm, key: 'utm_campaign') ?? Arr::get(array: $this->data, key: 'utm_campaign'),
+            utm_source: Arr::get(array: $utm, key: 'utm_source') ?? Arr::get(array: $this->data, key: 'utm_source'),
+            utm_term: Arr::get(array: $utm, key: 'utm_term') ?? Arr::get(array: $this->data, key: 'utm_term'),
+            utm_content: Arr::get(array: $utm, key: 'utm_content') ?? Arr::get(array: $this->data, key: 'utm_content'),
+            url_query_string: Arr::get(array: $this->data, key: 'url_query_string'),
             nextcall_date: null,
         );
         event(new LeadAdded($newLead));
