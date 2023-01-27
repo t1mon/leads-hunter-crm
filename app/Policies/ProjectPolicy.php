@@ -134,7 +134,7 @@ class ProjectPolicy
         if(is_null($permissions))
             return Response::deny(message: 'У вас нет доступа к этому проекту');
         else
-            return ($permissions->isOwner() || $permissions->isManager())
+            return ($permissions->isOwner() || $permissions->isManager() || $permissions->isJuniorManager() )
                 ? Response::allow()
                 : Response::deny(message: 'Вы не можете просматривать эти данные');
     } //getUsersForProject
