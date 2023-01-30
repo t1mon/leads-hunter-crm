@@ -26,12 +26,15 @@ class ProjectPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project\Project  $project
      * @return mixed
      */
     public function view(User $user, Project $project)
     {
-        if ( $project->isOwner() or ($user->isManagerFor($project) or $user->isWatcher($project)) )
+        if($user->isAdmin())
+            return Response::allow();
+
+        if($user->isInProject($project))
             return Response::allow();
         else
             return Response::deny();
@@ -41,7 +44,7 @@ class ProjectPolicy
      * Определяет, может ли пользователь просматривать страницы с настройками
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Project  $project
+     * @param  \App\Models\Project\Project  $project
      * @return bool
      */
 
@@ -131,7 +134,7 @@ class ProjectPolicy
         if(is_null($permissions))
             return Response::deny(message: 'У вас нет доступа к этому проекту');
         else
-            return ($permissions->isOwner() || $permissions->isManager())
+            return ($permissions->isOwner() || $permissions->isManager() || $permissions->isJuniorManager() )
                 ? Response::allow()
                 : Response::deny(message: 'Вы не можете просматривать эти данные');
     } //getUsersForProject

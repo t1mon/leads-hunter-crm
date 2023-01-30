@@ -32,12 +32,21 @@ class GetUsersForProjectHandler
             $permissions->load('user');
             return new AcceptUserList($permissions);
         }
-        
-        $permissions = $project->user_permissions()
+
+        //Список пользователей приходит согласно положению запрашивающего (по нисходящей)
+        $user = $command->request->user();
+        $userPermissions = $this->permissionsReadRepository->findByUserInProject(user: $command->request->user(), project: $project);
+
+        // $permissions = $project->user_permissions()
+        $list = $project->user_permissions()
             ->where('role', '!=', Role::ROLE_WATCHER)
+            ->when($userPermissions->isManager(), function($query) use ($project){
+                return $query->where('user_id', '!=', $project->user_id);
+            })
             ->with('user')
             ->get();
 
-        return AcceptUserList::collection($permissions);
+        // return AcceptUserList::collection($permissions);
+        return AcceptUserList::collection($list);
     }
 }
