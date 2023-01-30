@@ -68,7 +68,6 @@ export default {
             const user = this.assignedUsers.find(el => {
                 return el.name === this.assignedUser
             })
-            console.log(user, this.lead.id)
             await axios.post('/api/v2/lead/accept/assign', {
                 lead_id: this.lead.id,
                 acceptor_id: user.id

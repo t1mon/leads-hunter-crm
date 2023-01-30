@@ -57,7 +57,6 @@ export default {
           state.projectsLoad = true
           state.projects = data.data
           state.filteredProjects = data.data
-          console.log(data)
         })
         .catch(() => {
           commit('loader/LOADER_FALSE', null, { root: true })
