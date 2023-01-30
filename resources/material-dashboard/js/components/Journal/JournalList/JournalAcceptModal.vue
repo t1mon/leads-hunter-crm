@@ -23,6 +23,7 @@
                 </div>
                 <div class="modal-footer">
                     <button
+                        :disabled="!assignedUsers"
                         type="submit"
                         class="btn bg-gradient-info m-0">Назначить</button>
                 </div>

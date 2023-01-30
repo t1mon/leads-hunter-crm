@@ -170,10 +170,10 @@
                                       </span>
                                     </div>
                                 </td>
-
                                 <journal-accept-td v-if="'accepted_by' in lead" @openModal="openAcceptModal(lead.id, lead.accepted_by)" :accepted="lead.accepted_by" :id="lead.id"></journal-accept-td>
                                 <td v-else></td>
-
+                                <journal-accept-td v-if="'accepted_by' in lead" @openModal="openAcceptModal(lead.id, lead.accepted_by)" :accepted="lead.accepted_by" :id="lead.id"></journal-accept-td>
+                                <td v-else></td>
                                 <journal-company-td :companyBack="lead.company" :leadId="lead.id"></journal-company-td>
                                 <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
