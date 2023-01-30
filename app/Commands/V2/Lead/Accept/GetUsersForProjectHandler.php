@@ -30,7 +30,8 @@ class GetUsersForProjectHandler
         if($command->request->user()->isJuniorManagerFor($project)){
             $permissions = $this->permissionsReadRepository->findByUserInProject(user: $command->request->user(), project: $project);
             $permissions->load('user');
-            return new AcceptUserList($permissions);
+            // return new AcceptUserList($permissions);
+            return AcceptUserList::collection([$permissions]);
         }
 
         //Список пользователей приходит согласно положению запрашивающего (по нисходящей)
