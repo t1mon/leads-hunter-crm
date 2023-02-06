@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 use App\Journal\Facade\Journal;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
@@ -338,5 +339,10 @@ class Project extends Model
     public function vk_forms(){ //Получить формы, привязанные к проекту
         return $this->hasMany(VKForm::class);
     } //vk_forms
+
+    public function blacklists(): HasMany
+    {
+        return $this->hasMany(related: Blacklist::class, foreignKey: 'project_id');
+    } //blacklists
 }
 

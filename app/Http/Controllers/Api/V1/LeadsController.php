@@ -21,6 +21,8 @@ use App\Models\Project\Integrations\Mango;
 use App\Services\Project\Integrations\MangoService;
 use Illuminate\Support\Facades\Http;
 
+use function PHPUnit\Framework\isEmpty;
+
 class LeadsController extends Controller
 {
     public $leads;
@@ -48,6 +50,18 @@ class LeadsController extends Controller
             $phone = preg_replace('/^./','7', $phone);
             $request->merge(['phone' => $phone]);
         }
+
+        //Проверка чёрного списка
+        $blacklistRepository = app(\App\Repositories\Project\Blacklist\ReadRepository::class);
+        $blacklistPhone = $blacklistRepository->findByPhone($phone);
+        if($blacklistPhone->isNotEmpty())
+            return response()->json([
+                'data' => [
+                    'status' => 'BLACKLIST',
+                    'message' => 'Данный номер указан в чёрном списке',
+                    'response' => Response::HTTP_FORBIDDEN,
+                ]
+            ]);
 
         $request->merge(['cost' => preg_replace("/[^0-9]/", '', trim($request->cost))]);
 

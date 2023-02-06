@@ -3,8 +3,14 @@
 namespace App\Repositories\$NAMESPACE$;
 
 use App\Models\$FULL_MODEL$;
+use Illuminate\Database\Eloquent\Builder;
 
 class Repository{
+    public function query(): Builder
+    {
+        return $SHORT_MODEL$::query();
+    } //query
+
     public function create(
         // ...
     ): $SHORT_MODEL$

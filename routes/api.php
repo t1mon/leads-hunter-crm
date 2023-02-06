@@ -125,6 +125,12 @@ Route::prefix('v2')->name('v2.')->group(function(){
         
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
+            Route::prefix('blacklist')->name('blacklist.')->group(function(){
+                Route::get('index', [\App\Http\Controllers\Api\V2\Project\BlacklistController::class, 'index'])->name('index');
+                Route::post('add', [\App\Http\Controllers\Api\V2\Project\BlacklistController::class, 'store'])->name('add');
+                Route::delete('remove', [\App\Http\Controllers\Api\V2\Project\BlacklistController::class, 'destroy'])->name('remove');
+            });
+
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
