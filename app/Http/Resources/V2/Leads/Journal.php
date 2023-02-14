@@ -12,7 +12,7 @@ class Journal extends JsonResource
     public function toArray($request)
     {
         //Заранее форматируются даты
-        $this->nextcall_date = is_null($this->nextcall_date) ? null : Carbon::parse(time: $this->nextcall_date, tz: config('app.timezone'))->setTimezone('Europe/Samara')->format('Y.m.d H:i:s');
+        $this->nextcall_date = is_null($this->nextcall_date) ? null : Carbon::parse(time: $this->nextcall_date, tz: config('app.timezone'))->setTimezone($this->project->timezone)->format('Y.m.d H:i:s');
 
         // return parent::toArray($request);
         if(is_null($this->visible))
@@ -23,7 +23,7 @@ class Journal extends JsonResource
             'name' => $this->getClientName(),
             'phone' => $this->phone,
             'created_at' => $this->created_at->format('d.m.Y H:i:s'),
-            'comment_crm' => $this->when(in_array(needle: 'comment_crm', haystack: $this->visible), 
+            'comment_crm' => $this->when(in_array(needle: 'comment_crm', haystack: $this->visible),
                 is_null($this->comment_crm) ? null
                 :
                 [
