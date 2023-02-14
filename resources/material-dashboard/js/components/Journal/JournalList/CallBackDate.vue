@@ -110,7 +110,7 @@ export default {
     created() {
         if(this.callBack) {
             const date = new Date(this.callBack)
-            this.serverDate = `${date.getFullYear()}-${this.addZero(date.getMonth() + 1)}-${this.addZero(date.getDate())}T${this.addZero(date.getUTCHours())}:${this.addZero(date.getUTCMinutes())}`
+            this.serverDate = `${date.getFullYear()}-${this.addZero(date.getMonth() + 1)}-${this.addZero(date.getDate())}T${this.addZero(date.getHours())}:${this.addZero(date.getMinutes())}`
         }
         this.date = this.serverDate
     }
