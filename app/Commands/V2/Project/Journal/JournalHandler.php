@@ -82,7 +82,7 @@ class JournalHandler
 
         $leads->each(function($lead) use ($project){
             if(!is_null($lead->nexcall_date))
-                $lead->nexcall_date = Carbon::parse($lead->nexcall_date, config('app.timezone'))->setTimezone($project->timezone);
+                $lead->nexcall_date = Carbon::parse($lead->nexcall_date, config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y H:i:s');
 
             $lead->created_at = Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($project->timezone);
         });

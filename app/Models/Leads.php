@@ -60,7 +60,6 @@ class Leads extends Model
 
     protected $casts = [
         'utm' => 'array',
-        'nextcall_date' => 'datetime:d.m.Y H:i:s',
     ];
 
     /**

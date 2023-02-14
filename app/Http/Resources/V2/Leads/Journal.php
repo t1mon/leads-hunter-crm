@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V2\Leads;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Journal extends JsonResource
@@ -10,6 +11,9 @@ class Journal extends JsonResource
 
     public function toArray($request)
     {
+        //Заранее форматируются даты
+        $this->nextcall_date = is_null($this->nextcall_date) ? null : Carbon::parse(time: $this->nextcall_date, tz: config('app.timezone'))->setTimezone('Europe/Samara')->format('Y.m.d H:i:s');
+
         // return parent::toArray($request);
         if(is_null($this->visible))
             return $this->fullData();
@@ -69,7 +73,7 @@ class Journal extends JsonResource
                 'id' => $this->comment_crm?->id,
                 'text' => $this->comment_crm?->comment_body,
             ]),
-            'nextcall_date' => $this->nextcall_date ?? null,
+            'nextcall_date' => $this->nextcall_date,
             'created_at' => $this->created_at->format('d.m.Y H:i:s')
         ];
     } //fullData
