@@ -73,7 +73,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::apiResource('project/{project}/webhooks', 'Project\WebhookController')->only(['index', 'store', 'destroy']);
     });
 
-    Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
+    Route::post('/lead.add', 'LeadsController@store')->name('lead.store')->middleware(['throttle:phone']);
     Route::put('/lead.update', 'LeadsController@update')->name('lead.update');
     Route::delete('/lead.destroy', 'LeadsController@destroy')->name('lead.destroy');
     Route::get('/lead.test', 'LeadsController@test')->name('lead.test');
@@ -122,7 +122,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'destroy'])->name('clear');
             });
         });
-        
+
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
