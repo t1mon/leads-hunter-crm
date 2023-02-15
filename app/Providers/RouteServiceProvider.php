@@ -114,5 +114,10 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60);
         });
+
+        RateLimiter::for('phone', function (Request $request) {
+            return Limit::perMinute(1)->by($request->phone);
+        });
+
     }
 }
