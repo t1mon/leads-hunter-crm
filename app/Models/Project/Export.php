@@ -23,8 +23,10 @@ class Export extends Model
     /**
      *      Константы
      */
+    public const FILE_FORMAT = \Maatwebsite\Excel\Excel::XLSX; //Формат выгружаемого файла
     public const DEFAULT_VALID_FOR = 2; //Количество дней, на протяжении которых можно скачать файл (значение по умолчанию)
     public const LIMIT_PER_USER = 3; //Ограничение по количеству экспортов на пользователя в день (по умолчанию)
+    //  DEFAULT_STORAGE_PATH - см. функцию getDefaultStoragePath
 
     /**
      *      Отношения
@@ -66,6 +68,14 @@ class Export extends Model
     {
         return $query->finished()->whereDate('expires_at', '<', Carbon::now(config('app.config')));
     } //scopeValid
+
+    /**
+     *      Геттеры
+     */
+    public static function getDefaultStoragePath(): string
+    {
+        return storage_path('project_exports/');
+    } //getDefaultStoragePath
 
     /**
      *      Служебные методы

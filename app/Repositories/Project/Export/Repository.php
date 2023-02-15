@@ -20,7 +20,7 @@ class Repository{
         return Export::create([
             'project_id' => $project,
             'user_id' => $user,
-            'name' => $name ?? $this->_generateName(project: $project),
+            'name' => $name ?? $this->generateName(project: $project),
         ]);
     } //create
 
@@ -47,13 +47,15 @@ class Repository{
         Export::expired()->delete();
     } //cleanInvalid
 
-    private function _generateName($project)
+    public function generateName(Project $project)
     {
         $name = implode(separator: '_', array: [
             $project->name,
             Carbon::now(tz: config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y'),
-            Str::rand(6),
-        ]); 
+            Str::rand(self::ID_LENGTH),
+        ]);
+
+        return $name;
     } //_generateName
 };
 
