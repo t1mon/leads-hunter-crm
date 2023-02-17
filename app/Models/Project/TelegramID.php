@@ -68,15 +68,8 @@ class TelegramID extends Model
         //Основная часть сообщения
         $message = "Получен лид по проекту {$this->project->name}:\nИмя: {$lead->full_name}\nТелефон: +{$lead->phone}";
 
-        foreach($settings['fields'] as $field){
-            if($field === 'comment_crm'){
-                $message .= "\n" . trans('leads.fields.comment_crm') . ': ' . $lead->comment_crm->comment_body;
-                continue;
-            }
-                
-
+        foreach($settings['fields'] as $field)
             $message .= "\n" . trans('leads.fields.' . $field) . ": {$lead->$field}";
-        }
         
         return $message;
     } //composeMessage

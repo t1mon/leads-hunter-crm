@@ -149,6 +149,7 @@ class ProjectController extends Controller
         unset($lead_fields[13]);
         unset($lead_fields[17]);
         unset($lead_fields[24]);
+        unset($lead_fields[26]);
 
         return view( 'material-dashboard.project.settings_sync',
             compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs', 'lead_fields') );
