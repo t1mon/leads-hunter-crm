@@ -7,6 +7,7 @@ use App\Models\Project\Project;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Excel;
 
 class Repository{
     private const ID_LENGTH = 6; //Длина идентификатора документа в символах
@@ -18,8 +19,8 @@ class Repository{
     ): Export
     {
         return Export::create([
-            'project_id' => $project,
-            'user_id' => $user,
+            'project_id' => $project->id,
+            'user_id' => $user->id,
             'name' => $name ?? $this->generateName(project: $project),
         ]);
     } //create
@@ -52,8 +53,10 @@ class Repository{
         $name = implode(separator: '_', array: [
             $project->name,
             Carbon::now(tz: config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y'),
-            Str::rand(self::ID_LENGTH),
+            Str::random(self::ID_LENGTH),
         ]);
+
+        $name .= '.' . Excel::XLSX;
 
         return $name;
     } //_generateName

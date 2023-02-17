@@ -46,7 +46,7 @@ class StartExportHandler
         dispatch(
             new GenerateExportFile(
                 project: $project,
-                leadsQuery: $leads,
+                leads: $leads,
                 user: $command->user,
                 permissions: $permissions,
             )
@@ -55,7 +55,7 @@ class StartExportHandler
         return response(content: 'Начат экспорт. Вы получите уведомление, когда файл будет готов');
     }
 
-    private function _loadLeads(Project $project, StartExportCommand $command): Builder
+    private function _loadLeads(Project $project, StartExportCommand $command)
     {
         //Первичный запрос
         $query = $this->leadReadRepository->findFromProject(
@@ -83,7 +83,8 @@ class StartExportHandler
             sort_by: $command->request->sort_by,
             sort_order: $command->request->sort_order,
         )
-        ->with('class');
+        ->with('class')
+        ->get();
 
         return $query;
     } //loadLeadsgit

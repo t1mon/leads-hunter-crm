@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V2\Project;
 
+use App\Commands\V2\Project\Export\StartExportCommand;
+use App\Commands\V2\Project\Export\StartExportHandler;
 use App\Commands\V2\Project\Journal\ExportCommand;
 use App\Commands\V2\Project\Journal\ExportHandler;
 use App\Commands\V2\Project\Journal\GetVariantsCommand;
@@ -67,6 +69,16 @@ class ProjectController extends Controller
 
     public function export(int $project, JournalRequest $request) //Выгрузка лидов в файл
     {
+        $this->bus->addHandler(StartExportCommand::class, StartExportHandler::class);
+        
+        return $this->bus->dispatch(
+            command: StartExportCommand::class,
+            input: [
+                'project' => $project,
+                'request' => $request,
+            ]
+        );
+
         $this->bus->addHandler(ExportCommand::class, ExportHandler::class);
         
         return $this->bus->dispatch(

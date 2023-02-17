@@ -15,8 +15,11 @@ use App\Models\Project\UserPermissions;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exports\V2\Project\Journal\LeadExport;
+use App\Exports\V2\Project\Journal\BackgroundLeadExport;
 use App\Repositories\Project\Export\Repository as ExportRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Maatwebsite\Excel\Excel;
 
 class GenerateExportFile implements ShouldQueue
 {
@@ -29,7 +32,7 @@ class GenerateExportFile implements ShouldQueue
      */
     public function __construct(
         private Project $project,
-        private Builder $leadsQuery,
+        private Collection $leads,
         private User $user,
         private UserPermissions|null $permissions
     )
@@ -52,7 +55,7 @@ class GenerateExportFile implements ShouldQueue
             array: [
                 Carbon::today(tz: config('app.timezone'))->format('d-m-Y'),
                 $this->project->id,
-                $exportRepository->generateName($this->project)
+                $exportRepository->generateName($this->project),
             ]
         );
 
@@ -64,15 +67,16 @@ class GenerateExportFile implements ShouldQueue
         );
 
         //Экспорт
-        $exported = (new LeadExport())->make(
+        // $exported = (new LeadExport())->make(
+        $exported = (new BackgroundLeadExport())->make(
             project: $this->project,
-            leadsQuery: $this->leadsQuery,
+            leads: $this->leads,
             user: $this->user,
             permissions: $this->permissions
         );
 
         //Сохранение экспортированного файла в хранилище
-        $exported->store(filePath: $name, disk: Export::STORAGE_DISK_NAME);
+        $exported->store(filePath: $name, disk: Export::STORAGE_DISK_NAME, writerType: Excel::XLSX);
 
         //Срабатывание события о завершении экспорта
         event(new \App\Events\Projects\Export\ExportFinished($exportRecord));
