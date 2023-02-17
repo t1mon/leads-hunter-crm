@@ -50,15 +50,14 @@ class GenerateExportFile implements ShouldQueue
         $name = implode(
             separator: '/',
             array: [
-                Export::getDefaultStoragePath(),
-                Carbon::today(tz: config('app.timezone'))->foramt('d-m-Y'),
+                Carbon::today(tz: config('app.timezone'))->format('d-m-Y'),
                 $this->project->id,
                 $exportRepository->generateName($this->project)
             ]
         );
 
         //Создание записи об экспорте
-        $exportRepository->create(
+        $exportRecord = $exportRepository->create(
             project: $this->project,
             user: $this->user,
             name: $name
@@ -73,9 +72,9 @@ class GenerateExportFile implements ShouldQueue
         );
 
         //Сохранение экспортированного файла в хранилище
-        //...
+        $exported->store(filePath: $name, disk: Export::STORAGE_DISK_NAME);
 
         //Срабатывание события о завершении экспорта
-        //...
+        event(new \App\Events\Projects\Export\ExportFinished($exportRecord));
     }
 }

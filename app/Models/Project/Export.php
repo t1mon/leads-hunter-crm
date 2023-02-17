@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Export extends Model
 {
@@ -26,6 +27,7 @@ class Export extends Model
     public const FILE_FORMAT = \Maatwebsite\Excel\Excel::XLSX; //Формат выгружаемого файла
     public const DEFAULT_VALID_FOR = 2; //Количество дней, на протяжении которых можно скачать файл (значение по умолчанию)
     public const LIMIT_PER_USER = 3; //Ограничение по количеству экспортов на пользователя в день (по умолчанию)
+    public const STORAGE_DISK_NAME = 'project_exports';
     //  DEFAULT_STORAGE_PATH - см. функцию getDefaultStoragePath
 
     /**
@@ -72,10 +74,10 @@ class Export extends Model
     /**
      *      Геттеры
      */
-    public static function getDefaultStoragePath(): string
+    public static function getStorageDiskInstance(): \Illuminate\Filesystem\FilesystemAdapter
     {
-        return storage_path('project_exports/');
-    } //getDefaultStoragePath
+        return Storage::disk(self::STORAGE_DISK_NAME);
+    } //getStorageDiskInstance
 
     /**
      *      Служебные методы

@@ -6,6 +6,7 @@ use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
 use App\Events\Leads\LeadExists;
 use App\Events\Leads\LeadDeleted;
+use App\Events\Projects\Export\ExportFinished;
 use App\Listeners\Leads\SplitUTM;
 use App\Listeners\Leads\MakeFullName;
 use App\Listeners\Leads\SendEmailData;
@@ -13,6 +14,7 @@ use App\Listeners\Leads\SendTelegramData;
 use App\Listeners\Leads\SendWebhookData;
 use App\Listeners\Leads\SendSMSData;
 use App\Listeners\Leads\CountLeadsInProject;
+use App\Listeners\Projects\Export\FillExportRecord;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -55,7 +57,11 @@ class EventServiceProvider extends ServiceProvider
 
         LeadDeleted::class => [
             CountLeadsInProject::class
-        ]
+        ],
+
+        ExportFinished::class => [
+            FillExportRecord::class,
+        ],
     ];
 
     /**

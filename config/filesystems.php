@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'project_exports' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/project_exports'),
+            'url' => env('APP_URL') . '/project_exports',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
