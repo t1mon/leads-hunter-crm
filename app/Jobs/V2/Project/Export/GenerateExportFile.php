@@ -50,12 +50,13 @@ class GenerateExportFile implements ShouldQueue
     )
     {
         //Составление имени и пути файла
+        $token = $exportRepository->generateToken();
         $name = implode(
             separator: '/',
             array: [
                 Carbon::today(tz: config('app.timezone'))->format('d-m-Y'),
                 $this->project->id,
-                $exportRepository->generateName($this->project),
+                $exportRepository->generateName(project: $this->project, token: $token),
             ]
         );
 
@@ -63,6 +64,7 @@ class GenerateExportFile implements ShouldQueue
         $exportRecord = $exportRepository->create(
             project: $this->project,
             user: $this->user,
+            token: $token,
             name: $name
         );
 

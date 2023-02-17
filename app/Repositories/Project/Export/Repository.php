@@ -15,13 +15,15 @@ class Repository{
     public function create(
         Project $project,
         User $user,
+        string $token,
         ?string $name = null,
     ): Export
     {
         return Export::create([
             'project_id' => $project->id,
             'user_id' => $user->id,
-            'name' => $name ?? $this->generateName(project: $project),
+            'name' => $name ?? $this->generateName(project: $project, token: $token),
+            'token' => $token,
         ]);
     } //create
 
@@ -32,7 +34,7 @@ class Repository{
         $export->update([
             'expires_at' => Carbon::now(tz: config('app.timezone'))->addDays(Export::DEFAULT_VALID_FOR),
             'finished' => true,
-            'download_url' => route('v2.project.export.download', [$export->project->id, $export->id]), //TODO продумать, откуда берётся URL
+            'download_url' => route('v2.project.export.download', [$export->project->id, $export->token]), //TODO продумать, откуда берётся URL
         ]);
 
         return $export;
@@ -48,12 +50,17 @@ class Repository{
         Export::expired()->delete();
     } //cleanInvalid
 
-    public function generateName(Project $project)
+    public function generateToken(): string
+    {
+        return Str::random(self::ID_LENGTH);
+    } //generateToken
+
+    public function generateName(Project $project, string $token)
     {
         $name = implode(separator: '_', array: [
             $project->name,
             Carbon::now(tz: config('app.timezone'))->setTimezone($project->timezone)->format('d.m.Y'),
-            Str::random(self::ID_LENGTH),
+            $token,
         ]);
 
         $name .= '.' . Excel::XLSX;

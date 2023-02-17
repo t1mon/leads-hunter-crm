@@ -3,6 +3,7 @@
 namespace App\Commands\V2\Project\Export;
 
 use App\Models\Project\Export;
+use App\Repositories\Project\Export\ReadRepository as ExportReadRepository;
 
 class DownloadFileHandler
 {
@@ -10,7 +11,7 @@ class DownloadFileHandler
      * DownloadFileHandler constructor.
      */
     public function __construct(
-
+        private ExportReadRepository $exportReadRepository,
     )
     {
     }
@@ -20,7 +21,7 @@ class DownloadFileHandler
      */
     public function handle(DownloadFileCommand $command)
     {
-        $export = Export::findOrFail($command->export_id);
+        $export = $this->exportReadRepository->findByToken(token: $command->export_token, fail: true, with: ['project', 'user']);
         return Export::getStorageDiskInstance()->download($export->name);
     }
 }

@@ -23,6 +23,7 @@ class CreateProjectExportsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('name')->nullable();
+            $table->string('token')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->boolean('finished')->default(false);
             $table->string('download_url')->nullable();

@@ -128,7 +128,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
-            Route::get('{project}/export/download/{export_id}', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'downloadExportedFile'])->name('export.download');
+            Route::get('{project}/export/download/{export_token}', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'downloadExportedFile'])->name('export.download');
 
         });
 

@@ -18,6 +18,7 @@ class Export extends Model
         'name',
         'expires_at',
         'finished',
+        'token',
         'download_url',
     ];
 
@@ -61,6 +62,11 @@ class Export extends Model
         return $query->where('finished', true);
     } //scopeFinished
 
+    public function scopeToken($query, string $token)
+    {
+        return $query->where('token', $token);
+    } //scopeToken
+
     public function scopeExpired($query)
     {
         return $query->finished()->whereDate('expires_at', '>=', Carbon::now(config('app.config')));
@@ -68,7 +74,7 @@ class Export extends Model
 
     public function scopeValid($query)
     {
-        return $query->finished()->whereDate('expires_at', '<', Carbon::now(config('app.config')));
+        return $query->finished()->whereDate('expires_at', '>', Carbon::now(config('app.config')));
     } //scopeValid
 
     /**

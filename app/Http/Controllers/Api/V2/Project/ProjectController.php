@@ -92,12 +92,12 @@ class ProjectController extends Controller
         // );
     } //export
 
-    public function downloadExportedFile($project_id, $export_id)
+    public function downloadExportedFile($project_id, $export_token)
     {
         $this->bus->addHandler(command: DownloadFileCommand::class, handler: DownloadFileHandler::class);
         return $this->bus->dispatch(
             command: DownloadFileCommand::class,
-            input: ['export_id' => $export_id],
+            input: ['export_token' => $export_token],
         );
     } //downloadExportedFile
 

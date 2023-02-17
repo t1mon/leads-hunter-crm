@@ -8,7 +8,7 @@ class DownloadFileCommand
      * DownloadFileCommand constructor.
      */
     public function __construct(
-        public $export_id)
+        public $export_token)
     {
     }
 }
