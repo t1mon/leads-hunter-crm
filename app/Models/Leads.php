@@ -115,10 +115,10 @@ class Leads extends Model
                 : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
     } //getUtmTermAttribute
 
-    public function getFieldsAttribute() //Получить список полей лида
+    public static function getFields() //Получить список полей лида
     {
-        return $this->fillable;
-    } //getFieldsAttribute
+        return (new self)->fillable;
+    } //getFields
 
     /**
      *      Отношения
