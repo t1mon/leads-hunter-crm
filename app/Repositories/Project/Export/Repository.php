@@ -32,7 +32,7 @@ class Repository{
         $export->update([
             'expires_at' => Carbon::now(tz: config('app.timezone'))->addDays(Export::DEFAULT_VALID_FOR),
             'finished' => true,
-            'download_url' => '', //TODO продумать, откуда берётся URL
+            'download_url' => route('v2.project.export.download', [$export->project->id, $export->id]), //TODO продумать, откуда берётся URL
         ]);
 
         return $export;

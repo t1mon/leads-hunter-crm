@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V2\Project;
 
+use App\Commands\V2\Project\Export\DownloadFileCommand;
+use App\Commands\V2\Project\Export\DownloadFileHandler;
 use App\Commands\V2\Project\Export\StartExportCommand;
 use App\Commands\V2\Project\Export\StartExportHandler;
 use App\Commands\V2\Project\Journal\ExportCommand;
@@ -79,16 +81,25 @@ class ProjectController extends Controller
             ]
         );
 
-        $this->bus->addHandler(ExportCommand::class, ExportHandler::class);
+        // $this->bus->addHandler(ExportCommand::class, ExportHandler::class);
         
-        return $this->bus->dispatch(
-            command: ExportCommand::class,
-            input: [
-                'project' => $project,
-                'request' => $request,
-            ]
-        );
+        // return $this->bus->dispatch(
+        //     command: ExportCommand::class,
+        //     input: [
+        //         'project' => $project,
+        //         'request' => $request,
+        //     ]
+        // );
     } //export
+
+    public function downloadExportedFile($project_id, $export_id)
+    {
+        $this->bus->addHandler(command: DownloadFileCommand::class, handler: DownloadFileHandler::class);
+        return $this->bus->dispatch(
+            command: DownloadFileCommand::class,
+            input: ['export_id' => $export_id],
+        );
+    } //downloadExportedFile
 
     /**
      * Store a newly created resource in storage.
