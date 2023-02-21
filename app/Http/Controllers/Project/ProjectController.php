@@ -23,6 +23,7 @@ use App\Journal\Facade\Journal;
 use App\Exports\LogsExportToday;
 use App\Exports\LeadExport;
 use App\Jobs\ExportLeadsToMail;
+use Illuminate\Support\Arr;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
@@ -137,8 +138,21 @@ class ProjectController extends Controller
         //Личные чаты
         $telegram_privateIDs = TelegramID::where(['project_id' => $project->id, 'type' => TelegramID::TYPE_PRIVATE, ])->paginate(50);
 
+        //Поля лидов
+        $lead_fields = \App\Models\Leads::getFields();
+        array_push($lead_fields, 'comment_crm');
+        unset($lead_fields[0]);
+        unset($lead_fields[3]);
+        unset($lead_fields[4]);
+        unset($lead_fields[5]);
+        unset($lead_fields[7]);
+        unset($lead_fields[13]);
+        unset($lead_fields[17]);
+        unset($lead_fields[24]);
+        unset($lead_fields[26]);
+
         return view( 'material-dashboard.project.settings_sync',
-            compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs') );
+            compact('tab', 'project', 'emails', 'telegram_groupID', 'telegram_privateIDs', 'lead_fields') );
     } //settings_sync
 
     public function integrations(Project $project){ //Страница интеграций
