@@ -62,6 +62,11 @@ class Export extends Model
         return $query->where('finished', true);
     } //scopeFinished
 
+    public function scopeInProgress($query)
+    {
+        return $query->where('finished', false);
+    } //scopeInProgress
+
     public function scopeToken($query, string $token)
     {
         return $query->where('token', $token);

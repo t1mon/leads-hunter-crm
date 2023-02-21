@@ -71,25 +71,15 @@ class ProjectController extends Controller
 
     public function export(int $project, JournalRequest $request) //Выгрузка лидов в файл
     {
-        $this->bus->addHandler(StartExportCommand::class, StartExportHandler::class);
+        $this->bus->addHandler(ExportCommand::class, ExportHandler::class);
         
         return $this->bus->dispatch(
-            command: StartExportCommand::class,
+            command: ExportCommand::class,
             input: [
                 'project' => $project,
                 'request' => $request,
             ]
         );
-
-        // $this->bus->addHandler(ExportCommand::class, ExportHandler::class);
-        
-        // return $this->bus->dispatch(
-        //     command: ExportCommand::class,
-        //     input: [
-        //         'project' => $project,
-        //         'request' => $request,
-        //     ]
-        // );
     } //export
 
     public function downloadExportedFile($project_id, $export_token)
