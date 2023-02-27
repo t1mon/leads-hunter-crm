@@ -37,7 +37,7 @@ class Service{
         $projects = $this->projectReadRepository->findByIdsWithLeadsCount_q(
             ids: $ids,
             select: [
-                'projects.id', 'projects.name', 'projects.settings',
+                'projects.id', 'projects.name', 'projects.settings', 'projects.created_at',
                 'leads_count.total_leads', 'leads_count.leads_today',
             ],
             perPage: 10
