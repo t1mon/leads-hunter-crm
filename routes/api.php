@@ -129,6 +129,14 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
 
+            //Интеграции
+            Route::prefix('integrations')->name('integrations')->group(function(){
+                //Парсер E-mail
+                Route::put('email-reader/toggle', [\App\Http\Controllers\Api\V2\Project\Integrations\EmailReaderController::class, 'toggle'])->name('email-reader.toggle');
+                Route::put('email-reader/test', [\App\Http\Controllers\Api\V2\Project\Integrations\EmailReaderController::class, 'test'])->name('email-reader.test');
+                Route::apiResource('email-reader', 'Api\V2\Project\Integrations\EmailReaderController');
+            });
+
         });
 
         //Комментарии
