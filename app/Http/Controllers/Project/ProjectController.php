@@ -342,6 +342,11 @@ class ProjectController extends Controller
         if (Gate::denies('delete', [Project::class, $project]))
             return redirect()->route('project.index');
 
+        //Временный код до перехода на API/V2, пока используются страницы на Blade
+        $logRepository = app(abstract: \App\Repositories\Log\ReadRepository::class);
+        $entries = $logRepository->findForProject(project: $project);
+        return view('material-dashboard.project.log.index', compact('entries', 'project'));
+
         $entries = null;
         if($request->has('amount')){
             if($request->amount === 'all')
