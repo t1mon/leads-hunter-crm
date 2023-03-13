@@ -56,4 +56,19 @@ class EmailReader extends Model
     {
         return $query->where('project_id', $project instanceof Project ? $project->id : $project);
     } //scopeFrom
+
+    //
+    //      Рабочие методы
+    //
+    public function getMail() //Проверить почтовый ящик и получить письма
+    {
+        try{
+            $inbox = imap_open(mailbox: $this->host . 'INBOX', user: $this->email, password: $this->password);
+            if(!$inbox)
+                throw new \Exception(message: 'Ошибка открытия почтового ящика:' . imap_last_error());
+        }
+        catch(\Exception $e){
+
+        }
+    } //getMail
 }
