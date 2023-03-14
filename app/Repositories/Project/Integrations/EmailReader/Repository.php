@@ -14,7 +14,8 @@ class Repository{
 
     public function create(
         User|int $user,
-        Project $project,
+        Project|int $project,
+        string $subject,
         string $email,
         string $password,
         string $host,
@@ -27,7 +28,8 @@ class Repository{
     {
         return $this->query()->create([
             'user_id' => $user instanceof User ? $user->id : $user,
-            'project' => $project instanceof Project ? $project->id : $project,
+            'project_id' => $project instanceof Project ? $project->id : $project,
+            'subject' => $subject,
             'email' => $email,
             'password' => $password,
             'host' => $host,
@@ -41,6 +43,7 @@ class Repository{
 
     public function update(
         EmailReader $emailReader,
+        string $subject,
         string $email,
         string $password,
         string $host,
@@ -52,6 +55,7 @@ class Repository{
     ): EmailReader
     {
         $emailReader->update([
+            'subject' => $subject,
             'email' => $email,
             'password' => $password,
             'host' => $host,

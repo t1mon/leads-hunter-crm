@@ -26,6 +26,7 @@ class AddHandler
             project: $command->request->project_id,
             email: $command->request->email,
             password: $command->request->password,
+            subject: $command->request->subject,
             host: $command->request->host,
             template: $command->request->template,
             enabled: $command->request->enabled,

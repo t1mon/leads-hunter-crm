@@ -72,9 +72,14 @@ class EmailReaderController extends Controller
     public function test(Request $request)
     {
         $request->validate([
-            'reader_id' => 'required|exists:integrations_email_readers',
+            'reader_id' => 'required|exists:integrations_email_readers,id',
         ]);
 
-        
+        $repository = app(\App\Repositories\Project\Integrations\EmailReader\ReadRepository::class);
+        $reader = $repository->query()->first();
+
+        $reader->getMail();
+
+        return response()->json(['success' => true,]);
     } //test
 }

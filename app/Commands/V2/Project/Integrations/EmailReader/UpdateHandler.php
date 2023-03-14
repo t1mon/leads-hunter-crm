@@ -22,10 +22,11 @@ class UpdateHandler
      */
     public function handle(UpdateCommand $command)
     {
-        $emailReader = $this->readRepository->findById(id: $command->request->reader_id, fail: true);
+        $emailReader = $this->readRepository->findById(id: $command->request->email_reader, fail: true);
 
         $this->repository->update(
             emailReader: $emailReader,
+            subject: $command->request->subject,
             email: $command->request->email,
             password: $command->request->password,
             host: $command->request->host,
@@ -36,6 +37,6 @@ class UpdateHandler
             mark_as_read: $command->request->mark_as_read
         );
 
-        return response(content: 'Парсер добавлен в проект', status: Response::HTTP_OK);
+        return response(content: 'Данные парсера обновлены', status: Response::HTTP_OK);
     }
 }

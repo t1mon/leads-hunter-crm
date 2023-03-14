@@ -21,7 +21,7 @@ class ShowHandler
      */
     public function handle(ShowCommand $command)
     {
-        $emailReader = $this->emailReadRepository->findById(id: $command->request->reader_id, fail: true, with: ['user', 'project']);
+        $emailReader = $this->emailReadRepository->findById(id: $command->request->email_reader, fail: true, with: ['user', 'project']);
         return new Show($emailReader);
     }
 }

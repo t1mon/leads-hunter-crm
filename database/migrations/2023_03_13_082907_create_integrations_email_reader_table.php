@@ -13,7 +13,7 @@ class CreateIntegrationsEmailReaderTable extends Migration
      */
     public function up()
     {
-        Schema::create('integrations_email_reader', function (Blueprint $table) {
+        Schema::create('integrations_email_readers', function (Blueprint $table) {
             $table->id();
 
             $table->integer('user_id')->unsigned();
@@ -22,6 +22,7 @@ class CreateIntegrationsEmailReaderTable extends Migration
             $table->unsignedInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
 
+            $table->string('subject');
             $table->string('email');
             $table->string('password');
             $table->string('host');

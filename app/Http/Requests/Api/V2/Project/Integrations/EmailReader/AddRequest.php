@@ -30,6 +30,7 @@ class AddRequest extends FormRequest
             'project_id' => 'required|exists:projects,id',
             'email' => 'required|email',
             'password' => 'required|string',
+            'subject' => 'required|string',
             'host' => 'required|string',
             'template' => 'required|string',
             'enabled' => 'required|boolean',

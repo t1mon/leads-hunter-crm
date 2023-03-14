@@ -23,7 +23,7 @@ class RemoveHandler
      */
     public function handle(RemoveCommand $command)
     {
-        $emailReader = $this->readRepository->findById(id: $command->request->reader_id, fail: true);
+        $emailReader = $this->readRepository->findById(id: $command->request->email_reader, fail: true);
         $this->repository->remove($emailReader);
 
         return response(content: 'Парсер удалён из проекта', status: Response::HTTP_NO_CONTENT);

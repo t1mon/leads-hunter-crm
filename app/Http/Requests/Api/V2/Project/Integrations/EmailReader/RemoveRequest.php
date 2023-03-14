@@ -15,7 +15,7 @@ class RemoveRequest extends FormRequest
     
     public function authorize()
     {
-        $emailReader = $this->emailReadRepository->findById(id: $this->reader_id, fail: true, with: 'project');
+        $emailReader = $this->emailReadRepository->findById(id: $this->email_reader, fail: true, with: 'project');
         return $this->user()->can('delete', \App\Models\Project\Integrations\EmailReader::class, $emailReader);
     }
 
@@ -27,7 +27,7 @@ class RemoveRequest extends FormRequest
     public function rules()
     {
         return [
-            'reader_id' => 'required|exists:integrations_email_reader',
+
         ];
     }
 }
