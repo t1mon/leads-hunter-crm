@@ -30,7 +30,6 @@ class CreateIntegrationsEmailReaderTable extends Migration
             $table->boolean('enabled')->default(false);
             $table->unsignedInteger('interval')->default(1);
             $table->unsignedInteger('mails_per_time')->default(10); //Количество писем, считываемых за раз
-            $table->boolean('mark_as_read')->default(true);
 
             $table->timestamps();
         });
@@ -43,6 +42,6 @@ class CreateIntegrationsEmailReaderTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('integrations_email_reader');
+        Schema::dropIfExists('integrations_email_readers');
     }
 }

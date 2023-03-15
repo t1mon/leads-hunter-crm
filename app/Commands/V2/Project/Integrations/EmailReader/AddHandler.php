@@ -32,7 +32,6 @@ class AddHandler
             enabled: $command->request->enabled,
             interval: $command->request->interval,
             mails_per_time: $command->request->mails_per_time,
-            mark_as_read: $command->request->mark_as_read
         );
 
         return response(content: 'Парсер добавлен в проект', status: Response::HTTP_CREATED);

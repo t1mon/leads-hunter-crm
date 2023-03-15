@@ -23,7 +23,6 @@ class Repository{
         bool $enabled,
         int $interval,
         int $mails_per_time,
-        bool $mark_as_read,
     ): EmailReader
     {
         return $this->query()->create([
@@ -37,7 +36,6 @@ class Repository{
             'enabled' => $enabled,
             'interval' => $interval,
             'mails_per_time' => $mails_per_time,
-            'mark_as_read' => $mark_as_read,
         ]);
     } //create
 
@@ -51,7 +49,6 @@ class Repository{
         bool $enabled,
         int $interval,
         int $mails_per_time,
-        bool $mark_as_read,
     ): EmailReader
     {
         $emailReader->update([
@@ -63,7 +60,6 @@ class Repository{
             'enabled' => $enabled,
             'interval' => $interval,
             'mails_per_time' => $mails_per_time,
-            'mark_as_read' => $mark_as_read,
         ]);
 
         return $emailReader;

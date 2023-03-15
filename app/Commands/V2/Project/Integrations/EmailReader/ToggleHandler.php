@@ -34,7 +34,6 @@ class ToggleHandler
             enabled: !$emailReader->enabled,
             interval: $emailReader->interval,
             mails_per_time: $emailReader->mails_per_time,
-            mark_as_read: $emailReader->mark_as_read
         );
 
         return response(content: $emailReader->enabled ? 'Парсер включен' : 'Парсер отключен', status: Response::HTTP_OK);

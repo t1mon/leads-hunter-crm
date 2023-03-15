@@ -23,16 +23,13 @@ class EmailReader extends Model
         'template',
         'enabled',
         'interval',
-        'check_unseen',
         'mails_per_time',
-        'mark_as_read',
     ];
 
     protected $casts = [
         'enabled' => 'boolean',
         'interval' => 'integer',
         'mails_per_time' => 'integer',
-        'mark_as_read' => 'boolean',
     ];
 
     //
@@ -87,11 +84,13 @@ class EmailReader extends Model
         $mailStructure = imap_fetchstructure($inbox, $index);
         switch($mailStructure->type){
             case TYPETEXT: //Если письмо типа plain-text
+                // dd('TYPETEXT');
                 return $this->_decodeMailText(imap_body($inbox, $index, FT_PEEK), $mailStructure->encoding);
                 break;
             case TYPEMULTIPART: //Если письмо типа multipart (потребует большей проработки, если будет использоваться)
+                // dd('TYPEMULTIPART');
                 if(isset($mailStructure->parts) && is_array($mailStructure->parts) && isset($mailStructure->parts[1]))
-                    return $this->_decodeMailText(imap_fetchbody($inbox, $index, 2), $mailStructure->encoding);
+                    return $this->_decodeMailText(imap_fetchbody($inbox, $index, 2, FT_PEEK), $mailStructure->encoding);
                 break;
             default:
                 throw new \Exception(message: 'Ошибка: текст не принадлежит к типу plain-text или multipart');
@@ -107,17 +106,13 @@ class EmailReader extends Model
         // dd($text);
 
         preg_match(pattern: '/Имя: .+\n/', subject: $text, matches: $nameString);
-        preg_match(pattern: '/Телефон:.+\n/', subject: $text, matches: $phoneString);
+        preg_match(pattern: '/Телефон: .+\n/', subject: $text, matches: $phoneString);
         preg_match(pattern: '/Город: .+\n/', subject: $text, matches: $cityString);
 
         $obj = new stdClass;
 
-        $phone = str_replace(search: 'Телефон:', replace: '', subject: $phoneString[0]);
-        $phone = mb_substr($phone, 1);
-
-
         $obj->name = str_replace(search: 'Имя: ', replace: '', subject: $nameString[0]);
-        $obj->phone = $phone;
+        $obj->phone = str_replace(search: 'Телефон: ', replace: '', subject: $phoneString[0]);
         $obj->city = str_replace(search: 'Город: ', replace: '', subject: $cityString[0]);
 
         // dd($obj);
@@ -147,6 +142,7 @@ class EmailReader extends Model
 
                 $leadRepository = app(\App\Repositories\Lead\Repository::class);
 
+                $i = 0;
                 foreach($mailIndexes as $index){
                     $text = $this->_getTextFromMail(inbox: $inbox, index: $index);
                     $data = $this->_parseMail($text);
@@ -176,6 +172,10 @@ class EmailReader extends Model
                         url_query_string: null,
                         nextcall_date: null
                     );
+
+                    $i++;
+                    if($i >= $this->mails_per_time)
+                        break;
                 }
             }
 

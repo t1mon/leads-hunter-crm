@@ -33,8 +33,7 @@ class UpdateHandler
             template: $command->request->template,
             enabled: $command->request->enabled,
             interval: $command->request->interval,
-            mails_per_time: $command->request->mails_per_time,
-            mark_as_read: $command->request->mark_as_read
+            mails_per_time: $command->request->mails_per_time
         );
 
         return response(content: 'Данные парсера обновлены', status: Response::HTTP_OK);

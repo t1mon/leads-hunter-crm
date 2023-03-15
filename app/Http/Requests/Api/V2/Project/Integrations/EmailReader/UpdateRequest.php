@@ -34,7 +34,6 @@ class UpdateRequest extends FormRequest
             'enabled' => 'required|boolean',
             'interval' => 'required|integer|gte:1',
             'mails_per_time' => 'required|integer|gte:1',
-            'mark_as_read' => 'required|boolean',
         ];
     }
 }
