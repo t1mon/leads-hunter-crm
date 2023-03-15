@@ -76,7 +76,7 @@ class EmailReaderController extends Controller
         ]);
 
         $repository = app(\App\Repositories\Project\Integrations\EmailReader\ReadRepository::class);
-        $reader = $repository->query()->first();
+        $reader = $repository->query()->findOrFail($request->reader_id);
 
         $reader->getMail();
 

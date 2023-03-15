@@ -102,8 +102,7 @@ class EmailReader extends Model
     {
         //Очистка письма от лишних символов и тэгов
         $text = htmlspecialchars_decode(string: $text);
-        $text = preg_replace(pattern: '/<br .+?>/', replacement: PHP_EOL, subject: $text);
-        $text = strip_tags($text);
+        $text = preg_replace(pattern: '/<.+?>/', replacement: PHP_EOL, subject: $text);
 
         // dd($text);
 
@@ -123,13 +122,6 @@ class EmailReader extends Model
 
         // dd($obj);
         return $obj;
-
-
-        return [
-            'name' => str_replace(search: 'Имя: ', replace: '', subject: $nameString),
-            'phone' => str_replace(search: 'Телефон: ', replace: '', subject: $phoneString),
-            'city' => str_replace(search: 'Город: ', replace: '', subject: $cityString),
-        ];
     } 
 
     public function getMail() //Проверить почтовый ящик и выгрузить из него письма
@@ -143,12 +135,10 @@ class EmailReader extends Model
             //Поиск писем
             $mailIndexes = imap_search(
                 imap: $inbox,
-                // criteria: "UNSEEN SUBJECT \"{$this->subject}\"",
-                criteria: 'UNSEEN',
+                criteria: "UNSEEN SUBJECT \"{$this->subject}\"",
                 charset: 'UTF-8'
             );
 
-            //Новая заявка от формы: Лид-форма БФЛ РФ
             // dd($mailIndexes);
 
             //Парсинг полученных писем
