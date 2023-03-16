@@ -28,9 +28,13 @@ class ProjectController extends Controller
     {} //Конструктор
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *      path="/project",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Список проекто загружен успешно"
+     *      )
+     *  )
      */
     public function index()
     {
