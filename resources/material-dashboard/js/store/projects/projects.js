@@ -57,7 +57,6 @@ export default {
           state.projectsLoad = true
           state.projects = data.data
           state.filteredProjects = data.data
-          console.log(data.data)
         })
         .catch(() => {
           commit('loader/LOADER_FALSE', null, { root: true })
@@ -67,10 +66,8 @@ export default {
       await axios
         .post(state.endpoint + '/leads-count')
         .then(({ data }) => {
-          console.log('Вывод данных: ' + data)
           state.projectsLeadsCountLoad = true
           state.projectsLeadsCount = Object.assign({}, ...data.data.map(i => ({ [i.id]: { totalLeads: i.totalLeads, leadsToday: i.leadsToday } })))
-          console.log(state.projectsLeadsCount)
         })
         .catch(() => {
           state.projectsLeadsCountLoad = false
@@ -98,7 +95,6 @@ export default {
         dropMenu.firstChild.children[i].addEventListener('click', (e) => {
           e.stopPropagation()
           if (e.currentTarget.firstElementChild && e.currentTarget.firstElementChild.classList.contains('projects__dropdown__menu')) {
-            console.log(1)
             return
           } else {
             dropMenu.firstChild.classList.remove('projects__dropdown__menu--active')
@@ -116,7 +112,6 @@ export default {
       axios
         .delete(state.endpoint + '/' + id )
         .then(({data}) => {
-          console.log(data)
           if (data.data.response === 200 ) {
             const projectsDropdownMenuActive = document.querySelectorAll('.projects__dropdown__menu--active')
             state.filteredProjects.forEach((project, index) => {

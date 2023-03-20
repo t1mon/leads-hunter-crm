@@ -8,6 +8,8 @@ use App\Commands\V2\Project\Journal\GetVariantsCommand;
 use App\Commands\V2\Project\Journal\GetVariantsHandler;
 use App\Commands\V2\Project\Journal\JournalCommand;
 use App\Commands\V2\Project\Journal\JournalHandler;
+use App\Commands\V2\Project\MyProjects\MyProjectsCommand;
+use App\Commands\V2\Project\MyProjects\MyProjectsHandler;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\V2\Project\Project\Journal as JournalRequest;
@@ -34,7 +36,7 @@ class ProjectController extends Controller
     {
         return $this->service->dashboard();
     }
-
+    
     /**
      *  ЕЖЛ
      * 

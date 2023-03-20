@@ -84,7 +84,8 @@
     </div>
     
     <div class="text-center my-3">
-        <a href="{{route('project.log', ['project' => $project, 'amount' => 'all'])}}" class='link-primary'>@lang('projects.log.show-all')</a>
+        {{-- <a href="{{route('project.log', ['project' => $project, 'amount' => 'all'])}}" class='link-primary'>@lang('projects.log.show-all')</a> --}}
+        {{$entries->links()}}
     </div>
 
 @endsection

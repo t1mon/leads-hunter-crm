@@ -61,7 +61,6 @@ class Leads extends Model
 
     protected $casts = [
         'utm' => 'array',
-        'nextcall_date' => 'datetime:d.m.Y H:i:s',
     ];
 
     /**
@@ -117,10 +116,10 @@ class Leads extends Model
                 : (array_key_exists('utm_term', $this->utm) ? $this->utm['utm_term'] : null);
     } //getUtmTermAttribute
 
-    public function getFieldsAttribute() //Получить список полей лида
+    public static function getFields() //Получить список полей лида
     {
-        return $this->fillable;
-    } //getFieldsAttribute
+        return (new self)->fillable;
+    } //getFields
 
     /**
      *      Отношения
@@ -198,6 +197,27 @@ class Leads extends Model
         ? $query->whereIn('city', $city)
         : $query->where('city', $city);
     } //scopeCity
+    
+    public function scopeCompany($query, string|array $company)
+    {
+        return is_array($company)
+        ? $query->whereIn('company', $company)
+        : $query->where('company', $company);
+    } //scopeCompany
+    
+    public function scopeRegion($query, string|array $region)
+    {
+        return is_array($region)
+        ? $query->whereIn('region', $region)
+        : $query->where('region', $region);
+    } //scopeRegion
+    
+    public function scopeManualRegion($query, string|array $manual_region)
+    {
+        return is_array($manual_region)
+        ? $query->whereIn('manual_region', $manual_region)
+        : $query->where('manual_region', $manual_region);
+    } //scopeRegion
     
     public function scopeReferrer($query, string|array $referrer)
     {

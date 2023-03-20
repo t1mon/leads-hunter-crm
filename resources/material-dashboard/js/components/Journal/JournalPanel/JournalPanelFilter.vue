@@ -42,7 +42,6 @@
 <script>
 export default {
     name: "JournalPanelFilter",
-    props: ['projectid'],
     data() {
         return {
             dateFrom: '',
@@ -300,7 +299,6 @@ export default {
         const date_fromLS = localStorage.getItem('date_from')
         const date_toLS = localStorage.getItem('date_to')
         if (columnIndexLS && itemIndexLS) {
-            console.log(columnIndexLS, itemIndexLS)
             await this.getPeriod(+columnIndexLS, +itemIndexLS)
         }
         if (date_fromLS && date_toLS) {

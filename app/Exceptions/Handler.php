@@ -48,10 +48,6 @@ class Handler extends ExceptionHandler
                 return response()->json(['error' => $exception->errors()]);
             }
 
-            if ($exception instanceof \Exception) {
-                // return response()->json(['response' => "Project id:{$request->project} Not Found'"], 404);
-                return response()->json(['response' => $exception->getMessage()]);
-            }
 
             if ($exception instanceof NotFoundHttpException) {
                     return response()->json(['error' => 'Not Found'], 404);
@@ -59,6 +55,10 @@ class Handler extends ExceptionHandler
 
             if ($exception instanceof AuthenticationException) {
                     return response()->json(['message' => 'Unauthorised'], 401);
+            }
+
+            if ($exception instanceof \Exception) {
+                return response()->json(['response' => $exception->getMessage()]);
             }
 
         }

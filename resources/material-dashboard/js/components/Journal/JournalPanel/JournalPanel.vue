@@ -5,12 +5,15 @@
             <div class="journal__date__box align-items-start align-items-lg-end flex-column flex-lg-row mb-2 mb-sm-0">
                 <h5 class="m-0 me-3">{{ stateProjectJour.name }}</h5>
 
-                <journal-panel-filter :projectid="projectid"></journal-panel-filter>
+                <journal-panel-filter></journal-panel-filter>
             </div>
 
-            <div class="d-flex justify-content-between justify-content-sm-end">
+            <div class="d-flex flex-row-reverse flex-sm-row justify-content-between justify-content-sm-end align-items-end">
                 <clear-filters></clear-filters>
-                <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
+                <div class="d-flex flex-column flex-md-row">
+                    <manual-leads></manual-leads>
+                    <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
+                </div>
             </div>
         </div>
     </div>
@@ -20,12 +23,14 @@
 <script>
 import JournalPanelFilter from "./JournalPanelFilter";
 import ClearFilters from "./ClearFilters";
+import ManualLeads from "./ManualLeads";
 
 export default {
     name: "JournalPanel",
     components: {
         JournalPanelFilter,
-        ClearFilters
+        ClearFilters,
+        ManualLeads
     },
     props: ['projectid'],
     data () {
@@ -49,7 +54,6 @@ export default {
                 date_to: this.$store.getters['filterParams/stateParams'].date_to
             }
             const url = window.location.href + `/download?` + $.param(query)
-            console.log(url)
             window.location = url
         }
     }

@@ -1,5 +1,6 @@
 @php
-    $telegram_fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+    // $telegram_fields = ['email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+    $telegram_fields = $lead_fields;
 @endphp
 
 {{--Скрытая форма для добавления группового чата--}}
@@ -82,7 +83,7 @@
                                         'id' => "fields[$column]"
                                     ]
                                 )!!}
-                                {!! Form::label("fields[$column]", trans('projects.notifications.webhooks.common.fields.' . $column, ['class' => 'from-check-label'])) !!}                                
+                                {!! Form::label("fields[$column]", trans('leads.fields.' . $column, ['class' => 'from-check-label'])) !!}                                
                             </div>
                         @endforeach
                     </div>

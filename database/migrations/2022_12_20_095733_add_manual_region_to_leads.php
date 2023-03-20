@@ -14,7 +14,7 @@ class AddManualRegionToLeads extends Migration
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->string('manual_region')->after('region')->nullable();
+            $table->string('manual_region')->after('city')->nullable();
         });
     }
 

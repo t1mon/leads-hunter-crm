@@ -50,7 +50,6 @@ export default {
                 class_id: classId
             })
                 .then(function (response) {
-                    console.log(response)
                     store.commit('loader/LOADER_FALSE')
                 })
                 .catch(function (error) {

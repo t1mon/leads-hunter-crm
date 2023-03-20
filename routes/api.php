@@ -73,7 +73,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::apiResource('project/{project}/webhooks', 'Project\WebhookController')->only(['index', 'store', 'destroy']);
     });
 
-    Route::post('/lead.add', 'LeadsController@store')->name('lead.store');
+    Route::post('/lead.add', 'LeadsController@store')->name('lead.store')->middleware(['throttle:phone']);
     Route::put('/lead.update', 'LeadsController@update')->name('lead.update');
     Route::delete('/lead.destroy', 'LeadsController@destroy')->name('lead.destroy');
     Route::get('/lead.test', 'LeadsController@test')->name('lead.test');
@@ -100,6 +100,10 @@ Route::prefix('v2')->name('v2.')->group(function(){
 
         //Лиды
         Route::prefix('lead')->name('lead.')->group(function(){
+            //Управление лидами вручную
+            Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
+            Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
+
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){
                 Route::post('add', [\App\Http\Controllers\Api\V2\LeadController::class, 'addNextcall'])->name('add');
@@ -118,7 +122,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 Route::delete('clear', [\App\Http\Controllers\Api\V2\Lead\CompanyController::class, 'destroy'])->name('clear');
             });
         });
-        
+
         //Проекты
         Route::prefix('project')->name('project.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
@@ -129,6 +133,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::prefix('{project}/settings')->name('settings.')->group(function(){
                 Route::post('toggle_find_region', [App\Http\Controllers\Api\V2\Project\ProjectSettingsController::class, 'toggleFindRegion'])->name('togge_find_region');
             });
+
         });
 
         //Комментарии

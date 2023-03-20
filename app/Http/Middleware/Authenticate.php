@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class Authenticate extends Middleware
@@ -19,4 +20,13 @@ class Authenticate extends Middleware
     {
         return route('login');
     }
+
+//    protected function unauthenticated($request, array $guards)
+//    {
+////        throw new AuthenticationException(
+////            'Unauthenticated.', $guards, $this->redirectTo($request)
+////        );
+//
+//        return response()->json(['message' => 'Unauthenticated.'], 401);
+//    }
 }
