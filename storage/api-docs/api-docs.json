@@ -9,6 +9,7 @@
         "/": {},
         "/project": {
             "get": {
+                "description": "Вывести список проектов",
                 "operationId": "76f1ab7b3d3ff8c85f9b454cad43e770",
                 "responses": {
                     "200": {

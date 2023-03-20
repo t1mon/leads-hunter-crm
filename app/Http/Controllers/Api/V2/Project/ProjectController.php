@@ -29,6 +29,7 @@ class ProjectController extends Controller
 
     /**
      * @OA\Get(
+     *      description="Вывести список проектов",
      *      path="/project",
      *      @OA\Response(
      *          response=200,
