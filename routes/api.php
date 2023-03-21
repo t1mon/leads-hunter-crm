@@ -103,6 +103,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
             //Управление лидами вручную
             Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
+            Route::post('find_region', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'findRegion'])->name('find_region');
 
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){

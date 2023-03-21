@@ -6,10 +6,19 @@ use App\Journal\Facade\Journal;
 use App\Models\Leads;
 use App\Models\Project\Project;
 use Carbon\Carbon;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class Repository{
     protected const REGION_SERVICE_URL = 'http://htmlweb.ru/geo/api.php'; //Адрес службы определения региона
     protected const REGION_SERVICE_API_KEY = 'e6a69c81b471789f28756464e3363e48'; //API-ключ службы определения региона
+
+    //Коды статуса
+    public const STATUS_OK = 0;
+    public const STATUS_CONNECTION_ERROR = 1;
+    public const STATUS_ERROR = 2;
+
     /**
      * URL для проверки баланса: https://htmlweb.ru/api.php?json&obj=money&m=get_limit&api_key=e6a69c81b471789f28756464e3363e48
      */
@@ -100,7 +109,7 @@ class Repository{
         $lead->delete();
     } //remove
     
-    public function findRegion(Leads $lead, bool $online = true): void //Определить регион у лида
+    public function findRegion(Leads $lead, bool $online = true): int //Определить регион у лида
     {
         if($online){
             try{
@@ -113,30 +122,31 @@ class Repository{
 
                 $response->throw();
 
-                
-
                 //Обработка ответа
                 $data = $response->json(key: 'region');
-                // $data = json_decode($response->body(), true);
-                // throw new \Exception(message: $response->body());
 
-                if(empty($data))
+                if(empty($data)){
                     Journal::leadError(lead: $lead, text: 'Сервис не смог определить регион');
+                    return self::STATUS_ERROR;
+                }
                 else{
                     $lead->update(['region' => $data['name']]);
-                    // $lead->update(['region' => $data['region']['name'] ]);
                     Journal::lead(lead: $lead, text: 'Регион лида определён: ' . $lead->region);
+                    return self::STATUS_OK;
                 }
             }
             catch(ConnectionException $e){
                 Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: время ожидания ответа с сервера истекло. Исключение: ' . $e->getMessage());
+                return self::STATUS_CONNECTION_ERROR;
             }
             catch(RequestException $e){
                 Journal::leadError(lead: $lead, text: 'Ошибка при определении региона: ' . $e->getMessage());
+                return self::STATUS_ERROR;
             }
         }
         else{
             throw new \Exception(message: 'Пока что оффлайн-опредление региона не реализовано');
+            return self::STATUS_OK; //TODO Изменить, когда будет реализовано оффлайн-опредление региона
         }
     } //findRegion
 

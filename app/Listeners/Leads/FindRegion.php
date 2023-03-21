@@ -5,6 +5,7 @@ namespace App\Listeners\Leads;
 use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
 use App\Events\Leads\LeadExists;
+use App\Jobs\Leads\FindRegion as FindRegionJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -32,9 +33,6 @@ class FindRegion
      */
     public function handle(LeadCreated|LeadAdded|LeadExists $event)
     {
-        $project = $event->lead->project;
-        
-        if($project->find_region)
-            $this->repository->findRegion(lead: $event->lead);
+        dispatch(new FindRegionJob($event->lead));
     }
 }
