@@ -115,9 +115,9 @@ class Repository{
             try{
                 //Запрос на сервис
                 $response = Http::timeout(5)
-                ->retry(times: 3, sleep: 500)
+                ->retry(times: 3, sleep: 60000)
                 ->get(
-                    self::REGION_SERVICE_URL."?json&telcod={$lead->phone}&charset=utf-8&api_key=".self::REGION_SERVICE_API_KEY
+                    env(key: 'REGION_SERVICE_URL')."?json&telcod={$lead->phone}&charset=utf-8&api_key=".env(key: 'REGION_SERVICE_API_KEY')
                 );
 
                 $response->throw();

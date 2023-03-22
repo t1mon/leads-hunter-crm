@@ -1,10 +1,6 @@
 {{--Объявление полей журнала (чтобы быстро добавлять/удалять в дальнейшем--}}
 @php
-<<<<<<< HEAD
-    $journal_fields = ['class_id', 'comment_crm', 'email', 'city', 'region', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
-=======
     $journal_fields = ['class_id', 'comment_crm', 'owner', 'company', 'nextcall_date', 'email', 'city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
->>>>>>> d09378a3e5ffeb236920f9ef1dde6a0c31e0c0e4
 @endphp
 
 {{--Форма для добавления нового пользователя--}}
