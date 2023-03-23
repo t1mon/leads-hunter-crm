@@ -166,7 +166,8 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
 
         Joselfonseca\LaravelTactician\Providers\LaravelTacticianServiceProvider::class,
-
+        L5Swagger\L5SwaggerServiceProvider::class,
+        
         /*
          * Package Service Providers...
          */

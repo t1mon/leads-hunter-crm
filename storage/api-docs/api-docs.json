@@ -1,0 +1,22 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Документация по API",
+        "description": "Документация по API для Leads Hunter CRM",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {},
+        "/project": {
+            "get": {
+                "description": "Вывести список проектов",
+                "operationId": "76f1ab7b3d3ff8c85f9b454cad43e770",
+                "responses": {
+                    "200": {
+                        "description": "Список проекто загружен успешно"
+                    }
+                }
+            }
+        }
+    }
+}
