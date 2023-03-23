@@ -41,6 +41,11 @@ class Repository{
         $bot->delete();
     } //remove
 
+    public function setWebhook(Bot $bot): void
+    {
+
+    } //setWebhook
+
 };
 
 ?>
