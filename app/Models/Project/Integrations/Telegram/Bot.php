@@ -4,6 +4,7 @@ namespace App\Models\Project\Integrations\Telegram;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Bot extends Model
 {
@@ -19,6 +20,8 @@ class Bot extends Model
     protected $casts = [
         'enabled' => 'boolean',
     ];
+
+    public const HEADER_WEBHOOK_TOKEN = 'x-telegram-bot-api-secret-token'; //Поле в заголовке запроса, в котором приходит webhook_token бота
 
     /**
      *      Отношения
@@ -40,4 +43,12 @@ class Bot extends Model
     {
         return $query->where('enabled', false);
     } //scopeDisabled
+
+    /**
+     *      Рабочие методы
+     */
+    public static function generateWebhookToken(): string
+    {
+        return Str::random(60);
+    } //generateWebhookToken
 }
