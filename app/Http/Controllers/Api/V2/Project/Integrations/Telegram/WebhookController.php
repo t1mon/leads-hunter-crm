@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V2\Project\Integrations\Telegram;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
 use TeleBot;
 use WeStacks\TeleBot\Objects\Update;
