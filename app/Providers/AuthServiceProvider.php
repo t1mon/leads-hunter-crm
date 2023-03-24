@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
+use App\Models\Project\Integrations;
 use App\Models\Project\Lead\Comment;
 use App\Models\User;
 use App\Models\Project\UserPermissions;
@@ -28,6 +29,10 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Media' => 'App\Policies\MediaPolicy',
         Project::class => ProjectPolicy::class,
         UserPermissions::class => UserPermissionsPolicy::class,
+
+        //Интеграции в проект
+        Integrations\Telegram\Bot::class => \App\Policies\V2\Project\Integrations\CommonPolicy::class,
+
         Comment::class => CommentPolicy::class,
         Leads::class => LeadPolicy::class,
     ];

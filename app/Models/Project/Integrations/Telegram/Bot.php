@@ -3,7 +3,9 @@
 namespace App\Models\Project\Integrations\Telegram;
 
 use App\Models\Leads;
+use App\Models\Project\Project;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
@@ -49,6 +51,7 @@ class Bot extends Model
     protected $table = 'integrations_tg_bots';
 
     protected $fillable = [
+        'project_id',
         'username',
         'api_token',
         'webhook_token', //Токен, по которому будет распознаваться, для какого бота пришёл запрос на вебхук
@@ -78,6 +81,11 @@ class Bot extends Model
     /**
      *      Отношения
      */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(related: Project::class, foreignKey: 'project_id');
+    } //project
+
     public function chats(): HasMany
     {
         return $this->hasMany(related: Chat::class, foreignKey: 'bot_id');
@@ -86,6 +94,11 @@ class Bot extends Model
     /**
      *      Фильтры
      */
+    public function scopeFrom($query, Project|int $project)
+    {
+        return $this->where('project_id', $project instanceof Project ? $project->id : $project);
+    } //scopeFrom
+
     public function scopeEnabled($query)
     {
         return $query->where('enabled', true);
@@ -95,6 +108,19 @@ class Bot extends Model
     {
         return $query->where('enabled', false);
     } //scopeDisabled
+
+    /**
+     *      Геттеры
+     */
+    public static function getWebhookRoute(): string
+    {
+        return route('api.v2.integrations.telegram.webhook');
+    } //getWebhookRoute
+
+    public static function getWebhookNgrokRoute(): string
+    {
+        return env(key: 'TELEGRAM_NGROK_WEBHOOK_URL') . '/api/v2/integrations/telegram/webhook';
+    } //getWebhookNgrokRoute
 
     /**
      *      Рабочие методы
@@ -118,12 +144,11 @@ class Bot extends Model
             ->timeout(5)
             ->retry(
                 times: 3,
-                sleep: 10000,
-                when: function($exception, $reqeust){
-                    return ($exception instanceof ConnectionException) || ($exception->response->status() === HttpResponse::HTTP_NOT_FOUND);
-                });
+                sleep: 5000);
 
         $url = $this->_makeRequestUrl($methodName);
+
+        // throw new \Exception(message: 'URL запроса: ' . $url);
 
         switch(Str::lower($type)){
             case 'post':
@@ -157,7 +182,7 @@ class Bot extends Model
         $this->update(['webhook_token' => self::generateWebhookToken()]);
 
         $data = [
-            'url' => env(key: 'TELEGRAM_USE_NGROK', default: true) ? env(key: 'TELEGRAM_NGROK_WEBHOOK_URL') . '/webhook' : route('api.v2.project.integrations.telegram.webhook'),
+            'url' => env(key: 'TELEGRAM_USE_NGROK', default: true) ? self::getWebhookNgrokRoute() : self::getWebhookRoute(),
             'secret_token' => $this->webhook_token,
             'drop_pending_updates' => true,
         ];
@@ -196,4 +221,27 @@ class Bot extends Model
 
         return $response;
     } //sendMessage
+
+    public function setDefaultCommands()
+    {
+        $data = [
+            'commands' => [
+                [
+                    'command' => 'start',
+                    'description' => 'Включить уведомления',
+                ],
+
+                [
+                    'command' => 'stop',
+                    'description' => 'Выключить уведомления',
+                ],
+            ],
+            // 'scope' => [
+            //     'type' => 'all_chat_administrators',
+            // ],
+        ];
+
+        $response = $this->_makeApiRequest(methodName: 'setMyCommands', type: 'post', data: $data);
+        return $response;
+    } //setDefaultCommands
 }

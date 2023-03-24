@@ -3,7 +3,8 @@
 namespace App\Repositories\Project\Integrations\Telegram\Bot;
 
 use App\Models\Project\Integrations\Telegram\Bot;
-
+use App\Models\Project\Project;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ReadRepository{
@@ -30,20 +31,10 @@ class ReadRepository{
         return $this->_findByData(field: 'username', value: $username, fail: $fail, with: $with);
     } //findById
 
-    public function find(int|string $bot, bool $fail = false, string|array $with = null): ?Bot //Общая функция поиска для удобства
+    public function findByProject(Project|int $project): Collection
     {
-        //Поиск по id
-        $result = $this->findById(id: $bot, with: $with);
-
-        //Поиск по другим результатам
-        if(is_null($result))
-            $result = $this->findByUsername(username: $bot, with: $with);
-
-        if(is_null($result) && $fail === true )
-            throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
-
-        return $result;
-    } //find
+        return $this->query()->from($project)->get();
+    } //findByProject
 
     //
     //  Скрытые методы

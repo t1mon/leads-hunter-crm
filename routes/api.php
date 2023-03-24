@@ -132,16 +132,29 @@ Route::prefix('v2')->name('v2.')->group(function(){
             //Интеграции
             Route::prefix('integrations')->name('integrations.')->group(function(){
                 Route::prefix('telegram')->name('telegram.')->group(function(){
-                    Route::post('webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
+                    
+                    Route::prefix('bot/{bot}')->name('bot.')->group(function(){
+                        Route::post('set_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'setWebhook'])->name('set_webhook');
+                        Route::get('delete_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'deleteWebhook'])->name('delete_webhook');
+                    });
+                    Route::apiResource('bot', 'Api\V2\Project\Integrations\Telegram\BotController');
+
                 });
             });
         });
-
+        
         //Комментарии
         Route::prefix('comment')->name('comment.')->group(function(){
             Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
             Route::get('show', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'show'])->name('show');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
+        });
+    });
+    Route::post('integrations/telegram/webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
+
+    Route::prefix('integrations')->name('integrations.')->group(function(){
+        Route::prefix('telegram')->name('telegram.')->group(function(){
+            Route::post('webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
         });
     });
 });
