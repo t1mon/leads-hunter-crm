@@ -24,6 +24,7 @@ class Dashboard extends JsonResource
             ],
             'total_leads' => $this->total_leads,
             'leads_today' => $this->leads_today,
+            'created_at' => $this->created_at->format('d.m.Y'),
         ];
     }
 }

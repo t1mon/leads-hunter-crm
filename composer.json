@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0",
         "barryvdh/laravel-debugbar": "3.5.1",
+        "darkaonline/l5-swagger": "^8.5",
         "doctrine/dbal": "^3.2",
         "facade/ignition": "^2.16",
         "fideloper/proxy": "4.4.0",
