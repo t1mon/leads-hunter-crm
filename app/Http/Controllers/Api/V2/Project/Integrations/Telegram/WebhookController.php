@@ -57,6 +57,23 @@ class WebhookController extends Controller
                     'text' => $messageEntity ? 'Понял принял' : 'я Ничоег ни понел!!!',
                 ]);
             }
+            else{
+                $messageEntity = false;
+
+                if(preg_match(pattern: '/^\w{6}$/', subject: $message->text)){
+                    $messageEntity = true;
+                }
+
+                if(preg_match(pattern: '/^\/(start|stop)$/', subject: $message->text)){
+                    $messageEntity = true;
+                }
+
+            
+                $bot->sendMessage([
+                    'chat_id' => $update->message()->chat->id,
+                    'text' => $messageEntity ? 'Понял принял' : 'я Ничоег ни понел!!!',
+                ]);
+            }
         }
         catch(\Throwable $e){
             return 200;
