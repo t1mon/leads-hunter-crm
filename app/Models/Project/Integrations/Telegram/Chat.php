@@ -14,12 +14,12 @@ class Chat extends Model
 
     protected $fillable = [
         'project_id',
-        'username',
+        'title',
+        'type',
         'chat_id',
         'invite',
-        'confirmed',
-        'bot_id',
         'format',
+        'confirmed',
         'enabled',
     ];
 
@@ -35,11 +35,6 @@ class Chat extends Model
     {
         return $this->belongsTo(related: Project::class, foreignKey: 'project_id');
     } //project
-
-    public function bot(): BelongsTo
-    {
-        return $this->belongsTo(related: Bot::class, foreignKey: 'bot_id');
-    } //bot
 
     /**
      *      Фильтры
@@ -57,13 +52,13 @@ class Chat extends Model
             return $query->where('project_id', $project instanceof Project ? $project->id : $project);
     } //scopeFrom
 
-    public function scopeUsername($query, string|array $username)
+    public function scopeTitle($query, string|array $title)
     {
-        if(is_array($username))
-            return $query->whereIn('username', $username);
+        if(is_array($title))
+            return $query->whereIn('title', $title);
         else
-            return $query->where('username', $username);
-    } //scopeUsername
+            return $query->where('title', $title);
+    } //scopeTitle
 
     public function scopeChat($query, string|array $chat_id)
     {
@@ -83,19 +78,6 @@ class Chat extends Model
         return $query->where('confirmed', false);
     } //scopePending
 
-    public function scopeFor($query, Bot|int|array $bot)
-    {
-        if(is_array($bot)){
-            $bots = array_map(callback: function($item){
-                return $item instanceof Bot ? $item->id : $item;
-            }, array: $bot);
-
-            return $query->whereIn('project_id', $bots);
-        }
-        else
-            return $query->where('bot_id', $bot instanceof Project ? $bot->id : $bot);
-    } //scopeFor
-
     public function scopeEnabled($query)
     {
         return $query->where('enabled', true);
@@ -109,6 +91,11 @@ class Chat extends Model
     /**
      *      Рабочие методы
      */
+    public static function generateInvite(): string
+    {
+        return Str::random(6);
+    } //generateInvite
+
     public function composeMessage(Leads $lead): string //Подставить значения лида в сообщение
     {
         if(empty($this->format))

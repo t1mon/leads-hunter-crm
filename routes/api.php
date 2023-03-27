@@ -132,7 +132,19 @@ Route::prefix('v2')->name('v2.')->group(function(){
             //Интеграции
             Route::prefix('integrations')->name('integrations.')->group(function(){
                 Route::prefix('telegram')->name('telegram.')->group(function(){
+<<<<<<< HEAD
                     Route::post('webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
+=======
+                    Route::apiResource('chat', 'Api\V2\Project\Integrations\Telegram\ChatController');
+
+
+                    // Route::prefix('bot/{bot}')->name('bot.')->group(function(){
+                    //     Route::post('set_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'setWebhook'])->name('set_webhook');
+                    //     Route::get('delete_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'deleteWebhook'])->name('delete_webhook');
+                    // });
+                    // Route::apiResource('bot', 'Api\V2\Project\Integrations\Telegram\BotController');
+
+>>>>>>> 88f94d4... Подключена библиотека telebot/laravel, написаны регулярные выражения для распознавания команд
                 });
             });
         });
@@ -144,6 +156,16 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
         });
     });
+<<<<<<< HEAD
+=======
+
+    //Внешние ссылки для интеграций
+    Route::prefix('integrations')->name('integrations.')->group(function(){
+        Route::prefix('telegram')->name('telegram.')->group(function(){
+            Route::post('webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
+        });
+    });
+>>>>>>> 88f94d4... Подключена библиотека telebot/laravel, написаны регулярные выражения для распознавания команд
 });
 
 
