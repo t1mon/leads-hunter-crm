@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Leads;
 use App\Models\Project\Project;
+use App\Models\Project\Integrations;
 use App\Models\Project\Lead\Comment;
 use App\Models\User;
 use App\Models\Project\UserPermissions;

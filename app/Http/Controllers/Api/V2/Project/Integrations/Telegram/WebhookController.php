@@ -64,9 +64,23 @@ class WebhookController extends Controller
 
     } //getIncomingRequest
 
-    public function setWebhook()
+    public function setWebhook(Request $request)
     {
+        $request->validate(rules: [
+            'bot_id' => 'required|exists:integrations_tg_bots,id',
+        ]);
+        
+        $repository = app(\App\Repositories\Project\Integrations\Telegram\Bot\Repository::class);
+        $readRepository = app(\App\Repositories\Project\Integrations\Telegram\Bot\ReadRepository::class);
 
+        $bot = $readRepository->findById(id: $request->bot_id, fail: true);
+
+        if($bot->checkWebhook())
+            $bot->deleteWebhook();
+
+        $repository->setWebhook($bot);
+
+        return response(content: 'Вебхук назначен');
     } //setWebhook
 
     public function deleteWebhook()

@@ -144,7 +144,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 });
             });
         });
-
+        
         //Комментарии
         Route::prefix('comment')->name('comment.')->group(function(){
             Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
