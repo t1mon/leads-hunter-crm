@@ -4,6 +4,7 @@ namespace App\Repositories\Project\Integrations\Telegram\Chat;
 
 use App\Models\Project\Integrations\Telegram\Chat;
 use App\Models\Project\Project;
+use WeStacks\TeleBot\Objects\Update;
 
 class Repository{
     public function query(): \Illuminate\Database\Eloquent\Builder //Общая функция для запросов
@@ -61,6 +62,15 @@ class Repository{
         $chat->delete();
     } //remove
 
+    public function getInfoFromUpdate(Chat $chat, Update $update): Chat //Обновить информацию о чате из полученного сообщения
+    {
+        $chat->update([
+            'type' => $update->message()->chat->type,
+            'title' => $update->message()->chat->type === 'private' ? $update->message()->chat->username : $update->message()->chat->title,
+        ]);
+
+        return $chat;
+    } //getInfoFromUpdate
 };
 
 ?>

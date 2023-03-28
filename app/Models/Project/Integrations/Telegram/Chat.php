@@ -68,6 +68,11 @@ class Chat extends Model
             return $query->where('chat_id', $chat_id);
     } //scopeUsername
 
+    public function scopeInvite($query, string $invite)
+    {
+        return $query->where('invite', $invite);
+    } //scopeInvite
+
     public function scopeConfirmed($query)
     {
         return $query->where('confirmed', true);
@@ -89,6 +94,35 @@ class Chat extends Model
     } //scopeDisabled
 
     /**
+     *      Геттеры
+     */
+    public function isPrivate(): bool
+    {
+        return $this->type === 'private';
+    } //isPrivate
+
+    public function getStartCommandPattern(): string //Составляет шаблон команды для проверки в зависимости от типа чата
+    {
+        return $this->isPrivate()
+            ? '/^\/start$/'
+            : '/^\/start@' . env('TELEGRAM_BOT_NAME') . '$/';
+    } //getStartCommand
+
+    public function getStopCommandPattern(): string
+    {
+        return $this->isPrivate()
+            ? '/^\/stop$/'
+            : '/^\/stop@' . env('TELEGRAM_BOT_NAME') . '$/';
+    } //getStopCommandPattern
+
+    public function getConfirmCommandPattern(): string
+    {
+        return $this->isPrivate()
+            ? '/^' . $this->invite . '$/'
+            : '/^@' . env('TELEGRAM_BOT_NAME') . ' ' . $this->invite . '$/';
+    } //getConfirmCommandPattern
+
+    /**
      *      Рабочие методы
      */
     public static function generateInvite(): string
@@ -104,8 +138,26 @@ class Chat extends Model
         $result = $this->format;
 
         foreach(Leads::getFields() as $field)
-            $result = Str::replace(search: '$'.$field, replace: $lead->$field, subject: $result);
+            if(Str::contains(haystack: $result, needles: '$'.$field))
+                $result = Str::replace(search: '$'.$field, replace: "{$lead->$field}", subject: $result);
+
+        $result = Str::replace(search: ['\n'], replace: PHP_EOL, subject: $result);
 
         return $result;
     } //composeMessage
+
+    public function enable(): void
+    {
+        $this->update(['enabled' => true]);
+    } //enable
+
+    public function disable(): void
+    {
+        $this->update(['enabled' => false]);
+    } //enable
+
+    public function toggle(): void
+    {
+        $this->update(['enabled' => !$this->enabled]);
+    } //toggle
 }

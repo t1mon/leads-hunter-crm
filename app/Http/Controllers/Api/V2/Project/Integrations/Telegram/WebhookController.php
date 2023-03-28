@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V2\Project\Integrations\Telegram;
 
+use App\Commands\V2\Project\Integrations\Telegram\Webhook\ProcessIncomingMessage\ProcessIncomingMessageCommand;
+use App\Commands\V2\Project\Integrations\Telegram\Webhook\ProcessIncomingMessage\ProcessIncomingMessageHandler;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Joselfonseca\LaravelTactician\CommandBusInterface;
@@ -22,6 +24,12 @@ class WebhookController extends Controller
         try{
             if(!env(key: 'TELEGRAM_ENABLED', default: false))
                 return 200;
+
+
+            $this->bus->addHandler(command: ProcessIncomingMessageCommand::class, handler: ProcessIncomingMessageHandler::class);
+            $this->bus->dispatch(command: ProcessIncomingMessageCommand::class, input: ['request' => $request]);
+
+            return 200;
             
             //Загрузка бота и обработка обновления
             $bot = TeleBot::bot('bot');
@@ -76,6 +84,7 @@ class WebhookController extends Controller
             }
         }
         catch(\Throwable $e){
+            report($e);
             return 200;
         }
 
