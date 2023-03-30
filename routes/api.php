@@ -129,13 +129,34 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
 
-        });
+            //Интеграции
+            Route::prefix('integrations')->name('integrations.')->group(function(){
+                Route::prefix('telegram')->name('telegram.')->group(function(){
+                    Route::apiResource('chat', 'Api\V2\Project\Integrations\Telegram\ChatController');
 
+
+                    // Route::prefix('bot/{bot}')->name('bot.')->group(function(){
+                    //     Route::post('set_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'setWebhook'])->name('set_webhook');
+                    //     Route::get('delete_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'deleteWebhook'])->name('delete_webhook');
+                    // });
+                    // Route::apiResource('bot', 'Api\V2\Project\Integrations\Telegram\BotController');
+
+                });
+            });
+        });
+        
         //Комментарии
         Route::prefix('comment')->name('comment.')->group(function(){
             Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
             Route::get('show', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'show'])->name('show');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
+        });
+    });
+
+    //Внешние ссылки для интеграций
+    Route::prefix('integrations')->name('integrations.')->group(function(){
+        Route::prefix('telegram')->name('telegram.')->group(function(){
+            Route::post('webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
         });
     });
 });

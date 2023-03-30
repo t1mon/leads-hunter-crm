@@ -18,5 +18,50 @@
                 }
             }
         }
+    },
+    "components": {
+        "schemas": {
+            "Bot": {
+                "title": "Модель Project\\Integrations\\Telegram\\Bot",
+                "description": "Модель, содержащая данные Telegram-бота",
+                "required": [
+                    "username",
+                    "api_token"
+                ],
+                "properties": {
+                    "username": {
+                        "description": "Идентификатор бота в Telegram",
+                        "type": "string"
+                    },
+                    "api_token": {
+                        "description": "API-токен бота, который используется для запросов в Telegram API",
+                        "type": "string"
+                    },
+                    "webhook_token": {
+                        "description": "Секретный ключ бота, по которому Leads Hunter CRM API распознаёт, от какого бота пришёл запрос на вебхук. Генерируется автоматически",
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "description": "Флаг, указывающий, включен ли бот в текущий момент",
+                        "type": "boolean"
+                    },
+                    "HEADER_WEBHOOK_TOKEN": {
+                        "description": "Поле в заголовке запроса, в котором приходит webhook_token бота",
+                        "type": "const string",
+                        "enum": [
+                            "x-telegram-bot-api-secret-token"
+                        ]
+                    },
+                    "TG_API_REQUEST_URL": {
+                        "description": "Базовый адрес Telegram API, куда бот отправляет запросы",
+                        "type": "const string",
+                        "enum": [
+                            "https://api.telegram.org/bot"
+                        ]
+                    }
+                },
+                "type": "object"
+            }
+        }
     }
 }
