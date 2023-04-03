@@ -16,7 +16,7 @@ class AddRequest extends FormRequest
     public function authorize()
     {
         $project = $this->projectReadRepository->findById(id: $this->project_id, fail: true);
-        return $this->user()->can('create', \App\Models\Project\Integrations\EmailReader::class, $project);
+        return $this->user()->can('common', \App\Models\Project\Integrations\EmailReader::class, $project);
     }
 
     /**

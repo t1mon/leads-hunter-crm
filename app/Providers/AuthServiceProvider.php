@@ -33,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         UserPermissions::class => UserPermissionsPolicy::class,
 
         //Интеграции в проект
+        Integrations\EmailReader::class => \App\Policies\V2\Project\Integrations\CommonPolicy::class,
         Integrations\Telegram\Chat::class => \App\Policies\V2\Project\Integrations\CommonPolicy::class,
 
         Comment::class => CommentPolicy::class,

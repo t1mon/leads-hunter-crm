@@ -131,17 +131,14 @@ Route::prefix('v2')->name('v2.')->group(function(){
 
             //Интеграции
             Route::prefix('integrations')->name('integrations.')->group(function(){
+                //Telegram
                 Route::prefix('telegram')->name('telegram.')->group(function(){
                     Route::apiResource('chat', 'Api\V2\Project\Integrations\Telegram\ChatController');
-
-
-                    // Route::prefix('bot/{bot}')->name('bot.')->group(function(){
-                    //     Route::post('set_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'setWebhook'])->name('set_webhook');
-                    //     Route::get('delete_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'deleteWebhook'])->name('delete_webhook');
-                    // });
-                    // Route::apiResource('bot', 'Api\V2\Project\Integrations\Telegram\BotController');
-
                 });
+
+                //Email
+                Route::get('email-reader/test', [\App\Http\Controllers\Api\V2\Project\Integrations\EmailReaderController::class, 'test'])->name('email-reader.test');
+                Route::apiResource('email-reader', 'Api\V2\Project\Integrations\EmailReaderController');
             });
         });
         
