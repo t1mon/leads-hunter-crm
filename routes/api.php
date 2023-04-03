@@ -130,21 +130,10 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
 
             //Интеграции
-<<<<<<< HEAD
-            Route::prefix('integrations')->name('integrations')->group(function(){
-                //Парсер E-mail
-                Route::put('email-reader/toggle', [\App\Http\Controllers\Api\V2\Project\Integrations\EmailReaderController::class, 'toggle'])->name('email-reader.toggle');
-                Route::get('email-reader/test', [\App\Http\Controllers\Api\V2\Project\Integrations\EmailReaderController::class, 'test'])->name('email-reader.test');
-                Route::apiResource('email-reader', 'Api\V2\Project\Integrations\EmailReaderController');
-            });
-
-        });
-=======
             Route::prefix('integrations')->name('integrations.')->group(function(){
                 Route::prefix('telegram')->name('telegram.')->group(function(){
                     Route::apiResource('chat', 'Api\V2\Project\Integrations\Telegram\ChatController');
 
->>>>>>> c79bd9d85153a45fea81652829c6527bc9af8b22
 
                     // Route::prefix('bot/{bot}')->name('bot.')->group(function(){
                     //     Route::post('set_webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'setWebhook'])->name('set_webhook');
