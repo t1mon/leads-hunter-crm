@@ -31,14 +31,10 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Media' => 'App\Policies\MediaPolicy',
         Project::class => ProjectPolicy::class,
         UserPermissions::class => UserPermissionsPolicy::class,
-<<<<<<< HEAD
-        EmailReader::class => EmailReaderPolicy::class,
-=======
 
         //Интеграции в проект
         Integrations\Telegram\Chat::class => \App\Policies\V2\Project\Integrations\CommonPolicy::class,
 
->>>>>>> c79bd9d85153a45fea81652829c6527bc9af8b22
         Comment::class => CommentPolicy::class,
         Leads::class => LeadPolicy::class,
     ];
