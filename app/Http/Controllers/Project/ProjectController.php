@@ -213,6 +213,15 @@ class ProjectController extends Controller
             'date_to'   => 'nullable|date_format:Y-m-d',
         ]);
 
+        //Запись в лог
+        Log::info(
+            message: 'Пользователь ' . auth()->user()->email . ' запросил экспорт проекта ' . $project->name,
+            context: array_merge(
+             ['datetime' => Carbon::now('Europe/Samara')->format('d.m.Y, H:i:s')],
+             $_SERVER,
+            ),
+        );
+
         //Создание дат (если указаны в форме)
         $date_from = $request->filled('date_from') ? Carbon::parse($request->date_from, $project->timezone)->startOfDay()->setTimezone(config('app.timezone')) : null;
         $date_to = $request->filled('date_to') ? Carbon::parse($request->date_to, $project->timezone)->endOfDay()->setTimezone(config('app.timezone')) : null;
