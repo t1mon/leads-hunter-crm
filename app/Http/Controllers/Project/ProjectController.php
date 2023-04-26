@@ -214,7 +214,7 @@ class ProjectController extends Controller
         ]);
 
         //Запись в лог
-        Log::info(
+        Log::channel('exports')->info(
             message: 'Пользователь ' . auth()->user()->email . ' запросил экспорт проекта ' . $project->name,
             context: array_merge(
              ['datetime' => Carbon::now('Europe/Samara')->format('d.m.Y, H:i:s')],
