@@ -84,6 +84,13 @@ return [
             'path' => storage_path('logs/leads.log'),
             'level' => 'debug',
         ],
+
+        //Лог для записи запросов на экспорт ЕЖЛ
+        'exports' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/exports.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];
