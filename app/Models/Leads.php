@@ -117,7 +117,8 @@ class Leads extends Model
 
     public static function getFields() //Получить список полей лида
     {
-        return (new self)->fillable;
+        $leadFields = (new self)->fillable;
+        return array_merge(['id'], $leadFields);
     } //getFields
 
     /**
