@@ -18,10 +18,21 @@ class Journal extends JsonResource
         if(is_null($this->visible))
             return $this->fullData();
 
+        $user = $request->user();
+        $permissions = $user->getPermissionsForProject($this->project_id);
+
         $result = [
-            'id' => $this->id,
+            'id' => $this->when(
+                condition: $permissions->isOwner() || $permissions->isManager() || $user->isAdmin(),
+                value: $this->id,
+                default: '*',
+            ),
             'name' => $this->getClientName(),
-            'phone' => $this->phone,
+            'phone' => $this->when(
+                condition: $permissions->isOwner() || $permissions->isManager() || $user->isAdmin(),
+                value: $this->phone,
+                default: '******' . substr($this->phone, 7)
+            ),
             'created_at' => $this->created_at->format('d.m.Y H:i:s'),
             'comment_crm' => $this->when(in_array(needle: 'comment_crm', haystack: $this->visible),
                 is_null($this->comment_crm) ? null

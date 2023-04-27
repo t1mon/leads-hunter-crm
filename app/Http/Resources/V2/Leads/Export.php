@@ -24,11 +24,18 @@ class Export extends JsonResource
         if(is_null($this->visible))
             return $this->fullData();
 
+        $user = $request->user();
+        $permissions = $user->getPermissionsForProject($this->project_id);
+
         $result = [
             // 'id' => $this->id,
             'name' => $this->getClientName(),
-            'phone' => $this->phone,
-            'created_at' => $this->applyTimezone(),
+            'phone' => $this->when(
+                condition: $permissions->isOwner() || $permissions->isManager() || $user->isAdmin(),
+                value: $this->phone,
+                default: '******' . substr($this->phone, 7)
+            ),
+            'created_at' => $this->applyTimezone($this->created_at),
             'comment_crm' => $this->when(in_array(needle: 'comment_crm', haystack: $this->visible), 
                 is_null($this->comment_crm) ? null : $this->comment_crm?->comment_body
             ),
