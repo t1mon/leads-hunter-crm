@@ -68,6 +68,7 @@ class LeadExport implements FromCollection
             $row[] = 'UTM campaign';
             $row[] = 'UTM medium';
             $row[] = 'referrer';
+            $row[] = 'ip';
         }
         else{
             foreach($this->permissions->view_fields as $field)
@@ -109,6 +110,7 @@ class LeadExport implements FromCollection
                 // $row[] = $lead->utm['utm_campaign'] ?? '';
                 // $row[] = $lead->utm['utm_medium'] ?? '';
                 $row[] = $lead->referrer;
+                $row[] = $lead->ip;
             }
             else{
                 foreach($this->permissions->view_fields as $field)
