@@ -45,6 +45,7 @@ class Leads extends Model
         'city',
         'region',
         'manual_region',
+        'manual_city',
         'ip',
         'referrer',
         'source',

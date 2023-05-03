@@ -83,6 +83,10 @@ class LeadsController extends Controller
         $user = User::where('api_token', $request->bearerToken())->first();
         $request->merge(['owner' => is_null($user) ? 'API' : $user->name]);
 
+        //Переименование поля city в manual_city
+        $request->merge(['manual_city' => $request->city]);
+        $request->request->remove('city');
+
         //$new_lead = Leads::addToDB($request->all());
         $new_lead = $this->leads->createOrUpdate($request->all());
 

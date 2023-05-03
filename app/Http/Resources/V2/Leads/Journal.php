@@ -70,6 +70,7 @@ class Journal extends JsonResource
             'city' => $this->city,
             'region' => $this->region,
             'manual_region' => $this->manual_region,
+            'manual_city' => $this->manual_city,
             'ip' => $this->ip,
             'referrer' => $this->referrer,
             'source' => $this->source,

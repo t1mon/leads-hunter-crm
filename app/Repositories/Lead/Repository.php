@@ -124,14 +124,15 @@ class Repository{
 
                 //Обработка ответа
                 $data = $response->json(key: 'region');
+                $city = $response->json(key: '0');
 
                 if(empty($data)){
                     Journal::leadError(lead: $lead, text: 'Сервис не смог определить регион');
-                    $lead->update(['region' => '0']);
+                    $lead->update(['region' => '0', 'city' => '0']);
                     return self::STATUS_ERROR;
                 }
                 else{
-                    $lead->update(['region' => $data['name']]);
+                    $lead->update(['region' => $data['name'], 'city' => $city['name'] ?? '0']);
                     Journal::lead(lead: $lead, text: 'Регион лида определён: ' . $lead->region);
                     return self::STATUS_OK;
                 }
