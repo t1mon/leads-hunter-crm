@@ -32,6 +32,10 @@ class FindRegion implements ShouldQueue
      */
     public function handle(LeadCreated|LeadAdded|LeadExists $event)
     {
+        //Не посылать запрос, если отключена глобальная настройка
+        if(!env('REGION_SERVICE_ENABLED', false))
+            return;
+
         $project = $event->lead->project;
         
         if($project->find_region)
