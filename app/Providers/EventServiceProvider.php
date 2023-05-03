@@ -14,6 +14,9 @@ use App\Listeners\Leads\SendEmailData;
 use App\Listeners\Leads\SendTelegramData;
 use App\Listeners\Leads\SendWebhookData;
 use App\Listeners\Leads\SendSMSData;
+
+use App\Listeners\Project\Integrations\Telegram\SendLeadDataToTG;
+
 use App\Listeners\Leads\CountLeadsInProject;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -38,11 +41,12 @@ class EventServiceProvider extends ServiceProvider
             SplitUTM::class,
             MakeFullName::class,
             SendEmailData::class,
-            CountLeadsInProject::class
+            CountLeadsInProject::class,
         ],
 
         LeadCreated::class => [
-            SendTelegramData::class,
+            SendTelegramData::class, //Старая версия интеграции Telegram
+            SendLeadDataToTG::class, //Новая версии интеграции Telegram
             SendSMSData::class,
             SendWebhookData::class,
             SendMangoData::class,

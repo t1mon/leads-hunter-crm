@@ -58,6 +58,9 @@ class UserPermissionsController extends Controller
         
         $request->merge(['user_id' => $user->id]);
 
+        if(!$request->filled('view_fields'))
+            $request->merge(['view_fields' => []]);
+
         UserPermissions::create($request->all());
 
         Journal::project($project, Auth::user()->name . ' добавил пользователя ' . $user->name . 'в проект (' . $request->role . ')');
@@ -66,6 +69,8 @@ class UserPermissionsController extends Controller
     } //store
 
     public function update(Project $project, $permissions, Request $request){
+        // return response()->json($request->all());
+
         //Проверка полномочий пользователя
         if(Gate::denies('delete', [UserPermissions::class, $project]))
             return trans('projects.not-authorized'); //TODO: сделать более симпатичное представление;
@@ -85,7 +90,8 @@ class UserPermissionsController extends Controller
             return !is_null($value);
         });
 
-        $permissions->view_fields = $view_fields;
+        //Если view_fields в запросе нет, вставить пустой массив
+        $permissions->view_fields = $request->filled('view_fields') ? $view_fields : [];
 
         $permissions->save();
 

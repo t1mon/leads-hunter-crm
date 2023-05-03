@@ -68,6 +68,7 @@ class LeadExport implements FromCollection
             $row[] = 'UTM campaign';
             $row[] = 'UTM medium';
             $row[] = 'referrer';
+            $row[] = 'ip';
         }
         else{
             foreach($this->permissions->view_fields as $field)
@@ -79,12 +80,17 @@ class LeadExport implements FromCollection
         foreach($this->leads as $lead){
             $row = [];
 
+            //Если номер телефона не указан в видимых полях, скрыть его
+            $phone = $lead->phone;
+            if($this->permissions->isWatcher($this->project) && !in_array('phone', $this->permissions->view_fields))
+                $phone = '******' . substr($phone, 7);
+
             //Базовые поля
             $row[] = Carbon::parse($lead->created_at, config('app.timezone'))->setTimezone($this->project->timezone)->format('d.m.Y H:i:s');
             $row[] = $this->project->name;
             $row[] = $lead->class->name ?? null;
             $row[] = $lead->getClientName();
-            $row[] = $lead->phone;
+            $row[] = $phone;
             $row[] =  $lead->entries;
 
             //Поля в зависимости от разрешений пользователя
@@ -104,6 +110,7 @@ class LeadExport implements FromCollection
                 // $row[] = $lead->utm['utm_campaign'] ?? '';
                 // $row[] = $lead->utm['utm_medium'] ?? '';
                 $row[] = $lead->referrer;
+                $row[] = $lead->ip;
             }
             else{
                 foreach($this->permissions->view_fields as $field)
