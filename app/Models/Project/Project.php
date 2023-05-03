@@ -157,7 +157,7 @@ class Project extends Model
         //Установка срока годности токена у вебхука AmoCRM
         if($new_webhook['type'] === self::WEBHOOK_AMOCRM)
             $this->webhook_add_amocrm($new_webhook);
-        else{    
+        else{
             $new_settings = $this->settings;
             $new_settings['webhooks'][ $new_webhook['name'] ] = $new_webhook;
 
@@ -168,7 +168,7 @@ class Project extends Model
     public function webhook_add_amocrm(array $new_webhook){
         //Вычисление URL для обновления access_token
         $new_webhook['auth_url'] = 'https://' . parse_url($new_webhook['url'], PHP_URL_HOST) . '/oauth2/access_token';
-        
+
         //Отправка кода авторизации для получения токенов
         $body = [
             'client_id' => $new_webhook['client_id'],
@@ -184,7 +184,7 @@ class Project extends Model
         //Парсинг ответа
         $new_webhook['access_token'] = $response['access_token'];
         $new_webhook['refresh_token'] = $response['refresh_token'];
-        
+
         //Установка срока годности токена у вебхука AmoCRM
         $new_webhook['expires_at'] = Carbon::now()->addSeconds(86400);
 
@@ -251,7 +251,7 @@ class Project extends Model
             $this->webhook_update($name, ['enabled' => 0], true);
             return json_decode($e->response);
         }
-        
+
     } //webhook_send
 
     public function doRequest(string $url, array $data, $method = 'post', $asForm = false) : Response
@@ -273,10 +273,10 @@ class Project extends Model
             $webhook = $this->webhook_get($webhook->name);
             $webhook->query = $old_query;
         }
-    
+
         // Отправка запроса
         $response = Http::withToken($webhook->access_token)->withBody(json_encode(yaml_parse($webhook->query)), 'application/json')->post($webhook->url);
-        
+
         if($response->failed() and $response['status'] == 401){ //Если попытка подключения не удалась из-за устаревшего токена
             $this->webhook_amocrm_update_token($webhook);
             $old_query = $webhook->query; //Сохранение уже составленного запроса
@@ -342,7 +342,7 @@ class Project extends Model
 
     public function getFindRegionAttribute(): bool //Получить значение настройки find_region (поиск региона при добавлении лида)
     {
-        return $this->settings['find_region'] ?? false;
+        return $this->settings['find_region'] ?? true;
     } //getFindRegionAttribute
 
     public function setFindRegionAttribute(bool $value)
