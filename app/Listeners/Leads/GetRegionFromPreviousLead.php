@@ -32,6 +32,10 @@ class GetRegionFromPreviousLead
      */
     public function handle(LeadExists|LeadCreated|LeadAdded $event)
     {
+        //Не посылать запрос, если отключена глобальная настройка
+        if(!env('REGION_SERVICE_ENABLED', false))
+            return;
+
         $this->repository->getRegionFromPreviousLead(lead: $event->lead);
     }
 }

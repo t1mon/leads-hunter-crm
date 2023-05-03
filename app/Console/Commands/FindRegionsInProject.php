@@ -55,8 +55,6 @@ class FindRegionsInProject extends Command
      */
     public function handle()
     {
-        $this->info('Начало handle');
-
         //Отладочная информация
         if($this->option('debug')){
             $this->info('Входные данные:');
@@ -75,9 +73,7 @@ class FindRegionsInProject extends Command
         if(!$this->_findRegion())
             return 1;
 
-        $this->info('Конец handle');
         return 0;
-
     } //handle
 
     protected function _loadArguments(): bool //Загрузка аргументов
