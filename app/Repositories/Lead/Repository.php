@@ -127,6 +127,7 @@ class Repository{
 
                 if(empty($data)){
                     Journal::leadError(lead: $lead, text: 'Сервис не смог определить регион');
+                    $lead->update(['region' => '0']);
                     return self::STATUS_ERROR;
                 }
                 else{
