@@ -28,6 +28,7 @@ return [
         'city' =>  'Город',
         'region' =>  'Регион',
         'manual_region' =>  'Регион (вручную)',
+        'manual_city' => 'Город (вручную)',
         'ip' =>  'IP',
         'referrer' =>  'Реферрер',
         'source' =>  'Источник',

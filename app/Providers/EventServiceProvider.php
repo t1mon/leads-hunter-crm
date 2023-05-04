@@ -8,6 +8,8 @@ use App\Events\Leads\LeadExists;
 use App\Events\Leads\LeadDeleted;
 use App\Listeners\Leads\SplitUTM;
 use App\Listeners\Leads\MakeFullName;
+use App\Listeners\Leads\FindRegion;
+use App\Listeners\Leads\GetRegionFromPreviousLead;
 use App\Listeners\Leads\SendEmailData;
 use App\Listeners\Leads\SendTelegramData;
 use App\Listeners\Leads\SendWebhookData;
@@ -35,7 +37,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        LeadAdded::class => [
+        LeadAdded::class => [ //Общее событие (используется для вызова общих обработчиков для LeadCreated и LeadExists)
             SplitUTM::class,
             MakeFullName::class,
             SendEmailData::class,
@@ -48,13 +50,11 @@ class EventServiceProvider extends ServiceProvider
             SendSMSData::class,
             SendWebhookData::class,
             SendMangoData::class,
-            //Определение региона
-            //...
+            FindRegion::class,
         ],
 
         LeadExists::class => [
-            //Определение региона из предыдущего лида
-            //...
+            GetRegionFromPreviousLead::class,
         ],
 
         LeadDeleted::class => [

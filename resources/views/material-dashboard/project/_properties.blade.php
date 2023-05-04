@@ -97,6 +97,28 @@
                 </div>
             </div>
         </div>
+
+        {{-- Автоматическое определение региона --}}
+        <div class="col">
+            <div class="card my-3">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Автоматическое определение региона лида</h5>
+                    {!! Form::model($project, ['method' => 'PUT', 'route' => ['project.update', $project] ]) !!}
+                        @if ($project->find_region)
+                            {!! Form::hidden('settings[find_region]', 0) !!}
+                            <p class="card-text text-center">
+                                {!! Form::submit('Выключить', ['class' => 'btn btn-primary'] ) !!}
+                            </p>
+                        @else
+                            {!! Form::hidden('settings[find_region]', 1) !!}
+                            <p class="card-text text-center">
+                                {!! Form::submit('Включить', ['class' => 'btn btn-secondary'] ) !!}
+                            </p>
+                        @endif
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

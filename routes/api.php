@@ -50,7 +50,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         Route::apiResource('project/{project}/users', 'Project\UserPermissionsController')->only(['index', 'store', 'update', 'destroy']);
 
         //Классы лидов
-        Route::apiResource('project/{project}/class', 'Project\Lead\LeadClassController')->only(['store', 'update', 'destroy']);
+        Route::apiResource('project/{project}/class', 'Project\Lead\z')->only(['store', 'update', 'destroy']);
         Route::post('project/{project}/journal/{lead}/class/assign', 'Project\Lead\LeadClassController@assign')->name('class-assign');
 
         //Комментарии к лидам
@@ -103,6 +103,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
             //Управление лидами вручную
             Route::post('add', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'store'])->name('add');
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'destroy'])->name('delete');
+            Route::post('find_region', [\App\Http\Controllers\Api\V2\Lead\LeadController::class, 'findRegion'])->name('find_region');
 
             //Дата следующего звонка
             Route::prefix('nextcall')->name('nextcall.')->group(function(){
@@ -128,6 +129,11 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::get('{project}/journal', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'journal'] )->name('journal');
             Route::get('{project}/journal/variants', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'getFilterVariants'] )->name('journal.variants');
             Route::get('{project}/export', [\App\Http\Controllers\Api\V2\Project\ProjectController::class, 'export'])->name('export');
+
+            //Настройки проекта
+            Route::prefix('{project}/settings')->name('settings.')->group(function(){
+                Route::post('toggle_find_region', [App\Http\Controllers\Api\V2\Project\ProjectSettingsController::class, 'toggleFindRegion'])->name('togge_find_region');
+            });
 
             //Интеграции
             Route::prefix('integrations')->name('integrations.')->group(function(){

@@ -108,7 +108,7 @@ class LeadPolicy
      */
     public function restore(User $user, Leads $leads)
     {
-        //
+
     }
 
     /**
@@ -123,6 +123,26 @@ class LeadPolicy
         //
     }
 
+    /**
+     * Определить, может ли пользователь дать команду на определение региона лида
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Leads  $leads
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function findRegion(User $user, Leads $lead)
+    {
+        if($user->isAdmin())
+        return Response::allow();
+
+        $permissions = $user->getPermissionsForProject($lead->project);
+        if(is_null($permissions))
+            return Response::deny(message: 'У вас нет доступа к этому проекту', code: HttpResponse::HTTP_FORBIDDEN);
+        else
+            return ($permissions->isOwner() || $permissions->isManager())
+                ? Response::allow()
+                : Response::deny(message: 'У вас нет полномчий на определение региона', code: HttpResponse::HTTP_FORBIDDEN);
+    }
 
     /**
      * Общая политика на добавление пользователем дополнительной информации к лиду
