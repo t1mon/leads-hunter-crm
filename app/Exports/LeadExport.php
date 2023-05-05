@@ -61,6 +61,9 @@ class LeadExport implements FromCollection
             $row[] = 'Сумма';
             $row[] = 'Комментарий';
             $row[] = 'Город';
+            $row[] = 'Город (вручную)';
+            $row[] = 'Регион';
+            $row[] = 'Регион (вручную)';
             $row[] = 'Посадочная';
             $row[] = 'Источник';
             $row[] = 'UTM term';
@@ -99,6 +102,9 @@ class LeadExport implements FromCollection
                 $row[] = $lead->cost;
                 $row[] = $lead->comment;
                 $row[] = $lead->city;
+                $row[] = $lead->manual_city;
+                $row[] = $lead->region;
+                $row[] = $lead->manual_region;
                 $row[] = $lead->host;
                 $row[] = $lead->source;
                 $row[] = $lead->utm_term;
