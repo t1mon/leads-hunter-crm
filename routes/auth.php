@@ -5,6 +5,7 @@ use App\Http\Controllers\NewsletterSubscriptionController;
 use App\Http\Controllers\Project\EmailController;
 use App\Http\Controllers\Project\TelegramIDController;
 use App\Http\Controllers\Project\HostController;
+use App\Http\Controllers\Project\Integrations\Calltracking\PhoneController;
 use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Project\LeadClassController;
 use App\Http\Controllers\Project\UserPermissionsController;
@@ -77,10 +78,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         //Интеграции
         Route::name('project.')->group(function(){
             Route::prefix('integrations')->name('integrations.')->group(function(){
+                //Манго
                 Route::get('mango/{project_id}/index', [MangoController::class, 'index'])->name('mango.index');
                 Route::get('mango/{project_id}/create', [MangoController::class, 'create'])->name('mango.create');
                 Route::get('mango/{mango}/toggle', [MangoController::class, 'toggle'])->name('mango.toggle');
                 Route::resource('mango', MangoController::class)->except(['index', 'create']);
+
+                //Отслеживание звонков
+                Route::prefix('calltracking')->as('calltracking.')->group(function(){
+                    Route::prefix('phones/{project_id}')->as('phones.')->group(function(){
+                        Route::get('create', [PhoneController::class, 'create'])->name('create');
+                        Route::post('create', [PhoneController::class, 'store'])->name('store');
+                    });
+                });
             });
         });
         

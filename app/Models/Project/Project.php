@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 use App\Journal\Facade\Journal;
+use App\Models\Project\Integrations\Calltracking\Log;
+use App\Models\Project\Integrations\Calltracking\Phone;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 
 class Project extends Model
@@ -106,6 +109,16 @@ class Project extends Model
     {
         return $this->hasMany(Email::class);
     }
+
+    public function calltracking_phones(): HasMany
+    {
+        return $this->hasMany(related: Phone::class);
+    } //calltracking_phones
+
+    public function calltracking_logs(): HasMany
+    {
+        return $this->hasMany(related: Log::class);
+    } //calltracking_logs
 
     public function getTelegramChannelIdAttribute() //Получить идентификатор канала, на который назначен проект
     {

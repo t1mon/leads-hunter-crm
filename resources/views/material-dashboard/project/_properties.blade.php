@@ -119,6 +119,29 @@
                 </div>
             </div>
         </div>
+
+        {{-- Отслеживание звонков --}}
+        <div class="col">
+            <div class="card my-3">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Отслеживание звонков</h5>
+                    @if ($calltracking_phones->isEmpty())
+                    <p class="card-text text-secondary text-center">
+                        Телефоны отсутствуют…
+                        <a href="{{route('project.integrations.calltracking.phones.create', $project->id)}}" class="link-info">Добавить</a>
+                    </p>
+                    @else
+                        @foreach ($calltracking_phones as $phone)
+                            <p class="card-text">{{$phone->phone}}</p>
+                        @endforeach
+                    @endif
+                    <p class="text-center">
+                        <a href="{{route('project.integrations.calltracking.phones.create', $project->id)}}" class="btn btn-sm btn-primary">Добавить</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 </div>
