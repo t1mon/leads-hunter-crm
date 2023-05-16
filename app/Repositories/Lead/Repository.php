@@ -2,6 +2,9 @@
 
 namespace App\Repositories\Lead;
 
+use App\Events\Leads\LeadAdded;
+use App\Events\Leads\LeadCreated;
+use App\Events\Leads\LeadExists;
 use App\Journal\Facade\Journal;
 use App\Models\Leads;
 use App\Models\Project\Project;
@@ -39,8 +42,7 @@ class Repository{
         ?string $cost,
         ?string $email,
         ?string $comment,
-        ?string $city,
-        // ?string $region,
+        ?string $manual_city,
         ?string $manual_region,
         ?string $company,
         ?string $ip,
@@ -66,8 +68,7 @@ class Repository{
             'email' => $email,
             'cost' => $cost,
             'comment' => $comment,
-            'city' => $city,
-            // 'region' => $region,
+            'manual_city' => $manual_city,
             'manual_region' => $manual_region,
             'company' => $company,
             'ip' => $ip,
@@ -94,6 +95,106 @@ class Repository{
                 'utm_term' => $utm_term,
             ],
         ]);
+
+        return $lead;
+    } //create
+
+    public function findLatestEntry(string|int $phone, Project|int $project): ?Leads //Поиск последнего вхождения лида
+    {
+        return $this->query()->where([
+            'project_id' => $project instanceof Project ? $project->id : $project,
+            'phone' => $phone,
+        ])
+        ->latest()
+        ->first();
+    } //findLatestEntry
+
+    public function add(    //Создаёт лид с автоматическим заполнением некоторых полей (например, кол-ва вхождений) и вызовом событий
+        Project $project,
+        string $name,
+        int $phone,
+        ?string $host = null,
+        ?string $surname = null,
+        ?string $patronymic = null,
+        ?string $owner = null,
+        ?string $cost = null,
+        ?string $email = null,
+        ?string $comment = null,
+        ?string $manual_city = null,
+        ?string $manual_region = null,
+        ?string $company = null,
+        ?string $ip = null,
+        ?string $referrer = null,
+        ?string $source = null,
+        ?string $utm_medium = null,
+        ?string $utm_campaign = null,
+        ?string $utm_source = null,
+        ?string $utm_term = null,
+        ?string $utm_content = null,
+        ?string $url_query_string = null,
+        ?string $nextcall_date = null,
+    ): Leads
+    {
+        //Поиск последнего вхождения
+        $entries = 1;
+        $lastEntry = $this->findLatestEntry(phone: $phone, project: $project);
+        if(!is_null($lastEntry)){
+            //Если срок годности лида включен и не истёк, увеличить entries
+            if($project->settings['leadValidDays'] > 0)
+            {
+                $leadDate = Carbon::parse($lastEntry->created_at)->addDays($project->settings['leadValidDays']);
+                if(Carbon::now()->lessThan($leadDate))
+                    $entries = $lastEntry->entries + 1;
+            }
+        }
+
+        //Создание лида
+        $lead = $this->query()->create([
+            'project_id' => $project->id,
+            'owner' => $owner,
+            'name' => $name,
+            'surname' => $surname,
+            'patronymic' => $patronymic,
+            'phone' => $phone,
+            'entries' => $entries,
+            'email' => $email,
+            'cost' => $cost,
+            'comment' => $comment,
+            'manual_city' => $manual_city,
+            'manual_region' => $manual_region,
+            'company' => $company,
+            'ip' => $ip,
+            'referrer' => $referrer,
+            'source' => $source,
+            'utm_medium' => $utm_medium,
+            'utm_source' => $utm_source,
+            'utm_campaign' => $utm_campaign,
+            'utm_content' => $utm_content,
+            'utm_term' => $utm_term,
+            'host' => $host,
+            'url_query_string' => $url_query_string,
+            'nextcall_date' => is_null($nextcall_date) ? null : Carbon::parse(time: $nextcall_date, tz: $project->timezone)->setTimezone(config('app.timezone')),
+        ]);
+
+        //Заполнение остальных полей
+        $lead->update([
+            'full_name' => $lead->getClientName(),
+            'utm' => [
+                'utm_medium' => $utm_medium,
+                'utm_source' => $utm_source,
+                'utm_campaign' => $utm_campaign,
+                'utm_content' => $utm_content,
+                'utm_term' => $utm_term,
+            ],
+        ]);
+
+        //Отправка событий
+        event(new LeadAdded($lead));
+
+        if($lead->entries === 1)
+            event(new LeadCreated($lead));
+        else
+            event(new LeadExists($lead));
 
         return $lead;
     } //create

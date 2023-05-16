@@ -2,7 +2,6 @@
 
 namespace App\Jobs\Api\V2\Project\Integrations\Calltacking;
 
-use App\Journal\Facade\Journal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,14 +9,13 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-use App\Repositories\Project\Repository as ProjectRepository;
 use App\Repositories\Project\ReadRepository as ProjectReadRepository;
-use App\Repositories\Project\Integrations\Calltracking\Phone\Repository as PhoneRepository;
 use App\Repositories\Project\Integrations\Calltracking\Phone\ReadRepository as PhoneReadRepository;
 use App\Repositories\Lead\Repository as LeadRepository;
 use App\Repositories\Project\Host\ReadRepository as HostReadRepository;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Joselfonseca\LaravelTactician\CommandBusInterface;
 
 class ParseIncomingCall implements ShouldQueue
 {
@@ -45,6 +43,8 @@ class ParseIncomingCall implements ShouldQueue
         PhoneReadRepository $phoneReadRepository,
         HostReadRepository $hostReadRepository,
         LeadRepository $leadRepository,
+
+        CommandBusInterface $bus,
     )
     {
         $this->params = json_decode($this->params)[0];
@@ -53,50 +53,28 @@ class ParseIncomingCall implements ShouldQueue
             //Поиск номера трекинга
             $phone = $phoneReadRepository->findByPhone(phone: $this->params['caller_did'], fail: true, with: 'project');
 
-            //Проверка проекта
-            if(!$phone->project->settings['enabled']){
-                Journal::projectError($phone->project, 'ПРОЕКТ ОТКЛЮЧЕН! Поступило уведомление с коллтрекинга по номеру ' . $this->params['caller_did'] . ', телефон лида ' . $this->params['caller_id']);
-                return;
-            }
+            //Назначение команды
+            $bus->addHandler(
+                command: \App\Commands\V2\Lead\CUD\AddCommand::class,
+                handler: \App\Commands\V2\Lead\CUD\AddHandler::class
+            );
 
-            //Проверка хоста
-            $host = filter_var(value: $this->params['url'], filter: FILTER_VALIDATE_URL)
-                ? parse_url(url: $this->params['url'])['host']
-                : $this->params['url'];
-
-            $query = $hostReadRepository->query()
-                ->where(['project_id' => $phone->project_id, 'host' => $host]);
-
-            if(!$query->exists()){
-                Journal::projectError($phone->project, 'ХОСТ ' . $host . ' НЕ НАЙДЕН! Поступило уведомление с коллтрекинга по номеру ' . $this->params['caller_did'] . ', телефон лида ' . $this->params['caller_id']);
-                return;
-            }
-
-            //Создание лида
-            $leadRepository->create(
-                project: $phone->project,
-                name: 'CALL_TRACKING',
-                phone: $this->params['caller_id'],
-                host: $host,
-                surname: null,
-                patronymic: null,
-                owner: null,
-                cost: null,
-                email: null,
-                comment: 'CALL_TRACKING: ' . $this->params['caller_did'],
-                city: null,
-                manual_region: null,
-                company: null,
-                ip: null,
-                referrer: null,
-                source: $this->params['source'] ?? null,
-                utm_medium: $this->params['utm_medium'] ?? null,
-                utm_term: $this->params['utm_term'] ?? null,
-                utm_campaign: $this->params['utm_campaign'] ?? null,
-                utm_source: $this->params['utm_source'] ?? null,
-                utm_content: $this->params['utm_content'] ?? null,
-                url_query_string: $this->params['url'] ?? null,
-                nextcall_date: null
+            //Выполнение команды
+            $bus->dispatch(
+                command: \App\Commands\V2\Lead\CUD\AddCommand::class,
+                input: [
+                    'project' => $phone->project,
+                    'name' => 'CALL_TRACKING',
+                    'phone' => $this->params['caller_id'],
+                    'comment' => 'CALL_TRACKING: ' . $this->params['caller_did'],
+                    'source' => $this->params['source'] ?? null,
+                    'utm_medium' => $this->params['utm_medium'] ?? null,
+                    'utm_term' => $this->params['utm_term'] ?? null,
+                    'utm_campaign' => $this->params['utm_campaign'] ?? null,
+                    'utm_source' => $this->params['utm_source'] ?? null,
+                    'utm_content' => $this->params['utm_content'] ?? null,
+                    'url_query_string' => $this->params['url'] ?? null,
+                ]
             );
         }
         catch(ModelNotFoundException $e){
