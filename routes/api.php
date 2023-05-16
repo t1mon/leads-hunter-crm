@@ -158,13 +158,17 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
         });
     });
+    
+    Route::get('call-tracking', 'Api\V2\Project\Integrations\CallController')->name('call-tracking');
 
     //Внешние ссылки для интеграций
     Route::prefix('integrations')->name('integrations.')->group(function(){
         Route::prefix('telegram')->name('telegram.')->group(function(){
             Route::post('webhook', [\App\Http\Controllers\Api\V2\Project\Integrations\Telegram\WebhookController::class, 'getIncomingRequest'])->name('webhook');
         });
+
     });
+    
 });
 
 
