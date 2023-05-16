@@ -88,12 +88,12 @@ class ParseIncomingCall implements ShouldQueue
                 ip: null,
                 referrer: null,
                 source: $this->params['source'] ?? null,
-                utm_medium: $this->params['utm_medium'],
-                utm_term: $this->params['utm_term'],
-                utm_campaign: $this->params['utm_campaign'],
-                utm_source: $this->params['utm_source'],
-                utm_content: $this->params['utm_content'],
-                url_query_string: $this->params['url'],
+                utm_medium: $this->params['utm_medium'] ?? null,
+                utm_term: $this->params['utm_term'] ?? null,
+                utm_campaign: $this->params['utm_campaign'] ?? null,
+                utm_source: $this->params['utm_source'] ?? null,
+                utm_content: $this->params['utm_content'] ?? null,
+                url_query_string: $this->params['url'] ?? null,
                 nextcall_date: null
             );
         }

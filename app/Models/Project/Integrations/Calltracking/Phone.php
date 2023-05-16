@@ -26,7 +26,7 @@ class Phone extends Model
     //
     public function project(): BelongsTo
     {
-        return $this->belongsTo(related: Projectt::class, foreignKey: 'project_id');
+        return $this->belongsTo(related: Project::class, foreignKey: 'project_id');
     } //project
 
     //
