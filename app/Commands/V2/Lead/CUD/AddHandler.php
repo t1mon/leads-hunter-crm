@@ -38,8 +38,8 @@ class AddHandler
 
         //Проверка хоста
         $host = filter_var(value: $command->host, filter: FILTER_VALIDATE_URL)
-        ? parse_url(url: $command->host)['host']
-        : $command->host;
+            ? parse_url(url: $command->host)['host']
+            : $command->host;
 
         if(!$this->hostReadRepository->validateHost(project: $command->project, host: $host)){
             Journal::projectError($command->project, 'ХОСТ ' . $host . ' НЕ НАЙДЕН! Поступило уведомление с коллтрекинга по номеру ' . $this->params['caller_did'] . ', телефон лида ' . $this->params['caller_id']);

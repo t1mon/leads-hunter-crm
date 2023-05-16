@@ -18,6 +18,9 @@ class CallController extends Controller
 
     public function __invoke(IncomingCall $request)
     {
+        // $params = json_decode(json: $request->result, associative: true)[0];
+        // dd($params);
+
         dispatch(new ParseIncomingCall($request->result));
 
         return response('Данные получены');

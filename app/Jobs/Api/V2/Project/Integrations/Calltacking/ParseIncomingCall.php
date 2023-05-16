@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Api\V2\Project\Integrations\Calltacking;
 
+use App\Journal\Facade\Journal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -43,38 +44,47 @@ class ParseIncomingCall implements ShouldQueue
         PhoneReadRepository $phoneReadRepository,
         HostReadRepository $hostReadRepository,
         LeadRepository $leadRepository,
-
-        CommandBusInterface $bus,
     )
     {
-        $this->params = json_decode($this->params)[0];
+        $this->params = json_decode(json: $this->params, associative: true)[0];
 
         try{
             //Поиск номера трекинга
             $phone = $phoneReadRepository->findByPhone(phone: $this->params['caller_did'], fail: true, with: 'project');
 
-            //Назначение команды
-            $bus->addHandler(
-                command: \App\Commands\V2\Lead\CUD\AddCommand::class,
-                handler: \App\Commands\V2\Lead\CUD\AddHandler::class
-            );
 
-            //Выполнение команды
-            $bus->dispatch(
-                command: \App\Commands\V2\Lead\CUD\AddCommand::class,
-                input: [
-                    'project' => $phone->project,
-                    'name' => 'CALL_TRACKING',
-                    'phone' => $this->params['caller_id'],
-                    'comment' => 'CALL_TRACKING: ' . $this->params['caller_did'],
-                    'source' => $this->params['source'] ?? null,
-                    'utm_medium' => $this->params['utm_medium'] ?? null,
-                    'utm_term' => $this->params['utm_term'] ?? null,
-                    'utm_campaign' => $this->params['utm_campaign'] ?? null,
-                    'utm_source' => $this->params['utm_source'] ?? null,
-                    'utm_content' => $this->params['utm_content'] ?? null,
-                    'url_query_string' => $this->params['url'] ?? null,
-                ]
+            //Загрузка проекта
+            $project = $projectReadRepository->findById(id: $phone->project_id, fail: true);
+        
+            //Проверка проекта
+            if(!$project->settings['enabled']){
+                Journal::projectError($project, 'ПРОЕКТ ОТКЛЮЧЕН! Поступило уведомление с коллтрекинга по номеру ' . $this->params['caller_did'] . ', телефон лида ' . $this->params['caller_id']);
+                return;
+            }
+
+            //Проверка хоста
+            $host = filter_var(value: $this->params['url'], filter: FILTER_VALIDATE_URL)
+                ? parse_url(url: $this->params['url'])['host']
+                : $this->params['url'];
+
+            if(!$hostReadRepository->validateHost(project: $project, host: $host)){
+                Journal::projectError($project, 'ХОСТ ' . $host . ' НЕ НАЙДЕН! Поступило уведомление с коллтрекинга по номеру ' . $this->params['caller_did'] . ', телефон лида ' . $this->params['caller_id']);
+                return;
+            }
+
+            //Создание лида            
+            $lead = $leadRepository->add(
+                project: $project,
+                name: 'ЗВОНОК С САЙТА',
+                phone: $this->params['caller_id'],
+                comment: 'CALL_TRACKING: ' . $this->params['caller_did'],
+                source: $this->params['source'] ?? null,
+                utm_medium: $this->params['utm_medium'] ?? null,
+                utm_term: $this->params['utm_term'] ?? null,
+                utm_campaign: $this->params['utm_campaign'] ?? null,
+                utm_source: $this->params['utm_source'] ?? null,
+                utm_content: $this->params['utm_content'] ?? null,
+                url_query_string: $this->params['url_query_string'] ?? null,
             );
         }
         catch(ModelNotFoundException $e){

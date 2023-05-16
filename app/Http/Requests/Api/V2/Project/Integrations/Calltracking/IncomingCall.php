@@ -25,11 +25,7 @@ class IncomingCall extends FormRequest
     {
         return [
             'event' => 'required|in:CALL_TRACKING',
-            //'result' => 'array',
-            //'result.caller_id' => 'required|regex:/^\d+$/s',
-            //'result.caller_did' => 'required|regex:/^\d+$/s',
-            //'result.url' => 'required|url',
-
+            'result' => 'json',
         ];
     }
 }
