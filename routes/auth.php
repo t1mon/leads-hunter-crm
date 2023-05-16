@@ -88,7 +88,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::prefix('calltracking')->as('calltracking.')->group(function(){
                     Route::prefix('phones/{project_id}')->as('phones.')->group(function(){
                         Route::get('create', [PhoneController::class, 'create'])->name('create');
-                        Route::post('create', [PhoneController::class, 'store'])->name('store');
+                        Route::post('store', [PhoneController::class, 'store'])->name('store');
+                        Route::get('edit/{phone_id}', [PhoneController::class, 'edit'])->name('edit');
+                        Route::put('update/{phone_id}', [PhoneController::class, 'update'])->name('update');
+                        Route::get('toggle/{phone_id}', [PhoneController::class, 'toggle'])->name('toggle');
+                        Route::delete('destroy/{phone_id}', [PhoneController::class, 'destroy'])->name('destroy');
                     });
                 });
             });
