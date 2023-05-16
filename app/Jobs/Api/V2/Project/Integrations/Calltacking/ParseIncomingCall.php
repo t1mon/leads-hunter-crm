@@ -29,7 +29,7 @@ class ParseIncomingCall implements ShouldQueue
      * @return void
      */
     public function __construct(
-        public array $params
+        public $params
     )
     {
         //
@@ -47,6 +47,8 @@ class ParseIncomingCall implements ShouldQueue
         LeadRepository $leadRepository,
     )
     {
+        $this->params = json_decode($this->params)[0];
+
         try{
             //Поиск номера трекинга
             $phone = $phoneReadRepository->findByPhone(phone: $this->params['caller_did'], fail: true, with: 'project');
@@ -58,7 +60,7 @@ class ParseIncomingCall implements ShouldQueue
             }
 
             //Проверка хоста
-            $host = filter_var(value: $this->params['url'], filter: FILTER_VALIDATE_URL)    
+            $host = filter_var(value: $this->params['url'], filter: FILTER_VALIDATE_URL)
                 ? parse_url(url: $this->params['url'])['host']
                 : $this->params['url'];
 
@@ -98,7 +100,7 @@ class ParseIncomingCall implements ShouldQueue
             );
         }
         catch(ModelNotFoundException $e){
-            
+
         }
     }
 }

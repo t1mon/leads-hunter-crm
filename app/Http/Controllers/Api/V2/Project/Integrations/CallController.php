@@ -18,9 +18,6 @@ class CallController extends Controller
 
     public function __invoke(IncomingCall $request)
     {
-        //Обязательный код от novaphone, без которого интеграция не сработает
-        if (isset($_GET['zd_echo'])) exit($_GET['zd_echo']);
-
         dispatch(new ParseIncomingCall($request->result));
 
         return response('Данные получены');

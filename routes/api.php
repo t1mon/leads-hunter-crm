@@ -150,7 +150,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
                 });
             });
         });
-        
+
         //Комментарии
         Route::prefix('comment')->name('comment.')->group(function(){
             Route::post('add', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'store'])->name('add');
@@ -158,8 +158,13 @@ Route::prefix('v2')->name('v2.')->group(function(){
             Route::delete('delete', [\App\Http\Controllers\Api\V2\Project\Lead\CommentController::class, 'delete'])->name('delete');
         });
     });
-    
-    Route::get('call-tracking', 'Api\V2\Project\Integrations\CallController')->name('call-tracking');
+
+    Route::get('call-tracking', function (){
+        //Обязательный код от novaphone, без которого интеграция не сработает
+        if (isset($_GET['zd_echo'])) exit($_GET['zd_echo']);
+    });
+
+    Route::post('call-tracking', 'Api\V2\Project\Integrations\CallController')->name('call-tracking');
 
     //Внешние ссылки для интеграций
     Route::prefix('integrations')->name('integrations.')->group(function(){
@@ -168,7 +173,7 @@ Route::prefix('v2')->name('v2.')->group(function(){
         });
 
     });
-    
+
 });
 
 
