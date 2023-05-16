@@ -146,6 +146,8 @@ class Repository{
                 if(Carbon::now()->lessThan($leadDate))
                     $entries = $lastEntry->entries + 1;
             }
+            else
+                $entries = $lastEntry->entries + 1;
         }
 
         //Создание лида
