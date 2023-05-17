@@ -191,12 +191,15 @@ class Repository{
         ]);
 
         //Отправка событий
-        event(new LeadAdded($lead));
+        // dispatch(new LeadAdded($lead));
+        LeadAdded::dispatch($lead);
 
         if($lead->entries === 1)
-            event(new LeadCreated($lead));
+            // dispatch(new LeadCreated($lead));
+            LeadCreated::dispatch($lead);
         else
-            event(new LeadExists($lead));
+            // dispatch(new LeadExists($lead));
+            LeadExists::dispatch($lead);
 
         return $lead;
     } //create
