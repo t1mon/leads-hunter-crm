@@ -7,7 +7,7 @@
         @endisset
 
         <p class="card-text text-center">
-            {!! Form::text('phone', $phone?->phone , ['class' => 'form-control border p-2', 'placeholder' => 'Номер телефона']) !!}
+            {!! Form::text('phone', isset($phone->phone ) ? $phone->phone : null , ['class' => 'form-control border p-2', 'placeholder' => 'Номер телефона']) !!}
             {!! Form::hidden('project_id', $project->id) !!}
         </p>
 
