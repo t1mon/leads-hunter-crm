@@ -3,6 +3,7 @@
 namespace App\Jobs\Api\V2\Project\Integrations\Calltacking;
 
 use App\Journal\Facade\Journal;
+use App\Models\Leads;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,8 +18,9 @@ use App\Repositories\Project\Host\ReadRepository as HostReadRepository;
 use App\Repositories\Project\Integrations\Calltracking\Log\Repository as LogRepository;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
-class ParseIncomingCall implements ShouldQueue
+class ParseIncomingCall
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -77,10 +79,11 @@ class ParseIncomingCall implements ShouldQueue
             //Создание лида            
             $lead = $leadRepository->add(
                 project: $project,
-                name: 'ЗВОНОК С САЙТА',
+                name: 'звонок',
                 phone: $this->params['caller_id'],
+                host: $host,
                 comment: 'CALL_TRACKING: ' . $this->params['caller_did'],
-                source: $this->params['source'] ?? null,
+                source: Leads::SOURCE_CALL_TRACKING,
                 utm_medium: $this->params['utm_medium'] ?? null,
                 utm_term: $this->params['utm_term'] ?? null,
                 utm_campaign: $this->params['utm_campaign'] ?? null,
@@ -97,7 +100,12 @@ class ParseIncomingCall implements ShouldQueue
             );
         }
         catch(ModelNotFoundException $e){
-
+            Log::warning(
+                message: 'CALL_TRACKING по номеру' . $this->params['caller_did'] . ' не подключен',
+                context: $this->params
+            );
+            
+            return response('CALL_TRACKING по номеру' . $this->params['caller_did'] . ' не подключен');
         }
     }
 }

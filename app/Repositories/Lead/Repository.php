@@ -271,7 +271,7 @@ class Repository{
             }
         }
         else{
-            $lead->update(['region' => $previous->region]);
+            $lead->update(['region' => $previous->region, 'city' => $previous->city]);
             Journal::lead(lead: $lead, text: "Регион \"{$lead->region}\" взят из предыдущего лида.");
         }
     } //getRegionFromPreviousLead
