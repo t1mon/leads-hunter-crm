@@ -119,6 +119,55 @@
                 </div>
             </div>
         </div>
+
+        {{-- Отслеживание звонков --}}
+        <div class="col">
+            <div class="card my-3">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Отслеживание звонков</h5>
+                    @if ($calltracking_phones->isEmpty())
+                    <p class="card-text text-secondary text-center">
+                        Телефоны отсутствуют…
+                        <a href="{{route('project.integrations.calltracking.phones.create', $project->id)}}" class="link-info">Добавить</a>
+                    </p>
+                    @else
+                        <table class="table">
+                            <tbody>
+                                @foreach ($calltracking_phones as $phone)
+                                    <tr>
+                                        @if ($phone->enabled)
+                                            <td class="text-info" >{{$phone->phone}}</td>
+                                            <td>
+                                                <a href="{{route('project.integrations.calltracking.phones.toggle', [$project->id, $phone->id])}}" class="btn btn-sm btn-primary"><i class="fa fa-power-off fs-6" aria-hidden="true"></i></a>
+                                            </td>
+                                        @else
+                                            <td class="text-secondary"><s>{{$phone->phone}}</s></td>
+                                            <td>
+                                                <a href="{{route('project.integrations.calltracking.phones.toggle', [$project->id, $phone->id])}}" class="btn btn-sm btn-secondary"><i class="fa fa-power-off fs-6" aria-hidden="true"></i></a>
+                                            </td>
+                                        @endif
+                                        <td>
+                                            <a href="{{route('project.integrations.calltracking.phones.edit', [$project->id, $phone->id])}}" class="btn btn-sm btn-info"><i class="fa fa-pencil fs-6" aria-hidden="true"></i></a>
+                                        </td>
+                                        <td>
+                                            {!! Form::open(['url' => route('project.integrations.calltracking.phones.destroy', [$project->id, $phone->id]), 'method' => 'DELETE']) !!}
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fa fa-trash fs-6" aria-hidden="true"></i>
+                                                </button>
+                                            {!! Form::close() !!}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                    <p class="text-center">
+                        <a href="{{route('project.integrations.calltracking.phones.create', $project->id)}}" class="btn btn-sm btn-primary">Добавить</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 </div>

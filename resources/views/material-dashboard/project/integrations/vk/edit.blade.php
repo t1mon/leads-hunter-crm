@@ -10,7 +10,7 @@
                 <div class="row justify-content-center mb-3">
                     {{-- Код ответа --}}
                     <div class="col-1">
-                        {!! Form::label('confirmation_response', 'Код ответа', ['class' => 'form-label']) !!}
+                        {!! Form::label('ation_response', 'Код ответа', ['class' => 'form-label']) !!}
                         <div class="border rounded px-2">
                             {!! Form::text('confirmation_response', $form->confirmation_response, ['id' => 'confirmation_response', 'class' => 'form-control']) !!}
                         </div>

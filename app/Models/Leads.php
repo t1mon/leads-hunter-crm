@@ -23,6 +23,7 @@ class Leads extends Model
     const LEAD_PROCESSED = 'processed';
 
     const SOURCE_DIRECT_ENTRY = 'DIRECT_ENTRY';
+    const SOURCE_CALL_TRACKING = 'CALL_TRACKING';
 
     /**
      * The attributes that are mass assignable.

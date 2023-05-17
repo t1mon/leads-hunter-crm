@@ -1,0 +1,73 @@
+version: "3.5"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
+    ports:
+      - 8000:8000
+      - 443:443
+    volumes:
+      - ./:/var/www/app:cached
+      - ./docker/conf:/etc/nginx/conf.d:cached
+      - ./docker/nginx_logs:/var/log/nginx:cached
+      - ./docker/ssl:/etc/nginx/ssl:cached
+    links:
+      - fpm
+  fpm:
+    build:
+      context: ./
+      dockerfile: docker/php81-fpm.Dockerfile
+    volumes:
+      - ./:/var/www/app:cached
+    environment:
+      #- DB_HOST=mysql
+      #- DB_PORT=3306
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PHP_INI_SCAN_DIR=./docker:/usr/local/etc/php/conf.d
+    links:
+      #- mysql
+      - redis
+
+  php81-cli:
+    build:
+      context: ./
+      dockerfile: docker/php81-cli.Dockerfile
+    volumes:
+      - ./:/var/www/app:cached
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PHP_INI_SCAN_DIR=./docker:/usr/local/etc/php/conf.d
+    links:
+      #- mysql
+      - redis
+    tty: true
+    #  mysql:
+    #    build:
+    #      context: ./
+    #      dockerfile: docker/mysql8.0/Dockerfile
+    # image: mysql:5.6
+    #    ports:
+    #      -  3306:3306
+    #    volumes:
+    #- ./storage/mysqldb:/var/lib/mysql:cached
+  #      - ./mysqldb:/var/lib/mysql:cached
+  #    environment:
+  #       - MYSQL_ROOT_PASSWORD=secret
+  #       - MYSQL_USER=root
+  #       - MYSQL_PASSWORD=secret
+  #       - MYSQL_DATABASE=laravel
+  redis:
+    #image: arm64v8/redis:3.0
+    image: i386/redis:6.0.19-alpine
+    ports:
+      - 6379:6379
+        #adminer:
+        #image: adminer
+        #restart: always
+        #ports:
+      #- 8080:8080

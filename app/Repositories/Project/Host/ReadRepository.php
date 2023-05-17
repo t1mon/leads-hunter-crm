@@ -46,6 +46,13 @@ class ReadRepository{
         return $this->query()->from($project)->get();
     } //findByProject
 
+    public function validateHost(Project|int $project, string $host): bool //Проверить, что хост есть в проекте
+    {
+        return $this->query()
+            ->where(['project_id' => $project instanceof Project ? $project->id : $project, 'host' => $host])
+            ->exists();
+    } //validateHost
+
     //
     //  Скрытые методы
     //

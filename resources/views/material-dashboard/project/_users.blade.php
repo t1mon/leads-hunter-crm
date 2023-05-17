@@ -76,7 +76,7 @@
                                 {!! Form::checkbox(
                                     'role', "manager",
                                     $permission->role === \App\Models\Role::ROLE_MANAGER ? true : false,
-                                    [( (Auth::user()->isWatcher($project) or $project->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
+                                    [( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
                                     )
                                 !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -86,7 +86,7 @@
                                     {!! Form::checkbox(
                                         'view_fields[]', $field,
                                         in_array($field, $permission->view_fields) ? true : false,
-                                        [( (Auth::user()->isWatcher($project) or $project->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
+                                        [( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
                                         )
                                     !!}
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -95,7 +95,7 @@
                                 {!! Form::submit(trans('projects.button-save'),
                                     [
                                         'class' => 'btn btn-danger btn-sm',
-                                        ( (Auth::user()->isWatcher($project) or $project->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
+                                        ( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
                                     ])
                                 !!}
                             </td>
@@ -109,7 +109,7 @@
                                         'class' => 'btn btn-danger btn-sm',
                                         'type' => 'submit',
                                         'data-confirm' => __('forms.user-permissions.delete'),
-                                        ( (Auth::user()->isWatcher($project) or $project->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
+                                        ( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
                                     ]) !!}
                                 {!! Form::close() !!}
                             </td>

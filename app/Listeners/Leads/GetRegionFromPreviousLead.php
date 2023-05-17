@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 
 use App\Repositories\Lead\Repository as LeadRepository;
 
-class GetRegionFromPreviousLead
+class GetRegionFromPreviousLead implements ShouldQueue
 {
     /**
      * Create the event listener.
