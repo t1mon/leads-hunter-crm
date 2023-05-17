@@ -14,9 +14,9 @@ use App\Repositories\Project\ReadRepository as ProjectReadRepository;
 use App\Repositories\Project\Integrations\Calltracking\Phone\ReadRepository as PhoneReadRepository;
 use App\Repositories\Lead\Repository as LeadRepository;
 use App\Repositories\Project\Host\ReadRepository as HostReadRepository;
+use App\Repositories\Project\Integrations\Calltracking\Log\Repository as LogRepository;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Joselfonseca\LaravelTactician\CommandBusInterface;
 
 class ParseIncomingCall implements ShouldQueue
 {
@@ -44,8 +44,10 @@ class ParseIncomingCall implements ShouldQueue
         PhoneReadRepository $phoneReadRepository,
         HostReadRepository $hostReadRepository,
         LeadRepository $leadRepository,
+        LogRepository $logRepository,
     )
     {
+        $originalJson = $this->params; //Сохраняем оригинальный JSON для записи в лог
         $this->params = json_decode(json: $this->params, associative: true)[0];
 
         try{
@@ -85,6 +87,13 @@ class ParseIncomingCall implements ShouldQueue
                 utm_source: $this->params['utm_source'] ?? null,
                 utm_content: $this->params['utm_content'] ?? null,
                 url_query_string: $this->params['url_query_string'] ?? null,
+            );
+
+            //Запись в лог звонков
+            $logRepository->create(
+                project: $project,
+                phone: $phone,
+                json: $originalJson
             );
         }
         catch(ModelNotFoundException $e){

@@ -14,11 +14,11 @@ class Log extends Model
     protected $fillable = [
         'project_id',
         'phone_id',
-        'log',
+        'json',
     ];
 
     protected $casts = [
-        'log' => 'array',
+        'json' => 'array',
     ];
 
     //
@@ -46,4 +46,12 @@ class Log extends Model
     {
         return $query->where('phone_id', $phone instanceof Phone ? $phone->id : $phone);
     } //scopeIntegration
+
+    //
+    //  Геттеры
+    //
+    public function getCallerDidAttribute(): int
+    {
+        return $this->json['caller_did'];
+    } //getCallerDidAttribute
 }

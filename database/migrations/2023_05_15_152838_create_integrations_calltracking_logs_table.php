@@ -21,7 +21,7 @@ class CreateIntegrationsCalltrackingLogsTable extends Migration
             $table->foreign('project_id')->references('id')->on('projects');
 
             $table->foreignIdFor(Phone::class);
-            $table->json('log');
+            $table->json('json');
 
             $table->timestamps();
         });
