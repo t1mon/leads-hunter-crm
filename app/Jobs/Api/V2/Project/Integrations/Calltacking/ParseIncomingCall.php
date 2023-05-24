@@ -59,7 +59,7 @@ class ParseIncomingCall
 
             //Загрузка проекта
             $project = $projectReadRepository->findById(id: $phone->project_id, fail: true);
-        
+
             //Проверка проекта
             if(!$project->settings['enabled']){
                 Journal::projectError($project, 'ПРОЕКТ ОТКЛЮЧЕН! Поступило уведомление с коллтрекинга по номеру ' . $this->params['caller_did'] . ', телефон лида ' . $this->params['caller_id']);
@@ -76,10 +76,10 @@ class ParseIncomingCall
                 return;
             }
 
-            //Создание лида            
+            //Создание лида
             $lead = $leadRepository->add(
                 project: $project,
-                name: 'звонок',
+                name: 'Без имени',
                 phone: $this->params['caller_id'],
                 host: $host,
                 comment: 'CALL_TRACKING: ' . $this->params['caller_did'],
@@ -104,7 +104,7 @@ class ParseIncomingCall
                 message: 'CALL_TRACKING по номеру' . $this->params['caller_did'] . ' не подключен',
                 context: $this->params
             );
-            
+
             return response('CALL_TRACKING по номеру' . $this->params['caller_did'] . ' не подключен');
         }
     }
