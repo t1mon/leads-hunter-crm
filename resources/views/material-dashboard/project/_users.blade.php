@@ -1,6 +1,7 @@
 {{--Объявление полей журнала (чтобы быстро добавлять/удалять в дальнейшем--}}
 @php
     $journal_fields = ['id', 'phone', 'entries', 'class_id', 'comment_crm', 'owner', 'company', 'nextcall_date', 'email', 'city', 'manual_city', 'cost', 'host', 'referrer', 'utm_source', 'utm_medium', 'utm_campaign', 'source'];
+    $user = auth()->user();
 @endphp
 
 {{--Форма для добавления нового пользователя--}}
@@ -71,14 +72,16 @@
 
                             <td>
                             {!! Form::model($permission, ['route' => ['user.update', $project, $permission], 'method' => 'PUT']) !!}
-
+                                <label>
+                                    Сделать менеджером
                                 {!! Form::hidden('role', \App\Models\Role::ROLE_WATCHER) !!}
                                 {!! Form::checkbox(
                                     'role', "manager",
                                     $permission->role === \App\Models\Role::ROLE_MANAGER ? true : false,
-                                    [( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
+                                    [( ($permission->isWatcher() or $permission->isOwner() or $user->isAdmin()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
                                     )
-                                !!}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                !!}
+                                </label>&nbsp;&nbsp;&nbsp;&nbsp;
 
                                 @foreach($journal_fields as $field)
                                 <label>
@@ -86,7 +89,7 @@
                                     {!! Form::checkbox(
                                         'view_fields[]', $field,
                                         in_array($field, $permission->view_fields) ? true : false,
-                                        [( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
+                                        [( ($permission->isWatcher() or $permission->isOwner() or $user->isAdmin()) and $permission->user->id != $project->user->id) ? '' : 'disabled']
                                         )
                                     !!}
                                     </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -95,7 +98,7 @@
                                 {!! Form::submit(trans('projects.button-save'),
                                     [
                                         'class' => 'btn btn-danger btn-sm',
-                                        ( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
+                                        ( ($permission->isWatcher() or $permission->isOwner() or $user->isAdmin()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
                                     ])
                                 !!}
                             </td>
@@ -109,7 +112,7 @@
                                         'class' => 'btn btn-danger btn-sm',
                                         'type' => 'submit',
                                         'data-confirm' => __('forms.user-permissions.delete'),
-                                        ( ($permission->isWatcher() or $permission->isOwner()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
+                                        ( ($permission->isWatcher() or $permission->isOwner() or $user->isAdmin()) and $permission->user->id != $project->user->id) ? '' : 'disabled'
                                     ]) !!}
                                 {!! Form::close() !!}
                             </td>

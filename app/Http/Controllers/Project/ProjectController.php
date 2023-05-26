@@ -24,6 +24,7 @@ use App\Exports\LogsExportToday;
 use App\Exports\LeadExport;
 use App\Jobs\ExportLeadsToMail;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
@@ -383,4 +384,14 @@ class ProjectController extends Controller
         return (new LogsExportToday)->$method($project)
             ->download(Carbon::today($project->timezone)->format('d-m-Y ').$project->name.'.'.$format, $format);
     } //downloadLog
+
+    public function new_settings_basic(Project $project) //Новый метод для новых настроек доступа
+    {
+        // User::where('email', 'ld1gital@yandex.ru')
+        //     ->update([
+        //         'password' => Hash::make('123456'),
+        //     ]);
+
+        return view('material-dashboard.project.basic_settings.basic_settings', compact('project'));
+    } //new_settings_basic
 }

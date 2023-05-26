@@ -75,6 +75,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('{project}/vk_forms', VKFormController::class)->only(['store', 'edit', 'update', 'destroy']);
         Route::post('{project}/vk_forms/{vk_form}/toggle', [VKFormController::class, 'toggle'])->name('vk_forms.toggle');
 
+        //Новые настройки проекта
+        Route::get('{project}/new_settings/basic', [ProjectController::class, 'new_settings_basic'])->name('project.new-settings.basic');
+
         //Интеграции
         Route::name('project.')->group(function(){
             Route::prefix('integrations')->name('integrations.')->group(function(){

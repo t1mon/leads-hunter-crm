@@ -128,6 +128,33 @@
                     </li>
                 @endif
 
+                {{-- Новые настройки --}}
+                @php
+                    $permissions = auth()->user()->getPermissionsForProject($project)    
+                @endphp
+
+                @isset($permissions)
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#newSettings" class="nav-link text-white m-0 rounded-0" aria-controls="newSettings" role="button" aria-expanded="false">
+                            <i class="material-icons-round">settings</i>
+                            <span class="nav-link-text ms-2 ps-1">Настройки <strong>(новые)</strong> </span>
+                        </a>
+
+                        <div class="collapse " id="newSettings">
+                            <ul class="nav">
+                                @if ($permissions->isOwner() || $permissions->isManager() || $permissions->settingsAllowed('properties_toggle'))
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white m-0 rounded-0" href="{{route('project.new-settings.basic', $project->id)}}">
+                                            <span class="sidenav-normal  ms-2  ps-1">Свойства проекта</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+
+                    </li>
+                @endisset
+
                     {{-- <hr class="horizontal light">
                     <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder text-white">Вспомогательное меню</h6>
                     <li class="nav-item">

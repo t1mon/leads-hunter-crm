@@ -54,6 +54,24 @@ class ProjectPolicy
             return Response::deny();
     }
 
+    /**
+     * Проверяет, имеет ли пользователь доступ к указанной настройке
+     * 
+     * @param \App\Models\User $user
+     * @param  \App\Models\Project\Project  $project
+     * @param string  $settings   Настройка, к которой нужно проверить доступ
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function changeSettings(User $user, Project $project, string $settings)
+    {
+        $permissions = $user->getPermissionsForProject($project);
+        
+        if($permissions->isOwner($project) or $permissions->isManager($project))
+            return true;
+        
+        return $permissions->settingsAllowed($settings);
+    } //changeSettings
+
     public function export(User $user, Project $project) //Определяет, может ли пользователь выгружать лиды из проекта
     {
         return $user->isAdmin() || $user->isInProject($project)

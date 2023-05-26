@@ -12,6 +12,18 @@ class ProjectPolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+    
+        return null;
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -53,10 +65,7 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Project $project)
-    {
-        if($user->isAdmin())
-            return Response::allow();
-        
+    {        
         $permissions = $user->getPermissionsForProject($project);
 
         if(is_null($permissions))
@@ -103,4 +112,22 @@ class ProjectPolicy
     {
         //
     }
+
+    /**
+     * Проверяет, имеет ли пользователь доступ к указанной настройке
+     * 
+     * @param \App\Models\User $user
+     * @param  \App\Models\Project\Project  $project
+     * @param string  $settings   Настройка, к которой нужно проверить доступ
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function changeSettings(User $user, Project $project, string $settings)
+    {
+        $permissions = $user->getPermissionsForProject($project);
+        
+        if($permissions->isOwner($project) or $permissions->isManager($project))
+            return true;
+        
+        return $permissions->settingsAllowed($settings);
+    } //changeSettings
 }

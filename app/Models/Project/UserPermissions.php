@@ -17,11 +17,13 @@ class UserPermissions extends Model
         'user_id',
         'project_id',
         'role',
-        'view_fields' //Поля журнала, которые пользователь может видеть
+        'view_fields', //Поля журнала, которые пользователь может видеть
+        'settings', //Настройки, которые пользователь может видеть и изменять
     ];
 
     protected $casts = [
-        'view_fields' => 'array'
+        'view_fields' => 'array',
+        'settings' => 'array',
     ];
 
     public const ALLOWED_BASIC_FIELDS = [ //Базовые поля лида, которые доступны любому пользователю
@@ -31,6 +33,15 @@ class UserPermissions extends Model
         'surname',
         'phone',
         'created_at',
+    ];
+
+    public const PROJECT_SETTINGS = [ //Список всех настроек проекта
+        //Свойства проекта
+        'properties_toggle', //Включение/выключение проекта
+
+        'permissions',
+        'classes',
+        'integrations'
     ];
 
     /**
@@ -89,4 +100,12 @@ class UserPermissions extends Model
         
         return in_array(needle: $field, haystack: $this->view_fields);
     }
+
+    public function settingsAllowed(string $settings): bool //Проверяет, что у пользователя есть доступ к указанным настройкам
+    {
+        if(is_null($this->settings))
+            return false;
+
+        return in_array(needle: $settings, haystack: $this->settings);
+    } //settingsAllowed
 }
