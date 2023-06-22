@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Http;
 class LeadsController extends Controller
 {
     public $leads;
-    
+
     public MangoService $mangoService;
 
     public function __construct(Leads $leads, MangoService $mangoService)
@@ -52,7 +52,8 @@ class LeadsController extends Controller
         $request->merge(['cost' => preg_replace("/[^0-9]/", '', trim($request->cost))]);
 
         //Получение источника и UTM-меток
-        $request->merge(['source' => $this->detectSource($request)]);
+        //$request->merge(['source' => $this->detectSource($request)]);
+        $request->merge(['source' => Leads::SOURCE_DIRECT_ENTRY]);
         $request->merge(['utm' => $this->getUTM($request)]);
 
         //Проверка хоста у лида
@@ -90,7 +91,7 @@ class LeadsController extends Controller
         //$new_lead = Leads::addToDB($request->all());
         $new_lead = $this->leads->createOrUpdate($request->all());
 
-        Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');            
+        Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
 
         return new LeadsResource(
             $new_lead

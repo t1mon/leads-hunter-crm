@@ -5,6 +5,7 @@ namespace App\Listeners\Leads;
 use App\Events\Leads\LeadAdded;
 use App\Events\Leads\LeadCreated;
 use App\Mail\Leads\SendLeadData;
+use App\Models\Leads;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailer;
@@ -36,6 +37,12 @@ class SendEmailData
     {
         //Рассылка по e-mail
         if($event->lead->project->settings['email']['enabled']){
+            $calltraking = $event->lead->project->settings['calltracking_sync'] ?? false;
+
+            if ($event->lead->source === Leads::SOURCE_CALL_TRACKING && !$calltraking){
+                return;
+            }
+
             $emails = $event->lead->project->emails;
             foreach ($emails as $email) {
                 try {
