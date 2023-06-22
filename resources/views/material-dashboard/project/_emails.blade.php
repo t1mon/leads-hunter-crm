@@ -17,6 +17,11 @@
                                 {!! Form::checkbox('settings[email][enabled]', 1, $project->settings['email']['enabled'] ? true : false, ['id' => 'enabled_checkbox', 'class' => 'form-check-input']) !!}
                                 {!! Form::label('enabled_checkbox', trans('projects.notifications.emails_toggle'), ['class' => 'form-check-label']) !!}
                             </div>
+                            <div class="my-1 form-check">
+                                {!! Form::hidden('settings[calltracking_sync]', 0) !!}
+                                {!! Form::checkbox('settings[calltracking_sync]', 1, $project->settings['calltracking_sync'] ?? null , ['id' => 'calltracking_sync_checkbox', 'class' => 'form-check-input']) !!}
+                                {!! Form::label('calltracking_sync_checkbox', trans('Включить рассылку с коллтрекинга'), ['class' => 'form-check-label']) !!}
+                            </div>
                             <div class="my-2">
                                 {!! Form::label('email-subject', trans('projects.notifications.emails_subject') . ':', ['class' => 'form-label']) !!}
                                 {!! Form::text('settings[email][subject]', $project->settings['email']['subject'], ['class' => 'form-control border p-2', 'placeholder' => trans('projects.notifications.emails_subject'), 'id' => 'email-subject']) !!}
