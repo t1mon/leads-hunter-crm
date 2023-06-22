@@ -52,8 +52,7 @@ class LeadsController extends Controller
         $request->merge(['cost' => preg_replace("/[^0-9]/", '', trim($request->cost))]);
 
         //Получение источника и UTM-меток
-        //$request->merge(['source' => $this->detectSource($request)]);
-        $request->merge(['source' => Leads::SOURCE_DIRECT_ENTRY]);
+        $request->merge(['source' => $this->detectSource($request)]);
         $request->merge(['utm' => $this->getUTM($request)]);
 
         //Проверка хоста у лида
