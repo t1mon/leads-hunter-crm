@@ -49,14 +49,14 @@ export default {
             await axios.post(`/api/v1/project/${projectId}/journal/${leadId}/class/assign`, {
                 class_id: classId
             })
-                .then(function (response) {
+                .then( (response) => {
                     store.commit('loader/LOADER_FALSE')
+                    this.lead.class_id = classId
                 })
                 .catch(function (error) {
                     store.commit('loader/LOADER_FALSE')
                     console.log(error)
                 })
-            await this.$store.dispatch('journalAll/getJournalAll')
         }
     }
 }

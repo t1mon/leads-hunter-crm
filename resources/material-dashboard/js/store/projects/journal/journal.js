@@ -20,7 +20,8 @@ export default {
       leadsOrigin: null,
       // TODO Найти более элегантный метод
       dataReady: false,
-      // Даты из JournalPanel.vue
+      // Даты из JournalPanel.vue,
+      projectJour: null
     }
   },
   getters: {

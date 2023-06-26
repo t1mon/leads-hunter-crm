@@ -71,7 +71,6 @@ export default {
           commit('loader/LOADER_FALSE', null, { root: true })
           commit('SET_LEADS', data.data.data.leads.data, { root: true })
           commit('SET_PROJECT_JOUR', data.data.data, { root: true })
-          console.log(data)
         })
         .catch(error => {
           commit('loader/LOADER_FALSE', null, { root: true })
