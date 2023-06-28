@@ -32,7 +32,7 @@ class SendWebhookData implements ShouldQueue
      */
     public function handle(LeadCreated $event)
     {
-        // TODO Потом переписать с настройками общими пока добавлено отключение напрямую от коллтрекинга
+        // TODO Потом переписать с возможностью вкл\выкл, пока добавлено отключение напрямую от коллтрекинга
         if ($event->lead->source === Leads::SOURCE_CALL_TRACKING){
             return;
         }
