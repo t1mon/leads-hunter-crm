@@ -3,6 +3,7 @@
 namespace App\Listeners\Leads;
 
 use App\Events\Leads\LeadCreated;
+use App\Models\Leads;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
@@ -31,6 +32,11 @@ class SendWebhookData implements ShouldQueue
      */
     public function handle(LeadCreated $event)
     {
+        // TODO Потом переписать с настройками общими пока добавлено отключение напрямую от коллтрекинга
+        if ($event->lead->source === Leads::SOURCE_CALL_TRACKING){
+            return;
+        }
+
         if(count( $event->lead->project->webhooks_active() )){
             $lead = $event->lead;
             $project = $lead->project;
