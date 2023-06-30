@@ -8,8 +8,11 @@
                 <journal-panel-filter></journal-panel-filter>
             </div>
 
-            <div class="d-flex flex-row-reverse flex-sm-row justify-content-between justify-content-sm-end align-items-end">
-                <clear-filters></clear-filters>
+            <div class="d-flex flex-row flex-sm-row justify-content-between justify-content-sm-end align-items-end">
+                <div class="d-flex flex-column flex-xxl-row align-items-start m-0 me-sm-2">
+                    <clear-filters></clear-filters>
+                    <columns-settings></columns-settings>
+                </div>
                 <div class="d-flex flex-column flex-md-row">
                     <manual-leads></manual-leads>
                     <button @click.prevent="exportJournal()" class="journal__date__button--last btn btn-primary mb-0 py-1 px-3" > Скачать записи </button>
@@ -24,13 +27,15 @@
 import JournalPanelFilter from "./JournalPanelFilter";
 import ClearFilters from "./ClearFilters";
 import ManualLeads from "./ManualLeads";
+import ColumnsSettings from "./ColumnsSettings.vue";
 
 export default {
     name: "JournalPanel",
     components: {
         JournalPanelFilter,
         ClearFilters,
-        ManualLeads
+        ManualLeads,
+        ColumnsSettings
     },
     props: ['projectid'],
     data () {
