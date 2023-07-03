@@ -81,7 +81,6 @@ export default {
             }
         },
         async setClasses() {
-            console.log(this.classes)
             this.$store.commit('filterParams/SET_CLASSES', this.classes)
             await this.$store.dispatch('journalAll/getJournalAll')
             $('#filterClass').dropdown('hide')

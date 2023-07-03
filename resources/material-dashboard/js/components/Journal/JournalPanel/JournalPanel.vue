@@ -11,7 +11,7 @@
             <div class="d-flex flex-row flex-sm-row justify-content-between justify-content-sm-end align-items-end">
                 <div class="d-flex flex-column flex-xxl-row align-items-start m-0 me-sm-2">
                     <clear-filters></clear-filters>
-                    <columns-settings></columns-settings>
+                    <columns-settings :columns="columns" @changeColumnsSettings="changeColumnsSettings"></columns-settings>
                 </div>
                 <div class="d-flex flex-column flex-md-row">
                     <manual-leads></manual-leads>
@@ -37,7 +37,12 @@ export default {
         ManualLeads,
         ColumnsSettings
     },
-    props: ['projectid'],
+    props: {
+        columns: {
+            type: Object,
+            required: true
+        }
+    },
     data () {
         return {
         }
@@ -48,6 +53,9 @@ export default {
         }
     },
     methods: {
+        changeColumnsSettings(column) {
+            this.$emit('changeColumnsSettings', column)
+        },
         getFilteredLeads (_projectId, _dateFrom, _dateTo) {
             this.$store.dispatch('getLeads', { projectId: _projectId, dateFrom: _dateFrom, dateTo: _dateTo })
             localStorage.setItem('dateFrom', _dateFrom)
