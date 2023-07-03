@@ -42,7 +42,9 @@ export default {
     },
     created() {
         for (const key in this.columns) {
-            this.columnsSettings.push(key)
+            if(this.columns[key]) {
+                this.columnsSettings.push(key)
+            }
         }
     }
 }

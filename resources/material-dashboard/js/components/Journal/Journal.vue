@@ -44,12 +44,18 @@ export default {
     },
     methods: {
         changeColumnsSettings(column) {
+            const projectLS = `projects${this.projectid}`
+            const projectInfoLS = JSON.parse(localStorage.getItem(projectLS))
+
             this.columns[column] = !this.columns[column]
+
+            projectInfoLS.columns = this.columns
+            localStorage.setItem(projectLS, JSON.stringify(projectInfoLS))
         }
     },
     async created () {
-        // const projectLS = localStorage.getItem('projects')
         const projectIdLS = localStorage.getItem('projectId')
+
         if (!projectIdLS || projectIdLS != this.projectid) {
             this.$store.commit('filterParams/CLEAR_PARAMS')
             localStorage.setItem('projectId', this.projectid)
@@ -83,6 +89,21 @@ export default {
         //     console.log('hello')
         //     table.removeEventListener('mousemove', moving)
         // })
+    },
+    mounted() {
+        // Проверка и запись настроек колонок в локал стореж
+        let projectLS = localStorage.getItem(`projects${this.projectid}`)
+
+        if(projectLS && JSON.parse(projectLS).columns) {
+            this.columns = null
+            this.columns = JSON.parse(projectLS).columns
+        } else {
+            projectLS = `projects${this.projectid}`
+            const projectInfo = {
+                columns: this.columns
+            }
+            localStorage.setItem(projectLS, JSON.stringify(projectInfo))
+        }
     }
 }
 </script>
