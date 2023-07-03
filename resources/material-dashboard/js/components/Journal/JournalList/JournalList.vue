@@ -135,13 +135,13 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td v-if="columns.created_at">
                                     <p v-html="dateFormat(lead.created_at)" class="text-center text-sm font-weight-normal mb-0"></p>
                                 </td>
-                                <td class="p-2">
+                                <td v-if="columns.nextcall_date" class="p-2">
                                     <call-back-date :callBack="lead.nextcall_date" :leadId="lead.id"></call-back-date>
                                 </td>
-                                <td style="text-overflow: ellipsis; width: 100px; max-width: 100px">
+                                <td v-if="columns.name" style="text-overflow: ellipsis; width: 100px; max-width: 100px">
                                     <h6 :title="lead.name" class="text-center mb-0 font-weight-normal text-sm" style="text-overflow: ellipsis; overflow: hidden">
                                         {{  lead.name }}
                                     </h6>
@@ -152,11 +152,11 @@
 <!--                                >-->
 <!--                                    <span :title="lead.referrer">{{ lead.referrer }}</span>-->
 <!--                                </td>-->
-                                <journal-classes :lead="lead"></journal-classes>
-                                <td class="align-middle text-center text-sm">
+                                <journal-classes v-if="columns.classes" :lead="lead"></journal-classes>
+                                <td v-if="columns.phone" class="align-middle text-center text-sm">
                                     <a :href="'tel: ' + lead.phone" class="mb-0 font-weight-normal text-sm">{{ phoneFormat(lead.phone) }}</a>
                                 </td>
-                                <td>
+                                <td v-if="columns.entries">
                                     <div class="text-center">
                                       <span class="badge badge-dot">
                                           <i v-if="lead.entries === 1" class="bg-success"></i>
@@ -166,9 +166,10 @@
                                       </span>
                                     </div>
                                 </td>
-                                <journal-company-td :companyBack="lead.company" :leadId="lead.id"></journal-company-td>
-                                <journal-region-td :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
+                                <journal-company-td v-if="columns.company" :companyBack="lead.company" :leadId="lead.id"></journal-company-td>
+                                <journal-region-td v-if="columns.manual_region" :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
+                                    v-if="columns.comment_crm"
                                     @click="comments(lead.comment_crm, lead.id)"
                                     class="align-middle text-center text-sm overflow-hidden cursor-pointer"
                                     style="width: 200px; min-width: 200px; max-width: 200px; text-overflow: ellipsis"
@@ -184,45 +185,50 @@
                                 </td>
 
                                 <td
+                                    v-if="columns.email"
                                     class="text-sm text-center font-weight-normal mb-0 overflow-hidden"
                                     style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
                                 >
                                     <span :title="lead.email">{{ lead.email }}</span>
                                 </td>
                                 <td
+                                    v-if="columns.city"
                                     class="text-sm text-center font-weight-normal mb-0 overflow-hidden"
                                     style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
                                 >
                                     <span :title="lead.city">{{ lead.city }}</span>
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
+                                <td v-if="columns.cost" class="text-sm text-center font-weight-normal mb-0">
                                     {{ sumFormat(lead.cost) }}
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
+                                <td v-if="columns.host" class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.host }}
                                 </td>
                                 <td
+                                    v-if="columns.referrer"
                                     class="text-sm font-weight-normal mb-0 overflow-hidden"
                                     style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
                                 >
                                     <span :title="lead.referrer">{{ lead.referrer }}</span>
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
+                                <td v-if="columns.utm_term" class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm_term }}
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
+                                <td v-if="columns.utm_medium" class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm_medium }}
                                 </td>
-                                <td class="text-sm text-center font-weight-normal mb-0">
+                                <td v-if="columns.utm_source" class="text-sm text-center font-weight-normal mb-0">
                                     {{ lead.utm_source }}
                                 </td>
                                 <td
+                                    v-if="columns.utm_campaign"
                                     class="text-sm text-center font-weight-normal mb-0 overflow-hidden"
                                     style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
                                 >
                                     <span :title="lead.utm_campaign">{{ lead.utm_campaign }}</span>
                                 </td>
                                 <td
+                                    v-if="columns.source"
                                     class="text-sm font-weight-normal mb-0 overflow-hidden"
                                     style="width: 150px; min-width: 150px; max-width: 150px; text-overflow: ellipsis"
                                 >
@@ -290,7 +296,28 @@ export default {
           first: false,
           second: false,
           region: '',
-          leadIdRegion: ''
+          leadIdRegion: '',
+          columns: {
+              created_at: true,
+              nextcall_date: true,
+              name: true,
+              classes: true,
+              phone: true,
+              entries: true,
+              company: true,
+              manual_region: true,
+              comment_crm: true,
+              email: true,
+              city: true,
+              cost: true,
+              host: true,
+              referrer: true,
+              utm_term: true,
+              utm_medium: true,
+              utm_source: true,
+              utm_campaign: true,
+              source: true
+          }
       }
     },
     methods: {
