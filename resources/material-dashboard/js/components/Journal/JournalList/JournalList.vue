@@ -12,7 +12,7 @@
                                     <div class="journal__col-resize"></div>
                                 </th>
 
-                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.created_at" class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">Дата</p>
                                     <filter-app
                                         :ascDesc="{sort_by: 'created_at', sort_order: 'desc'}"
@@ -21,11 +21,11 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.nextcall_date" class="p-2 lh-1 cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10">Дата следующего <br> звонка</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.name" class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterName" data-bs-toggle="dropdown" aria-expanded="false">Клиент</p>
                                     <filter-app
                                                 :ascDesc="{sort_by: 'name', sort_order: 'asc'}"
@@ -35,7 +35,7 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.classes" class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterClass" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Класс</p>
                                     <filter-app
                                         :filterClass="true"
@@ -44,7 +44,7 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.phone" class="p-2 lh-1 dropdown cursor-pointer text-center text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterPhone" data-bs-toggle="dropdown" aria-expanded="false">Телефон</p>
                                     <filter-app
                                         :ascDesc="{sort_by: 'phone', sort_order: 'asc'}"
@@ -54,7 +54,7 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 dropdown cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.entries" class="p-2 lh-1 dropdown cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="text-center journal__th__header dropdown-toggle m-0 text-xxs font-weight-bolder opacity-10" id="filterEntries" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">№</p>
                                     <filter-app
                                         :ascDesc="{sort_by: 'entries', sort_order: 'asc'}"
@@ -64,56 +64,56 @@
                                     ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                <th v-if="columns.company" class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Компания</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                <th v-if="columns.manual_region" class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Регион</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
+                                <th v-if="columns.comment_crm" class="p-2 lh-1 cursor-pointer text-uppercase text-center text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Комментарий</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
 
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.email" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">E-MAIl</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.city" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Город</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 text-center cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.cost" class="p-2 lh-1 text-center cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Сумма сделки</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.host" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Посадочная</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.referrer" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Реферрер</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.utm_term" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_TERM]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.utm_medium" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_MEDIUM]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.utm_source" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_SOURCE]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.utm_campaign" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">[UTM_CAMPAIGN]</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                <th v-if="columns.source" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">ИСТОЧНИК</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
@@ -290,34 +290,19 @@ export default {
         JournalCompanyTd,
         JournalCompanyModal
     },
+    props: {
+        columns: {
+            type: Object,
+            required: true
+        }
+    },
     data () {
       return {
           counterDocListener: 0,
           first: false,
           second: false,
           region: '',
-          leadIdRegion: '',
-          columns: {
-              created_at: true,
-              nextcall_date: true,
-              name: true,
-              classes: true,
-              phone: true,
-              entries: true,
-              company: true,
-              manual_region: true,
-              comment_crm: true,
-              email: true,
-              city: true,
-              cost: true,
-              host: true,
-              referrer: true,
-              utm_term: true,
-              utm_medium: true,
-              utm_source: true,
-              utm_campaign: true,
-              source: true
-          }
+          leadIdRegion: ''
       }
     },
     methods: {

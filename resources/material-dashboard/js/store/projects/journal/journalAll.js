@@ -68,7 +68,6 @@ export default {
           params: params
         })
         .then(data => {
-          console.log( data.data.data)
           data.data.data.classes.unshift({
             color: "",
             id: "",

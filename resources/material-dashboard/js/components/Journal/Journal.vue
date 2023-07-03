@@ -1,6 +1,6 @@
 <template>
-    <journal-panel></journal-panel>
-    <journal-list></journal-list>
+    <journal-panel :columns="columns" @changeColumnsSettings="changeColumnsSettings"></journal-panel>
+    <journal-list :columns="columns"></journal-list>
     <journal-paginate></journal-paginate>
 </template>
 
@@ -17,7 +17,38 @@ export default {
         JournalPaginate
     },
     name: "Journal",
+    data() {
+      return {
+          columns: {
+              created_at: true,
+              nextcall_date: true,
+              name: true,
+              classes: true,
+              phone: true,
+              entries: true,
+              company: true,
+              manual_region: true,
+              comment_crm: true,
+              email: true,
+              city: true,
+              cost: true,
+              host: true,
+              referrer: true,
+              utm_term: true,
+              utm_medium: true,
+              utm_source: true,
+              utm_campaign: true,
+              source: true
+          }
+      }
+    },
+    methods: {
+        changeColumnsSettings(column) {
+            this.columns[column] = !this.columns[column]
+        }
+    },
     async created () {
+        // const projectLS = localStorage.getItem('projects')
         const projectIdLS = localStorage.getItem('projectId')
         if (!projectIdLS || projectIdLS != this.projectid) {
             this.$store.commit('filterParams/CLEAR_PARAMS')
