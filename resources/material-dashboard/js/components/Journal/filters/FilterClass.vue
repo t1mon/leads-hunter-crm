@@ -24,6 +24,7 @@
             >
             <label class="form-check-label m-0 text-xxs lh-sm d-flex align-items-center" :for="'projectClass' + projectClassIndex">
                 <span
+                    v-if="projectClass.color"
                     :style="'background: #' + projectClass.color"
                     class="color rounded-2 me-1"
                 ></span>
@@ -80,6 +81,7 @@ export default {
             }
         },
         async setClasses() {
+            console.log(this.classes)
             this.$store.commit('filterParams/SET_CLASSES', this.classes)
             await this.$store.dispatch('journalAll/getJournalAll')
             $('#filterClass').dropdown('hide')

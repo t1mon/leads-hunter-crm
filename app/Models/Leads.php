@@ -74,7 +74,7 @@ class Leads extends Model
     } //getClientName
 
     public function getUtmMediumAttribute(){
-        return 
+        return
             $this->utm_medium
             ??
             is_null($this->utm)
@@ -83,7 +83,7 @@ class Leads extends Model
     } //getUtmMediumAttribute
 
     public function getUtmSourceAttribute(){
-        return 
+        return
             $this->utm_source
             ??
             is_null($this->utm)
@@ -92,7 +92,7 @@ class Leads extends Model
     } //getUtmSourceAttribute
 
     public function getUtmCampaignAttribute(){
-        return 
+        return
             $this->utm_campaign
             ??
             is_null($this->utm)
@@ -150,11 +150,15 @@ class Leads extends Model
 
     public function scopeOfClass($query, int|array $class)
     {
-        return is_array($class)
-            ? $query->whereIn('class_id', $class)
-            : $query->where('class_id', $class);
+        if(is_array($class))
+            return $query->whereIn('class_id', $class)
+                ->when(in_array(null, $class), function ($q) use ($class) {
+                    $q->orWhereNull('class_id');
+                });
+        else
+            return $query->where('class_id', $class);
     } //scopeOfClass
-    
+
     public function scopeName($query, string $name)
     {
         // return $query->where('full_name', $name);
@@ -193,49 +197,49 @@ class Leads extends Model
             ? $query->whereIn('owner', $email)
             : $query->where('owner', $email);
     } //scopeEmail
-    
+
     public function scopeCity($query, string|array $city)
     {
         return is_array($city)
         ? $query->whereIn('city', $city)
         : $query->where('city', $city);
     } //scopeCity
-    
+
     public function scopeCompany($query, string|array $company)
     {
         return is_array($company)
         ? $query->whereIn('company', $company)
         : $query->where('company', $company);
     } //scopeCompany
-    
+
     public function scopeRegion($query, string|array $region)
     {
         return is_array($region)
         ? $query->whereIn('region', $region)
         : $query->where('region', $region);
     } //scopeRegion
-    
+
     public function scopeManualRegion($query, string|array $manual_region)
     {
         return is_array($manual_region)
         ? $query->whereIn('manual_region', $manual_region)
         : $query->where('manual_region', $manual_region);
     } //scopeRegion
-    
+
     public function scopeReferrer($query, string|array $referrer)
     {
         return is_array($referrer)
         ? $query->whereIn('referrer', $referrer)
         : $query->where('referrer', $referrer);
     } //scopeReferrer
-    
+
     public function scopeSource($query, string|array $source)
     {
         return is_array($source)
         ? $query->whereIn('source', $source)
         : $query->where('source', $source);
     } //scopeSource
-    
+
     public function scopeUtmMedium($query, string|array $utm_medium)
     {
         return is_array($utm_medium)
@@ -246,34 +250,34 @@ class Leads extends Model
         // ? $query->whereIn('utm->utm_medium', $utm_medium)
         // : $query->where('utm->utm_medium', $utm_medium);
     } //scopeSource
-    
+
     public function scopeUtmSource($query, string|array $utm_source)
     {
         return is_array($utm_source)
         ? $query->whereIn('utm_source', $utm_source)
         : $query->where('utm_source', $utm_source);
     } //scopeSource
-    
+
     public function scopeUtmCampaign($query, string|array $utm_campaign)
     {
         return is_array($utm_campaign)
         ? $query->whereIn('utm_campaign', $utm_campaign)
         : $query->where('utm_campaign', $utm_campaign);
     } //scopeUtmCampaign
-    
+
     public function scopeUtmContent($query, string|array $utm_content)
     {
         return is_array($utm_content)
         ? $query->whereIn('utm_content', $utm_content)
         : $query->where('utm_content', $utm_content);
-    } //scopeUtmContent    
-    
+    } //scopeUtmContent
+
     public function scopeUtmTerm($query, string|array $utm_term)
     {
         return is_array($utm_term)
         ? $query->whereIn('utm_term', $utm_term)
         : $query->where('utm_term', $utm_term);
-    } //scopeUtmTerm    
+    } //scopeUtmTerm
 
     public function scopeHost($query, string|array $host)
     {
