@@ -36,15 +36,15 @@ class Journal extends FormRequest
             'name' => 'nullable|string|max:256',
 
             'class' => 'nullable|array',
-            'class.*' => 'integer|exists:leads_classes,id',
-    
+            'class.*' => 'nullable|integer|exists:leads_classes,id',
+
             'owner' => 'nullable|string|max:256',
             'phone' => 'nullable|integer|regex:/^\d+$/s',
             'email' => 'nullable|email',
 
             'cost_from' => 'nullable|integer|gte:0',
             'cost_to' => 'nullable|integer|gte:0',
-            
+
             'city' => 'nullable|array',
             'city.*' => 'string|max:256',
 

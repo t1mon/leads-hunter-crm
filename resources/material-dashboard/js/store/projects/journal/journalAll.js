@@ -49,7 +49,7 @@ export default {
       if (phoneLS) params.phone = phoneLS
       if (entriesLS) params.entry_filter = entriesLS
 
-      //Записываем занные с хранилища vuex
+      //Записываем данные с хранилища vuex
       if(filterParams.classes.length > 0) params.class = filterParams.classes
       if (filterParams.date_from) {
         params.date_from = filterParams.date_from
@@ -68,6 +68,13 @@ export default {
           params: params
         })
         .then(data => {
+          console.log( data.data.data)
+          data.data.data.classes.unshift({
+            color: "",
+            id: "",
+            name: "Не задан",
+            project_id: data.data.data.id
+          })
           commit('loader/LOADER_FALSE', null, { root: true })
           commit('SET_LEADS', data.data.data.leads.data, { root: true })
           commit('SET_PROJECT_JOUR', data.data.data, { root: true })
