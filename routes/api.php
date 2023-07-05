@@ -177,6 +177,6 @@ Route::prefix('v2')->name('v2.')->group(function(){
 });
 
 
-Route::fallback(function () {
+Route::fallback(function () {  
     return response()->json(['message' => 'Not Found.'], 404);
 });
