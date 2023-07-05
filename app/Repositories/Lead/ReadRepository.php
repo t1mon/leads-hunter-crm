@@ -154,7 +154,8 @@ class ReadRepository{
         if(!is_null($sort_by))
             $leads->orderBy($sort_by, $sort_order);
         else
-            $leads->latest(); //по умолчанию сортировать по дате в порядке убывания
+            // $leads->latest(); //по умолчанию сортировать по дате в порядке убывания
+            $leads->orderByDesc('id');
 
         return $leads;
     } //findFromProject
