@@ -10,6 +10,7 @@ use App\Http\Resources\V2\Leads\Journal as LeadResource;
 use App\Http\Resources\V2\Leads\JournalFull as FullLeadResource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\CursorPaginator;
 
 class Journal extends JsonResource
 {
@@ -17,7 +18,7 @@ class Journal extends JsonResource
         Project $resource,
         private User $user,
         private ?UserPermissions $permissions,
-        private LengthAwarePaginator|Collection $leads,
+        private LengthAwarePaginator|CursorPaginator|Collection $leads,
         // private Collection $classes
     )
     {
