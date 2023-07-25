@@ -25,12 +25,12 @@ class AddHandler
     {
         $lead = $this->leadReadRepository->findById(id: $command->lead_id, fail: true);
 
-        $this->commentRepository->create(
+        $comment = $this->commentRepository->create(
             user: $command->user,
             lead: $lead,
             comment_body: $command->comment_body,
         );
 
-        return response(content: 'Комментарий добавлен', status: Response::HTTP_CREATED);
+        return response()->json(data: $comment, status: Response::HTTP_CREATED);
     }
 }
