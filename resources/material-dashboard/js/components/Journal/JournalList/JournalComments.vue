@@ -15,7 +15,8 @@
                     </div>
                     <div v-if="!stateLoader" class="input-group input-group-dynamic">
                         <textarea
-                            v-model="comment"
+                            :value="comment"
+                            @input="$emit('update:comment', $event.target.value)"
                             class="form-control" rows="5" placeholder="Введите комментарий" spellcheck="false"
                         ></textarea>
                     </div>
@@ -35,15 +36,10 @@
 <script>
 export default {
     name: "JournalComments",
+    props: ['comment'],
     data() {
       return {
-          comment: ''
       }
-    },
-    watch: {
-        stateComment(comment) {
-            this.comment = comment
-        }
     },
     computed: {
         stateLoader() {
@@ -62,6 +58,9 @@ export default {
     methods: {
         async addDeleteComment() {
             this.$store.commit('loader/LOADER_TRUE')
+
+            const obj = {}
+
             if (!this.comment) {
                 await axios.delete('/api/v2/comment/delete', {
                     data: {
@@ -99,12 +98,14 @@ export default {
                             showIcon: true
                         }
                     })
+                    console.log(response)
                 }).catch(error => {
                     this.$store.commit('loader/LOADER_FALSE')
                     console.log(error)
                 })
             }
-            await this.$store.dispatch('journalAll/getJournalAll')
+            // await this.$store.dispatch('journalAll/getJournalAll')
+
         }
     }
 }
