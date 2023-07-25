@@ -36,6 +36,9 @@ export default {
     }
   },
   mutations: {
+    CHANGE_COMMENT_LEAD(state, obj) {
+      state.leads[obj.index].comment_crm = obj.comment
+    },
     SET_LEADS(state, data) {
       state.leads = ''
       state.leads = data

@@ -36,7 +36,7 @@
 <script>
 export default {
     name: "JournalComments",
-    props: ['comment'],
+    props: ['comment', 'leadIndex'],
     data() {
       return {
       }
@@ -98,7 +98,13 @@ export default {
                             showIcon: true
                         }
                     })
-                    console.log(response)
+                    obj.id = response.data.id
+                    obj.text = response.data.comment_body
+                    const obj_ = {
+                        index: this.leadIndex,
+                        comment: obj
+                    }
+                    this.$store.commit('CHANGE_COMMENT_LEAD', obj_)
                 }).catch(error => {
                     this.$store.commit('loader/LOADER_FALSE')
                     console.log(error)

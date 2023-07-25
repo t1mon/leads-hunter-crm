@@ -170,7 +170,7 @@
                                 <journal-region-td v-if="columns.manual_region" :manualRegion="lead.manual_region" :leadId="lead.id"></journal-region-td>
                                 <td
                                     v-if="columns.comment_crm"
-                                    @click="comments(lead.comment_crm, lead.id, index)"
+                                    @click="setComment(lead.comment_crm, lead.id, index)"
                                     class="align-middle text-center text-sm overflow-hidden cursor-pointer"
                                     style="width: 200px; min-width: 200px; max-width: 200px; text-overflow: ellipsis"
                                     data-bs-toggle="modal" data-bs-target="#journalComments"
@@ -263,7 +263,7 @@
         </div>
 
         <journal-region-modal ref="journalRegionModal"></journal-region-modal>
-        <journal-comments v-model:comment="comment" ref="journalCommentsModal"></journal-comments>
+        <journal-comments v-model:comment="comments.comment" :leadIndex="comments.leadIndex"></journal-comments>
         <journal-company-modal ref="journalCompanyModal"></journal-company-modal>
     </div>
 </template>
@@ -303,7 +303,10 @@ export default {
           second: false,
           region: '',
           leadIdRegion: '',
-          comment: ''
+          comments: {
+              comment: '',
+              leadIndex: ''
+          }
       }
     },
     methods: {
@@ -340,15 +343,17 @@ export default {
 
             await this.$store.dispatch('journalAll/getJournalAll')
         },
-        async comments(comment_crm, leadId, index) {
+        setComment(comment_crm, leadId, index) {
             // this.$refs.journalCommentsModal.comment = ''
             // this.$store.commit('journalComments/CLEAR_COMMENT')
             // if (comment_crm) {
             //     await this.$store.dispatch('journalComments/commentShow', comment_crm.id)
             //     this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
             // }
+            console.log(1)
+            this.comments.leadIndex = index
             this.$store.commit('journalComments/SET_LEAD_ID', leadId)
-            comment_crm ? this.comment = this.stateLeads[index].comment_crm.text : this.comment = ''
+            comment_crm ? this.comments.comment = this.stateLeads[index].comment_crm.text : this.comments.comment = ''
         },
         dateFormat(date) {
             const arrStr = date.split(' ')
