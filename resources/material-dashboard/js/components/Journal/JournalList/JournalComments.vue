@@ -36,23 +36,17 @@
 <script>
 export default {
     name: "JournalComments",
-    props: ['comment', 'leadIndex'],
+    props: ['comment', 'leadIndex', 'commentId', 'leadId'],
     data() {
       return {
       }
     },
     computed: {
+        stateLeads () {
+            return this.$store.getters.stateLeads
+        },
         stateLoader() {
             return this.$store.getters['journalComments/stateLoader']
-        },
-        stateComment() {
-            return this.$store.getters['journalComments/stateComment']
-        },
-        stateLeadId() {
-            return this.$store.getters['journalComments/stateLeadId']
-        },
-        stateCommentId() {
-            return this.$store.getters['journalComments/stateCommentId']
         }
     },
     methods: {
@@ -62,9 +56,14 @@ export default {
             const obj = {}
 
             if (!this.comment) {
+                if(!this.stateLeads[this.leadIndex].comment_crm) {
+                    this.$store.commit('loader/LOADER_FALSE')
+                    this.$refs.closeComments.click()
+                    return
+                }
                 await axios.delete('/api/v2/comment/delete', {
                     data: {
-                        comment_id: this.stateCommentId
+                        comment_id: this.commentId
                     }
                 }).then(response => {
                     this.$refs.closeComments.click()
@@ -78,13 +77,18 @@ export default {
                             showIcon: true
                         }
                     })
+                    const obj_ = {
+                        index: this.leadIndex,
+                        comment: null
+                    }
+                    this.$store.commit('CHANGE_COMMENT_LEAD', obj_)
                 }).catch(error => {
                     this.$store.commit('loader/LOADER_FALSE')
                     console.log(error)
                 })
             } else {
                 await axios.post('/api/v2/comment/add', {
-                    lead_id: this.stateLeadId,
+                    lead_id: this.leadId,
                     comment_body: this.comment
                 }).then(response => {
                     this.$refs.closeComments.click()
@@ -110,7 +114,6 @@ export default {
                     console.log(error)
                 })
             }
-            // await this.$store.dispatch('journalAll/getJournalAll')
 
         }
     }

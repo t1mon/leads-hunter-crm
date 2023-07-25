@@ -1,7 +1,6 @@
 import journalAll from "./journalAll";
 import journalFilters from "./journalFilters";
 import filterParams from "./filterParams";
-import journalComments from "./journalComments";
 import journalRegion from "./journalRegion";
 import journalCompany from "./journalCompany";
 
@@ -10,7 +9,6 @@ export default {
     journalAll,
     journalFilters,
     filterParams,
-    journalComments,
     journalRegion,
     journalCompany
   },

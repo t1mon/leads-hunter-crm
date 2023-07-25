@@ -263,7 +263,14 @@
         </div>
 
         <journal-region-modal ref="journalRegionModal"></journal-region-modal>
-        <journal-comments v-model:comment="comments.comment" :leadIndex="comments.leadIndex"></journal-comments>
+
+        <journal-comments
+            v-model:comment="comments.comment"
+            :leadIndex="comments.leadIndex"
+            :commentId="comments.commentId"
+            :leadId="comments.leadId"
+        ></journal-comments>
+
         <journal-company-modal ref="journalCompanyModal"></journal-company-modal>
     </div>
 </template>
@@ -305,7 +312,9 @@ export default {
           leadIdRegion: '',
           comments: {
               comment: '',
-              leadIndex: ''
+              leadIndex: '',
+              commentId: '',
+              leadId: ''
           }
       }
     },
@@ -344,16 +353,14 @@ export default {
             await this.$store.dispatch('journalAll/getJournalAll')
         },
         setComment(comment_crm, leadId, index) {
-            // this.$refs.journalCommentsModal.comment = ''
-            // this.$store.commit('journalComments/CLEAR_COMMENT')
-            // if (comment_crm) {
-            //     await this.$store.dispatch('journalComments/commentShow', comment_crm.id)
-            //     this.$store.commit('journalComments/SET_COMMENT_ID', comment_crm.id)
-            // }
-            console.log(1)
             this.comments.leadIndex = index
-            this.$store.commit('journalComments/SET_LEAD_ID', leadId)
-            comment_crm ? this.comments.comment = this.stateLeads[index].comment_crm.text : this.comments.comment = ''
+            this.comments.leadId = leadId
+            if (comment_crm) {
+                this.comments.comment = this.stateLeads[index].comment_crm.text
+                this.comments.commentId = this.stateLeads[index].comment_crm.id
+            } else {
+                this.comments.comment = ''
+            }
         },
         dateFormat(date) {
             const arrStr = date.split(' ')
