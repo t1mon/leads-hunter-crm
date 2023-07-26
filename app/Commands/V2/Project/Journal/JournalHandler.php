@@ -78,10 +78,8 @@ class JournalHandler
             sort_order: $command->sort_order,
         );
 
-        // $leads = $leads->paginate(self::PER_PAGE);
-        $leads = $leads->cursorPaginate(self::PER_PAGE);
+        $leads = $leads->paginate(self::PER_PAGE);
         
-
         return $leads;
     } //_loadLeads
 }
