@@ -6,6 +6,7 @@ use App\Events\Leads\LeadDeleted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LeadsRequest;
 use App\Http\Resources\Leads as LeadsResource;
+use App\Jobs\Api\V2\Lead\FindEntries;
 use App\Models\Project\Host;
 use App\Models\Leads;
 use App\Models\User;
@@ -88,9 +89,13 @@ class LeadsController extends Controller
         $request->request->remove('city');
 
         //$new_lead = Leads::addToDB($request->all());
-        $new_lead = $this->leads->createOrUpdate($request->all());
+        // $new_lead = $this->leads->createOrUpdate($request->all());
+        // Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
 
-        Journal::lead($new_lead, $new_lead->entries == 1 ? 'Добавлен новый лид' : 'Лид уже существует в базе (кол-во вхождений: '  . $new_lead->entries . ')');
+        $request->merge(['entries' => 1, 'status' => Leads::LEAD_NEW]);
+        $new_lead = Leads::create($request->all());
+
+        FindEntries::dispatch($new_lead);
 
         return new LeadsResource(
             $new_lead
