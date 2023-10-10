@@ -58,7 +58,7 @@ class LeadsController extends Controller
 
         //Проверка хоста у лида
         if(!Host::where([ ['host', $request->host], ['project_id', $request->project_id] ])->exists()){
-            Journal::leadError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ],
+            Journal::projectError(['name' => $request->name, 'phone' => $request->phone, 'project_id' => $request->project_id ],
                         'Лид не добавлен в проект: хост ' . $request->host . ' не найден');
             return response()->json(['data' =>
                 [

@@ -88,7 +88,6 @@ class ProjectController extends Controller
             }, 3);  // Повторить три раза, прежде чем признать неудачу
 
         } catch (\Exception $exception) {
-            Journal::error('Ошибка создания проекта: "' . $request->name . '": ' . $exception->getMessage());
             Log::error($exception->getMessage());
             return redirect()->route('project.index')->withErrors('Ошибка создания проекта');
         }
@@ -354,20 +353,7 @@ class ProjectController extends Controller
         if (Gate::denies('delete', [Project::class, $project]))
             return redirect()->route('project.index');
 
-        //Временный код до перехода на API/V2, пока используются страницы на Blade
-        $logRepository = app(abstract: \App\Repositories\Log\ReadRepository::class);
-        $entries = $logRepository->findForProject(project: $project);
-        return view('material-dashboard.project.log.index', compact('entries', 'project'));
-
-        $entries = null;
-        if($request->has('amount')){
-            if($request->amount === 'all')
-                $entries = Journal::allInProject($project);
-            else
-                $entries = Journal::recentInProject($project, $request->amount);
-        }
-        else
-            $entries = Journal::recentInProject($project);
+        $entries = Journal::allInProject($project, $request->type ?? null);
 
         return view('material-dashboard.project.log.index', compact('entries', 'project'));
     } //log

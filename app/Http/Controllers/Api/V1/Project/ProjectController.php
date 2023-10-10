@@ -92,7 +92,6 @@ class ProjectController extends Controller
             return $this->_response('project_created', 'Project has been created', Response::HTTP_CREATED);
         }
         catch(\Exception $exception){
-            Journal::error('Ошибка создания проекта: "' . $request->name . '": ' . $exception->getMessage());
             Log::error($exception->getMessage());
             //Вернуть ответ
             return $this->_response('project_error', 'Project cannot be created', Response::HTTP_INTERNAL_SERVER_ERROR);
