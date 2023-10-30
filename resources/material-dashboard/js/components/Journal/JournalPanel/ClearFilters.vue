@@ -15,7 +15,24 @@ export default {
     computed: {
         appliedFilters() {
             const params = this.$store.getters['filterParams/stateParams']
-            return params.date_from || params.sort_by || params.name || params.classes.length > 0 || params.phone || params.entries
+            let searchParams = false
+            for (let key in params) {
+                if (params[key]) {
+                    if( typeof(params[key]) === "object") {
+                        if( params[key].length && params[key].length > 0 ) {
+                            searchParams = true
+                            break
+                        }
+                    }
+                    if (typeof(params[key]) === "string") {
+                        if(params[key]) {
+                            searchParams = true
+                            break
+                        }
+                    }
+                }
+            }
+            return searchParams
         }
     },
     methods: {

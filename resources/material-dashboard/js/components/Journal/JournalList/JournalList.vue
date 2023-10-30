@@ -89,8 +89,14 @@
                                     <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Сумма сделки</p>
                                     <div class="journal__col-resize"></div>
                                 </th>
-                                <th v-if="columns.host" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
-                                    <p class="journal__th__header m-0 text-xxs font-weight-bolder opacity-10">Посадочная</p>
+                                <th v-if="columns.host" class="dropdown text-center p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
+                                    <p class="dropdown-toggle journal__th__header m-0 text-xxs font-weight-bolder opacity-10" id="filterHost" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Посадочная</p>
+                                    <filter-app
+                                        :filterHost="true"
+                                        :projectid="projectid"
+                                        class="dropdown-menu"
+                                        aria-labelledby="filterHost"
+                                    ></filter-app>
                                     <div class="journal__col-resize"></div>
                                 </th>
                                 <th v-if="columns.referrer" class="p-2 lh-1 cursor-pointer text-uppercase text-xxs font-weight-bolder">
@@ -291,6 +297,9 @@ export default {
         JournalCompanyModal
     },
     props: {
+        projectid: {
+            required: true
+        },
         columns: {
             type: Object,
             required: true

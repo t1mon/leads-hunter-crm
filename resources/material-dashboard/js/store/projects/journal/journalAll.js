@@ -35,7 +35,9 @@ export default {
       const classesLS = localStorage.getItem('classes')
       const phoneLS = localStorage.getItem('phone')
       const entriesLS = localStorage.getItem('entries')
+      const hostsLS = localStorage.getItem('hosts')
 
+      if(hostsLS && JSON.parse(hostsLS).length > 0) params.host = JSON.parse(hostsLS)
       if(classesLS && JSON.parse(classesLS).length > 0) params.class = JSON.parse(classesLS)
       // if (date_fromLS && date_toLS) {
       //   params.date_from = date_fromLS
@@ -50,6 +52,7 @@ export default {
       if (entriesLS) params.entry_filter = entriesLS
 
       //Записываем данные с хранилища vuex
+      if(filterParams.hosts && filterParams.hosts.length > 0) params.host = filterParams.hosts
       if(filterParams.classes.length > 0) params.class = filterParams.classes
       if (filterParams.date_from) {
         params.date_from = filterParams.date_from

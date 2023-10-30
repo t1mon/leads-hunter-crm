@@ -25,8 +25,8 @@ class GetVariantsHandler
     public function handle(GetVariantsCommand $command)
     {
         //Загрузка хостов
-        if($command->column === 'host')
-            return $this->hostRepository->query()->from($command->project)->select('host')->pluck('host');
+//        if($command->column === 'host')
+//            return $this->hostRepository->query()->from($command->project)->select('host')->pluck('host');
 
         //Загрузка других полей
         return $this->leadRepository->query()

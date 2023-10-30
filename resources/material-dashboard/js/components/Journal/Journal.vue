@@ -1,6 +1,6 @@
 <template>
     <journal-panel :columns="columns" @changeColumnsSettings="changeColumnsSettings"></journal-panel>
-    <journal-list :columns="columns"></journal-list>
+    <journal-list :projectid="projectid" :columns="columns"></journal-list>
     <journal-paginate></journal-paginate>
 </template>
 

@@ -6,6 +6,7 @@
             <filter-class v-if="filterClass"></filter-class>
             <filter-phone v-if="filterPhone"></filter-phone>
             <filter-entries v-if="filterEntries"></filter-entries>
+            <filter-host v-if="filterHost" :projectid="projectid"></filter-host>
         </div>
     </div>
 </template>
@@ -16,16 +17,18 @@ import filterName from "./FilterName";
 import filterClass from "./FilterClass";
 import filterPhone from "./FilterPhone";
 import filterEntries from "./FilterEntries";
+import filterHost from "./FilterHost";
 
 export default {
-    props: ['ascDesc', 'name', 'filterClass', 'filterPhone', 'filterEntries'],
+    props: ['ascDesc', 'name', 'filterClass', 'filterPhone', 'filterEntries', 'filterHost', 'projectid'],
     name: "Filters",
     components: {
         filterAscDesc,
         filterName,
         filterClass,
         filterPhone,
-        filterEntries
+        filterEntries,
+        filterHost
     }
 }
 </script>
